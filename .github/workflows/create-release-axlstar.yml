@@ -1,25 +1,24 @@
-# Il faut que le tag soit de la forme 'arcane-v2.3.4'
+# Il faut que le tag soit de la forme 'axlstar-v2.3.4'
 
 on:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
-      - 'arcane-v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - 'axlstar-v*'
 
-name: Create Release Arcane
-
+name: Create Release Axlstar
 
 # TODO: Vérifier que le numéro de version du tag correspond
 # au fichier 'version' dans le composant correspondant
-# (par exemple si 'arcane-v2.3.2' alors le fichier 'framework/arcane/version'
+# (par exemple si 'axlstar-v2.3.2' alors le fichier 'framework/axlstar/version'
 # doit valoir cela aussi)
 
 jobs:
   build:
     env:
-      COMPONENT_NAME: arcane
-      COMPONENT_NAME_UPPER: Arcane
-    name: Create Release Arcane
+      COMPONENT_NAME: axlstar
+      COMPONENT_NAME_UPPER: Axlstar
+    name: Create Release Axlstar
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -39,36 +38,11 @@ jobs:
           echo FRAMEWORK_TAG_VERSION = $FRAMEWORK_TAG_VERSION
           echo "FRAMEWORK_TAG_VERSION=$FRAMEWORK_TAG_VERSION" >> $GITHUB_ENV
 
-      - name: Removing git directory Listing directory
+      - name: Make ${{ env.COMPONENT_NAME }} tar
         shell: 'bash'
         run: |
-          echo FRAMEWORK_TAG_VERSION = ${FRAMEWORK_TAG_VERSION}
-          echo Listing files
-          ls -lart .
-          echo Listing files in 'framework'
-          ls -lart framework
-          rm -rf framework/.git
-          rm -rf framework/.circleci
-          rm -rf framework/.github
-          rm -f framework/.git*
-          echo Get Size
-          du -sh .
-
-      # Fait un tar du 'framework' avant de le renommer
-      # avec le numéro de version
-
-      - name: Make 'framework-base' tar
-        shell: 'bash'
-        run: |
-          tar cfz framework.tar.gz --transform "s,^framework,framework-${FRAMEWORK_TAG_VERSION}," framework
-          ls -lart .
-          tar tvf framework.tar.gz
-
-      - name: Make 'arcane' tar
-        shell: 'bash'
-        run: |
-          echo Creating tar file for arcane
-          tar cfz ${COMPONENT_NAME}.tar.gz --transform "s,^${COMPONENT_NAME},${COMPONENT_NAME}-${FRAMEWORK_TAG_VERSION}," -C framework arcane
+          echo Creating tar file for ${COMPONENT_NAME}
+          tar cfz ${COMPONENT_NAME}.tar.gz --transform "s,^${COMPONENT_NAME},${COMPONENT_NAME}-${FRAMEWORK_TAG_VERSION}," -C framework ${COMPONENT_NAME}
           ls -lart .
           tar tvf ${COMPONENT_NAME}.tar.gz
 
@@ -94,14 +68,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./${{ env.COMPONENT_NAME }}.tar.gz
           asset_name: ${{ env.COMPONENT_NAME }}-${{ env.FRAMEWORK_TAG_VERSION }}.src.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload asset 2 to GitHub release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./framework.tar.gz
-          asset_name: framework-${{ env.FRAMEWORK_TAG_VERSION }}.src.tar.gz
           asset_content_type: application/gzip
