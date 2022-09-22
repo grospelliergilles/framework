@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: '24 0 * * *' # Tous les jours à 00:24.
   # A executer lorsque l'on demande.
+  push:
   workflow_dispatch:
   
 env:
@@ -72,7 +73,7 @@ jobs:
 
       - name: Remove generated axl headers
         shell: bash
-        run: rm -f *_axl.h.gcov
+        run: rm -f *.h.gcov
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
