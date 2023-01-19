@@ -126,12 +126,12 @@ jobs:
 
       - uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Configure build script
+      - name: Configure arcane
         shell: bash
         run: |
           cmake -S "${{ github.workspace }}/_common/build_all" -B "${{ env.CMAKE_BUILD_DIR }}" -DCMAKE_VERBOSE_MAKEFILE=TRUE -DVCPKG_INSTALLED_DIR="${{ env.VCPKG_BUILD_DIR }}/installed" -DBUILD_SHARED_LIBS=TRUE -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" ${{ matrix.cmake_specific_args }} -DFRAMEWORK_NO_EXPORT_PACKAGES=TRUE -DCMAKE_INSTALL_PREFIX="${{ env.CMAKE_BUILD_DIR }}/install_arcane" -GNinja
 
-      - name: Dump Some Generated fileskCMakeCache.txt
+      - name: Dump Some Generated files
         shell: bash
         run: |
           echo "Dump CMakeCache.txt"
@@ -172,7 +172,7 @@ jobs:
       - name: Configure alien build script
         shell: bash
         run: |
-          cmake -S "${{ env.ALIEN_ROOT_PATH }}/alien" -B "${{ env.ALIEN_ROOT_PATH }}/build_alien" -DCMAKE_VERBOSE_MAKEFILE=TRUE -DVCPKG_INSTALLED_DIR="${{ env.VCPKG_BUILD_DIR }}/installed" -DBUILD_SHARED_LIBS=TRUE -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" ${{ matrix.cmake_specific_args }} -DCMAKE_PREFIX_PATH="${{ env.CMAKE_BUILD_DIR }}/install_arcane" -GNinja
+          cmake -S "${{ env.ALIEN_ROOT_PATH }}/alien" -B "${{ env.ALIEN_ROOT_PATH }}/build_alien" -DCMAKE_VERBOSE_MAKEFILE=TRUE -DVCPKG_INSTALLED_DIR="${{ env.VCPKG_BUILD_DIR }}/installed" -DBUILD_SHARED_LIBS=TRUE -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" ${{ matrix.cmake_specific_args }} -DCMAKE_PREFIX_PATH="${{ env.CMAKE_BUILD_DIR }}/install_arcane" -DALIEN_DEFAULT_OPTIONS=ON -DALIEN_PLUGIN_HYPRE=ON -DALIEN_UNIT_TESTS=ON -GNinja
 
       - name: Build alien
         shell: bash
@@ -183,4 +183,4 @@ jobs:
         continue-on-error: true
         shell: bash
         run: |
-          cd "${{ env.ALIEN_ROOT_PATH }}/build_alien" && cmake --output-on-failure
+          cd "${{ env.ALIEN_ROOT_PATH }}/build_alien" && ctest --output-on-failure
