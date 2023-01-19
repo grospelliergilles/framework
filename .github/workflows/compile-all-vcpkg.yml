@@ -23,7 +23,7 @@ jobs:
             full_name: 'windows-2022-intelmpi'
             triplet: x64-windows
             vcpkg_os: windows-2022
-            cmake_specific_args : '-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER="ccache"'
+            cmake_specific_args : '-DARCCORE_BUILD_MODE=Check -DCMAKE_CXX_COMPILER_LAUNCHER="ccache"'
             ctest_specific_args : '-I 1,75'
 
     env:
