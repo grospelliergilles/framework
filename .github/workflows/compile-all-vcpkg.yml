@@ -23,7 +23,7 @@ jobs:
             full_name: 'windows-2022-intelmpi'
             triplet: x64-windows
             vcpkg_os: windows-2022
-            cmake_specific_args : '-DARCCORE_BUILD_MODE=Check -DCMAKE_CXX_COMPILER_LAUNCHER="ccache"'
+            cmake_specific_args : '-DARCCORE_BUILD_MODE=Check -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_COMPILER_LAUNCHER="ccache"'
             ctest_specific_args : '-I 1,75'
 
     env:
@@ -172,7 +172,7 @@ jobs:
       - name: Configure alien build script
         shell: bash
         run: |
-          cmake -S "${{ env.ALIEN_ROOT_PATH }}/alien" -B "${{ env.ALIEN_ROOT_PATH }}/build_alien" -DCMAKE_VERBOSE_MAKEFILE=TRUE -DVCPKG_INSTALLED_DIR="${{ env.VCPKG_BUILD_DIR }}/installed" -DBUILD_SHARED_LIBS=TRUE -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" ${{ matrix.cmake_specific_args }} -DCMAKE_PREFIX_PATH="${{ env.CMAKE_BUILD_DIR }}/install_arcane" -DALIEN_DEFAULT_OPTIONS=ON -DALIEN_PLUGIN_HYPRE=ON -DALIEN_UNIT_TESTS=ON -GNinja
+          cmake -S "${{ env.ALIEN_ROOT_PATH }}/alien" -B "${{ env.ALIEN_ROOT_PATH }}/build_alien" -DCMAKE_VERBOSE_MAKEFILE=TRUE -DVCPKG_INSTALLED_DIR="${{ env.VCPKG_BUILD_DIR }}/installed" -DBUILD_SHARED_LIBS=TRUE -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -DCMAKE_PREFIX_PATH="${{ env.CMAKE_BUILD_DIR }}/install_arcane" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DALIEN_DEFAULT_OPTIONS=ON -DALIEN_PLUGIN_HYPRE=ON -DALIEN_UNIT_TESTS=ON -GNinja
 
       - name: Build alien
         shell: bash
@@ -184,7 +184,7 @@ jobs:
         shell: bash
         run: |
           echo "Display alien build directory : ${{ env.ALIEN_ROOT_PATH }}/build_alien"
-          ls -lart "${{ env.ALIEN_ROOT_PATH }}/build_alien"
+          ls -lartR "${{ env.ALIEN_ROOT_PATH }}/build_alien"
 
       - name: Test alien
         continue-on-error: true
