@@ -18,30 +18,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-20.04
-            full_name: 'ubuntu-20.04'
-            triplet: x64-linux
-            vcpkg_os: ubuntu-20.04
-            cmake_specific_args : '-DARCCORE_BUILD_MODE=Debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
-            ctest_specific_args : '-I 1,60'
-          - os: ubuntu-22.04
-            full_name: 'ubuntu-22.04'
-            triplet: x64-linux
-            vcpkg_os: ubuntu-22.04
-            cmake_specific_args : '-DARCCORE_BUILD_MODE=Debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
-            ctest_specific_args : '-I 1,60'
-          - os: 'windows-2019'
-            full_name: 'windows-2019-msmpi'
-            triplet: x64-windows
-            vcpkg_os: windows-2019
-            cmake_specific_args : '-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER="ccache"'
-            ctest_specific_args : '-I 1,75'
-          - os: 'windows-2019'
-            full_name: 'windows-2019-intelmpi'
-            triplet: x64-windows
-            vcpkg_os: windows-2019
-            cmake_specific_args : '-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER="ccache"'
-            ctest_specific_args : '-I 1,75'
           - os: 'windows-2022'
             full_name: 'windows-2022-intelmpi'
             triplet: x64-windows
@@ -61,6 +37,7 @@ jobs:
       CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir/
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       FRAMEWORKCI_ROOT_PATH: '${{ github.workspace }}/../../build_base'
+      ALIEN_ROOT_PATH: '${{ github.workspace }}/../../build_base'
       VCPKG_ROOT: '${{ github.workspace }}/../../build_base/framework-ci/vcpkg'
       VCPKG_BUILD_DIR: '${{ github.workspace }}/../../build_base/framework-ci/vcpkg'
       BUILD_COMMANDS_ROOT: '${{ github.workspace }}/../../build_base/framework-ci/_build'
@@ -68,6 +45,7 @@ jobs:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
       DOTNET_CLI_TELEMETRY_OPTOUT: true
       FRAMEWORKCI_BRANCH: main
+      ALIEN_BRANCH: dev/gg-add-exports-for-win32
 
     steps:
       - name: Checkout actions
@@ -150,7 +128,7 @@ jobs:
       - name: Configure build script
         shell: bash
         run: |
-          cmake -S "${{ github.workspace }}/_common/build_all" -B "${{ env.CMAKE_BUILD_DIR }}" -DCMAKE_VERBOSE_MAKEFILE=TRUE -DVCPKG_INSTALLED_DIR="${{ env.VCPKG_BUILD_DIR }}/installed" -DBUILD_SHARED_LIBS=TRUE -DARCANE_ADD_RPATH_TO_LIBS=OFF -DARCCON_REGISTER_PACKAGE_VERSION=2 -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" ${{ matrix.cmake_specific_args }} -GNinja
+          cmake -S "${{ github.workspace }}/_common/build_all" -B "${{ env.CMAKE_BUILD_DIR }}" -DCMAKE_VERBOSE_MAKEFILE=TRUE -DVCPKG_INSTALLED_DIR="${{ env.VCPKG_BUILD_DIR }}/installed" -DBUILD_SHARED_LIBS=TRUE -DARCANE_ADD_RPATH_TO_LIBS=OFF -DARCCON_REGISTER_PACKAGE_VERSION=2 -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" ${{ matrix.cmake_specific_args }} -DFRAMEWORK_NO_EXPORT_PACKAGES=TRUE -DCMAKE_INSTALL_PREFIX="${{ env.CMAKE_BUILD_DIR }}/install_arcane" -GNinja
 
       - name: Dump Some Generated fileskCMakeCache.txt
         shell: bash
@@ -169,13 +147,29 @@ jobs:
       - name: Get 'ccache' status
         run: ccache -s -v
 
-      - name: Test arcane
+      - name: Install arcane
         shell: bash
         run: |
-          cd "${{ env.CMAKE_BUILD_DIR }}" && ctest --output-on-failure ${{ matrix.ctest_specific_args }}
+          cmake --build "${{ env.CMAKE_BUILD_DIR }}" --target install
 
-      - name: Test arcane Win32 x64
-        if: matrix.triplet == 'x64-windows'
+      - name: Checkout alien
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.repository_owner }}/alien
+          path: alien
+          ref: ${{ env.ALIEN_BRANCH }}
+          submodules: true
+
+      - name: Move alien
+        shell: 'bash'
+        run: |
+          mkdir -p '${{ env.ALIEN_ROOT_PATH }}'
+          ls -lart '${{ github.workspace }}/alien'
+          cd '${{ github.workspace }}' && mv alien '${{ env.ALIEN_ROOT_PATH }}'
+          ls -lart '${{ env.ALIEN_ROOT_PATH }}'
+
+      - name: Configure alien build script
+        continue-on-error: true
         shell: bash
         run: |
-          cd "${{ env.CMAKE_BUILD_DIR }}" && ctest --output-on-failure ${{ matrix.ctest_specific_args }} -R kappa
+          cmake -S "${{ env.ALIEN_ROOT_PATH }}/alien" -B "${{ env.ALIEN_ROOT_PATH }}/build_alien" -DCMAKE_VERBOSE_MAKEFILE=TRUE -DVCPKG_INSTALLED_DIR="${{ env.VCPKG_BUILD_DIR }}/installed" -DBUILD_SHARED_LIBS=TRUE -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" ${{ matrix.cmake_specific_args }} -DCMAKE_PREFIX_PATH="${{ env.CMAKE_BUILD_DIR }}/install_arcane" -GNinja
