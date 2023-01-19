@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+      - dev/gg-test-alien-on-win32-ci
   pull_request:
     branches:
       - main
@@ -128,7 +129,7 @@ jobs:
       - name: Configure build script
         shell: bash
         run: |
-          cmake -S "${{ github.workspace }}/_common/build_all" -B "${{ env.CMAKE_BUILD_DIR }}" -DCMAKE_VERBOSE_MAKEFILE=TRUE -DVCPKG_INSTALLED_DIR="${{ env.VCPKG_BUILD_DIR }}/installed" -DBUILD_SHARED_LIBS=TRUE -DARCANE_ADD_RPATH_TO_LIBS=OFF -DARCCON_REGISTER_PACKAGE_VERSION=2 -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" ${{ matrix.cmake_specific_args }} -DFRAMEWORK_NO_EXPORT_PACKAGES=TRUE -DCMAKE_INSTALL_PREFIX="${{ env.CMAKE_BUILD_DIR }}/install_arcane" -GNinja
+          cmake -S "${{ github.workspace }}/_common/build_all" -B "${{ env.CMAKE_BUILD_DIR }}" -DCMAKE_VERBOSE_MAKEFILE=TRUE -DVCPKG_INSTALLED_DIR="${{ env.VCPKG_BUILD_DIR }}/installed" -DBUILD_SHARED_LIBS=TRUE -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" ${{ matrix.cmake_specific_args }} -DFRAMEWORK_NO_EXPORT_PACKAGES=TRUE -DCMAKE_INSTALL_PREFIX="${{ env.CMAKE_BUILD_DIR }}/install_arcane" -GNinja
 
       - name: Dump Some Generated fileskCMakeCache.txt
         shell: bash
@@ -169,7 +170,17 @@ jobs:
           ls -lart '${{ env.ALIEN_ROOT_PATH }}'
 
       - name: Configure alien build script
-        continue-on-error: true
         shell: bash
         run: |
           cmake -S "${{ env.ALIEN_ROOT_PATH }}/alien" -B "${{ env.ALIEN_ROOT_PATH }}/build_alien" -DCMAKE_VERBOSE_MAKEFILE=TRUE -DVCPKG_INSTALLED_DIR="${{ env.VCPKG_BUILD_DIR }}/installed" -DBUILD_SHARED_LIBS=TRUE -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" ${{ matrix.cmake_specific_args }} -DCMAKE_PREFIX_PATH="${{ env.CMAKE_BUILD_DIR }}/install_arcane" -GNinja
+
+      - name: Build alien
+        shell: bash
+        run: |
+          cmake --build "${{ env.ALIEN_ROOT_PATH }}/build_alien"
+
+      - name: Test alien
+        continue-on-error: true
+        shell: bash
+        run: |
+          cd "${{ env.ALIEN_ROOT_PATH }}/build_alien" && cmake --output-on-failure
