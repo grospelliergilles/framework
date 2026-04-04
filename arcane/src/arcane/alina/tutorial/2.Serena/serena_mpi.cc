@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include <iostream>
 
 #include <amgcl/backend_builtin.h>
-#include <amgcl/value_type/static_matrix.h>
+#include <amgcl/value_type_static_matrix.h>
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/adapter_block_matrix.h>
 
@@ -42,7 +42,7 @@ THE SOFTWARE.
 #include <amgcl/mpi/amg.h>
 #include <amgcl/mpi/coarsening/smoothed_aggregation.h>
 #include <amgcl/mpi/relaxation/spai0.h>
-#include <amgcl/mpi/solver/bicgstab.h>
+#include <amgcl/mpi/solver/solver_bicgstab.h>
 
 #include <amgcl/io_binary.h>
 #include <amgcl/profiler.h>

@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE TestSolvers
 #include <boost/test/unit_test.hpp>
 
-#include <amgcl/value_type/complex.h>
+#include <amgcl/value_type_complex.h>
 #include <amgcl/backend_builtin.h>
 
 #include "test_solver.h"

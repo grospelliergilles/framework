@@ -36,8 +36,7 @@ THE SOFTWARE.
 #include <boost/range/size.hpp>
 #include <boost/iterator/permutation_iterator.hpp>
 
-
-#include <amgcl/reorder/cuthill_mckee.h>
+#include <amgcl/reorder_cuthill_mckee.h>
 #include <amgcl/backend_builtin.h>
 #include <amgcl/backend_detail_matrix_ops.h>
 

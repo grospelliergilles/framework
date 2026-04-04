@@ -47,7 +47,7 @@ Bi-orthogonality Properties. ACM Transactions on Mathematical Software, Vol.
 #include <tuple>
 #include <random>
 
-#include <amgcl/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 #include <amgcl/solver/detail/default_inner_product.h>
 #include <amgcl/util.h>
 

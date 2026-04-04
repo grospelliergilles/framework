@@ -89,7 +89,7 @@ amgcl::make_solver<
 \endcode
 */
 
-#include <amgcl/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 #include <amgcl/backend_detail_matrix_ops.h>
 
 namespace amgcl {

@@ -38,7 +38,6 @@ THE SOFTWARE.
 #include <tuple>
 
 #include <amgcl/backend_interface.h>
-#include <amgcl/value_type/backend_interface.h>
 #include <amgcl/mpi/util.h>
 #include <amgcl/mpi/distributed_matrix.h>
 

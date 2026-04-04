@@ -35,13 +35,13 @@ typedef amgcl::backend::builtin<double> Backend;
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/amg.h>
 #include <amgcl/coarsening_runtime.h>
-#include <amgcl/relaxation/runtime.h>
-#include <amgcl/relaxation/as_preconditioner.h>
+#include <amgcl/relaxation_runtime.h>
+#include <amgcl/relaxation_as_preconditioner.h>
 #include <amgcl/mpi/make_solver.h>
 #include <amgcl/mpi/schur_pressure_correction.h>
 #include <amgcl/mpi/block_preconditioner.h>
 #include <amgcl/mpi/subdomain_deflation.h>
-#include <amgcl/mpi/solver/runtime.h>
+#include <amgcl/mpi/solver/solver_runtime.h>
 #include <amgcl/mpi/direct_solver/runtime.h>
 #include <amgcl/profiler.h>
 

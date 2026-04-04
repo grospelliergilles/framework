@@ -42,15 +42,15 @@ THE SOFTWARE.
 #include <boost/property_tree/ptree.hpp>
 
 #include <amgcl/util.h>
-#include <amgcl/solver/cg.h>
-#include <amgcl/solver/bicgstab.h>
-#include <amgcl/solver/bicgstabl.h>
-#include <amgcl/solver/gmres.h>
-#include <amgcl/solver/lgmres.h>
-#include <amgcl/solver/fgmres.h>
-#include <amgcl/solver/idrs.h>
-#include <amgcl/solver/richardson.h>
-#include <amgcl/solver/preonly.h>
+#include <amgcl/solver_cg.h>
+#include <amgcl/solver_bicgstab.h>
+#include <amgcl/solver_bicgstabl.h>
+#include <amgcl/solver_gmres.h>
+#include <amgcl/solver_lgmres.h>
+#include <amgcl/solver_fgmres.h>
+#include <amgcl/solver_idrs.h>
+#include <amgcl/solver_richardson.h>
+#include <amgcl/solver_preonly.h>
 #include <amgcl/solver/detail/default_inner_product.h>
 
 namespace amgcl {

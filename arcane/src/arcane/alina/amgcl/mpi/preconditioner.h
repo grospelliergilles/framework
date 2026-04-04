@@ -41,7 +41,7 @@ THE SOFTWARE.
 
 #include <amgcl/mpi/amg.h>
 #include <amgcl/mpi/coarsening/runtime.h>
-#include <amgcl/mpi/relaxation/runtime.h>
+#include <amgcl/mpi/relaxation/relaxation_runtime.h>
 #include <amgcl/mpi/direct_solver/runtime.h>
 #include <amgcl/mpi/partition/runtime.h>
 #include <amgcl/mpi/relaxation/as_preconditioner.h>

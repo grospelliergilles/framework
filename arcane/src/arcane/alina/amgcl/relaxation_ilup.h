@@ -42,7 +42,7 @@ THE SOFTWARE.
 
 #include <amgcl/backend_builtin.h>
 #include <amgcl/util.h>
-#include <amgcl/relaxation/ilu0.h>
+#include <amgcl/relaxation_ilu0.h>
 
 namespace amgcl {
 namespace relaxation {

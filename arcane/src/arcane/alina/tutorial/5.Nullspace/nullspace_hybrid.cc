@@ -33,14 +33,14 @@ THE SOFTWARE.
 #include <iostream>
 
 #include <amgcl/backend_builtin_hybrid.h>
-#include <amgcl/value_type/static_matrix.h>
+#include <amgcl/value_type_static_matrix.h>
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
 #include <amgcl/coarsenin_smoothed_aggregation.h>
 #include <amgcl/coarsening_rigid_body_modes.h>
-#include <amgcl/relaxation/spai0.h>
-#include <amgcl/solver/cg.h>
+#include <amgcl/relaxation_spai0.h>
+#include <amgcl/solver_cg.h>
 
 #include <amgcl/io_mm.h>
 #include <amgcl/profiler.h>

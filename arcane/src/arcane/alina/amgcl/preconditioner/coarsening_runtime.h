@@ -38,10 +38,10 @@ THE SOFTWARE.
 #include <boost/property_tree/ptree.hpp>
 
 #include <amgcl/util.h>
-#include <amgcl/solver/runtime.h>
+#include <amgcl/solver_runtime.h>
 #include <amgcl/coarsening_runtime.h>
-#include <amgcl/relaxation/runtime.h>
-#include <amgcl/relaxation/as_preconditioner.h>
+#include <amgcl/relaxation_runtime.h>
+#include <amgcl/relaxation_as_preconditioner.h>
 #include <amgcl/preconditioner/dummy.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>

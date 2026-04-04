@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #include <amgcl/backend_builtin.h>
 #include <amgcl/util.h>
-#include <amgcl/relaxation/detail/ilu_solve.h>
+#include <amgcl/relaxation_detail_ilu_solve.h>
 
 namespace amgcl {
 namespace relaxation {

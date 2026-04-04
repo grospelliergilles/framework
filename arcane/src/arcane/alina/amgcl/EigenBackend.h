@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #include <memory>
 #include <amgcl/EigenAdapter.h>
-#include <amgcl/solver/skyline_lu.h>
+#include <amgcl/solver_skyline_lu.h>
 
 namespace amgcl::backend
 {

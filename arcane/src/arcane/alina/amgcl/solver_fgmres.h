@@ -37,7 +37,7 @@ THE SOFTWARE.
 #include <tuple>
 #include <iostream>
 
-#include <amgcl/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 #include <amgcl/solver/detail/default_inner_product.h>
 #include <amgcl/solver/detail/givens_rotations.h>
 #include <amgcl/util.h>

@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include <amgcl/mpi/amg.h>
 #include <amgcl/mpi/coarsening/smoothed_aggregation.h>
 #include <amgcl/mpi/relaxation/spai0.h>
-#include <amgcl/mpi/solver/cg.h>
+#include <amgcl/mpi/solver/solver_cg.h>
 
 #include <amgcl/io_binary.h>
 #include <amgcl/profiler.h>

@@ -21,15 +21,15 @@ typedef amgcl::backend::EigenBackend<double> Backend;
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
 #include <../amgcl/backend_builtin.h>
-#include <amgcl/value_type/static_matrix.h>
+#include <../amgcl/value_type_static_matrix.h>
 #include <../amgcl/adapter_block_matrix.h>
 typedef amgcl::backend::builtin<double> Backend;
 #endif
 
-#include <amgcl/relaxation/runtime.h>
+#include <../amgcl/relaxation_runtime.h>
 #include <amgcl/coarsening_runtime.h>
 #include <amgcl/coarsening_rigid_body_modes.h>
-#include <amgcl/solver/runtime.h>
+#include <../amgcl/solver_runtime.h>
 #include <amgcl/preconditioner/coarsening_runtime.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>

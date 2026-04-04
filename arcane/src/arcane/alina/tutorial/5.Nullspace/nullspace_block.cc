@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include <iostream>
 
 #include <amgcl/backend_builtin.h>
-#include <amgcl/value_type/static_matrix.h>
+#include <amgcl/value_type_static_matrix.h>
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/adapter_block_matrix.h>
 #include <amgcl/make_solver.h>
@@ -41,8 +41,8 @@ THE SOFTWARE.
 #include <amgcl/coarsenin_smoothed_aggregation.h>
 #include <amgcl/coarsening_rigid_body_modes.h>
 #include <amgcl/coarsening_as_scalar.h>
-#include <amgcl/relaxation/ilu0.h>
-#include <amgcl/solver/cg.h>
+#include <amgcl/relaxation_ilu0.h>
+#include <amgcl/solver_cg.h>
 
 #include <amgcl/io_mm.h>
 #include <amgcl/profiler.h>

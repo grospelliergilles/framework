@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_SOLVER_BICGSTAB_HPP
-#define AMGCL_MPI_SOLVER_BICGSTAB_HPP
+#ifndef AMGCL_MPI_SOLVER_CG_HPP
+#define AMGCL_MPI_SOLVER_CG_HPP
 
 /*
 The MIT License
@@ -26,12 +26,12 @@ THE SOFTWARE.
 */
 
 /**
- * \file   amgcl/mpi/solver/bicgstab.hpp
+ * \file   amgcl/mpi/solver/cg.hpp
  * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  MPI wrapper for BiCGStab iterative method.
+ * \brief  MPI wrapper for CG iterative method.
  */
 
-#include <amgcl/solver/bicgstab.h>
+#include <amgcl/solver_cg.h>
 #include <amgcl/mpi/inner_product.h>
 
 namespace amgcl {
@@ -39,8 +39,8 @@ namespace mpi {
 namespace solver {
 
 template <class Backend, class InnerProduct = mpi::inner_product>
-class bicgstab : public amgcl::solver::bicgstab<Backend, InnerProduct> {
-    typedef amgcl::solver::bicgstab<Backend, InnerProduct> Base;
+class cg : public amgcl::solver::cg<Backend, InnerProduct> {
+    typedef amgcl::solver::cg<Backend, InnerProduct> Base;
     public:
         using Base::Base;
 };
@@ -48,5 +48,6 @@ class bicgstab : public amgcl::solver::bicgstab<Backend, InnerProduct> {
 } // namespace solver
 } // namespace mpi
 } // namespace amgcl
+
 
 #endif

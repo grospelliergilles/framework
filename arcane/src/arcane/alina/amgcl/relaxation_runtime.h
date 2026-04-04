@@ -40,15 +40,15 @@ THE SOFTWARE.
 #include <boost/property_tree/ptree.hpp>
 
 #include <amgcl/util.h>
-#include <amgcl/relaxation/gauss_seidel.h>
-#include <amgcl/relaxation/ilu0.h>
-#include <amgcl/relaxation/iluk.h>
-#include <amgcl/relaxation/ilup.h>
-#include <amgcl/relaxation/ilut.h>
-#include <amgcl/relaxation/damped_jacobi.h>
-#include <amgcl/relaxation/spai0.h>
-#include <amgcl/relaxation/spai1.h>
-#include <amgcl/relaxation/chebyshev.h>
+#include <amgcl/relaxation_gauss_seidel.h>
+#include <amgcl/relaxation_ilu0.h>
+#include <amgcl/relaxation_iluk.h>
+#include <amgcl/relaxation_ilup.h>
+#include <amgcl/relaxation_ilut.h>
+#include <amgcl/relaxation_damped_jacobi.h>
+#include <amgcl/relaxation_spai0.h>
+#include <amgcl/relaxation_spai1.h>
+#include <amgcl/relaxation_chebyshev.h>
 
 namespace amgcl {
 namespace runtime {

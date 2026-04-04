@@ -69,9 +69,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <algorithm>
 
-#include <amgcl/backend_interface.h>
-#include <amgcl/value_type/backend_interface.h>
-#include <amgcl/reorder/cuthill_mckee.h>
+#include <amgcl/value_type_backend_interface.h>
+#include <amgcl/reorder_cuthill_mckee.h>
 #include <amgcl/util.h>
 
 namespace amgcl {

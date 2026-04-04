@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <Eigen/SparseLU>
-#include <amgcl/solver/eigen.h>
+#include <amgcl/solver_eigen.h>
 #include <amgcl/backend_builtin.h>
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/profiler.h>

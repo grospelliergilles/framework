@@ -7,8 +7,8 @@
 #include <amgcl/amg.h>
 #include <amgcl/coarsenin_smoothed_aggregation.h>
 #include <amgcl/coarsening_aggregation.h>
-#include <amgcl/relaxation/spai0.h>
-#include <amgcl/solver/cg.h>
+#include <../amgcl/relaxation_spai0.h>
+#include <../amgcl/solver_cg.h>
 #include <amgcl/profiler.h>
 
 class sparse_matrix {

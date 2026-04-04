@@ -35,7 +35,7 @@ THE SOFTWARE.
 
 #include <type_traits>
 
-#include <amgcl/value_type/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 #include <amgcl/util.h>
 
 namespace amgcl

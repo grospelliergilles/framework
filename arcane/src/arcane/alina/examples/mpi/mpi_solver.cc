@@ -8,7 +8,7 @@
 #include <boost/preprocessor/seq/for_each.hpp>
 
 #include <amgcl/backend_builtin.h>
-#include <amgcl/value_type/static_matrix.h>
+#include <amgcl/value_type_static_matrix.h>
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/adapter_block_matrix.h>
 
@@ -27,7 +27,7 @@
 #include <amgcl/mpi/util.h>
 #include <amgcl/mpi/make_solver.h>
 #include <amgcl/mpi/preconditioner.h>
-#include <amgcl/mpi/solver/runtime.h>
+#include <amgcl/mpi/solver/solver_runtime.h>
 
 #include <amgcl/io_mm.h>
 #include <amgcl/io_binary.h>

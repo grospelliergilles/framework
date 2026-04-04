@@ -34,7 +34,7 @@ THE SOFTWARE.
 #include <mpi.h>
 
 #include <amgcl/backend_builtin.h>
-#include <amgcl/value_type/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 #include <amgcl/mpi/util.h>
 #include <amgcl/util.h>
 

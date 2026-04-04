@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_SOLVER_RUNTIME_HPP
-#define AMGCL_MPI_SOLVER_RUNTIME_HPP
+#ifndef AMGCL_MPI_SOLVER_BICGSTAB_HPP
+#define AMGCL_MPI_SOLVER_BICGSTAB_HPP
 
 /*
 The MIT License
@@ -26,28 +26,27 @@ THE SOFTWARE.
 */
 
 /**
- * \file   amgcl/mpi/solver/runtime.hpp
+ * \file   amgcl/mpi/solver/bicgstab.hpp
  * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Runtime-configurable MPI wrapper around amgcl iterative solvers.
+ * \brief  MPI wrapper for BiCGStab iterative method.
  */
 
-#include <amgcl/solver/runtime.h>
+#include <amgcl/solver_bicgstab.h>
 #include <amgcl/mpi/inner_product.h>
 
 namespace amgcl {
-namespace runtime { 
 namespace mpi {
 namespace solver {
 
-template <class Backend, class InnerProduct = amgcl::mpi::inner_product>
-struct wrapper : public amgcl::runtime::solver::wrapper<Backend, InnerProduct> {
-    typedef amgcl::runtime::solver::wrapper<Backend, InnerProduct> Base;
-    using Base::Base;
+template <class Backend, class InnerProduct = mpi::inner_product>
+class bicgstab : public amgcl::solver::bicgstab<Backend, InnerProduct> {
+    typedef amgcl::solver::bicgstab<Backend, InnerProduct> Base;
+    public:
+        using Base::Base;
 };
 
 } // namespace solver
 } // namespace mpi
-} // namespace runtime
 } // namespace amgcl
 
 #endif

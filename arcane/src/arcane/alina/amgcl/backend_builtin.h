@@ -42,8 +42,8 @@ THE SOFTWARE.
 #endif
 
 #include <amgcl/util.h>
-#include <amgcl/backend_interface.h>
-#include <amgcl/solver/skyline_lu.h>
+#include <amgcl/value_type_backend_interface.h>
+#include <amgcl/solver_skyline_lu.h>
 #include <amgcl/detail_inverse.h>
 #include <amgcl/detail_sort_row.h>
 #include <amgcl/detail_spgemm.h>

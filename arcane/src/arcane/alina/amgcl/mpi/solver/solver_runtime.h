@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_SOLVER_CG_HPP
-#define AMGCL_MPI_SOLVER_CG_HPP
+#ifndef AMGCL_MPI_SOLVER_RUNTIME_HPP
+#define AMGCL_MPI_SOLVER_RUNTIME_HPP
 
 /*
 The MIT License
@@ -26,28 +26,28 @@ THE SOFTWARE.
 */
 
 /**
- * \file   amgcl/mpi/solver/cg.hpp
+ * \file   amgcl/mpi/solver/runtime.hpp
  * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  MPI wrapper for CG iterative method.
+ * \brief  Runtime-configurable MPI wrapper around amgcl iterative solvers.
  */
 
-#include <amgcl/solver/cg.h>
+#include <amgcl/solver_runtime.h>
 #include <amgcl/mpi/inner_product.h>
 
 namespace amgcl {
+namespace runtime { 
 namespace mpi {
 namespace solver {
 
-template <class Backend, class InnerProduct = mpi::inner_product>
-class cg : public amgcl::solver::cg<Backend, InnerProduct> {
-    typedef amgcl::solver::cg<Backend, InnerProduct> Base;
-    public:
-        using Base::Base;
+template <class Backend, class InnerProduct = amgcl::mpi::inner_product>
+struct wrapper : public amgcl::runtime::solver::wrapper<Backend, InnerProduct> {
+    typedef amgcl::runtime::solver::wrapper<Backend, InnerProduct> Base;
+    using Base::Base;
 };
 
 } // namespace solver
 } // namespace mpi
+} // namespace runtime
 } // namespace amgcl
-
 
 #endif

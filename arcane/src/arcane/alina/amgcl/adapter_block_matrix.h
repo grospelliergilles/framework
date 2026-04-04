@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include <amgcl/util.h>
 #include <amgcl/backend_detail_matrix_ops.h>
 #include <amgcl/backend_builtin.h>
-#include <amgcl/value_type/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 
 namespace amgcl {
 namespace adapter {

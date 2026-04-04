@@ -40,7 +40,7 @@ distributed direct solver interface but always works sequentially.
 
 #include <amgcl/backend_builtin.h>
 #include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/solver/skyline_lu.h>
+#include <amgcl/solver_skyline_lu.h>
 #include <amgcl/mpi/util.h>
 #include <amgcl/mpi/direct_solver/solver_base.h>
 

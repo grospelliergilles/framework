@@ -42,7 +42,7 @@ THE SOFTWARE.
 #include <boost/property_tree/ptree.hpp>
 
 #include <amgcl/util.h>
-#include <amgcl/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 #include <amgcl/coarsening_ruge_stuben.h>
 #include <amgcl/coarsening_aggregation.h>
 #include <amgcl/coarsenin_smoothed_aggregation.h>

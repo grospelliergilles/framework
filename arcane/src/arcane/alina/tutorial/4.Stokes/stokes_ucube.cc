@@ -34,18 +34,18 @@ THE SOFTWARE.
 
 #include <amgcl/backend_builtin.h>
 #include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/value_type/static_matrix.h>
+#include <amgcl/value_type_static_matrix.h>
 #include <amgcl/adapter_block_matrix.h>
 #include <amgcl/preconditioner/schur_pressure_correction.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/make_block_solver.h>
 #include <amgcl/amg.h>
-#include <amgcl/solver/cg.h>
-#include <amgcl/solver/preonly.h>
+#include <amgcl/solver_cg.h>
+#include <amgcl/solver_preonly.h>
 #include <amgcl/coarsening_aggregation.h>
-#include <amgcl/relaxation/ilu0.h>
-#include <amgcl/relaxation/spai0.h>
-#include <amgcl/relaxation/as_preconditioner.h>
+#include <amgcl/relaxation_ilu0.h>
+#include <amgcl/relaxation_spai0.h>
+#include <amgcl/relaxation_as_preconditioner.h>
 
 #include <amgcl/io_binary.h>
 #include <amgcl/profiler.h>

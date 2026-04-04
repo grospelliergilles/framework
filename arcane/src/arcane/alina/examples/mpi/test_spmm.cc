@@ -4,7 +4,7 @@
 #include <boost/scope_exit.hpp>
 
 #include <amgcl/backend_builtin.h>
-#include <amgcl/value_type/static_matrix.h>
+#include <amgcl/value_type_static_matrix.h>
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/mpi/distributed_matrix.h>
 #include <amgcl/io_mm.h>

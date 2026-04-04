@@ -43,7 +43,7 @@ THE SOFTWARE.
 #include <amgcl/backend_builtin.h>
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/mpi/util.h>
-#include <amgcl/mpi/direct_solver/skyline_lu.h>
+#include <amgcl/mpi/direct_solver/solver_skyline_lu.h>
 #include <amgcl/mpi/inner_product.h>
 #include <amgcl/mpi/distributed_matrix.h>
 

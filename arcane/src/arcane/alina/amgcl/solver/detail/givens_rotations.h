@@ -31,7 +31,7 @@ THE SOFTWARE.
  * \brief  Givens plane rotations used in GMRES variants.
  */
 
-#include <amgcl/value_type/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 
 namespace amgcl {
 namespace solver {

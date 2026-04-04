@@ -42,7 +42,6 @@ THE SOFTWARE.
 
 #include <amgcl/util.h>
 #include <amgcl/backend_interface.h>
-#include <amgcl/value_type/backend_interface.h>
 #include <amgcl/detail_sort_row.h>
 
 namespace amgcl {
@@ -52,7 +51,7 @@ namespace io {
 class mm_reader {
     public:
         /// Open the file by name
-        mm_reader(const std::string &fname) : f(fname) {
+        explicit mm_reader(const std::string &fname) : f(fname) {
             precondition(f, "Failed to open file \"" + fname + "\"");
 
             // Read banner.

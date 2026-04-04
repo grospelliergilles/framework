@@ -32,7 +32,7 @@ THE SOFTWARE.
  */
 
 #include <memory>
-#include <amgcl/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 #include <amgcl/util.h>
 
 namespace amgcl {

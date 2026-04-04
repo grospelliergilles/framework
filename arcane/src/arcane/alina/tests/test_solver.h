@@ -2,10 +2,10 @@
 #define TESTS_TEST_SOLVER_HPP
 
 #include <amgcl/amg.h>
-#include <amgcl/solver/runtime.h>
+#include <amgcl/solver_runtime.h>
 #include <amgcl/coarsening_runtime.h>
-#include <amgcl/relaxation/runtime.h>
-#include <amgcl/relaxation/as_preconditioner.h>
+#include <amgcl/relaxation_runtime.h>
+#include <amgcl/relaxation_as_preconditioner.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/adapter_zero_copy.h>
 #include <amgcl/profiler.h>

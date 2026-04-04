@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <amgcl/adapter_zero_copy.h>
-#include <amgcl/solver/skyline_lu.h>
+#include <amgcl/solver_skyline_lu.h>
 #include <amgcl/backend_builtin.h>
 #include <amgcl/profiler.h>
 #include "sample_problem.h"

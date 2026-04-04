@@ -7,8 +7,8 @@
 #include <../amgcl/backend_builtin.h>
 #include <../amgcl/adapter_crs_builder.h>
 #include <../amgcl/coarsenin_smoothed_aggregation.h>
-#include <amgcl/relaxation/gauss_seidel.h>
-#include <amgcl/solver/cg.h>
+#include <../amgcl/relaxation_gauss_seidel.h>
+#include <../amgcl/solver_cg.h>
 #include <amgcl/profiler.h>
 
 #include "sample_problem.h"

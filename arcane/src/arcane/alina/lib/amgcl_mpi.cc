@@ -6,8 +6,8 @@
 
 #include <amgcl/amg.h>
 #include <../amgcl/coarsening_runtime.h>
-#include <amgcl/relaxation/runtime.h>
-#include <amgcl/mpi/solver/runtime.h>
+#include <../amgcl/relaxation_runtime.h>
+#include <amgcl/mpi/solver/solver_runtime.h>
 #include <amgcl/mpi/direct_solver/runtime.h>
 #include <amgcl/mpi/subdomain_deflation.h>
 #include <../amgcl/backend_builtin.h>

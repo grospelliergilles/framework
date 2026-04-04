@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE TestSolvers
 #include <boost/test/unit_test.hpp>
 #include <amgcl/backend_builtin.h>
-#include <amgcl/value_type/static_matrix.h>
+#include <amgcl/value_type_static_matrix.h>
 
 #include "test_solver.h"
 

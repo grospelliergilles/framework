@@ -35,9 +35,9 @@ THE SOFTWARE.
 #include <numeric>
 
 #include <amgcl/util.h>
-#include <amgcl/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 #include <amgcl/backend_builtin.h>
-#include <amgcl/solver/skyline_lu.h>
+#include <amgcl/solver_skyline_lu.h>
 
 namespace amgcl {
 namespace backend {

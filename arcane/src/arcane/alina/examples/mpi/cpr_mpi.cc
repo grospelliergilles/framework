@@ -12,8 +12,8 @@
 #include <amgcl/mpi/cpr.h>
 #include <amgcl/mpi/amg.h>
 #include <amgcl/mpi/coarsening/runtime.h>
-#include <amgcl/mpi/relaxation/runtime.h>
-#include <amgcl/mpi/solver/runtime.h>
+#include <amgcl/mpi/relaxation/relaxation_runtime.h>
+#include <amgcl/mpi/solver/solver_runtime.h>
 #include <amgcl/mpi/relaxation/as_preconditioner.h>
 #include <amgcl/mpi/direct_solver/runtime.h>
 #include <amgcl/mpi/partition/runtime.h>

@@ -27,12 +27,12 @@ template <class T> using Backend = amgcl::backend::builtin<T>;
 
 #include <amgcl/make_solver.h>
 #include <amgcl/make_block_solver.h>
-#include <amgcl/value_type/static_matrix.h>
+#include <../amgcl/value_type_static_matrix.h>
 #include <../amgcl/adapter_block_matrix.h>
 #include <amgcl/amg.h>
-#include <amgcl/solver/runtime.h>
+#include <../amgcl/solver_runtime.h>
 #include <../amgcl/coarsening_runtime.h>
-#include <amgcl/relaxation/runtime.h>
+#include <../amgcl/relaxation_runtime.h>
 #include <amgcl/preconditioner/schur_pressure_correction.h>
 #include <amgcl/preconditioner/coarsening_runtime.h>
 #include <../amgcl/adapter_crs_tuple.h>

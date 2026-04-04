@@ -6,9 +6,9 @@
 #include <boost/multi_array.hpp>
 
 #include <amgcl/detail_qr.h>
-#include <amgcl/value_type/backend_interface.h>
-#include <amgcl/value_type/complex.h>
-#include <amgcl/value_type/static_matrix.h>
+#include <amgcl/value_type_backend_interface.h>
+#include <amgcl/value_type_complex.h>
+#include <amgcl/value_type_static_matrix.h>
 
 template <class T>
 struct make_random {

@@ -4,7 +4,7 @@
 
 #include <boost/program_options.hpp>
 #include <amgcl/util.h>
-#include <amgcl/value_type/complex.h>
+#include <../amgcl/value_type_complex.h>
 #include <amgcl/io_mm.h>
 #include <amgcl/io_binary.h>
 

@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #include <amgcl/adapter_block_matrix.h>
 #include <amgcl/backend_builtin.h>
-#include <amgcl/value_type/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 
 namespace amgcl {
 namespace coarsening {

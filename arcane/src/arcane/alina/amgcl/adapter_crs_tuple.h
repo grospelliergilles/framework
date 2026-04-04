@@ -64,7 +64,7 @@ AMG amg(std::make_tuple(n,
 #include <type_traits>
 
 #include <amgcl/util.h>
-#include <amgcl/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 #include <amgcl/backend_detail_matrix_ops.h>
 
 namespace amgcl {

@@ -11,17 +11,16 @@
 #include <amgcl/coarsenin_smoothed_aggregation.h>
 #include <amgcl/coarsening_smoothed_aggr_emin.h>
 
-#include <amgcl/relaxation/damped_jacobi.h>
-#include <amgcl/relaxation/gauss_seidel.h>
-#include <amgcl/relaxation/spai0.h>
-#include <amgcl/relaxation/ilu0.h>
-#include <amgcl/relaxation/ilut.h>
-#include <amgcl/relaxation/chebyshev.h>
+#include <amgcl/relaxation_damped_jacobi.h>
+#include <amgcl/relaxation_gauss_seidel.h>
+#include <amgcl/relaxation_spai0.h>
+#include <amgcl/relaxation_ilu0.h>
+#include <amgcl/relaxation_ilut.h>
+#include <amgcl/relaxation_chebyshev.h>
 
-#include <amgcl/solver/cg.h>
-#include <amgcl/solver/bicgstab.h>
-#include <amgcl/solver/bicgstabl.h>
-#include <amgcl/solver/gmres.h>
+#include <amgcl/solver_cg.h>
+#include <amgcl/solver_bicgstab.h>
+#include <amgcl/solver_gmres.h>
 
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/adapter_complex.h>

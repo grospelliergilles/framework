@@ -5,8 +5,8 @@
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
 #include <../amgcl/coarsenin_smoothed_aggregation.h>
-#include <amgcl/relaxation/spai0.h>
-#include <amgcl/solver/cg.h>
+#include <../amgcl/relaxation_spai0.h>
+#include <../amgcl/solver_cg.h>
 #include <amgcl/profiler.h>
 
 #if defined(SOLVER_BACKEND_VEXCL)

@@ -3,7 +3,7 @@
 
 #include <amgcl/backend_interface.h>
 #include <amgcl/adapter_block_matrix.h>
-#include <amgcl/value_type/static_matrix.h>
+#include <amgcl/value_type_static_matrix.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/util.h>
 

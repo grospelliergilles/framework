@@ -89,7 +89,7 @@ THE SOFTWARE.
 #include <cmath>
 
 #include <amgcl/util.h>
-#include <amgcl/value_type/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 
 namespace amgcl {
 namespace detail {

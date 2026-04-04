@@ -8,8 +8,8 @@
 #include <../amgcl/adapter_crs_tuple.h>
 #include <../amgcl/backend_block_crs.h>
 #include <../amgcl/coarsening_aggregation.h>
-#include <amgcl/relaxation/spai0.h>
-#include <amgcl/solver/bicgstab.h>
+#include <../amgcl/relaxation_spai0.h>
+#include <../amgcl/solver_bicgstab.h>
 #include <amgcl/profiler.h>
 
 namespace amgcl {

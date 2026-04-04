@@ -33,8 +33,7 @@ THE SOFTWARE.
 
 #include <iostream>
 
-#include <amgcl/backend_interface.h>
-#include <amgcl/value_type/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 
 namespace amgcl {
 namespace preconditioner {

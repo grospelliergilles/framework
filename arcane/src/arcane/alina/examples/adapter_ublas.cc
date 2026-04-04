@@ -10,8 +10,8 @@
 #include <../amgcl/backend_builtin.h>
 #include <../amgcl/adapter_ublas.h>
 #include <../amgcl/coarsenin_smoothed_aggregation.h>
-#include <amgcl/relaxation/spai0.h>
-#include <amgcl/solver/bicgstabl.h>
+#include <../amgcl/relaxation_spai0.h>
+#include <../amgcl/solver_bicgstabl.h>
 #include <amgcl/profiler.h>
 
 #include "sample_problem.h"

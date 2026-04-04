@@ -1,5 +1,5 @@
-#ifndef AMGCL_SOLVER_RICHARDSON_HPP
-#define AMGCL_SOLVER_RICHARDSON_HPP
+#ifndef AMGCL_SOLVER_PREONLY_HPP
+#define AMGCL_SOLVER_PREONLY_HPP
 
 /*
 The MIT License
@@ -26,15 +26,13 @@ THE SOFTWARE.
 */
 
 /**
- * \file   amgcl/solver/richardson.hpp
+ * \file   amgcl/solver/preonly.hpp
  * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Richardson iteration
+ * \brief  Only apply preconditioner once
  */
 
 #include <tuple>
-#include <iostream>
-
-#include <amgcl/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 #include <amgcl/solver/detail/default_inner_product.h>
 #include <amgcl/util.h>
 
@@ -53,7 +51,7 @@ template <
     class Backend,
     class InnerProduct = detail::default_inner_product
     >
-class richardson {
+class preonly {
     public:
         typedef Backend backend_type;
 
@@ -68,66 +66,15 @@ class richardson {
             >::return_type coef_type;
 
         /// Solver parameters.
-        struct params {
-            /// Damping factor
-            scalar_type damping;
-
-            /// Maximum number of iterations.
-            size_t maxiter;
-
-            /// Target relative residual error.
-            scalar_type tol;
-
-            /// Target absolute residual error.
-            scalar_type abstol;
-
-            /// Ignore the trivial solution x=0 when rhs is zero.
-            //** Useful for searching for the null-space vectors of the system */
-            bool ns_search;
-
-            /// Verbose output (show iterations and error)
-            bool verbose;
-
-            params()
-                : damping(1.0), maxiter(100), tol(1e-8),
-                  abstol(std::numeric_limits<scalar_type>::min()),
-                  ns_search(false), verbose(false)
-            {}
-
-#ifndef AMGCL_NO_BOOST
-            params(const boost::property_tree::ptree &p)
-                : AMGCL_PARAMS_IMPORT_VALUE(p, damping),
-                  AMGCL_PARAMS_IMPORT_VALUE(p, maxiter),
-                  AMGCL_PARAMS_IMPORT_VALUE(p, tol),
-                  AMGCL_PARAMS_IMPORT_VALUE(p, abstol),
-                  AMGCL_PARAMS_IMPORT_VALUE(p, ns_search),
-                  AMGCL_PARAMS_IMPORT_VALUE(p, verbose)
-            {
-                check_params(p, {"damping", "maxiter", "tol", "abstol",
-                        "ns_search", "verbose"});
-            }
-
-            void get(boost::property_tree::ptree &p, const std::string &path) const {
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, damping);
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, maxiter);
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, tol);
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, abstol);
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, ns_search);
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, verbose);
-            }
-#endif
-        };
+        typedef amgcl::detail::empty_params params;
 
         /// Preallocates necessary data structures for the system of size \p n.
-        richardson(
+        preonly(
                 size_t n,
-                const params &prm = params(),
-                const backend_params &backend_prm = backend_params(),
+                const params& = params(),
+                const backend_params& = backend_params(),
                 const InnerProduct &inner_product = InnerProduct()
-          ) : prm(prm), n(n),
-              r(Backend::create_vector(n, backend_prm)),
-              s(Backend::create_vector(n, backend_prm)),
-              inner_product(inner_product)
+          ) : n(n), inner_product(inner_product)
         { }
 
         /* Computes the solution for the given system matrix \p A and the
@@ -144,39 +91,10 @@ class richardson {
          */
         template <class Matrix, class Precond, class Vec1, class Vec2>
         std::tuple<size_t, scalar_type> operator()(
-                const Matrix &A, const Precond &P, const Vec1 &rhs, Vec2 &&x) const
+                const Matrix&, const Precond &P, const Vec1 &rhs, Vec2 &&x) const
         {
-            static const coef_type one = math::identity<coef_type>();
-
-            ios_saver ss(std::cout);
-
-            scalar_type norm_rhs = norm(rhs);
-            if (norm_rhs < amgcl::detail::eps<scalar_type>(1)) {
-                if (prm.ns_search) {
-                    norm_rhs = math::identity<scalar_type>();
-                } else {
-                    backend::clear(x);
-                    return std::make_tuple(0, norm_rhs);
-                }
-            }
-
-            scalar_type eps = std::max(prm.tol * norm_rhs, prm.abstol);
-
-            backend::residual(rhs, A, x, *r);
-            scalar_type res_norm = norm(*r);
-
-            size_t iter = 0;
-            for(; iter < prm.maxiter && math::norm(res_norm) > eps; ++iter) {
-                P.apply(*r, *s);
-                backend::axpby( prm.damping, *s, one,  x);
-                backend::residual(rhs, A, x, *r);
-                res_norm = norm(*r);
-
-                if (prm.verbose && iter % 5 == 0)
-                    std::cout << iter << "\t" << std::scientific << res_norm / norm_rhs << std::endl;
-            }
-
-            return std::make_tuple(iter, res_norm / norm_rhs);
+            P.apply(rhs, x);
+            return std::make_tuple(0, 0);
         }
 
         /* Computes the solution for the given right-hand side \p rhs. The
@@ -194,26 +112,19 @@ class richardson {
         }
 
         size_t bytes() const {
-            return
-                backend::bytes(*r) +
-                backend::bytes(*s);
+            return 0;
         }
 
-        friend std::ostream& operator<<(std::ostream &os, const richardson &s) {
+        friend std::ostream& operator<<(std::ostream &os, const preonly &s) {
             return os
-                << "Type:             Richardson"
+                << "Type:             PreOnly"
                 << "\nUnknowns:         " << s.n
                 << "\nMemory footprint: " << human_readable_memory(s.bytes())
                 << std::endl;
         }
-    public:
-        params prm;
 
     private:
         size_t n;
-
-        std::shared_ptr<vector> r;
-        std::shared_ptr<vector> s;
 
         InnerProduct inner_product;
 

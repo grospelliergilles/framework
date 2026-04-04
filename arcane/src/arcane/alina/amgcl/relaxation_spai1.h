@@ -34,8 +34,7 @@ THE SOFTWARE.
 #include <vector>
 
 #include <memory>
-#include <amgcl/backend_interface.h>
-#include <amgcl/value_type/backend_interface.h>
+#include <amgcl/value_type_backend_interface.h>
 #include <amgcl/util.h>
 #include <amgcl/detail_qr.h>
 

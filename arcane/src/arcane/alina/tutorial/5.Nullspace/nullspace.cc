@@ -38,8 +38,8 @@ THE SOFTWARE.
 #include <amgcl/amg.h>
 #include <amgcl/coarsenin_smoothed_aggregation.h>
 #include <amgcl/coarsening_rigid_body_modes.h>
-#include <amgcl/relaxation/spai0.h>
-#include <amgcl/solver/cg.h>
+#include <amgcl/relaxation_spai0.h>
+#include <amgcl/solver_cg.h>
 
 #include <amgcl/io_mm.h>
 #include <amgcl/profiler.h>
