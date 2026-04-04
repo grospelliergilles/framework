@@ -14,10 +14,17 @@ target_link_libraries(amgcl_test INTERFACE
   ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
 )
 
-function(add_amgcl_test TEST_NAME TEST_SOURCE)
-  add_executable(${TEST_NAME} ${TEST_SOURCE})
-  target_link_libraries(${TEST_NAME} amgcl_test)
-  add_test(alina_${TEST_NAME} ${TEST_NAME})
+# NOTE:
+# Certains tests utilisent OpenMP
+# On fixe en dur le nombre de threads sinon on utilise tous
+# les coeurs disponibles.
+
+function(add_amgcl_test TEST_EXEC_NAME TEST_SOURCE)
+  add_executable(${TEST_EXEC_NAME} ${TEST_SOURCE})
+  target_link_libraries(${TEST_EXEC_NAME} amgcl_test)
+  set(TEST_NAME "alina_${TEST_EXEC_NAME}")
+  add_test(${TEST_NAME} ${TEST_EXEC_NAME})
+  set_property(TEST ${TEST_NAME} APPEND PROPERTY ENVIRONMENT "OMP_NUM_THREADS=2")
 endfunction()
 
 add_amgcl_test(test_skyline_lu test_skyline_lu.cc)
