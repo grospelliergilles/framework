@@ -4,7 +4,7 @@
 #include <boost/scope_exit.hpp>
 
 #include <amgcl/backend/builtin.h>
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 #include <amgcl/mpi/distributed_matrix.h>
 #include <amgcl/io/mm.h>
 #include <amgcl/profiler.h>

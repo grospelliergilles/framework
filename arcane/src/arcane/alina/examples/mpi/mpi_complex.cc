@@ -9,7 +9,7 @@
 
 #include <amgcl/backend/builtin.h>
 #include <amgcl/value_type/complex.h>
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 
 #include <amgcl/mpi/util.h>
 #include <amgcl/mpi/make_solver.h>

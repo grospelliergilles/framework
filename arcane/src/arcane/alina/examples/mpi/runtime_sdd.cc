@@ -44,8 +44,8 @@ typedef amgcl::backend::builtin<double> Backend;
 #include <amgcl/mpi/direct_solver/runtime.h>
 #include <amgcl/mpi/solver/runtime.h>
 #include <amgcl/mpi/subdomain_deflation.h>
-#include <amgcl/adapter/crs_tuple.h>
-#include <amgcl/adapter/zero_copy.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <amgcl/adapter/adapter_zero_copy.h>
 #include <amgcl/profiler.h>
 
    namespace amgcl {

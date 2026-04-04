@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE TestSkylineLU
 #include <boost/test/unit_test.hpp>
 
-#include <amgcl/adapter/zero_copy.h>
+#include <amgcl/adapter/adapter_zero_copy.h>
 #include <amgcl/solver/skyline_lu.h>
 #include <amgcl/backend/builtin.h>
 #include <amgcl/profiler.h>

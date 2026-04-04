@@ -26,7 +26,7 @@ add_amgcl_example(bin2mm bin2mm.cc)
 add_amgcl_example(solver solver.cc)
 
 add_amgcl_example(solver_complex solver_complex.cc)
-add_amgcl_example(crs_builder crs_builder.cc)
+add_amgcl_example(crs_builder adapter_crs_builder.cc)
 add_amgcl_example(block_crs block_crs.cc)
 add_amgcl_example(schur_pressure_correction schur_pressure_correction.cc)
 add_amgcl_example(cpr cpr.cc)
@@ -37,7 +37,7 @@ add_amgcl_example(schurpc_mixed schurpc_mixed.cc)
 add_amgcl_example(deflated_solver deflated_solver.cc)
 add_amgcl_example(ns_search ns_search.cc)
 
-add_amgcl_example(ublas ublas.cc)
+add_amgcl_example(ublas adapter_ublas.cc)
 target_link_libraries(ublas PUBLIC ${Boost_SERIALIZATION_LIBRARY})
 
 if (TARGET eigen_target)

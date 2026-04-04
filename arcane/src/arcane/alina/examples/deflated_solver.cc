@@ -14,8 +14,8 @@
 #include <amgcl/preconditioner/runtime.h>
 #include <amgcl/deflated_solver.h>
 #include <amgcl/amg.h>
-#include <amgcl/adapter/crs_tuple.h>
-#include <amgcl/adapter/reorder.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <amgcl/adapter/adapter_reorder.h>
 #include <amgcl/io/mm.h>
 #include <amgcl/io/binary.h>
 

@@ -211,8 +211,8 @@ class amg {
                 const backend_params &bprm = backend_params()
                 )
         {
-            precondition(prm.allow_rebuild,
-                    "allow_rebuild is not set!");
+          precondition(prm.allow_rebuild,
+                       "allow_rebuild is not set!");
             precondition(
                     A->glob_rows() == system_matrix().glob_rows() &&
                     A->glob_cols() == system_matrix().glob_cols(),

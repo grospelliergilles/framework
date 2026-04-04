@@ -12,7 +12,7 @@
 
 #include <amgcl/backend/builtin.h>
 #include <amgcl/preconditioner/runtime.h>
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 #include <amgcl/mpi/make_solver.h>
 #include <amgcl/mpi/solver/runtime.h>
 #include <amgcl/mpi/block_preconditioner.h>

@@ -14,15 +14,15 @@
 #  include <amgcl/relaxation/cusparse_ilu0.hpp>
    typedef amgcl::backend::cuda<double> Backend;
 #elif defined(SOLVER_BACKEND_EIGEN)
-#  include <amgcl/backend/EigenBackend.h>
-   typedef amgcl::backend::EigenBackend<double> Backend;
+#include <amgcl/EigenBackend.h>
+typedef amgcl::backend::EigenBackend<double> Backend;
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
 #include <amgcl/backend/builtin.h>
 #include <amgcl/value_type/static_matrix.h>
-#include <amgcl/adapter/block_matrix.h>
+#include <amgcl/adapter/adapter_block_matrix.h>
 typedef amgcl::backend::builtin<double> Backend;
 #endif
 
@@ -33,8 +33,8 @@ typedef amgcl::backend::builtin<double> Backend;
 #include <amgcl/preconditioner/runtime.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
-#include <amgcl/adapter/crs_tuple.h>
-#include <amgcl/adapter/reorder.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <amgcl/adapter/adapter_reorder.h>
 #include <amgcl/io/mm.h>
 #include <amgcl/io/binary.h>
 

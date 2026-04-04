@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <amgcl/io/mm.h>
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 #include <amgcl/profiler.h>
 #include "sample_problem.h"
 

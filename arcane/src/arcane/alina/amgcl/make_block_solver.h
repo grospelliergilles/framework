@@ -2,7 +2,7 @@
 #define AMGCL_MAKE_BLOCK_SOLVER_HPP
 
 #include <amgcl/backend/interface.h>
-#include <amgcl/adapter/block_matrix.h>
+#include <amgcl/adapter/adapter_block_matrix.h>
 #include <amgcl/value_type/static_matrix.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/util.h>

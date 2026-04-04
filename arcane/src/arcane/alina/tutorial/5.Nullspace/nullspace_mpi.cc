@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include <iostream>
 
 #include <amgcl/backend/builtin.h>
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 #include <amgcl/coarsening/rigid_body_modes.h>
 
 #include <amgcl/mpi/distributed_matrix.h>

@@ -6,7 +6,7 @@
 
 #include <amgcl/io/binary.h>
 #include <amgcl/io/mm.h>
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 #include <amgcl/backend/builtin.h>
 #include <amgcl/mpi/make_solver.h>
 #include <amgcl/mpi/cpr.h>

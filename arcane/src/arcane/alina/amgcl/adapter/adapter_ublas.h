@@ -36,7 +36,7 @@ THE SOFTWARE.
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 #include <amgcl/backend/builtin.h>
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 
 namespace amgcl {
 namespace backend {

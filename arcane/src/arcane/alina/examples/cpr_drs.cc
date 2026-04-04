@@ -27,7 +27,7 @@ typedef amgcl::backend::builtin<double> Backend;
 
 #if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
 #include <amgcl/value_type/static_matrix.h>
-#include <amgcl/adapter/block_matrix.h>
+#include <amgcl/adapter/adapter_block_matrix.h>
 #endif
 
 #include <amgcl/make_solver.h>
@@ -37,7 +37,7 @@ typedef amgcl::backend::builtin<double> Backend;
 #include <amgcl/relaxation/runtime.h>
 #include <amgcl/relaxation/as_preconditioner.h>
 #include <amgcl/preconditioner/cpr_drs.h>
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 #include <amgcl/io/mm.h>
 #include <amgcl/io/binary.h>
 #include <amgcl/profiler.h>

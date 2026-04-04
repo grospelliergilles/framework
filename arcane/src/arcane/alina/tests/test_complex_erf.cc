@@ -23,8 +23,8 @@
 #include <amgcl/solver/bicgstabl.h>
 #include <amgcl/solver/gmres.h>
 
-#include <amgcl/adapter/crs_tuple.h>
-#include <amgcl/adapter/complex.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <amgcl/adapter/adapter_complex.h>
 #include <amgcl/profiler.h>
 
 #include "sample_problem.h"

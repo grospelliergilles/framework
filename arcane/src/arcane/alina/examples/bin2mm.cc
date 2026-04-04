@@ -3,7 +3,7 @@
 
 #include <boost/program_options.hpp>
 #include <amgcl/util.h>
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 #include <amgcl/io/mm.h>
 #include <amgcl/io/binary.h>
 

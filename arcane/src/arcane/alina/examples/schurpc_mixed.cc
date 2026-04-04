@@ -9,14 +9,14 @@
 #include <amgcl/make_solver.h>
 #include <amgcl/make_block_solver.h>
 #include <amgcl/value_type/static_matrix.h>
-#include <amgcl/adapter/block_matrix.h>
+#include <amgcl/adapter/adapter_block_matrix.h>
 #include <amgcl/amg.h>
 #include <amgcl/solver/runtime.h>
 #include <amgcl/coarsening/runtime.h>
 #include <amgcl/relaxation/runtime.h>
 #include <amgcl/preconditioner/schur_pressure_correction.h>
 #include <amgcl/preconditioner/runtime.h>
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 
 #if defined(SOLVER_BACKEND_VEXCL)
 #  include <amgcl/backend/vexcl.hpp>

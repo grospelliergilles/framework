@@ -32,7 +32,7 @@ typedef amgcl::backend::builtin<double> Backend;
 
 #include <amgcl/io/binary.h>
 #include <amgcl/io/mm.h>
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 #include <amgcl/amg.h>
 #include <amgcl/coarsening/runtime.h>
 #include <amgcl/relaxation/runtime.h>

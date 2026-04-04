@@ -5,7 +5,7 @@
 
 #include <amgcl/amg.h>
 
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 #include <amgcl/backend/block_crs.h>
 #include <amgcl/coarsening/aggregation.h>
 #include <amgcl/relaxation/spai0.h>

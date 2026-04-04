@@ -11,7 +11,7 @@
 #include <amgcl/mpi/direct_solver/runtime.h>
 #include <amgcl/mpi/subdomain_deflation.h>
 #include <amgcl/backend/builtin.h>
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 
 #include "amgcl_mpi.h"
 

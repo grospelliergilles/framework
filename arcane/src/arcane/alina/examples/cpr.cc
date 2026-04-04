@@ -15,8 +15,8 @@
 #include <amgcl/relaxation/runtime.h>
 #include <amgcl/relaxation/as_preconditioner.h>
 #include <amgcl/preconditioner/cpr.h>
-#include <amgcl/adapter/crs_tuple.h>
-#include <amgcl/adapter/block_matrix.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <amgcl/adapter/adapter_block_matrix.h>
 #include <amgcl/io/mm.h>
 #include <amgcl/io/binary.h>
 #include <amgcl/profiler.h>

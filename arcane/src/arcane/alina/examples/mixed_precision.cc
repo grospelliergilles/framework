@@ -1,7 +1,7 @@
 #include <vector>
 #include <tuple>
 
-#include <amgcl/adapter/crs_tuple.h>
+#include <amgcl/adapter/adapter_crs_tuple.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
 #include <amgcl/coarsening/smoothed_aggregation.h>
