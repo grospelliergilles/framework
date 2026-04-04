@@ -32,9 +32,9 @@ THE SOFTWARE.
  *         incomplete LU factorization.
  */
 
-#include <amgcl/backend/interface.h>
-#include <amgcl/backend/builtin.h>
-#include <amgcl/backend/builtin_hybrid.h>
+#include <amgcl/backend_interface.h>
+#include <amgcl/backend_builtin.h>
+#include <amgcl/backend_builtin_hybrid.h>
 #include <amgcl/util.h>
 
 namespace amgcl {

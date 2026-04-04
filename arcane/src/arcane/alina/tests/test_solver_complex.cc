@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <amgcl/value_type/complex.h>
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 
 #include "test_solver.h"
 

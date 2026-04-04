@@ -18,7 +18,7 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include <amgcl/amg.h>
-#include <amgcl/coarsening/runtime.h>
+#include <amgcl/coarsening_runtime.h>
 #include <amgcl/relaxation/runtime.h>
 #include <amgcl/mpi/subdomain_deflation.h>
 #include <amgcl/mpi/solver/runtime.h>

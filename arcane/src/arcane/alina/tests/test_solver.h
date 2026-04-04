@@ -3,11 +3,11 @@
 
 #include <amgcl/amg.h>
 #include <amgcl/solver/runtime.h>
-#include <amgcl/coarsening/runtime.h>
+#include <amgcl/coarsening_runtime.h>
 #include <amgcl/relaxation/runtime.h>
 #include <amgcl/relaxation/as_preconditioner.h>
 #include <amgcl/make_solver.h>
-#include <amgcl/adapter/adapter_zero_copy.h>
+#include <amgcl/adapter_zero_copy.h>
 #include <amgcl/profiler.h>
 
 #include <boost/assign/std/vector.hpp>

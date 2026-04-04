@@ -25,7 +25,7 @@
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 typedef amgcl::backend::builtin<double> Backend;
 #endif
 
@@ -33,7 +33,7 @@ typedef amgcl::backend::builtin<double> Backend;
 #include <amgcl/mpi/solver/runtime.h>
 #include <amgcl/mpi/subdomain_deflation.h>
 #include <amgcl/amg.h>
-#include <amgcl/coarsening/runtime.h>
+#include <amgcl/coarsening_runtime.h>
 #include <amgcl/relaxation/runtime.h>
 #include <amgcl/relaxation/as_preconditioner.h>
 #include <amgcl/profiler.h>

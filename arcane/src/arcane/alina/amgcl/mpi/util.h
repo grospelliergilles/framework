@@ -37,7 +37,7 @@ THE SOFTWARE.
 #include <complex>
 
 #include <type_traits>
-#include <amgcl/value_type/interface.h>
+#include <amgcl/value_type/backend_interface.h>
 
 #include <mpi.h>
 

@@ -10,9 +10,9 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/scope_exit.hpp>
 
-#include <amgcl/backend/builtin.h>
-#include <amgcl/preconditioner/runtime.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <amgcl/backend_builtin.h>
+#include <amgcl/preconditioner/coarsening_runtime.h>
+#include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/mpi/make_solver.h>
 #include <amgcl/mpi/solver/runtime.h>
 #include <amgcl/mpi/block_preconditioner.h>

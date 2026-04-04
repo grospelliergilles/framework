@@ -4,10 +4,10 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/scope_exit.hpp>
 
-#include <amgcl/io/binary.h>
-#include <amgcl/io/mm.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
-#include <amgcl/backend/builtin.h>
+#include <amgcl/io_binary.h>
+#include <amgcl/io_mm.h>
+#include <amgcl/adapter_crs_tuple.h>
+#include <amgcl/backend_builtin.h>
 #include <amgcl/mpi/make_solver.h>
 #include <amgcl/mpi/cpr.h>
 #include <amgcl/mpi/amg.h>

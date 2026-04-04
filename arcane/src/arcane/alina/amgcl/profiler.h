@@ -39,7 +39,7 @@ THE SOFTWARE.
 #include <type_traits>
 
 #include <amgcl/perf_counter/clock.h>
-#include <amgcl/io/ios_saver.h>
+#include <amgcl/ios_saver.h>
 
 namespace amgcl {
 

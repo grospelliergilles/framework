@@ -7,20 +7,20 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 
-#include <amgcl/backend/builtin.h>
+#include <../amgcl/backend_builtin.h>
 #include <amgcl/value_type/complex.h>
 #include <amgcl/value_type/static_matrix.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
-#include <amgcl/adapter/adapter_block_matrix.h>
+#include <../amgcl/adapter_crs_tuple.h>
+#include <../amgcl/adapter_block_matrix.h>
 
 #include <amgcl/solver/runtime.h>
-#include <amgcl/coarsening/runtime.h>
+#include <../amgcl/coarsening_runtime.h>
 #include <amgcl/relaxation/runtime.h>
-#include <amgcl/preconditioner/runtime.h>
+#include <amgcl/preconditioner/coarsening_runtime.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
-#include <amgcl/io/mm.h>
-#include <amgcl/io/binary.h>
+#include <../amgcl/io_mm.h>
+#include <../amgcl/io_binary.h>
 
 #include <amgcl/profiler.h>
 

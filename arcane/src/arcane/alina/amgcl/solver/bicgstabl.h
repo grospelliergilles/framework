@@ -68,10 +68,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <tuple>
 #include <iostream>
 
-#include <amgcl/backend/interface.h>
+#include <amgcl/backend_interface.h>
 #include <amgcl/solver/detail/default_inner_product.h>
 #include <amgcl/solver/precond_side.h>
-#include <amgcl/detail/qr.h>
+#include <amgcl/detail_qr.h>
 #include <amgcl/util.h>
 
 namespace amgcl {

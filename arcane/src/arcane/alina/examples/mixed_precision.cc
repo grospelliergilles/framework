@@ -1,10 +1,10 @@
 #include <vector>
 #include <tuple>
 
-#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <../amgcl/adapter_crs_tuple.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
-#include <amgcl/coarsening/smoothed_aggregation.h>
+#include <../amgcl/coarsenin_smoothed_aggregation.h>
 #include <amgcl/relaxation/spai0.h>
 #include <amgcl/solver/cg.h>
 #include <amgcl/profiler.h>
@@ -17,7 +17,7 @@
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
-#include <amgcl/backend/builtin.h>
+#include <../amgcl/backend_builtin.h>
 typedef amgcl::backend::builtin<float>  fBackend;
    typedef amgcl::backend::builtin<double> dBackend;
 #endif

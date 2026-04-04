@@ -1,8 +1,8 @@
 #define BOOST_TEST_MODULE TestSkylineLU
 #include <boost/test/unit_test.hpp>
 
-#include <amgcl/io/mm.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <amgcl/io_mm.h>
+#include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/profiler.h>
 #include "sample_problem.h"
 

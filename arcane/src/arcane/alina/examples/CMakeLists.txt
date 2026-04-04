@@ -43,7 +43,7 @@ add_amgcl_example(custom_adapter custom_adapter.cc)
 add_amgcl_example(mixed_precision mixed_precision.cc)
 add_amgcl_example(ublas adapter_ublas.cc)
 
-add_amgcl_example_no_test(block_crs block_crs.cc)
+add_amgcl_example_no_test(block_crs backend_block_crs.cc)
 add_amgcl_example_no_test(cpr cpr.cc)
 add_amgcl_example_no_test(cpr_drs cpr_drs.cc)
 add_amgcl_example_no_test(schur_pressure_correction schur_pressure_correction.cc)

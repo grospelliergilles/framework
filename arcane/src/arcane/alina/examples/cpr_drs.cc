@@ -21,25 +21,25 @@
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
-#include <amgcl/backend/builtin.h>
+#include <../amgcl/backend_builtin.h>
 typedef amgcl::backend::builtin<double> Backend;
 #endif
 
 #if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
 #include <amgcl/value_type/static_matrix.h>
-#include <amgcl/adapter/adapter_block_matrix.h>
+#include <../amgcl/adapter_block_matrix.h>
 #endif
 
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
 #include <amgcl/solver/runtime.h>
-#include <amgcl/coarsening/runtime.h>
+#include <amgcl/coarsening_runtime.h>
 #include <amgcl/relaxation/runtime.h>
 #include <amgcl/relaxation/as_preconditioner.h>
 #include <amgcl/preconditioner/cpr_drs.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
-#include <amgcl/io/mm.h>
-#include <amgcl/io/binary.h>
+#include <amgcl/adapter_crs_tuple.h>
+#include <amgcl/io_mm.h>
+#include <amgcl/io_binary.h>
 #include <amgcl/profiler.h>
 
    namespace amgcl { profiler<> prof; }

@@ -7,12 +7,12 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include <amgcl/relaxation/runtime.h>
-#include <amgcl/coarsening/runtime.h>
+#include <../amgcl/coarsening_runtime.h>
 #include <amgcl/solver/runtime.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
-#include <amgcl/backend/builtin.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <../amgcl/backend_builtin.h>
+#include <../amgcl/adapter_crs_tuple.h>
 
 #include "amgcl.h"
 

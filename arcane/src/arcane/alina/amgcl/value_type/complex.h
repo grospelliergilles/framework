@@ -31,8 +31,8 @@ THE SOFTWARE.
  * \brief  Enable std::complex<T> as value type.
  */
 
-#include <amgcl/backend/builtin.h>
-#include <amgcl/value_type/interface.h>
+#include <amgcl/backend_builtin.h>
+#include <amgcl/value_type/backend_interface.h>
 
 namespace amgcl {
 namespace backend {

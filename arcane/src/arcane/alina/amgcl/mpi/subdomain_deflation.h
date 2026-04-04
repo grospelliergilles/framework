@@ -40,8 +40,8 @@ THE SOFTWARE.
 
 #include <mpi.h>
 
-#include <amgcl/backend/builtin.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <amgcl/backend_builtin.h>
+#include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/mpi/util.h>
 #include <amgcl/mpi/direct_solver/skyline_lu.h>
 #include <amgcl/mpi/inner_product.h>

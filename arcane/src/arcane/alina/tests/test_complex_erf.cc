@@ -3,13 +3,13 @@
 
 #include <complex>
 
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 #include <amgcl/amg.h>
 #include <amgcl/make_solver.h>
 
-#include <amgcl/coarsening/aggregation.h>
-#include <amgcl/coarsening/smoothed_aggregation.h>
-#include <amgcl/coarsening/smoothed_aggr_emin.h>
+#include <amgcl/coarsening_aggregation.h>
+#include <amgcl/coarsenin_smoothed_aggregation.h>
+#include <amgcl/coarsening_smoothed_aggr_emin.h>
 
 #include <amgcl/relaxation/damped_jacobi.h>
 #include <amgcl/relaxation/gauss_seidel.h>
@@ -23,8 +23,8 @@
 #include <amgcl/solver/bicgstabl.h>
 #include <amgcl/solver/gmres.h>
 
-#include <amgcl/adapter/adapter_crs_tuple.h>
-#include <amgcl/adapter/adapter_complex.h>
+#include <amgcl/adapter_crs_tuple.h>
+#include <amgcl/adapter_complex.h>
 #include <amgcl/profiler.h>
 
 #include "sample_problem.h"

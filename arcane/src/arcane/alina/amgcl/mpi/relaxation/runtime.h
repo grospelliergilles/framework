@@ -40,8 +40,8 @@ THE SOFTWARE.
 #include <boost/property_tree/ptree.hpp>
 
 #include <amgcl/util.h>
-#include <amgcl/backend/interface.h>
-#include <amgcl/value_type/interface.h>
+#include <amgcl/backend_interface.h>
+#include <amgcl/value_type/backend_interface.h>
 #include <amgcl/relaxation/runtime.h>
 #include <amgcl/mpi/relaxation/spai0.h>
 #include <amgcl/mpi/util.h>

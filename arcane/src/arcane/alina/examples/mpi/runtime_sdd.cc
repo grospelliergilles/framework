@@ -29,20 +29,20 @@ typedef amgcl::backend::cuda<double> Backend;
 #ifndef SOLVER_BACKEND_BUILTIN
 #define SOLVER_BACKEND_BUILTIN
 #endif
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 typedef amgcl::backend::builtin<double> Backend;
 #endif
 
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
-#include <amgcl/coarsening/runtime.h>
+#include <amgcl/coarsening_runtime.h>
 #include <amgcl/relaxation/runtime.h>
-#include <amgcl/preconditioner/runtime.h>
+#include <amgcl/preconditioner/coarsening_runtime.h>
 #include <amgcl/mpi/direct_solver/runtime.h>
 #include <amgcl/mpi/solver/runtime.h>
 #include <amgcl/mpi/subdomain_deflation.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
-#include <amgcl/adapter/adapter_zero_copy.h>
+#include <amgcl/adapter_crs_tuple.h>
+#include <amgcl/adapter_zero_copy.h>
 #include <amgcl/profiler.h>
 
 namespace amgcl

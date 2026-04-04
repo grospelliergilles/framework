@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #include <vector>
 #include <memory>
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 
 namespace amgcl {
 namespace relaxation {

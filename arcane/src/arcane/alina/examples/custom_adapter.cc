@@ -2,11 +2,11 @@
 #include <vector>
 #include <map>
 
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
-#include <amgcl/coarsening/smoothed_aggregation.h>
-#include <amgcl/coarsening/aggregation.h>
+#include <amgcl/coarsenin_smoothed_aggregation.h>
+#include <amgcl/coarsening_aggregation.h>
 #include <amgcl/relaxation/spai0.h>
 #include <amgcl/solver/cg.h>
 #include <amgcl/profiler.h>

@@ -3,9 +3,9 @@
 
 #include <boost/program_options.hpp>
 #include <amgcl/util.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
-#include <amgcl/io/mm.h>
-#include <amgcl/io/binary.h>
+#include <../amgcl/adapter_crs_tuple.h>
+#include <../amgcl/io_mm.h>
+#include <../amgcl/io_binary.h>
 
 int main(int argc, char *argv[]) {
     namespace po = boost::program_options;

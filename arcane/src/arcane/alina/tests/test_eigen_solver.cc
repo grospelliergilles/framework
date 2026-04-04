@@ -3,8 +3,8 @@
 
 #include <Eigen/SparseLU>
 #include <amgcl/solver/eigen.h>
-#include <amgcl/backend/builtin.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <amgcl/backend_builtin.h>
+#include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/profiler.h>
 #include "sample_problem.h"
 

@@ -32,19 +32,19 @@ THE SOFTWARE.
 #include <vector>
 #include <iostream>
 
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 #include <amgcl/value_type/static_matrix.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
-#include <amgcl/adapter/adapter_block_matrix.h>
+#include <amgcl/adapter_crs_tuple.h>
+#include <amgcl/adapter_block_matrix.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
-#include <amgcl/coarsening/smoothed_aggregation.h>
-#include <amgcl/coarsening/rigid_body_modes.h>
-#include <amgcl/coarsening/as_scalar.h>
+#include <amgcl/coarsenin_smoothed_aggregation.h>
+#include <amgcl/coarsening_rigid_body_modes.h>
+#include <amgcl/coarsening_as_scalar.h>
 #include <amgcl/relaxation/ilu0.h>
 #include <amgcl/solver/cg.h>
 
-#include <amgcl/io/mm.h>
+#include <amgcl/io_mm.h>
 #include <amgcl/profiler.h>
 
 int main(int argc, char *argv[]) {

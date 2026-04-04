@@ -7,9 +7,9 @@
 
 #include <amgcl/amg.h>
 #include <amgcl/make_solver.h>
-#include <amgcl/backend/builtin.h>
-#include <amgcl/adapter/adapter_ublas.h>
-#include <amgcl/coarsening/smoothed_aggregation.h>
+#include <../amgcl/backend_builtin.h>
+#include <../amgcl/adapter_ublas.h>
+#include <../amgcl/coarsenin_smoothed_aggregation.h>
 #include <amgcl/relaxation/spai0.h>
 #include <amgcl/solver/bicgstabl.h>
 #include <amgcl/profiler.h>

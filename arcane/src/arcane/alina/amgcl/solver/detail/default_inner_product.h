@@ -33,7 +33,7 @@ THE SOFTWARE.
  * Falls through to backend::inner_product().
  */
 
-#include <amgcl/backend/interface.h>
+#include <amgcl/backend_interface.h>
 
 namespace amgcl {
 namespace solver {

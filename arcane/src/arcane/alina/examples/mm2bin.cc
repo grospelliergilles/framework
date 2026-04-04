@@ -5,8 +5,8 @@
 #include <boost/program_options.hpp>
 #include <amgcl/util.h>
 #include <amgcl/value_type/complex.h>
-#include <amgcl/io/mm.h>
-#include <amgcl/io/binary.h>
+#include <amgcl/io_mm.h>
+#include <amgcl/io_binary.h>
 
 namespace io = amgcl::io;
 namespace po = boost::program_options;

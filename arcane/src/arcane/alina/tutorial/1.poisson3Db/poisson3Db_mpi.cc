@@ -32,8 +32,8 @@ THE SOFTWARE.
 #include <vector>
 #include <iostream>
 
-#include <amgcl/backend/builtin.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <amgcl/backend_builtin.h>
+#include <amgcl/adapter_crs_tuple.h>
 
 #include <amgcl/mpi/distributed_matrix.h>
 #include <amgcl/mpi/make_solver.h>
@@ -42,7 +42,7 @@ THE SOFTWARE.
 #include <amgcl/mpi/relaxation/spai0.h>
 #include <amgcl/mpi/solver/bicgstab.h>
 
-#include <amgcl/io/binary.h>
+#include <amgcl/io_binary.h>
 #include <amgcl/profiler.h>
 
 #if defined(AMGCL_HAVE_PARMETIS)

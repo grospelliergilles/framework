@@ -40,7 +40,7 @@ THE SOFTWARE.
 #include <vector>
 #include <cmath>
 
-#include <amgcl/detail/inverse.h>
+#include <amgcl/detail_inverse.h>
 #include <amgcl/util.h>
 
 namespace amgcl {

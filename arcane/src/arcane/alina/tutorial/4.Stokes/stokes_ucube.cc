@@ -32,22 +32,22 @@ THE SOFTWARE.
 #include <iostream>
 #include <string>
 
-#include <amgcl/backend/builtin.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <amgcl/backend_builtin.h>
+#include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/value_type/static_matrix.h>
-#include <amgcl/adapter/adapter_block_matrix.h>
+#include <amgcl/adapter_block_matrix.h>
 #include <amgcl/preconditioner/schur_pressure_correction.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/make_block_solver.h>
 #include <amgcl/amg.h>
 #include <amgcl/solver/cg.h>
 #include <amgcl/solver/preonly.h>
-#include <amgcl/coarsening/aggregation.h>
+#include <amgcl/coarsening_aggregation.h>
 #include <amgcl/relaxation/ilu0.h>
 #include <amgcl/relaxation/spai0.h>
 #include <amgcl/relaxation/as_preconditioner.h>
 
-#include <amgcl/io/binary.h>
+#include <amgcl/io_binary.h>
 #include <amgcl/profiler.h>
 
 //---------------------------------------------------------------------------

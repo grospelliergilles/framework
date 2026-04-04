@@ -20,23 +20,23 @@ typedef amgcl::backend::EigenBackend<double> Backend;
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
-#include <amgcl/backend/builtin.h>
+#include <../amgcl/backend_builtin.h>
 #include <amgcl/value_type/static_matrix.h>
-#include <amgcl/adapter/adapter_block_matrix.h>
+#include <../amgcl/adapter_block_matrix.h>
 typedef amgcl::backend::builtin<double> Backend;
 #endif
 
 #include <amgcl/relaxation/runtime.h>
-#include <amgcl/coarsening/runtime.h>
-#include <amgcl/coarsening/rigid_body_modes.h>
+#include <amgcl/coarsening_runtime.h>
+#include <amgcl/coarsening_rigid_body_modes.h>
 #include <amgcl/solver/runtime.h>
-#include <amgcl/preconditioner/runtime.h>
+#include <amgcl/preconditioner/coarsening_runtime.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
-#include <amgcl/adapter/adapter_reorder.h>
-#include <amgcl/io/mm.h>
-#include <amgcl/io/binary.h>
+#include <amgcl/adapter_crs_tuple.h>
+#include <amgcl/adapter_reorder.h>
+#include <amgcl/io_mm.h>
+#include <amgcl/io_binary.h>
 
 #include <amgcl/profiler.h>
 

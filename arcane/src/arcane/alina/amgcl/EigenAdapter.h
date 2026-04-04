@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include <type_traits>
 #include <Eigen/SparseCore>
 #include <amgcl/util.h>
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 
 namespace amgcl {
 namespace backend {

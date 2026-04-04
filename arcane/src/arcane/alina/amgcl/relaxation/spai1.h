@@ -34,10 +34,10 @@ THE SOFTWARE.
 #include <vector>
 
 #include <memory>
-#include <amgcl/backend/interface.h>
-#include <amgcl/value_type/interface.h>
+#include <amgcl/backend_interface.h>
+#include <amgcl/value_type/backend_interface.h>
 #include <amgcl/util.h>
-#include <amgcl/detail/qr.h>
+#include <amgcl/detail_qr.h>
 
 namespace amgcl {
 namespace relaxation {

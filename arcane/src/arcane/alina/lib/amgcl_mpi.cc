@@ -5,13 +5,13 @@
 #include <boost/range/iterator_range.hpp>
 
 #include <amgcl/amg.h>
-#include <amgcl/coarsening/runtime.h>
+#include <../amgcl/coarsening_runtime.h>
 #include <amgcl/relaxation/runtime.h>
 #include <amgcl/mpi/solver/runtime.h>
 #include <amgcl/mpi/direct_solver/runtime.h>
 #include <amgcl/mpi/subdomain_deflation.h>
-#include <amgcl/backend/builtin.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <../amgcl/backend_builtin.h>
+#include <../amgcl/adapter_crs_tuple.h>
 
 #include "amgcl_mpi.h"
 

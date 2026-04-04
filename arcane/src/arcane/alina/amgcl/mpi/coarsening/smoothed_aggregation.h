@@ -34,9 +34,9 @@ THE SOFTWARE.
 #include <tuple>
 #include <memory>
 
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 #include <amgcl/util.h>
-#include <amgcl/coarsening/detail/galerkin.h>
+#include <amgcl/coarsening_detail_galerkin.h>
 #include <amgcl/mpi/util.h>
 #include <amgcl/mpi/distributed_matrix.h>
 #include <amgcl/mpi/coarsening/pmis.h>

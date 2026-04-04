@@ -6,19 +6,19 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 #include <amgcl/value_type/static_matrix.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
 #include <amgcl/solver/runtime.h>
-#include <amgcl/coarsening/runtime.h>
+#include <amgcl/coarsening_runtime.h>
 #include <amgcl/relaxation/runtime.h>
 #include <amgcl/relaxation/as_preconditioner.h>
 #include <amgcl/preconditioner/cpr.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
-#include <amgcl/adapter/adapter_block_matrix.h>
-#include <amgcl/io/mm.h>
-#include <amgcl/io/binary.h>
+#include <amgcl/adapter_crs_tuple.h>
+#include <amgcl/adapter_block_matrix.h>
+#include <amgcl/io_mm.h>
+#include <amgcl/io_binary.h>
 #include <amgcl/profiler.h>
 
 namespace amgcl { profiler<> prof; }

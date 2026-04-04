@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE TestSolvers
 #include <boost/test/unit_test.hpp>
-#include <amgcl/backend/block_crs.h>
+#include <amgcl/backend_block_crs.h>
 
 #include "test_solver.h"
 

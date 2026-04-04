@@ -36,11 +36,11 @@ THE SOFTWARE.
 #include <numeric>
 #include <cassert>
 
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 #include <amgcl/util.h>
 #include <amgcl/mpi/util.h>
 #include <amgcl/mpi/distributed_matrix.h>
-#include <amgcl/coarsening/tentative_prolongation.h>
+#include <amgcl/coarsening_tentative_prolongation.h>
 
 namespace amgcl {
 namespace mpi {

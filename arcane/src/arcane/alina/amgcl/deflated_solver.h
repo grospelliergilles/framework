@@ -31,9 +31,9 @@ THE SOFTWARE.
  * \brief  Iterative preconditioned solver with deflation.
  */
 
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 #include <amgcl/util.h>
-#include <amgcl/detail/inverse.h>
+#include <amgcl/detail_inverse.h>
 
 namespace amgcl {
 

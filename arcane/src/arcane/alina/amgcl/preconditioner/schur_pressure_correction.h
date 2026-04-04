@@ -46,10 +46,10 @@ THE SOFTWARE.
 
 #include <memory>
 
-#include <amgcl/backend/builtin.h>
-#include <amgcl/backend/detail/mixing.h>
+#include <amgcl/backend_builtin.h>
+#include <amgcl/backend_detail_mixing.h>
 #include <amgcl/util.h>
-#include <amgcl/io/mm.h>
+#include <amgcl/io_mm.h>
 
 namespace amgcl {
 namespace preconditioner {

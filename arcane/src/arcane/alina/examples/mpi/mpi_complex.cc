@@ -7,17 +7,17 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 #include <amgcl/value_type/complex.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
+#include <amgcl/adapter_crs_tuple.h>
 
 #include <amgcl/mpi/util.h>
 #include <amgcl/mpi/make_solver.h>
 #include <amgcl/mpi/preconditioner.h>
 #include <amgcl/mpi/solver/runtime.h>
 
-#include <amgcl/io/mm.h>
-#include <amgcl/io/binary.h>
+#include <amgcl/io_mm.h>
+#include <amgcl/io_binary.h>
 #include <amgcl/profiler.h>
 
 namespace amgcl {

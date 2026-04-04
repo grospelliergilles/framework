@@ -39,7 +39,7 @@ distributed direct solver interface but always works sequentially.
 #include <memory>
 
 #include <Eigen/SparseLU>
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 #include <amgcl/solver/eigen.h>
 #include <amgcl/mpi/util.h>
 #include <amgcl/mpi/direct_solver/solver_base.h>

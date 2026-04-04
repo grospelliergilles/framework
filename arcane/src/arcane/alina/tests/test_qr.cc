@@ -5,8 +5,8 @@
 #include <random>
 #include <boost/multi_array.hpp>
 
-#include <amgcl/detail/qr.h>
-#include <amgcl/value_type/interface.h>
+#include <amgcl/detail_qr.h>
+#include <amgcl/value_type/backend_interface.h>
 #include <amgcl/value_type/complex.h>
 #include <amgcl/value_type/static_matrix.h>
 

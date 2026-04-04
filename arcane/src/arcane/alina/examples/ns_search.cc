@@ -6,18 +6,18 @@
 #include <boost/property_tree/json_parser.hpp>
 
 
-#include <amgcl/backend/builtin.h>
+#include <amgcl/backend_builtin.h>
 #include <amgcl/relaxation/runtime.h>
-#include <amgcl/coarsening/runtime.h>
-#include <amgcl/coarsening/rigid_body_modes.h>
+#include <amgcl/coarsening_runtime.h>
+#include <amgcl/coarsening_rigid_body_modes.h>
 #include <amgcl/solver/runtime.h>
-#include <amgcl/preconditioner/runtime.h>
+#include <amgcl/preconditioner/coarsening_runtime.h>
 #include <amgcl/deflated_solver.h>
 #include <amgcl/amg.h>
-#include <amgcl/adapter/adapter_crs_tuple.h>
-#include <amgcl/adapter/adapter_reorder.h>
-#include <amgcl/io/mm.h>
-#include <amgcl/io/binary.h>
+#include <amgcl/adapter_crs_tuple.h>
+#include <amgcl/adapter_reorder.h>
+#include <amgcl/io_mm.h>
+#include <amgcl/io_binary.h>
 
 #include <amgcl/profiler.h>
 
