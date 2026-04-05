@@ -1,4 +1,5 @@
-﻿
+﻿include (srcs.cmake)
+
 #----------------------------------------------------------------------------
 # Find Boost
 #----------------------------------------------------------------------------
@@ -18,7 +19,8 @@ find_package(Boost COMPONENTS
 #----------------------------------------------------------------------------
 add_library(amgcl INTERFACE)
 add_library(amgcl::amgcl ALIAS amgcl)
-
+target_sources(amgcl INTERFACE ${ARCANE_ALINA_SOURCES})
+  
 target_compile_features(amgcl INTERFACE
   cxx_auto_type
   cxx_range_for
