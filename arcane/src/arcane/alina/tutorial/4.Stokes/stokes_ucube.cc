@@ -36,7 +36,7 @@ THE SOFTWARE.
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/value_type_static_matrix.h>
 #include <amgcl/adapter_block_matrix.h>
-#include <amgcl/preconditioner/schur_pressure_correction.h>
+#include <amgcl/preconditioner_schur_pressure_correction.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/make_block_solver.h>
 #include <amgcl/amg.h>

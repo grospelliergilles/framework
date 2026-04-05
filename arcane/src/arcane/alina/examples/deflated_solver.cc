@@ -7,11 +7,11 @@
 
 
 #include <amgcl/backend_builtin.h>
-#include <../amgcl/relaxation_runtime.h>
+#include <amgcl/relaxation_runtime.h>
 #include <amgcl/coarsening_runtime.h>
 #include <amgcl/coarsening_rigid_body_modes.h>
-#include <../amgcl/solver_runtime.h>
-#include <amgcl/preconditioner/coarsening_runtime.h>
+#include <amgcl/solver_runtime.h>
+#include <amgcl/preconditioner_runtime.h>
 #include <amgcl/deflated_solver.h>
 #include <amgcl/amg.h>
 #include <amgcl/adapter_crs_tuple.h>

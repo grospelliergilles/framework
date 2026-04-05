@@ -26,11 +26,11 @@ typedef amgcl::backend::EigenBackend<double> Backend;
 typedef amgcl::backend::builtin<double> Backend;
 #endif
 
-#include <../amgcl/relaxation_runtime.h>
+#include <amgcl/relaxation_runtime.h>
 #include <amgcl/coarsening_runtime.h>
 #include <amgcl/coarsening_rigid_body_modes.h>
-#include <../amgcl/solver_runtime.h>
-#include <amgcl/preconditioner/coarsening_runtime.h>
+#include <amgcl/solver_runtime.h>
+#include <amgcl/preconditioner_runtime.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
 #include <amgcl/adapter_crs_tuple.h>

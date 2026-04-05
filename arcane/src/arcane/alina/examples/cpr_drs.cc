@@ -25,18 +25,18 @@
 typedef amgcl::backend::builtin<double> Backend;
 #endif
 
-#if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
-#include <../amgcl/value_type_static_matrix.h>
-#include <../amgcl/adapter_block_matrix.h>
+#if defined(SOLVER_BACKEND_BUILTIN)
+#include <amgcl/value_type_static_matrix.h>
+#include <amgcl/adapter_block_matrix.h>
 #endif
 
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
-#include <../amgcl/solver_runtime.h>
+#include <amgcl/solver_runtime.h>
 #include <amgcl/coarsening_runtime.h>
-#include <../amgcl/relaxation_runtime.h>
-#include <../amgcl/relaxation_as_preconditioner.h>
-#include <amgcl/preconditioner/cpr_drs.h>
+#include <amgcl/relaxation_runtime.h>
+#include <amgcl/relaxation_as_preconditioner.h>
+#include <amgcl/preconditioner_cpr_drs.h>
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/io_mm.h>
 #include <amgcl/io_binary.h>

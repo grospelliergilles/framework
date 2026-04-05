@@ -37,7 +37,7 @@ typedef amgcl::backend::builtin<double> Backend;
 #include <amgcl/amg.h>
 #include <amgcl/coarsening_runtime.h>
 #include <amgcl/relaxation_runtime.h>
-#include <amgcl/preconditioner/coarsening_runtime.h>
+#include <amgcl/preconditioner_runtime.h>
 #include <amgcl/mpi/direct_solver/runtime.h>
 #include <amgcl/mpi/solver/solver_runtime.h>
 #include <amgcl/mpi/subdomain_deflation.h>

@@ -8,22 +8,17 @@
 
 #include <amgcl/make_solver.h>
 #include <amgcl/make_block_solver.h>
-#include <../amgcl/value_type_static_matrix.h>
-#include <../amgcl/adapter_block_matrix.h>
+#include <amgcl/value_type_static_matrix.h>
+#include <amgcl/adapter_block_matrix.h>
 #include <amgcl/amg.h>
-#include <../amgcl/solver_runtime.h>
-#include <../amgcl/coarsening_runtime.h>
-#include <../amgcl/relaxation_runtime.h>
-#include <amgcl/preconditioner/schur_pressure_correction.h>
-#include <amgcl/preconditioner/coarsening_runtime.h>
-#include <../amgcl/adapter_crs_tuple.h>
+#include <amgcl/solver_runtime.h>
+#include <amgcl/coarsening_runtime.h>
+#include <amgcl/relaxation_runtime.h>
+#include <amgcl/preconditioner_schur_pressure_correction.h>
+#include <amgcl/preconditioner_runtime.h>
+#include <amgcl/adapter_crs_tuple.h>
 
 #if defined(SOLVER_BACKEND_VEXCL)
-#  include <amgcl/backend/vexcl.hpp>
-#  include <amgcl/backend/vexcl_static_matrix.hpp>
-   template <class T> using Backend = amgcl::backend::vexcl<T>;
-   template <class T, int N, int M>
-   using BlockMatrix = amgcl::static_matrix<T, N, M>;
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN

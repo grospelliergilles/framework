@@ -11,7 +11,7 @@
 #include <boost/scope_exit.hpp>
 
 #include <amgcl/backend_builtin.h>
-#include <amgcl/preconditioner/coarsening_runtime.h>
+#include <amgcl/preconditioner_runtime.h>
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/mpi/make_solver.h>
 #include <amgcl/mpi/solver/solver_runtime.h>

@@ -42,7 +42,7 @@ THE SOFTWARE.
 #include <amgcl/coarsening_runtime.h>
 #include <amgcl/relaxation_runtime.h>
 #include <amgcl/relaxation_as_preconditioner.h>
-#include <amgcl/preconditioner/dummy.h>
+#include <amgcl/preconditioner_dummy.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
 

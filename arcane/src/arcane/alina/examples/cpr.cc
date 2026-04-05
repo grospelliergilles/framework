@@ -7,14 +7,14 @@
 #include <boost/preprocessor/seq/for_each.hpp>
 
 #include <amgcl/backend_builtin.h>
-#include <../amgcl/value_type_static_matrix.h>
+#include <amgcl/value_type_static_matrix.h>
 #include <amgcl/make_solver.h>
 #include <amgcl/amg.h>
-#include <../amgcl/solver_runtime.h>
+#include <amgcl/solver_runtime.h>
 #include <amgcl/coarsening_runtime.h>
-#include <../amgcl/relaxation_runtime.h>
-#include <../amgcl/relaxation_as_preconditioner.h>
-#include <amgcl/preconditioner/cpr.h>
+#include <amgcl/relaxation_runtime.h>
+#include <amgcl/relaxation_as_preconditioner.h>
+#include <amgcl/preconditioner_cpr.h>
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/adapter_block_matrix.h>
 #include <amgcl/io_mm.h>
