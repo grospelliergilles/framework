@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE TestSolvers
 #include <boost/test/unit_test.hpp>
-#include <amgcl/EigenBackend.h>
+#include <arcane/alina/EigenBackend.h>
 
 #include "test_solver.h"
 

@@ -3,17 +3,19 @@
 
 #include <boost/scope_exit.hpp>
 
-#include <amgcl/backend_builtin.h>
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/mpi/mp_distributed_matrix.h>
-#include <amgcl/io_mm.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/mpi/mp_distributed_matrix.h>
+#include <arcane/alina/io_mm.h>
+#include <arcane/alina/profiler.h>
 
-namespace amgcl {
+namespace amgcl
+{
     profiler<> prof;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
     MPI_Init(&argc, &argv);
     BOOST_SCOPE_EXIT(void) {
         MPI_Finalize();

@@ -32,20 +32,20 @@ THE SOFTWARE.
 #include <vector>
 #include <iostream>
 
-#include <amgcl/backend_builtin.h>
-#include <amgcl/value_type_static_matrix.h>
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/adapter_block_matrix.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/value_type_static_matrix.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/adapter_block_matrix.h>
 
-#include <amgcl/mpi/mp_distributed_matrix.h>
-#include <amgcl/mpi/mp_make_solver.h>
-#include <amgcl/mpi/mp_amg.h>
-#include <amgcl/mpi/mp_coarsening_smoothed_aggregation.h>
-#include <amgcl/mpi/mp_relaxation_spai0.h>
-#include <amgcl/mpi/mp_solver_bicgstab.h>
+#include <arcane/alina/mpi/mp_distributed_matrix.h>
+#include <arcane/alina/mpi/mp_make_solver.h>
+#include <arcane/alina/mpi/mp_amg.h>
+#include <arcane/alina/mpi/mp_coarsening_smoothed_aggregation.h>
+#include <arcane/alina/mpi/mp_relaxation_spai0.h>
+#include <arcane/alina/mpi/mp_solver_bicgstab.h>
 
-#include <amgcl/io_binary.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/io_binary.h>
+#include <arcane/alina/profiler.h>
 
 #if defined(AMGCL_HAVE_PARMETIS)
 #  include <amgcl/mpi/partition/parmetis.hpp>

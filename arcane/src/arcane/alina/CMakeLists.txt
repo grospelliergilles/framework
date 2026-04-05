@@ -20,6 +20,7 @@ find_package(Boost COMPONENTS
 add_library(amgcl INTERFACE)
 add_library(amgcl::amgcl ALIAS amgcl)
 target_sources(amgcl INTERFACE ${ARCANE_ALINA_SOURCES})
+target_include_directories(amgcl INTERFACE ${Arcane_SOURCE_DIR}/src)
   
 target_compile_features(amgcl INTERFACE
   cxx_auto_type

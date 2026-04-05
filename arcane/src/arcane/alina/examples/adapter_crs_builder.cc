@@ -2,14 +2,14 @@
 #include <vector>
 #include <algorithm>
 
-#include <amgcl/amg.h>
-#include <amgcl/make_solver.h>
-#include <../amgcl/backend_builtin.h>
-#include <../amgcl/adapter_crs_builder.h>
-#include <../amgcl/coarsenin_smoothed_aggregation.h>
-#include <../amgcl/relaxation_gauss_seidel.h>
-#include <../amgcl/solver_cg.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/make_solver.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/adapter_crs_builder.h>
+#include <arcane/alina/coarsenin_smoothed_aggregation.h>
+#include <arcane/alina/relaxation_gauss_seidel.h>
+#include <arcane/alina/solver_cg.h>
+#include <arcane/alina/profiler.h>
 
 #include "sample_problem.h"
 

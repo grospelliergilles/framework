@@ -7,22 +7,22 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 
-#include <amgcl/backend_builtin.h>
-#include <amgcl/value_type_complex.h>
-#include <amgcl/value_type_static_matrix.h>
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/adapter_block_matrix.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/value_type_complex.h>
+#include <arcane/alina/value_type_static_matrix.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/adapter_block_matrix.h>
 
-#include <amgcl/solver_runtime.h>
-#include <amgcl/coarsening_runtime.h>
-#include <amgcl/relaxation_runtime.h>
-#include <amgcl/preconditioner_runtime.h>
-#include <amgcl/make_solver.h>
-#include <amgcl/amg.h>
-#include <amgcl/io_mm.h>
-#include <amgcl/io_binary.h>
+#include <arcane/alina/solver_runtime.h>
+#include <arcane/alina/coarsening_runtime.h>
+#include <arcane/alina/relaxation_runtime.h>
+#include <arcane/alina/preconditioner_runtime.h>
+#include <arcane/alina/make_solver.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/io_mm.h>
+#include <arcane/alina/io_binary.h>
 
-#include <amgcl/profiler.h>
+#include <arcane/alina/profiler.h>
 
 #include "sample_problem.h"
 

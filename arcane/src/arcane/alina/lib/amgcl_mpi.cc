@@ -4,14 +4,14 @@
 
 #include <boost/range/iterator_range.hpp>
 
-#include <amgcl/amg.h>
-#include <amgcl/coarsening_runtime.h>
-#include <amgcl/relaxation_runtime.h>
-#include <amgcl/mpi/mp_solver_runtime.h>
-#include <amgcl/mpi/mp_direct_solver_runtime.h>
-#include <amgcl/mpi/mp_subdomain_deflation.h>
-#include <amgcl/backend_builtin.h>
-#include <amgcl/adapter_crs_tuple.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/coarsening_runtime.h>
+#include <arcane/alina/relaxation_runtime.h>
+#include <arcane/alina/mpi/mp_solver_runtime.h>
+#include <arcane/alina/mpi/mp_direct_solver_runtime.h>
+#include <arcane/alina/mpi/mp_subdomain_deflation.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/adapter_crs_tuple.h>
 
 #include "amgcl_mpi.h"
 

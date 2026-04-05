@@ -4,11 +4,11 @@
 #include <boost/scope_exit.hpp>
 #include <boost/program_options.hpp>
 
-#include <amgcl/backend_builtin.h>
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/mpi/mp_util.h>
-#include <amgcl/mpi/mp_distributed_matrix.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/mpi/mp_util.h>
+#include <arcane/alina/mpi/mp_distributed_matrix.h>
+#include <arcane/alina/profiler.h>
 
 #include "domain_partition.h"
 

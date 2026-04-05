@@ -5,21 +5,20 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/relaxation_runtime.h>
+#include <arcane/alina/coarsening_runtime.h>
+#include <arcane/alina/coarsening_rigid_body_modes.h>
+#include <arcane/alina/solver_runtime.h>
+#include <arcane/alina/preconditioner_runtime.h>
+#include <arcane/alina/deflated_solver.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/adapter_reorder.h>
+#include <arcane/alina/io_mm.h>
+#include <arcane/alina/io_binary.h>
 
-#include <amgcl/backend_builtin.h>
-#include <amgcl/relaxation_runtime.h>
-#include <amgcl/coarsening_runtime.h>
-#include <amgcl/coarsening_rigid_body_modes.h>
-#include <amgcl/solver_runtime.h>
-#include <amgcl/preconditioner_runtime.h>
-#include <amgcl/deflated_solver.h>
-#include <amgcl/amg.h>
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/adapter_reorder.h>
-#include <amgcl/io_mm.h>
-#include <amgcl/io_binary.h>
-
-#include <amgcl/profiler.h>
+#include <arcane/alina/profiler.h>
 
 namespace amgcl { profiler<> prof; }
 using amgcl::prof;

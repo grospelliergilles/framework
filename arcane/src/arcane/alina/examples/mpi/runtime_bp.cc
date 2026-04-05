@@ -10,13 +10,38 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/scope_exit.hpp>
 
-#include <amgcl/backend_builtin.h>
-#include <amgcl/preconditioner_runtime.h>
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/mpi/mp_make_solver.h>
-#include <amgcl/mpi/mp_solver_runtime.h>
-#include <amgcl/mpi/mp_block_preconditioner.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/preconditioner_runtime.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/mpi/mp_make_solver.h>
+#include <arcane/alina/mpi/mp_solver_runtime.h>
+#include <arcane/alina/mpi/mp_block_preconditioner.h>
+#include <arcane/alina/profiler.h>
+
+// Pour test compilation uniquement
+#include <arcane/alina/mpi/mp_solver_bicgstab.h>
+#include <arcane/alina/mpi/mp_solver_bicgstabl.h>
+#include <arcane/alina/mpi/mp_solver_cg.h>
+#include <arcane/alina/mpi/mp_solver_fgmres.h>
+#include <arcane/alina/mpi/mp_solver_gmres.h>
+#include <arcane/alina/mpi/mp_solver_idrs.h>
+#include <arcane/alina/mpi/mp_solver_lgmres.h>
+#include <arcane/alina/mpi/mp_solver_preonly.h>
+#include <arcane/alina/mpi/mp_solver_richardson.h>
+#include <arcane/alina/mpi/mp_solver_runtime.h>
+
+// Pour test compilation uniquement
+#include <arcane/alina/mpi/mp_relaxation_as_preconditioner.h>
+#include <arcane/alina/mpi/mp_relaxation_chebyshev.h>
+#include <arcane/alina/mpi/mp_relaxation_damped_jacobi.h>
+#include <arcane/alina/mpi/mp_relaxation_gauss_seidel.h>
+#include <arcane/alina/mpi/mp_relaxation_ilu0.h>
+#include <arcane/alina/mpi/mp_relaxation_iluk.h>
+#include <arcane/alina/mpi/mp_relaxation_ilup.h>
+#include <arcane/alina/mpi/mp_relaxation_ilut.h>
+#include <arcane/alina/mpi/mp_relaxation_runtime.h>
+#include <arcane/alina/mpi/mp_relaxation_spai0.h>
+#include <arcane/alina/mpi/mp_relaxation_spai1.h>
 
 #include "domain_partition.h"
 

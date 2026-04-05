@@ -7,18 +7,18 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-#include <amgcl/backend_builtin.h>
-#include <amgcl/value_type_complex.h>
-#include <amgcl/adapter_crs_tuple.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/value_type_complex.h>
+#include <arcane/alina/adapter_crs_tuple.h>
 
-#include <amgcl/mpi/mp_util.h>
-#include <amgcl/mpi/mp_make_solver.h>
-#include <amgcl/mpi/mp_preconditioner.h>
-#include <amgcl/mpi/mp_solver_runtime.h>
+#include <arcane/alina/mpi/mp_util.h>
+#include <arcane/alina/mpi/mp_make_solver.h>
+#include <arcane/alina/mpi/mp_preconditioner.h>
+#include <arcane/alina/mpi/mp_solver_runtime.h>
 
-#include <amgcl/io_mm.h>
-#include <amgcl/io_binary.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/io_mm.h>
+#include <arcane/alina/io_binary.h>
+#include <arcane/alina/profiler.h>
 
 namespace amgcl {
     profiler<> prof;

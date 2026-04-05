@@ -14,29 +14,26 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-#if defined(SOLVER_BACKEND_VEXCL)
-#  include <amgcl/backend/vexcl.hpp>
-   typedef amgcl::backend::vexcl<double> Backend;
-#elif defined(SOLVER_BACKEND_CUDA)
-#  include <amgcl/backend/cuda.hpp>
-#  include <amgcl/relaxation/cusparse_ilu0.hpp>
+#if defined(SOLVER_BACKEND_CUDA)
+#  include <arcane/alina/backend_cuda.h>
+#  include <arcane/alina/relaxation_cusparse_ilu0.h>
    typedef amgcl::backend::cuda<double> Backend;
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
-#include <amgcl/backend_builtin.h>
+#include <arcane/alina/backend_builtin.h>
 typedef amgcl::backend::builtin<double> Backend;
 #endif
 
-#include <amgcl/mpi/mp_direct_solver_runtime.h>
-#include <amgcl/mpi/mp_solver_runtime.h>
-#include <amgcl/mpi/mp_subdomain_deflation.h>
-#include <amgcl/amg.h>
-#include <amgcl/coarsening_runtime.h>
-#include <amgcl/relaxation_runtime.h>
-#include <amgcl/relaxation_as_preconditioner.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/mpi/mp_direct_solver_runtime.h>
+#include <arcane/alina/mpi/mp_solver_runtime.h>
+#include <arcane/alina/mpi/mp_subdomain_deflation.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/coarsening_runtime.h>
+#include <arcane/alina/relaxation_runtime.h>
+#include <arcane/alina/relaxation_as_preconditioner.h>
+#include <arcane/alina/profiler.h>
 
 #include "domain_partition.h"
 

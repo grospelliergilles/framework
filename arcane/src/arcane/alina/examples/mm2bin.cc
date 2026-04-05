@@ -3,10 +3,10 @@
 #include <complex>
 
 #include <boost/program_options.hpp>
-#include <amgcl/util.h>
-#include <../amgcl/value_type_complex.h>
-#include <amgcl/io_mm.h>
-#include <amgcl/io_binary.h>
+#include <arcane/alina/util.h>
+#include <arcane/alina/value_type_complex.h>
+#include <arcane/alina/io_mm.h>
+#include <arcane/alina/io_binary.h>
 
 namespace io = amgcl::io;
 namespace po = boost::program_options;

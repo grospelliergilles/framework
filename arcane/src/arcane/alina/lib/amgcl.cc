@@ -6,18 +6,18 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-#include <../amgcl/relaxation_runtime.h>
-#include <../amgcl/coarsening_runtime.h>
-#include <../amgcl/solver_runtime.h>
-#include <amgcl/make_solver.h>
-#include <amgcl/amg.h>
-#include <../amgcl/backend_builtin.h>
-#include <../amgcl/adapter_crs_tuple.h>
+#include <arcane/alina/relaxation_runtime.h>
+#include <arcane/alina/coarsening_runtime.h>
+#include <arcane/alina/solver_runtime.h>
+#include <arcane/alina/make_solver.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/adapter_crs_tuple.h>
 
 #include "amgcl.h"
 
 #ifdef AMGCL_PROFILING
-#include <amgcl/profiler.hpp>
+#include <arcane/alina/profiler.h>
 namespace amgcl {
     profiler<> prof;
 }

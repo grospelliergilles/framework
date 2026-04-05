@@ -32,18 +32,18 @@ THE SOFTWARE.
 #include <vector>
 #include <iostream>
 
-#include <amgcl/backend_builtin_hybrid.h>
-#include <amgcl/value_type_static_matrix.h>
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/make_solver.h>
-#include <amgcl/amg.h>
-#include <amgcl/coarsenin_smoothed_aggregation.h>
-#include <amgcl/coarsening_rigid_body_modes.h>
-#include <amgcl/relaxation_spai0.h>
-#include <amgcl/solver_cg.h>
+#include <arcane/alina/backend_builtin_hybrid.h>
+#include <arcane/alina/value_type_static_matrix.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/make_solver.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/coarsenin_smoothed_aggregation.h>
+#include <arcane/alina/coarsening_rigid_body_modes.h>
+#include <arcane/alina/relaxation_spai0.h>
+#include <arcane/alina/solver_cg.h>
 
-#include <amgcl/io_mm.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/io_mm.h>
+#include <arcane/alina/profiler.h>
 
 int main(int argc, char *argv[]) {
     // The command line should contain the matrix, the RHS, and the coordinate files:

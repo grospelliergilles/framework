@@ -4,7 +4,7 @@
 #include <complex>
 #include <type_traits>
 #include <cstddef>
-#include <amgcl/value_type_backend_interface.h>
+#include <arcane/alina/value_type_backend_interface.h>
 
 // Generates matrix for poisson problem in a unit cube.
 template <typename ValueType, typename ColType, typename PtrType, typename RhsType>

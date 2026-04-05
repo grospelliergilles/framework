@@ -3,28 +3,28 @@
 
 #include <complex>
 
-#include <amgcl/backend_builtin.h>
-#include <amgcl/amg.h>
-#include <amgcl/make_solver.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/make_solver.h>
 
-#include <amgcl/coarsening_aggregation.h>
-#include <amgcl/coarsenin_smoothed_aggregation.h>
-#include <amgcl/coarsening_smoothed_aggr_emin.h>
+#include <arcane/alina/coarsening_aggregation.h>
+#include <arcane/alina/coarsenin_smoothed_aggregation.h>
+#include <arcane/alina/coarsening_smoothed_aggr_emin.h>
 
-#include <amgcl/relaxation_damped_jacobi.h>
-#include <amgcl/relaxation_gauss_seidel.h>
-#include <amgcl/relaxation_spai0.h>
-#include <amgcl/relaxation_ilu0.h>
-#include <amgcl/relaxation_ilut.h>
-#include <amgcl/relaxation_chebyshev.h>
+#include <arcane/alina/relaxation_damped_jacobi.h>
+#include <arcane/alina/relaxation_gauss_seidel.h>
+#include <arcane/alina/relaxation_spai0.h>
+#include <arcane/alina/relaxation_ilu0.h>
+#include <arcane/alina/relaxation_ilut.h>
+#include <arcane/alina/relaxation_chebyshev.h>
 
-#include <amgcl/solver_cg.h>
-#include <amgcl/solver_bicgstab.h>
-#include <amgcl/solver_gmres.h>
+#include <arcane/alina/solver_cg.h>
+#include <arcane/alina/solver_bicgstab.h>
+#include <arcane/alina/solver_gmres.h>
 
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/adapter_complex.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/adapter_complex.h>
+#include <arcane/alina/profiler.h>
 
 #include "sample_problem.h"
 

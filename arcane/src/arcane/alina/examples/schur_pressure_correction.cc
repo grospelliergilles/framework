@@ -6,40 +6,33 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 
-#if defined(SOLVER_BACKEND_VEXCL)
-#  include <amgcl/backend/vexcl.hpp>
-#  include <amgcl/backend/vexcl_static_matrix.hpp>
-   template <class T> using Backend = amgcl::backend::vexcl<T>;
-#elif defined(SOLVER_BACKEND_VIENNACL)
-#  include <amgcl/backend/viennacl.hpp>
-   template <class T> using Backend = amgcl::backend::viennacl< viennacl::compressed_matrix<T> >;
-#elif defined(SOLVER_BACKEND_CUDA)
-#  include <amgcl/backend/cuda.hpp>
-#  include <amgcl/relaxation/cusparse_ilu0.hpp>
+#if defined(SOLVER_BACKEND_CUDA)
+#  include <arcane/alina/backend_cuda.h>
+#  include <arcane/alina/relaxation_cusparse_ilu0.h>
    template <class T> using Backend = amgcl::backend::cuda<T>;
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
-#include <../amgcl/backend_builtin.h>
+#include <arcane/alina/backend_builtin.h>
 template <class T> using Backend = amgcl::backend::builtin<T>;
 #endif
 
-#include <amgcl/make_solver.h>
-#include <amgcl/make_block_solver.h>
-#include <amgcl/value_type_static_matrix.h>
-#include <amgcl/adapter_block_matrix.h>
-#include <amgcl/amg.h>
-#include <amgcl/solver_runtime.h>
-#include <amgcl/coarsening_runtime.h>
-#include <amgcl/relaxation_runtime.h>
-#include <amgcl/preconditioner_schur_pressure_correction.h>
-#include <amgcl/preconditioner_runtime.h>
-#include <amgcl/adapter_crs_tuple.h>
+#include <arcane/alina/make_solver.h>
+#include <arcane/alina/make_block_solver.h>
+#include <arcane/alina/value_type_static_matrix.h>
+#include <arcane/alina/adapter_block_matrix.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/solver_runtime.h>
+#include <arcane/alina/coarsening_runtime.h>
+#include <arcane/alina/relaxation_runtime.h>
+#include <arcane/alina/preconditioner_schur_pressure_correction.h>
+#include <arcane/alina/preconditioner_runtime.h>
+#include <arcane/alina/adapter_crs_tuple.h>
 
-#include <amgcl/io_mm.h>
-#include <amgcl/io_binary.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/io_mm.h>
+#include <arcane/alina/io_binary.h>
+#include <arcane/alina/profiler.h>
 
 #ifndef AMGCL_BLOCK_SIZES
 #  define AMGCL_BLOCK_SIZES (3)(4)

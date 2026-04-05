@@ -1,13 +1,13 @@
 #include <vector>
 #include <tuple>
 
-#include <../amgcl/adapter_crs_tuple.h>
-#include <amgcl/make_solver.h>
-#include <amgcl/amg.h>
-#include <../amgcl/coarsenin_smoothed_aggregation.h>
-#include <../amgcl/relaxation_spai0.h>
-#include <../amgcl/solver_cg.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/make_solver.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/coarsenin_smoothed_aggregation.h>
+#include <arcane/alina/relaxation_spai0.h>
+#include <arcane/alina/solver_cg.h>
+#include <arcane/alina/profiler.h>
 
 #if defined(SOLVER_BACKEND_VEXCL)
 #  include <amgcl/backend/vexcl.hpp>
@@ -17,7 +17,7 @@
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
-#include <../amgcl/backend_builtin.h>
+#include <arcane/alina/backend_builtin.h>
 typedef amgcl::backend::builtin<float>  fBackend;
    typedef amgcl::backend::builtin<double> dBackend;
 #endif

@@ -3,17 +3,18 @@
 #include <iterator>
 #include <algorithm>
 
-#include <amgcl/amg.h>
+#include <arcane/alina/amg.h>
 
-#include <../amgcl/adapter_crs_tuple.h>
-#include <../amgcl/backend_block_crs.h>
-#include <../amgcl/coarsening_aggregation.h>
-#include <../amgcl/relaxation_spai0.h>
-#include <../amgcl/solver_bicgstab.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/backend_block_crs.h>
+#include <arcane/alina/coarsening_aggregation.h>
+#include <arcane/alina/relaxation_spai0.h>
+#include <arcane/alina/solver_bicgstab.h>
+#include <arcane/alina/profiler.h>
 
-namespace amgcl {
-    profiler<> prof("v2");
+namespace amgcl
+{
+profiler<> prof("v2");
 }
 
 int main() {

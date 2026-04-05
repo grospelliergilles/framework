@@ -5,14 +5,14 @@
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 
-#include <amgcl/amg.h>
-#include <amgcl/make_solver.h>
-#include <../amgcl/backend_builtin.h>
-#include <../amgcl/adapter_ublas.h>
-#include <../amgcl/coarsenin_smoothed_aggregation.h>
-#include <../amgcl/relaxation_spai0.h>
-#include <../amgcl/solver_bicgstabl.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/make_solver.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/adapter_ublas.h>
+#include <arcane/alina/coarsenin_smoothed_aggregation.h>
+#include <arcane/alina/relaxation_spai0.h>
+#include <arcane/alina/solver_bicgstabl.h>
+#include <arcane/alina/profiler.h>
 
 #include "sample_problem.h"
 

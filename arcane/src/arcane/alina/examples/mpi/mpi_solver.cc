@@ -7,10 +7,10 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 
-#include <amgcl/backend_builtin.h>
-#include <amgcl/value_type_static_matrix.h>
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/adapter_block_matrix.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/value_type_static_matrix.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/adapter_block_matrix.h>
 
 #if defined(SOLVER_BACKEND_VEXCL)
 #  include <amgcl/backend/vexcl.hpp>
@@ -24,14 +24,14 @@
 #  endif
 #endif
 
-#include <amgcl/mpi/mp_util.h>
-#include <amgcl/mpi/mp_make_solver.h>
-#include <amgcl/mpi/mp_preconditioner.h>
-#include <amgcl/mpi/mp_solver_runtime.h>
+#include <arcane/alina/mpi/mp_util.h>
+#include <arcane/alina/mpi/mp_make_solver.h>
+#include <arcane/alina/mpi/mp_preconditioner.h>
+#include <arcane/alina/mpi/mp_solver_runtime.h>
 
-#include <amgcl/io_mm.h>
-#include <amgcl/io_binary.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/io_mm.h>
+#include <arcane/alina/io_binary.h>
+#include <arcane/alina/profiler.h>
 
 #ifndef AMGCL_BLOCK_SIZES
 #  define AMGCL_BLOCK_SIZES (3)(4)

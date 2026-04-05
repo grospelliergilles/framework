@@ -29,21 +29,21 @@ typedef amgcl::backend::cuda<double> Backend;
 #ifndef SOLVER_BACKEND_BUILTIN
 #define SOLVER_BACKEND_BUILTIN
 #endif
-#include <amgcl/backend_builtin.h>
+#include <arcane/alina/backend_builtin.h>
 typedef amgcl::backend::builtin<double> Backend;
 #endif
 
-#include <amgcl/make_solver.h>
-#include <amgcl/amg.h>
-#include <amgcl/coarsening_runtime.h>
-#include <amgcl/relaxation_runtime.h>
-#include <amgcl/preconditioner_runtime.h>
-#include <amgcl/mpi/mp_direct_solver_runtime.h>
-#include <amgcl/mpi/mp_solver_runtime.h>
-#include <amgcl/mpi/mp_subdomain_deflation.h>
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/adapter_zero_copy.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/make_solver.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/coarsening_runtime.h>
+#include <arcane/alina/relaxation_runtime.h>
+#include <arcane/alina/preconditioner_runtime.h>
+#include <arcane/alina/mpi/mp_direct_solver_runtime.h>
+#include <arcane/alina/mpi/mp_solver_runtime.h>
+#include <arcane/alina/mpi/mp_subdomain_deflation.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/adapter_zero_copy.h>
+#include <arcane/alina/profiler.h>
 
 namespace amgcl
 {

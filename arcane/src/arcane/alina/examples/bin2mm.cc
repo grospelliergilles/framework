@@ -2,12 +2,13 @@
 #include <string>
 
 #include <boost/program_options.hpp>
-#include <amgcl/util.h>
-#include <../amgcl/adapter_crs_tuple.h>
-#include <../amgcl/io_mm.h>
-#include <../amgcl/io_binary.h>
+#include <arcane/alina/util.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/io_mm.h>
+#include <arcane/alina/io_binary.h>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
     namespace po = boost::program_options;
     namespace io = amgcl::io;
 

@@ -5,10 +5,10 @@
 #include <random>
 #include <boost/multi_array.hpp>
 
-#include <amgcl/detail_qr.h>
-#include <amgcl/value_type_backend_interface.h>
-#include <amgcl/value_type_complex.h>
-#include <amgcl/value_type_static_matrix.h>
+#include <arcane/alina/detail_qr.h>
+#include <arcane/alina/value_type_backend_interface.h>
+#include <arcane/alina/value_type_complex.h>
+#include <arcane/alina/value_type_static_matrix.h>
 
 template <class T>
 struct make_random {

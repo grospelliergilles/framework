@@ -15,37 +15,34 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/scope_exit.hpp>
 
-#if defined(SOLVER_BACKEND_VEXCL)
-#  include <amgcl/backend/vexcl.hpp>
-   typedef amgcl::backend::vexcl<double> Backend;
-#elif defined(SOLVER_BACKEND_CUDA)
-#  include <amgcl/backend/cuda.hpp>
-#  include <amgcl/relaxation/cusparse_ilu0.hpp>
+#if defined(SOLVER_BACKEND_CUDA)
+#  include <arcane/alina/backend_cuda.h>
+#  include <arcane/alina/relaxation_cusparse_ilu0.h>
    typedef amgcl::backend::cuda<double> Backend;
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
-#include <amgcl/backend_builtin.h>
+#include <arcane/alina/backend_builtin.h>
 typedef amgcl::backend::builtin<double> Backend;
 #endif
 
-#include <amgcl/io_binary.h>
-#include <amgcl/io_mm.h>
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/amg.h>
-#include <amgcl/coarsening_runtime.h>
-#include <amgcl/relaxation_runtime.h>
-#include <amgcl/relaxation_as_preconditioner.h>
-#include <amgcl/mpi/mp_make_solver.h>
-#include <amgcl/mpi/mp_schur_pressure_correction.h>
-#include <amgcl/mpi/mp_block_preconditioner.h>
-#include <amgcl/mpi/mp_subdomain_deflation.h>
-#include <amgcl/mpi/mp_solver_runtime.h>
-#include <amgcl/mpi/mp_direct_solver_runtime.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/io_binary.h>
+#include <arcane/alina/io_mm.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/coarsening_runtime.h>
+#include <arcane/alina/relaxation_runtime.h>
+#include <arcane/alina/relaxation_as_preconditioner.h>
+#include <arcane/alina/mpi/mp_make_solver.h>
+#include <arcane/alina/mpi/mp_schur_pressure_correction.h>
+#include <arcane/alina/mpi/mp_block_preconditioner.h>
+#include <arcane/alina/mpi/mp_subdomain_deflation.h>
+#include <arcane/alina/mpi/mp_solver_runtime.h>
+#include <arcane/alina/mpi/mp_direct_solver_runtime.h>
+#include <arcane/alina/profiler.h>
 
-   namespace amgcl {
+namespace amgcl {
     profiler<> prof;
 }
 

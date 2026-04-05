@@ -2,14 +2,14 @@
 #include <vector>
 #include <map>
 
-#include <amgcl/backend_builtin.h>
-#include <amgcl/make_solver.h>
-#include <amgcl/amg.h>
-#include <amgcl/coarsenin_smoothed_aggregation.h>
-#include <amgcl/coarsening_aggregation.h>
-#include <../amgcl/relaxation_spai0.h>
-#include <../amgcl/solver_cg.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/make_solver.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/coarsenin_smoothed_aggregation.h>
+#include <arcane/alina/coarsening_aggregation.h>
+#include <arcane/alina/relaxation_spai0.h>
+#include <arcane/alina/solver_cg.h>
+#include <arcane/alina/profiler.h>
 
 class sparse_matrix {
     public:

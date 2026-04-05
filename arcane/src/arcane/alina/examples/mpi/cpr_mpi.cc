@@ -4,20 +4,20 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/scope_exit.hpp>
 
-#include <amgcl/io_binary.h>
-#include <amgcl/io_mm.h>
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/backend_builtin.h>
-#include <amgcl/mpi/mp_make_solver.h>
-#include <amgcl/mpi/mp_cpr.h>
-#include <amgcl/mpi/mp_amg.h>
-#include <amgcl/mpi/mp_coarsening_runtime.h>
-#include <amgcl/mpi/mp_relaxation_runtime.h>
-#include <amgcl/mpi/mp_solver_runtime.h>
-#include <amgcl/mpi/mp_relaxation_as_preconditioner.h>
-#include <amgcl/mpi/mp_direct_solver_runtime.h>
-#include <amgcl/mpi/mp_partition_runtime.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/io_binary.h>
+#include <arcane/alina/io_mm.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/mpi/mp_make_solver.h>
+#include <arcane/alina/mpi/mp_cpr.h>
+#include <arcane/alina/mpi/mp_amg.h>
+#include <arcane/alina/mpi/mp_coarsening_runtime.h>
+#include <arcane/alina/mpi/mp_relaxation_runtime.h>
+#include <arcane/alina/mpi/mp_solver_runtime.h>
+#include <arcane/alina/mpi/mp_relaxation_as_preconditioner.h>
+#include <arcane/alina/mpi/mp_direct_solver_runtime.h>
+#include <arcane/alina/mpi/mp_partition_runtime.h>
+#include <arcane/alina/profiler.h>
 
 namespace amgcl {
     profiler<> prof;

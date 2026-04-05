@@ -2,10 +2,10 @@
 #include <boost/test/unit_test.hpp>
 
 #include <Eigen/SparseLU>
-#include <amgcl/solver_eigen.h>
-#include <amgcl/backend_builtin.h>
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/profiler.h>
+#include <arcane/alina/solver_eigen.h>
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/profiler.h>
 #include "sample_problem.h"
 
 namespace amgcl {
