@@ -95,11 +95,11 @@ int main(int argc, char* argv[])
   typedef Alina::backend::builtin<double> DBackend;
   typedef Alina::backend::builtin<float> FBackend;
   typedef Alina::mpi::make_solver<
-  Alina::mpi::amg<
-  FBackend,
-  Alina::mpi::coarsening::smoothed_aggregation<FBackend>,
-  Alina::mpi::relaxation::spai0<FBackend>>,
-  Alina::mpi::solver::bicgstab<DBackend>>
+    Alina::mpi::amg<
+      FBackend,
+      Alina::mpi::coarsening::smoothed_aggregation<FBackend>,
+      Alina::mpi::relaxation::spai0<FBackend>>,
+    Alina::mpi::solver::bicgstab<DBackend>>
   Solver;
 
   // Create the distributed matrix from the local parts.
@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
   // Partition the matrix and the RHS vector.
   // If neither ParMETIS not PT-SCOTCH are not available,
   // just keep the current naive partitioning.
-#if defined(AMGCL_HAVE_PARMETIS)
+#if defined(ARCANE_ALINA_HAVE_PARMETIS)
   typedef Alina::mpi::partition::parmetis<DBackend> Partition;
 
   if (world.size > 1) {
