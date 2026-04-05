@@ -7,10 +7,7 @@
 #include <arcane/alina/amg.h>
 #include <arcane/alina/make_solver.h>
 
-#include <arcane/alina/coarsening_aggregation.h>
-#include <arcane/alina/coarsening_smoothed_aggregation.h>
-#include <arcane/alina/coarsening_smoothed_aggr_emin.h>
-
+#include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
 
 #include <arcane/alina/solver_cg.h>

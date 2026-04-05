@@ -40,7 +40,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
-#include <arcane/alina/coarsening_tentative_prolongation.h>
+#include <arcane/alina/coarsening.h>
 
 namespace Arcane::Alina {
 namespace mpi {

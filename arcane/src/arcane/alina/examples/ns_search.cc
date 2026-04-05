@@ -9,7 +9,6 @@
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/relaxation_runtime.h>
 #include <arcane/alina/coarsening_runtime.h>
-#include <arcane/alina/coarsening_rigid_body_modes.h>
 #include <arcane/alina/solver_runtime.h>
 #include <arcane/alina/preconditioner_runtime.h>
 #include <arcane/alina/deflated_solver.h>

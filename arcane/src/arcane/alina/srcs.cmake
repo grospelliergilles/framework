@@ -16,18 +16,10 @@ set(ARCANE_ALINA_SOURCES
   backend_detail_matrix_ops.h
   backend_detail_mixing.h
   backend_interface.h
-  coarsening_aggregation.h
-  coarsening_as_scalar.h
+  coarsening.h
   coarsening_detail_galerkin.h
   coarsening_detail_scaled_galerkin.h
-  coarsening_plain_aggregates.h
-  coarsening_pointwise_aggregates.h
-  coarsening_rigid_body_modes.h
-  coarsening_ruge_stuben.h
   coarsening_runtime.h
-  coarsening_smoothed_aggr_emin.h
-  coarsening_tentative_prolongation.h
-  coarsening_smoothed_aggregation.h
   deflated_solver.h
   detail_inverse.h
   detail_qr.h

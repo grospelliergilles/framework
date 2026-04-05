@@ -42,7 +42,7 @@ THE SOFTWARE.
 #include <arcane/alina/amg.h>
 #include <arcane/alina/solver_cg.h>
 #include <arcane/alina/solver_preonly.h>
-#include <arcane/alina/coarsening_aggregation.h>
+#include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
 
 #include <arcane/alina/io_binary.h>

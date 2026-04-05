@@ -7,7 +7,7 @@
 
 #include <arcane/alina/adapter_crs_tuple.h>
 #include <arcane/alina/backend_block_crs.h>
-#include <arcane/alina/coarsening_aggregation.h>
+#include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
 #include <arcane/alina/solver_bicgstab.h>
 #include <arcane/alina/profiler.h>

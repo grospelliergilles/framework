@@ -34,7 +34,7 @@ THE SOFTWARE.
 
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/adapter_crs_tuple.h>
-#include <arcane/alina/coarsening_rigid_body_modes.h>
+#include <arcane/alina/coarsening.h>
 
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 #include <arcane/alina/mpi/mp_make_solver.h>
