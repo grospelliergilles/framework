@@ -37,7 +37,7 @@ THE SOFTWARE.
 #include <memory>
 
 #include <amgcl/backend_builtin.h>
-#include <amgcl/solver/detail/default_inner_product.h>
+#include <amgcl/solver_detail_default_inner_product.h>
 #include <amgcl/util.h>
 
 /// Primary namespace.

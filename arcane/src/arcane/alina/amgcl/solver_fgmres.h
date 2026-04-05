@@ -38,8 +38,8 @@ THE SOFTWARE.
 #include <iostream>
 
 #include <amgcl/value_type_backend_interface.h>
-#include <amgcl/solver/detail/default_inner_product.h>
-#include <amgcl/solver/detail/givens_rotations.h>
+#include <amgcl/solver_detail_default_inner_product.h>
+#include <amgcl/solver_detail_givens_rotations.h>
 #include <amgcl/util.h>
 
 namespace amgcl {

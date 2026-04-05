@@ -69,7 +69,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 
 #include <amgcl/value_type_backend_interface.h>
-#include <amgcl/solver/detail/default_inner_product.h>
+#include <amgcl/solver_detail_default_inner_product.h>
 #include <amgcl/solver_precond_side.h>
 #include <amgcl/detail_qr.h>
 #include <amgcl/util.h>

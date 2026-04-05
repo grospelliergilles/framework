@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <vector>
 #include <type_traits>
 
-#include <amgcl/perf_counter/clock.h>
+#include <amgcl/perf_counter_clock.h>
 #include <amgcl/ios_saver.h>
 
 namespace amgcl {

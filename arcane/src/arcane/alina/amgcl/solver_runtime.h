@@ -51,7 +51,7 @@ THE SOFTWARE.
 #include <amgcl/solver_idrs.h>
 #include <amgcl/solver_richardson.h>
 #include <amgcl/solver_preonly.h>
-#include <amgcl/solver/detail/default_inner_product.h>
+#include <amgcl/solver_detail_default_inner_product.h>
 
 namespace amgcl {
 namespace runtime {

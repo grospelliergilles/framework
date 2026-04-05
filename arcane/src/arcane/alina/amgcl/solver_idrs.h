@@ -48,7 +48,7 @@ Bi-orthogonality Properties. ACM Transactions on Mathematical Software, Vol.
 #include <random>
 
 #include <amgcl/value_type_backend_interface.h>
-#include <amgcl/solver/detail/default_inner_product.h>
+#include <amgcl/solver_detail_default_inner_product.h>
 #include <amgcl/util.h>
 
 #ifdef MPI_VERSION
