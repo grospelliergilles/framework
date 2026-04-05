@@ -8,7 +8,7 @@
 #include <arcane/alina/make_solver.h>
 
 #include <arcane/alina/coarsening_aggregation.h>
-#include <arcane/alina/coarsenin_smoothed_aggregation.h>
+#include <arcane/alina/coarsening_smoothed_aggregation.h>
 #include <arcane/alina/coarsening_smoothed_aggr_emin.h>
 
 #include <arcane/alina/relaxation.h>

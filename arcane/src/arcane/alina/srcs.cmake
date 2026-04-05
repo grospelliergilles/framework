@@ -27,7 +27,7 @@ set(ARCANE_ALINA_SOURCES
   coarsening_runtime.h
   coarsening_smoothed_aggr_emin.h
   coarsening_tentative_prolongation.h
-  coarsenin_smoothed_aggregation.h
+  coarsening_smoothed_aggregation.h
   deflated_solver.h
   detail_inverse.h
   detail_qr.h

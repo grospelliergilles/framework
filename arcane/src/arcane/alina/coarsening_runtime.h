@@ -35,7 +35,7 @@
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/coarsening_ruge_stuben.h>
 #include <arcane/alina/coarsening_aggregation.h>
-#include <arcane/alina/coarsenin_smoothed_aggregation.h>
+#include <arcane/alina/coarsening_smoothed_aggregation.h>
 #include <arcane/alina/coarsening_smoothed_aggr_emin.h>
 #include <arcane/alina/coarsening_as_scalar.h>
 
