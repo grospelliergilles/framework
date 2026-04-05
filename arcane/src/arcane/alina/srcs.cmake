@@ -83,15 +83,7 @@ set(ARCANE_ALINA_SOURCES
   mpi/mp_relaxation_runtime.h
   mpi/mp_relaxation.h
   mpi/mp_schur_pressure_correction.h
-  mpi/mp_solver_bicgstab.h
-  mpi/mp_solver_bicgstabl.h
-  mpi/mp_solver_cg.h
-  mpi/mp_solver_fgmres.h
-  mpi/mp_solver_gmres.h
-  mpi/mp_solver_idrs.h
-  mpi/mp_solver_lgmres.h
-  mpi/mp_solver_preonly.h
-  mpi/mp_solver_richardson.h
+  mpi/mp_solver.h
   mpi/mp_solver_runtime.h
   mpi/mp_subdomain_deflation.h
   mpi/mp_util.h

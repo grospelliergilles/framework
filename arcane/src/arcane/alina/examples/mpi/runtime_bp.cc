@@ -19,15 +19,7 @@
 #include <arcane/alina/profiler.h>
 
 // Pour test compilation uniquement
-#include <arcane/alina/mpi/mp_solver_bicgstab.h>
-#include <arcane/alina/mpi/mp_solver_bicgstabl.h>
-#include <arcane/alina/mpi/mp_solver_cg.h>
-#include <arcane/alina/mpi/mp_solver_fgmres.h>
-#include <arcane/alina/mpi/mp_solver_gmres.h>
-#include <arcane/alina/mpi/mp_solver_idrs.h>
-#include <arcane/alina/mpi/mp_solver_lgmres.h>
-#include <arcane/alina/mpi/mp_solver_preonly.h>
-#include <arcane/alina/mpi/mp_solver_richardson.h>
+#include <arcane/alina/mpi/mp_solver.h>
 #include <arcane/alina/mpi/mp_solver_runtime.h>
 
 // Pour test compilation uniquement

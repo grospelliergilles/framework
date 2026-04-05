@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_amg.h>
 #include <arcane/alina/mpi/mp_coarsening_smoothed_aggregation.h>
 #include <arcane/alina/mpi/mp_relaxation.h>
-#include <arcane/alina/mpi/mp_solver_cg.h>
+#include <arcane/alina/mpi/mp_solver.h>
 
 #include <arcane/alina/io_binary.h>
 #include <arcane/alina/profiler.h>
