@@ -1,5 +1,33 @@
 ﻿include (srcs.cmake)
 
+arcane_add_library(arcane_alina
+  INPUT_PATH ${Arcane_SOURCE_DIR}/src
+  RELATIVE_PATH arcane/alina
+  FILES ${ARCANE_SOURCES}
+)
+
+#----------------------------------------------------------------------------
+# Common compile options and definitions
+#----------------------------------------------------------------------------
+# target_compile_options(arcane_alina PUBLIC
+#   # Compiler is GNU (g++):
+#   $<$<CXX_COMPILER_ID:GNU>:$<BUILD_INTERFACE:-Wno-conversion;-Wno-float-conversion>>
+#   # Compiler is Clang:
+#   $<$<CXX_COMPILER_ID:Clang>:$<BUILD_INTERFACE:-Wno-conversion;-Wno-float-conversion>>
+#   # Compiler is MSVC:
+#   #$<$<CXX_COMPILER_ID:MSVC>:/bigobj>
+#   #$<$<CXX_COMPILER_ID:MSVC>:/wd4715>
+# )
+
+target_compile_definitions(arcane_alina PRIVATE ARCANE_COMPONENT_arcane_alina)
+
+target_link_libraries(arcane_alina PUBLIC Arcane::arcane_utils)
+arcane_register_library(arcane_alina OPTIONAL)
+
+if ((CMAKE_CXX_COMPILER_ID STREQUAL GNU) OR (CMAKE_CXX_COMPILER_ID STREQUAL Clang))
+  target_compile_options(arcane_alina PUBLIC -Wno-conversion -Wno-float-conversion)
+endif()
+
 #----------------------------------------------------------------------------
 # Find Boost
 #----------------------------------------------------------------------------
@@ -17,36 +45,36 @@ find_package(Boost COMPONENTS
 #----------------------------------------------------------------------------
 # Builtin backend
 #----------------------------------------------------------------------------
-add_library(amgcl INTERFACE)
-add_library(amgcl::amgcl ALIAS amgcl)
-target_sources(amgcl INTERFACE ${ARCANE_ALINA_SOURCES})
-target_include_directories(amgcl INTERFACE ${Arcane_SOURCE_DIR}/src)
+#add_library(amgcl INTERFACE)
+#add_library(amgcl::amgcl ALIAS amgcl)
+#target_sources(amgcl INTERFACE ${ARCANE_SOURCES})
+#target_include_directories(amgcl INTERFACE ${Arcane_SOURCE_DIR}/src)
   
-target_compile_features(amgcl INTERFACE
-  cxx_auto_type
-  cxx_range_for
-  cxx_rvalue_references
-  cxx_right_angle_brackets
-  cxx_static_assert
-)
+# target_compile_features(amgcl INTERFACE
+#   cxx_auto_type
+#   cxx_range_for
+#   cxx_rvalue_references
+#   cxx_right_angle_brackets
+#   cxx_static_assert
+# )
 
 if (Boost_FOUND)
-  target_include_directories(amgcl SYSTEM INTERFACE
+  target_include_directories(arcane_alina SYSTEM PUBLIC
     ${Boost_INCLUDE_DIRS}
   )
 else()
-  target_compile_definitions(amgcl INTERFACE AMGCL_NO_BOOST)
+  target_compile_definitions(arcane_alina INTERFACE AMGCL_NO_BOOST)
 endif()
 
-target_include_directories(amgcl INTERFACE
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:include>
-)
+#target_include_directories(amgcl INTERFACE
+#  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+#  $<INSTALL_INTERFACE:include>
+#)
 
 find_package(OpenMP)
 if (OPENMP_FOUND)
-  target_compile_options(amgcl INTERFACE ${OpenMP_CXX_FLAGS})
-  target_link_libraries(amgcl INTERFACE
+  target_compile_options(arcane_alina PUBLIC ${OpenMP_CXX_FLAGS})
+  target_link_libraries(arcane_alina PUBLIC
     $<$<CXX_COMPILER_ID:GNU>:${OpenMP_CXX_FLAGS}>
     $<$<CXX_COMPILER_ID:Clang>:${OpenMP_CXX_FLAGS}>
     $<$<CXX_COMPILER_ID:Intel>:${OpenMP_CXX_FLAGS}>
@@ -56,23 +84,23 @@ endif ()
 #----------------------------------------------------------------------------
 # Common compile options and definitions
 #----------------------------------------------------------------------------
-target_compile_options(amgcl INTERFACE
-  # Compiler is GNU (g++):
-  $<$<CXX_COMPILER_ID:GNU>:$<BUILD_INTERFACE:-Wall;-Wextra;-Wpedantic>>
-  # Compiler is Clang:
-  $<$<CXX_COMPILER_ID:Clang>:$<BUILD_INTERFACE:-Wall;-Wextra;-Wpedantic;-Wno-c99-extensions>>
-  # Compiler is MSVC:
-  $<$<CXX_COMPILER_ID:MSVC>:/bigobj>
-  $<$<CXX_COMPILER_ID:MSVC>:/wd4715>
-)
+# target_compile_options(arcane_alina PUBLIC
+#   # Compiler is GNU (g++):
+#   $<$<CXX_COMPILER_ID:GNU>:$<BUILD_INTERFACE:-Wno-conversion;-Wno-float-conversion>>
+#   # Compiler is Clang:
+#   $<$<CXX_COMPILER_ID:Clang>:$<BUILD_INTERFACE:-Wno-conversion;-Wno-float-conversion>>
+#   # Compiler is MSVC:
+#   #$<$<CXX_COMPILER_ID:MSVC>:/bigobj>
+#   #$<$<CXX_COMPILER_ID:MSVC>:/wd4715>
+# )
 
-target_compile_definitions(amgcl INTERFACE
-  # Compiler is MSVC:
-    $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
-    $<$<CXX_COMPILER_ID:MSVC>:_USE_MATH_DEFINES>
-    $<$<CXX_COMPILER_ID:MSVC>:_VARIADIC_MAX=10>
-    $<$<CXX_COMPILER_ID:MSVC>:_SCL_SECURE_NO_WARNINGS>
-  )
+# target_compile_definitions(amgcl INTERFACE
+#   # Compiler is MSVC:
+#     $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
+#     $<$<CXX_COMPILER_ID:MSVC>:_USE_MATH_DEFINES>
+#     $<$<CXX_COMPILER_ID:MSVC>:_VARIADIC_MAX=10>
+#     $<$<CXX_COMPILER_ID:MSVC>:_SCL_SECURE_NO_WARNINGS>
+#   )
 
 #----------------------------------------------------------------------------
 # Eigen backend
@@ -127,7 +155,7 @@ if (MPI_CXX_FOUND)
     string(STRIP "${MPI_CXX_LIBRARIES}" MPI_CXX_LIBRARIES)
 
     add_library(mpi_target INTERFACE)
-    target_link_libraries(mpi_target INTERFACE amgcl ${MPI_CXX_LIBRARIES})
+    target_link_libraries(mpi_target INTERFACE arcane_alina ${MPI_CXX_LIBRARIES})
     target_include_directories(mpi_target INTERFACE ${MPI_CXX_INCLUDE_PATH})
     # target_compile_options(mpi_target INTERFACE
     #     $<$<CXX_COMPILER_ID:GNU>:-Wno-long-long>
@@ -148,8 +176,8 @@ find_library(HWLOC_LIBRARY hwloc)
 arcane_find_package(Parmetis)
 if(Parmetis_FOUND)
   message(STATUS "Found Parmetis for Alina")
-  target_compile_definitions(amgcl INTERFACE AMGCL_HAVE_PARMETIS ARCANE_ALINA_HAVE_PARMETIS)
-  target_link_libraries(amgcl INTERFACE arccon::Parmetis)
+  target_compile_definitions(arcane_alina PUBLIC AMGCL_HAVE_PARMETIS ARCANE_ALINA_HAVE_PARMETIS)
+  target_link_libraries(arcane_alina PUBLIC arccon::Parmetis)
 endif()
 
 option(AMGCL_BUILD_TESTS    ON)

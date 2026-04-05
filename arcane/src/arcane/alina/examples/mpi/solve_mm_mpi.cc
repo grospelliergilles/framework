@@ -19,7 +19,7 @@
 
 #include <arcane/alina/amg.h>
 #include <arcane/alina/coarsening_runtime.h>
-#include <arcane/alina/relaxation_runtime.h>
+#include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/mpi/mp_subdomain_deflation.h>
 #include <arcane/alina/mpi/mp_solver_runtime.h>
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>

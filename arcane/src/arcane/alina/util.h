@@ -18,6 +18,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+#pragma GCC diagnostic ignored "-Wconversion"
+
 #include <iostream>
 #include <iomanip>
 #include <iterator>

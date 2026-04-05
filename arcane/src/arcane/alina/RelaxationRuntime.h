@@ -5,7 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* relaxation_runtime.h                                        (C) 2000-2026 */
+/* relaxation_runtime.h                                        (C) 2026-2026 */
 /*                                                                           */
 /*---------------------------------------------------------------------------*/
 #ifndef ARCANE_ALINA_RELAXATION_RUNTIME_H
@@ -23,6 +23,8 @@
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
+
+#include "arcane/alina/AlinaGlobal.h"
 
 #include <type_traits>
 
@@ -58,61 +60,14 @@ enum type
   chebyshev ///< Chebyshev relaxation
 };
 
-inline std::ostream& operator<<(std::ostream& os, type r)
-{
-  switch (r) {
-  case gauss_seidel:
-    return os << "gauss_seidel";
-  case ilu0:
-    return os << "ilu0";
-  case iluk:
-    return os << "iluk";
-  case ilup:
-    return os << "ilup";
-  case ilut:
-    return os << "ilut";
-  case damped_jacobi:
-    return os << "damped_jacobi";
-  case spai0:
-    return os << "spai0";
-  case spai1:
-    return os << "spai1";
-  case chebyshev:
-    return os << "chebyshev";
-  default:
-    return os << "???";
-  }
-}
+extern "C++" ARCANE_ALINA_EXPORT
+std::ostream& operator<<(std::ostream& os, type r);
 
-inline std::istream& operator>>(std::istream& in, type& r)
-{
-  std::string val;
-  in >> val;
+extern "C++" ARCANE_ALINA_EXPORT
+std::istream& operator>>(std::istream& in, type& r);
 
-  if (val == "gauss_seidel")
-    r = gauss_seidel;
-  else if (val == "ilu0")
-    r = ilu0;
-  else if (val == "iluk")
-    r = iluk;
-  else if (val == "ilup")
-    r = ilup;
-  else if (val == "ilut")
-    r = ilut;
-  else if (val == "damped_jacobi")
-    r = damped_jacobi;
-  else if (val == "spai0")
-    r = spai0;
-  else if (val == "spai1")
-    r = spai1;
-  else if (val == "chebyshev")
-    r = chebyshev;
-  else
-    throw std::invalid_argument("Invalid relaxation value. Valid choices are:"
-                                "gauss_seidel, ilu0, iluk, ilup, ilut, damped_jacobi, spai0, spai1, chebyshev.");
-
-  return in;
-}
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 template <class Backend>
 struct wrapper

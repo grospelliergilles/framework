@@ -1,10 +1,11 @@
 #include <iostream>
 #include <vector>
 
-#include <lib/amgcl.h>
+#include <amgcl.h>
 #include "sample_problem.h"
 
-int main() {
+int main()
+{
     std::vector<int>    ptr;
     std::vector<int>    col;
     std::vector<double> val;

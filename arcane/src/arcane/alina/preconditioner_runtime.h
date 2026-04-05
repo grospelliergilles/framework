@@ -40,7 +40,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/solver_runtime.h>
 #include <arcane/alina/coarsening_runtime.h>
-#include <arcane/alina/relaxation_runtime.h>
+#include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/relaxation.h>
 #include <arcane/alina/preconditioner_dummy.h>
 #include <arcane/alina/make_solver.h>

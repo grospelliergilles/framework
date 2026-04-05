@@ -1,15 +1,15 @@
 ﻿add_executable(nullspace nullspace.cc)
-target_link_libraries(nullspace amgcl)
+target_link_libraries(nullspace PUBLIC arcane_alina)
 
 add_executable(nullspace_hybrid nullspace_hybrid.cc)
-target_link_libraries(nullspace_hybrid amgcl)
+target_link_libraries(nullspace_hybrid PUBLIC arcane_alina)
 
 add_executable(nullspace_block nullspace_block.cc)
-target_link_libraries(nullspace_block amgcl)
+target_link_libraries(nullspace_block PUBLIC arcane_alina)
 
 if (TARGET mpi_target)
   add_executable(nullspace_mpi nullspace_mpi.cc)
-  target_link_libraries(nullspace_mpi amgcl mpi_target)
+  target_link_libraries(nullspace_mpi PUBLIC arcane_alina mpi_target)
 
   if (TARGET Metis::metis)
     target_link_libraries(nullspace_mpi Metis::metis)

@@ -25,6 +25,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+#pragma GCC diagnostic ignored "-Wconversion"
+
 /**
  * \file   alina/amg.hpp
  * \author Denis Demidov <dennis.demidov@gmail.com>

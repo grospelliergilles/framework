@@ -1,4 +1,5 @@
-set(ARCANE_ALINA_SOURCES
+set(ARCANE_SOURCES
+  AlinaGlobal.h
   Adapters.h
   adapter_ublas.h
   amg.h
@@ -36,7 +37,8 @@ set(ARCANE_ALINA_SOURCES
   profiler.h
   relaxation_cusparse_ilu0.h
   relaxation_detail_ilu_solve.h
-  relaxation_runtime.h
+  RelaxationRuntime.h
+  RelaxationRuntime.cc
   relaxation.h
   reorder_cuthill_mckee.h
   solver_bicgstab.h

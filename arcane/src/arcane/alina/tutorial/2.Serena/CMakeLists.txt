@@ -1,9 +1,9 @@
 ﻿add_executable(serena serena.cc)
-target_link_libraries(serena amgcl)
+target_link_libraries(serena PUBLIC arcane_alina)
 
 if (TARGET mpi_target)
   add_executable(serena_mpi serena_mpi.cc)
-  target_link_libraries(serena_mpi amgcl mpi_target)
+  target_link_libraries(serena_mpi PUBLIC arcane_alina mpi_target)
 
   if (TARGET Metis::metis)
     target_link_libraries(serena_mpi Metis::metis)

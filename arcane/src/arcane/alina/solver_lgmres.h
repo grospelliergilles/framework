@@ -87,70 +87,76 @@ namespace solver {
  * iterations.
  * \endrst
  */
-template <
-    class Backend,
-    class InnerProduct = detail::default_inner_product
-    >
-class lgmres {
-    public:
-        typedef Backend backend_type;
+template <class Backend,
+          class InnerProduct = detail::default_inner_product>
+class lgmres
+{
+ public:
 
-        typedef typename Backend::vector     vector;
-        typedef typename Backend::value_type value_type;
-        typedef typename Backend::params     backend_params;
+  typedef Backend backend_type;
 
-        typedef typename math::scalar_of<value_type>::type scalar_type;
-        typedef typename math::rhs_of<value_type>::type rhs_type;
-        typedef typename math::inner_product_impl<rhs_type>::return_type coef_type;
+  typedef typename Backend::vector vector;
+  typedef typename Backend::value_type value_type;
+  typedef typename Backend::params backend_params;
 
-        /// Solver parameters.
-        struct params {
-            /// Number of inner GMRES iterations per each outer iteration.
-            unsigned M;
+  typedef typename math::scalar_of<value_type>::type scalar_type;
+  typedef typename math::rhs_of<value_type>::type rhs_type;
+  typedef typename math::inner_product_impl<rhs_type>::return_type coef_type;
 
-            /// Number of vectors to carry between inner GMRES iterations.
-            /**
+  /// Solver parameters.
+  struct params
+  {
+    /// Number of inner GMRES iterations per each outer iteration.
+    unsigned M;
+
+    /// Number of vectors to carry between inner GMRES iterations.
+    /**
              * According to [BaJM05], good values are in the range of 1...3.
              * However, note that if you want to use the additional vectors to
              * accelerate solving multiple similar problems, larger values may
              * be beneficial.
              */
-            unsigned K;
+    unsigned K;
 
-            /// Reset augmented vectors between solves.
-            /** If the solver is used to repeatedly solve similar problems,
+    /// Reset augmented vectors between solves.
+    /** If the solver is used to repeatedly solve similar problems,
              *  then keeping the augmented vectors between solves may speed up
              *  subsequent solves.
              *  This flag, when set, resets the augmented vectors at the
              *  beginning of each solve.
              */
-            bool always_reset;
+    bool always_reset;
 
-            /// Preconditioning kind (left/right).
-            preconditioner::side::type pside;
+    /// Preconditioning kind (left/right).
+    preconditioner::side::type pside;
 
-            /// Maximum number of iterations.
-            size_t maxiter;
+    /// Maximum number of iterations.
+    size_t maxiter;
 
-            /// Target relative residual error.
-            scalar_type tol;
+    /// Target relative residual error.
+    scalar_type tol;
 
-            /// Target absolute residual error.
-            scalar_type abstol;
+    /// Target absolute residual error.
+    scalar_type abstol;
 
-            /// Ignore the trivial solution x=0 when rhs is zero.
-            //** Useful for searching for the null-space vectors of the system */
-            bool ns_search;
+    /// Ignore the trivial solution x=0 when rhs is zero.
+    //** Useful for searching for the null-space vectors of the system */
+    bool ns_search;
 
-            /// Verbose output (show iterations and error)
-            bool verbose;
+    /// Verbose output (show iterations and error)
+    bool verbose;
 
-            params()
-                : M(30), K(3), always_reset(true),
-                  pside(preconditioner::side::right), maxiter(100), tol(1e-8),
-                  abstol(std::numeric_limits<scalar_type>::min()),
-                  ns_search(false), verbose(false)
-            { }
+    params()
+    : M(30)
+    , K(3)
+    , always_reset(true)
+    , pside(preconditioner::side::right)
+    , maxiter(100)
+    , tol(1e-8)
+    , abstol(std::numeric_limits<scalar_type>::min())
+    , ns_search(false)
+    , verbose(false)
+    {}
 
 #ifndef AMGCL_NO_BOOST
             params(const boost::property_tree::ptree &p)
@@ -183,27 +189,30 @@ class lgmres {
         } prm;
 
         /// Preallocates necessary data structures for the system of size \p n.
-        lgmres(
-                size_t n,
-                const params &prm = params(),
-                const backend_params &bprm = backend_params(),
-                const InnerProduct &inner_product = InnerProduct()
-             )
-            : prm(prm), n(n), M(prm.M + prm.K),
-              H(M + 1, M),
-              H0(M + 1, M),
-              s(M + 1), cs(M + 1), sn(M + 1),
-              r( Backend::create_vector(n, bprm) ),
-              ws(M), outer_v(prm.K),
-              inner_product(inner_product)
+        lgmres(size_t n,
+               const params& prm = params(),
+               const backend_params& bprm = backend_params(),
+               const InnerProduct& inner_product = InnerProduct())
+        : prm(prm)
+        , n(n)
+        , M(prm.M + prm.K)
+        , H(M + 1, M)
+        , H0(M + 1, M)
+        , s(M + 1)
+        , cs(M + 1)
+        , sn(M + 1)
+        , r(Backend::create_vector(n, bprm))
+        , ws(M)
+        , outer_v(prm.K)
+        , inner_product(inner_product)
         {
-            outer_v_data.reserve(prm.K);
-            for(unsigned i = 0; i < prm.K; ++i)
-                outer_v_data.push_back(Backend::create_vector(n, bprm));
+          outer_v_data.reserve(prm.K);
+          for (unsigned i = 0; i < prm.K; ++i)
+            outer_v_data.push_back(Backend::create_vector(n, bprm));
 
-            vs.reserve(M + 1);
-            for(unsigned i = 0; i <= M; ++i)
-                vs.push_back(Backend::create_vector(n, bprm));
+          vs.reserve(M + 1);
+          for (unsigned i = 0; i <= M; ++i)
+            vs.push_back(Backend::create_vector(n, bprm));
         }
 
         /* Computes the solution for the given system matrix \p A and the
@@ -219,160 +228,163 @@ class lgmres {
          * good preconditioner for several subsequent time steps [DeSh12]_.
          */
         template <class Matrix, class Precond, class Vec1, class Vec2>
-        std::tuple<size_t, scalar_type> operator()(
-                Matrix  const &A,
-                Precond const &P,
-                Vec1    const &rhs,
-                Vec2          &x
-                ) const
+        std::tuple<size_t, scalar_type> operator()(Matrix const& A,
+                                                   Precond const& P,
+                                                   Vec1 const& rhs,
+                                                   Vec2& x) const
         {
-            namespace side = preconditioner::side;
+          namespace side = preconditioner::side;
 
-            static const scalar_type zero = math::zero<scalar_type>();
-            static const scalar_type one  = math::identity<scalar_type>();
+          static const scalar_type zero = math::zero<scalar_type>();
+          static const scalar_type one = math::identity<scalar_type>();
 
-            ios_saver ss(std::cout);
+          ios_saver ss(std::cout);
 
-            if (prm.always_reset) {
-                outer_v.clear();
+          if (prm.always_reset) {
+            outer_v.clear();
+          }
+
+          scalar_type norm_rhs = norm(rhs);
+          if (norm_rhs < Alina::detail::eps<scalar_type>(1)) {
+            if (prm.ns_search) {
+              norm_rhs = math::identity<scalar_type>();
+            }
+            else {
+              backend::clear(x);
+              return std::make_tuple(0, norm_rhs);
+            }
+          }
+
+          scalar_type norm_r = zero;
+          scalar_type eps = std::max(prm.tol * norm_rhs, prm.abstol);
+
+          unsigned iter = 0, n_outer = 0;
+          while (true) {
+            if (prm.pside == side::left) {
+              backend::residual(rhs, A, x, *vs[0]);
+              P.apply(*vs[0], *r);
+            }
+            else {
+              backend::residual(rhs, A, x, *r);
             }
 
-            scalar_type norm_rhs = norm(rhs);
-            if (norm_rhs < Alina::detail::eps<scalar_type>(1)) {
-                if (prm.ns_search) {
-                    norm_rhs = math::identity<scalar_type>();
-                } else {
-                    backend::clear(x);
-                    return std::make_tuple(0, norm_rhs);
-                }
+            // -- Check stopping condition
+            norm_r = norm(*r);
+            if (norm_r < eps || iter >= prm.maxiter)
+              break;
+
+            // -- Inner LGMRES iteration
+            backend::axpby(math::inverse(norm_r), *r, zero, *vs[0]);
+
+            std::fill(s.begin(), s.end(), 0);
+            s[0] = norm_r;
+
+            unsigned j = 0;
+            while (true) {
+              // -- Arnoldi process:
+              //
+              // Build an orthonormal basis V and matrices W and H such that
+              //     A W = V H
+              // Columns of W, V, and H are stored in `ws`, `vs` and `hs`.
+              //
+              // The first column of V is always the residual vector,
+              // `vs0`; V has *one more column* than the other of the
+              // three matrices.
+              //
+              // The other columns in V are built by feeding in, one by
+              // one, some vectors `z` and orthonormalizing them against
+              // the basis so far. The trick here is to feed in first
+              // some augmentation vectors, before starting to construct
+              // the Krylov basis on `v0`.
+              //
+              // It was shown in [BaJM05] that a good choice (the LGMRES
+              // choice) for these augmentation vectors are the `dx`
+              // vectors obtained from a couple of the previous restart
+              // cycles.
+              //
+              // Note especially that while `vs0` is always the first
+              // column in V, there is no reason why it should also be
+              // the first column in W. (In fact, below `vs0` comes in W
+              // only after the augmentation vectors.)
+              //
+              // The rest of the algorithm then goes as in GMRES, one
+              // solves a minimization problem in the smaller subspace
+              // spanned by W (range) and V (image).
+
+              vector& v_new = *vs[j + 1];
+
+              std::shared_ptr<vector> z;
+              if (j >= M - outer_v.size()) {
+                z = outer_v[j - (M - outer_v.size())];
+              }
+              else {
+                z = vs[j];
+              }
+
+              ws[j] = z;
+
+              preconditioner::spmv(prm.pside, P, A, *z, v_new, *r);
+
+              for (unsigned k = 0; k <= j; ++k) {
+                H0(k, j) = H(k, j) = inner_product(v_new, *vs[k]);
+                backend::axpby(-H(k, j), *vs[k], one, v_new);
+              }
+              H0(j + 1, j) = H(j + 1, j) = norm(v_new);
+
+              backend::axpby(math::inverse(H(j + 1, j)), v_new, zero, v_new);
+
+              for (unsigned k = 0; k < j; ++k)
+                detail::apply_plane_rotation(H(k, j), H(k + 1, j), cs[k], sn[k]);
+
+              detail::generate_plane_rotation(H(j, j), H(j + 1, j), cs[j], sn[j]);
+              detail::apply_plane_rotation(H(j, j), H(j + 1, j), cs[j], sn[j]);
+              detail::apply_plane_rotation(s[j], s[j + 1], cs[j], sn[j]);
+
+              scalar_type inner_res = std::abs(s[j + 1]);
+
+              if (prm.verbose && iter % 5 == 0)
+                std::cout << iter << "\t" << std::scientific << inner_res / norm_rhs << std::endl;
+
+              // Check for termination
+              ++j, ++iter;
+              if (iter >= prm.maxiter || j >= M || inner_res <= eps)
+                break;
             }
 
-            scalar_type norm_r = zero;
-            scalar_type eps    = std::max(prm.tol * norm_rhs, prm.abstol);
-
-            unsigned iter = 0, n_outer = 0;
-            while(true) {
-                if (prm.pside == side::left) {
-                    backend::residual(rhs, A, x, *vs[0]);
-                    P.apply(*vs[0], *r);
-                } else {
-                    backend::residual(rhs, A, x, *r);
-                }
-
-                // -- Check stopping condition
-                norm_r = norm(*r);
-                if (norm_r < eps || iter >= prm.maxiter) break;
-
-                // -- Inner LGMRES iteration
-                backend::axpby(math::inverse(norm_r), *r, zero, *vs[0]);
-
-                std::fill(s.begin(), s.end(), 0);
-                s[0] = norm_r;
-
-                unsigned j = 0;
-                while(true) {
-                    // -- Arnoldi process:
-                    //
-                    // Build an orthonormal basis V and matrices W and H such that
-                    //     A W = V H
-                    // Columns of W, V, and H are stored in `ws`, `vs` and `hs`.
-                    //
-                    // The first column of V is always the residual vector,
-                    // `vs0`; V has *one more column* than the other of the
-                    // three matrices.
-                    //
-                    // The other columns in V are built by feeding in, one by
-                    // one, some vectors `z` and orthonormalizing them against
-                    // the basis so far. The trick here is to feed in first
-                    // some augmentation vectors, before starting to construct
-                    // the Krylov basis on `v0`.
-                    //
-                    // It was shown in [BaJM05] that a good choice (the LGMRES
-                    // choice) for these augmentation vectors are the `dx`
-                    // vectors obtained from a couple of the previous restart
-                    // cycles.
-                    //
-                    // Note especially that while `vs0` is always the first
-                    // column in V, there is no reason why it should also be
-                    // the first column in W. (In fact, below `vs0` comes in W
-                    // only after the augmentation vectors.)
-                    //
-                    // The rest of the algorithm then goes as in GMRES, one
-                    // solves a minimization problem in the smaller subspace
-                    // spanned by W (range) and V (image).
-
-                    vector &v_new = *vs[j+1];
-
-                    std::shared_ptr<vector> z;
-                    if (j >= M - outer_v.size()) {
-                        z = outer_v[j - (M - outer_v.size())];
-                    } else {
-                        z = vs[j];
-                    }
-
-                    ws[j] = z;
-
-                    preconditioner::spmv(prm.pside, P, A, *z, v_new, *r);
-
-                    for(unsigned k = 0; k <= j; ++k) {
-                        H0(k, j) = H(k, j) = inner_product(v_new, *vs[k]);
-                        backend::axpby(-H(k, j), *vs[k], one, v_new);
-                    }
-                    H0(j+1, j) = H(j+1, j) = norm(v_new);
-
-                    backend::axpby(math::inverse(H(j+1, j)), v_new, zero, v_new);
-
-                    for(unsigned k = 0; k < j; ++k)
-                        detail::apply_plane_rotation(H(k, j), H(k+1, j), cs[k], sn[k]);
-
-                    detail::generate_plane_rotation(H(j, j), H(j+1, j), cs[j], sn[j]);
-                    detail::apply_plane_rotation(H(j, j), H(j+1, j), cs[j], sn[j]);
-                    detail::apply_plane_rotation(s[j], s[j+1], cs[j], sn[j]);
-
-                    scalar_type inner_res = std::abs(s[j+1]);
-
-                    if (prm.verbose && iter % 5 == 0)
-                        std::cout << iter << "\t" << std::scientific << inner_res / norm_rhs << std::endl;
-
-                    // Check for termination
-                    ++j, ++iter;
-                    if (iter >= prm.maxiter || j >= M || inner_res <= eps)
-                        break;
-                }
-
-                // -- GMRES terminated: eval solution
-                for (unsigned i = j; i --> 0; ) {
-                    s[i] /= H(i, i);
-                    for (unsigned k = 0; k < i; ++k)
-                        s[k] -= H(k, i) * s[i];
-                }
-
-                vector &dx = *r;
-                backend::lin_comb(j, s, ws, zero, dx);
-
-                // -- Apply step
-                if (prm.pside == side::left) {
-                    backend::axpby(one, dx, one, x);
-                } else {
-                    vector &tmp = *ws[0];
-                    P.apply(dx, tmp);
-                    backend::axpby(one, tmp, one, x);
-                }
-
-                // -- Store LGMRES augmented vectors
-                scalar_type norm_dx = norm(dx);
-
-                if(prm.K > 0 && !math::is_zero(norm_dx)) {
-                    unsigned outer_slot = n_outer % prm.K;
-                    ++n_outer;
-
-                    norm_dx = math::inverse(norm_dx);
-                    backend::axpby(norm_dx, dx, zero, *outer_v_data[outer_slot]);
-                    outer_v.push_back(outer_v_data[outer_slot]);
-                }
+            // -- GMRES terminated: eval solution
+            for (unsigned i = j; i-- > 0;) {
+              s[i] /= H(i, i);
+              for (unsigned k = 0; k < i; ++k)
+                s[k] -= H(k, i) * s[i];
             }
 
-            return std::make_tuple(iter, norm_r / norm_rhs);
+            vector& dx = *r;
+            backend::lin_comb(j, s, ws, zero, dx);
+
+            // -- Apply step
+            if (prm.pside == side::left) {
+              backend::axpby(one, dx, one, x);
+            }
+            else {
+              vector& tmp = *ws[0];
+              P.apply(dx, tmp);
+              backend::axpby(one, tmp, one, x);
+            }
+
+            // -- Store LGMRES augmented vectors
+            scalar_type norm_dx = norm(dx);
+
+            if (prm.K > 0 && !math::is_zero(norm_dx)) {
+              unsigned outer_slot = n_outer % prm.K;
+              ++n_outer;
+
+              norm_dx = math::inverse(norm_dx);
+              backend::axpby(norm_dx, dx, zero, *outer_v_data[outer_slot]);
+              outer_v.push_back(outer_v_data[outer_slot]);
+            }
+          }
+
+          return std::make_tuple(iter, norm_r / norm_rhs);
         }
 
         /* Computes the solution for the given right-hand side \p rhs. The
@@ -383,32 +395,33 @@ class lgmres {
          * solution on output.
          */
         template <class Precond, class Vec1, class Vec2>
-        std::tuple<size_t, scalar_type> operator()(
-                Precond const &P,
-                Vec1    const &rhs,
-                Vec2          &x
-                ) const
+        std::tuple<size_t, scalar_type> operator()(Precond const& P,
+                                                   Vec1 const& rhs,
+                                                   Vec2& x) const
         {
-            return (*this)(P.system_matrix(), P, rhs, x);
+          return (*this)(P.system_matrix(), P, rhs, x);
         }
 
-        size_t bytes() const {
-            size_t b = 0;
+        size_t bytes() const
+        {
+          size_t b = 0;
 
-            b += H.size() * sizeof(coef_type);
-            b += H0.size() * sizeof(coef_type);
+          b += H.size() * sizeof(coef_type);
+          b += H0.size() * sizeof(coef_type);
 
-            b += backend::bytes(s);
-            b += backend::bytes(cs);
-            b += backend::bytes(sn);
+          b += backend::bytes(s);
+          b += backend::bytes(cs);
+          b += backend::bytes(sn);
 
-            b += backend::bytes(*r);
+          b += backend::bytes(*r);
 
-            for(const auto &v : vs) b += backend::bytes(*v);
+          for (const auto& v : vs)
+            b += backend::bytes(*v);
 
-            for(const auto &v : outer_v_data)  b += backend::bytes(*v);
+          for (const auto& v : outer_v_data)
+            b += backend::bytes(*v);
 
-            return b;
+          return b;
         }
 
         friend std::ostream& operator<<(std::ostream &os, const lgmres &s) {

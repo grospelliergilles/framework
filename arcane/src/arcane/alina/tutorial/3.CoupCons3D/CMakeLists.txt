@@ -1,8 +1,8 @@
 ﻿add_executable(coupcons3d coupcons3d.cc)
-target_link_libraries(coupcons3d amgcl)
+target_link_libraries(coupcons3d PUBLIC arcane_alina)
 
 add_executable(coupcons3d_spc coupcons3d_spc.cc)
-target_link_libraries(coupcons3d_spc amgcl)
+target_link_libraries(coupcons3d_spc PUBLIC arcane_alina)
 
 # ----------------------------------------------------------------------------
 # Local Variables:

@@ -25,7 +25,7 @@ typedef Arcane::Alina::backend::EigenBackend<double> Backend;
 typedef Arcane::Alina::backend::builtin<double> Backend;
 #endif
 
-#include <arcane/alina/relaxation_runtime.h>
+#include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/coarsening_runtime.h>
 #include <arcane/alina/solver_runtime.h>
 #include <arcane/alina/preconditioner_runtime.h>

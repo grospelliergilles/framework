@@ -41,7 +41,7 @@ extern "C" {
 typedef double (STDCALL *amgclDefVecFunction)(int vec, ptrdiff_t coo, void *data);
 
 // Create distributed solver.
-amgclHandle STDCALL amgcl_mpi_create(
+amgclHandle ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_mpi_create(
         MPI_Comm             comm,
         ptrdiff_t            n,
         const ptrdiff_t     *ptr,
@@ -54,14 +54,14 @@ amgclHandle STDCALL amgcl_mpi_create(
         );
 
 // Find soltion for the given RHS.
-conv_info STDCALL amgcl_mpi_solve(
+conv_info ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_mpi_solve(
         amgclHandle   solver,
         double const *rhs,
         double       *x
         );
 
 // Destroy the distributed solver.
-void STDCALL amgcl_mpi_destroy(amgclHandle solver);
+void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_mpi_destroy(amgclHandle solver);
 
 #ifdef __cplusplus
 } // extern "C"

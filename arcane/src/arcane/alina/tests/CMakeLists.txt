@@ -9,7 +9,7 @@ endif ()
 
 target_include_directories(amgcl_test INTERFACE ${Boost_INCLUDE_DIRS})
 target_link_libraries(amgcl_test INTERFACE
-  amgcl
+  arcane_alina
   ${Boost_SYSTEM_LIBRARY}
   ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
 )

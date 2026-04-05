@@ -32,9 +32,19 @@ THE SOFTWARE.
  */
 
 #ifdef WIN32
-#  define STDCALL __cdecl
+#define STDCALL __cdecl
+#define ARCANE_ALINA_LIB_EXPORT_MACRO __declspec(dllexport)
+#define ARCANE_ALINA_LIB_IMPORT_MACRO __declspec(dllimport)
 #else
 #  define STDCALL
+#define ARCANE_ALINA_LIB_EXPORT_MACRO __attribute__ ((visibility("default")))
+#define ARCANE_ALINA_LIB_IMPORT_MACRO __attribute__ ((visibility("default")))
+#endif
+
+#ifdef ARCANE_COMPONENT_arcane_alina_lib
+#define ARCANE_ALINA_LIB_EXPORT ARCANE_ALINA_LIB_EXPORT_MACRO
+#else
+#define ARCANE_ALINA_LIB_EXPORT ARCANE_ALINA_LIB_IMPORT_MACRO
 #endif
 
 #ifdef __cplusplus
@@ -44,25 +54,25 @@ extern "C" {
 typedef void* amgclHandle;
 
 // Create parameter list.
-amgclHandle STDCALL amgcl_params_create();
+amgclHandle ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_params_create();
 
 // Set integer parameter in a parameter list.
-void STDCALL amgcl_params_seti(amgclHandle prm, const char *name, int   value);
+void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_params_seti(amgclHandle prm, const char *name, int   value);
 
 // Set floating point parameter in a parameter list.
-void STDCALL amgcl_params_setf(amgclHandle prm, const char *name, float value);
+void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_params_setf(amgclHandle prm, const char *name, float value);
 
 // Set floating point parameter in a parameter list.
-void STDCALL amgcl_params_sets(amgclHandle prm, const char *name, const char *value);
+void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_params_sets(amgclHandle prm, const char *name, const char *value);
 
 // Read parameters from a JSON file
-void STDCALL amgcl_params_read_json(amgclHandle prm, const char *fname);
+void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_params_read_json(amgclHandle prm, const char *fname);
 
 // Destroy parameter list.
-void STDCALL amgcl_params_destroy(amgclHandle prm);
+void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_params_destroy(amgclHandle prm);
 
 // Create AMG preconditioner.
-amgclHandle STDCALL amgcl_precond_create(
+amgclHandle ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_precond_create(
         int           n,
         const int    *ptr,
         const int    *col,
@@ -72,7 +82,7 @@ amgclHandle STDCALL amgcl_precond_create(
 
 // Create AMG preconditioner.
 // ptr and col arrays are 1-based (as in Fortran).
-amgclHandle STDCALL amgcl_precond_create_f(
+amgclHandle ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_precond_create_f(
         int           n,
         const int    *ptr,
         const int    *col,
@@ -81,16 +91,16 @@ amgclHandle STDCALL amgcl_precond_create_f(
         );
 
 // Apply AMG preconditioner (x = M^(-1) * rhs).
-void STDCALL amgcl_precond_apply(amgclHandle amg, const double *rhs, double *x);
+void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_precond_apply(amgclHandle amg, const double *rhs, double *x);
 
 // Printout preconditioner structure
-void STDCALL amgcl_precond_report(amgclHandle amg);
+void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_precond_report(amgclHandle amg);
 
 // Destroy AMG preconditioner
-void STDCALL amgcl_precond_destroy(amgclHandle amg);
+void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_precond_destroy(amgclHandle amg);
 
 // Create iterative solver preconditioned by AMG.
-amgclHandle STDCALL amgcl_solver_create(
+amgclHandle ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_solver_create(
         int           n,
         const int    *ptr,
         const int    *col,
@@ -100,7 +110,7 @@ amgclHandle STDCALL amgcl_solver_create(
 
 // Create iterative solver preconditioned by AMG.
 // ptr and col arrays are 1-based (as in Fortran).
-amgclHandle STDCALL amgcl_solver_create_f(
+amgclHandle ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_solver_create_f(
         int           n,
         const int    *ptr,
         const int    *col,
@@ -109,20 +119,20 @@ amgclHandle STDCALL amgcl_solver_create_f(
         );
 
 // Convergence info
-struct conv_info {
+struct ARCANE_ALINA_LIB_EXPORT conv_info {
     int    iterations;
     double residual;
 };
 
 // Solve the problem for the given right-hand side.
-conv_info STDCALL amgcl_solver_solve(
+conv_info ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_solver_solve(
         amgclHandle    solver,
         double const * rhs,
         double       * x
         );
 
 // Solve the problem for the given right-hand side.
-void STDCALL amgcl_solver_solve_f(
+void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_solver_solve_f(
         amgclHandle    solver,
         double const * rhs,
         double       * x,
@@ -130,7 +140,7 @@ void STDCALL amgcl_solver_solve_f(
         );
 
 // Solve the problem for the given matrix and the right-hand side.
-conv_info STDCALL amgcl_solver_solve_mtx(
+conv_info ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_solver_solve_mtx(
         amgclHandle    solver,
         int    const * A_ptr,
         int    const * A_col,
@@ -140,7 +150,7 @@ conv_info STDCALL amgcl_solver_solve_mtx(
         );
 
 // Solve the problem for the given matrix and the right-hand side.
-void STDCALL amgcl_solver_solve_mtx_f(
+void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_solver_solve_mtx_f(
         amgclHandle    solver,
         int    const * A_ptr,
         int    const * A_col,
@@ -151,10 +161,10 @@ void STDCALL amgcl_solver_solve_mtx_f(
         );
 
 // Printout solver structure
-void STDCALL amgcl_solver_report(amgclHandle solver);
+void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_solver_report(amgclHandle solver);
 
 // Destroy iterative solver.
-void STDCALL amgcl_solver_destroy(amgclHandle solver);
+void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_solver_destroy(amgclHandle solver);
 
 #ifdef __cplusplus
 } // extern "C"

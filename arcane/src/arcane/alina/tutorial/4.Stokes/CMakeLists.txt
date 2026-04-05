@@ -1,5 +1,5 @@
 ﻿add_executable(stokes_ucube stokes_ucube.cc)
-target_link_libraries(stokes_ucube amgcl)
+target_link_libraries(stokes_ucube PUBLIC arcane_alina)
 
 # ----------------------------------------------------------------------------
 # Local Variables:

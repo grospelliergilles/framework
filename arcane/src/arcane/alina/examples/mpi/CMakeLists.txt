@@ -2,22 +2,22 @@ if (NOT TARGET mpi_target)
   return()
 endif()
 
-add_library(amgcl_mpi_example INTERFACE)
-target_link_libraries(amgcl_mpi_example INTERFACE
-  amgcl mpi_target ${Boost_PROGRAM_OPTIONS_LIBRARY})
-target_compile_definitions(amgcl_mpi_example INTERFACE "AMGCL_BLOCK_SIZES=${AMGCL_BLOCK_SIZES_SEQ}")
+add_library(arcane_alina_mpi_example INTERFACE)
+target_link_libraries(arcane_alina_mpi_example INTERFACE
+  arcane_alina mpi_target ${Boost_PROGRAM_OPTIONS_LIBRARY})
+target_compile_definitions(arcane_alina_mpi_example INTERFACE "AMGCL_BLOCK_SIZES=${AMGCL_BLOCK_SIZES_SEQ}")
 
 if (TARGET eigen_target)
-  target_link_libraries(amgcl_mpi_example INTERFACE eigen_target)
+  target_link_libraries(arcane_alina_mpi_example INTERFACE eigen_target)
 endif()
 
 if (TARGET Metis::metis)
-  target_link_libraries(amgcl_mpi_example INTERFACE Metis::metis)
+  target_link_libraries(arcane_alina_mpi_example INTERFACE Metis::metis)
 endif()
 
 function(add_mpi_example example sources nb_core)
   add_executable(${example} ${sources})
-  target_link_libraries(${example} amgcl_mpi_example)
+  target_link_libraries(${example} PUBLIC arcane_alina_mpi_example)
   set(TEST_NAME "alina_sample_mpi${nb_core}_${example}")
   add_test(${TEST_NAME} ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${nb_core} ./${example})
   set_property(TEST ${TEST_NAME} APPEND PROPERTY ENVIRONMENT "OMP_NUM_THREADS=2")
@@ -25,7 +25,7 @@ endfunction()
 
 function(add_mpi_example_no_test example sources)
   add_executable(${example} ${sources})
-  target_link_libraries(${example} amgcl_mpi_example)
+  target_link_libraries(${example} PUBLIC arcane_alina_mpi_example)
 endfunction()
 
 # Il faut mettre 1 seul coeur pour certains tests
@@ -55,13 +55,13 @@ add_mpi_example_no_test(cpr_mpi cpr_mpi.cc)
 if (TARGET Metis::metis)
   add_executable(partition partition.cc)
   target_link_libraries(partition
-    amgcl
+    arcane_alina
     Metis::metis
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
   )
 endif()
 
-target_link_libraries(call_mpi_lib libamgcl_mpi)
+target_link_libraries(call_mpi_lib PUBLIC arcane_alina_mpi_clib)
 
 if (TARGET cuda_target)
   foreach(example runtime_sdd runtime_sdd_3d schur_pc_mpi mpi_solver)
@@ -74,7 +74,7 @@ if (TARGET cuda_target)
       ${CMAKE_CURRENT_BINARY_DIR}/${example}.cu
       OPTIONS -DSOLVER_BACKEND_CUDA)
     target_include_directories(${example}_cuda PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-    target_link_libraries(${example}_cuda amgcl_example cuda_target mpi_target)
+    target_link_libraries(${example}_cuda PUBLIC arcane_alina_example cuda_target mpi_target)
   endforeach()
 endif()
 

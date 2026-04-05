@@ -25,7 +25,7 @@ template <class T> using Backend = Arcane::Alina::backend::builtin<T>;
 #include <arcane/alina/amg.h>
 #include <arcane/alina/solver_runtime.h>
 #include <arcane/alina/coarsening_runtime.h>
-#include <arcane/alina/relaxation_runtime.h>
+#include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/preconditioner_schur_pressure_correction.h>
 #include <arcane/alina/preconditioner_runtime.h>
 #include <arcane/alina/Adapters.h>
