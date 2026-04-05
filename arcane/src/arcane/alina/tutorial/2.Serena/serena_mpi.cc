@@ -46,10 +46,8 @@ THE SOFTWARE.
 #include <arcane/alina/io_binary.h>
 #include <arcane/alina/profiler.h>
 
-#if defined(AMGCL_HAVE_PARMETIS)
-#  include <amgcl/mpi/partition/parmetis.hpp>
-#elif defined(AMGCL_HAVE_SCOTCH)
-#  include <amgcl/mpi/partition/ptscotch.hpp>
+#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+#  include <arcane/alina/mpi/mp_partition_parmetis.h>
 #endif
 
 // Block size

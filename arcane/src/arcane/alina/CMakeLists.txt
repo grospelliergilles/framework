@@ -145,6 +145,13 @@ find_library(PTHREAD_LIBRARY pthread)
 find_library(BZ2_LIBRARY bz2)
 find_library(HWLOC_LIBRARY hwloc)
 
+arcane_find_package(Parmetis)
+if(Parmetis_FOUND)
+  message(STATUS "Found Parmetis for Alina")
+  target_compile_definitions(amgcl INTERFACE AMGCL_HAVE_PARMETIS ARCANE_ALINA_HAVE_PARMETIS)
+  target_link_libraries(amgcl INTERFACE arccon::Parmetis)
+endif()
+
 option(AMGCL_BUILD_TESTS    ON)
 option(AMGCL_BUILD_EXAMPLES ON)
 

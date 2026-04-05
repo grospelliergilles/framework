@@ -46,13 +46,14 @@ THE SOFTWARE.
 #include <arcane/alina/io_binary.h>
 #include <arcane/alina/profiler.h>
 
-#if defined(AMGCL_HAVE_PARMETIS)
-#  include <amgcl/mpi/partition/parmetis.hpp>
+#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+#  include <arcane/alina/mpi/mp_partition_parmetis.h>
 #endif
 
 using namespace Arcane;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
     // The command line should contain the matrix, the RHS, and the coordinate files:
     if (argc < 4) {
         std::cerr << "Usage: " << argv[0] << " <A.bin> <b.bin> <coo.bin>" << std::endl;

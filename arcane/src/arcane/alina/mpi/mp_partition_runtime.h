@@ -1,245 +1,201 @@
-#ifndef AMGCL_MPI_REPARTITION_RUNTIME_HPP
-#define AMGCL_MPI_REPARTITION_RUNTIME_HPP
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* mp_partition_runtime.h                                      (C) 2026-2026 */
+/*                                                                           */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_MPI_MP_PARTITION_RUNTIME_H
+#define ARCANE_ALINA_MPI_MP_PARTITION_RUNTIME_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   alina/mpi/partition/runtime.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Runtime wrapper for distributed partitioners.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <memory>
 
 #ifdef AMGCL_NO_BOOST
-#  error Runtime interface relies on Boost.PropertyTree!
+#error Runtime interface relies on Boost.PropertyTree!
 #endif
 
 #include <boost/property_tree/ptree.hpp>
 
 #include <arcane/alina/util.h>
 #include <arcane/alina/mpi/mp_partition_merge.h>
-#ifdef AMGCL_HAVE_PARMETIS
-#  include <arcane/alina/mpi/mp_partition_parmetis.h>
+#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+#include <arcane/alina/mpi/mp_partition_parmetis.h>
 #endif
 
-namespace Arcane::Alina {
-namespace runtime {
-namespace mpi {
-namespace partition {
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
-enum type {
-    merge
-#ifdef AMGCL_HAVE_SCOTCH
-  , ptscotch
-#endif
-#ifdef AMGCL_HAVE_PARMETIS
-  , parmetis
+namespace Arcane::Alina::runtime::mpi::partition
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+enum type
+{
+  merge
+#ifdef ARCANE_ALINA_HAVE_PARMETIS
+  ,
+  parmetis
 #endif
 };
 
-inline std::ostream& operator<<(std::ostream &os, type s)
+inline std::ostream&
+operator<<(std::ostream& os, type s)
 {
-    switch (s) {
-        case merge:
-            return os << "merge";
-#ifdef AMGCL_HAVE_SCOTCH
-        case ptscotch:
-            return os << "ptscotch";
+  switch (s) {
+  case merge:
+    return os << "merge";
+#ifdef ARCANE_ALINA_HAVE_PARMETIS
+  case parmetis:
+    return os << "parmetis";
 #endif
-#ifdef AMGCL_HAVE_PARMETIS
-        case parmetis:
-            return os << "parmetis";
-#endif
-        default:
-            return os << "???";
-    }
+  default:
+    return os << "???";
+  }
 }
 
-inline std::istream& operator>>(std::istream &in, type &s)
+inline std::istream&
+operator>>(std::istream& in, type& s)
 {
-    std::string val;
-    in >> val;
+  std::string val;
+  in >> val;
 
-    if (val == "merge")
-        s = merge;
-#ifdef AMGCL_HAVE_SCOTCH
-    else if (val == "ptscotch")
-        s = ptscotch;
+  if (val == "merge")
+    s = merge;
+#ifdef ARCANE_ALINA_HAVE_PARMETIS
+  else if (val == "parmetis")
+    s = parmetis;
 #endif
-#ifdef AMGCL_HAVE_PARMETIS
-    else if (val == "parmetis")
-        s = parmetis;
+  else
+    throw std::invalid_argument("Invalid partitioner value. Valid choices are: "
+                                "merge"
+#ifdef ARCANE_ALINA_HAVE_PARMETIS
+                                ", parmetis"
 #endif
-    else
-        throw std::invalid_argument("Invalid partitioner value. Valid choices are: "
-                "merge"
-#ifdef AMGCL_HAVE_SCOTCH
-                ", ptscotch"
-#endif
-#ifdef AMGCL_HAVE_PARMETIS
-                ", parmetis"
-#endif
-                ".");
+                                ".");
 
-    return in;
+  return in;
 }
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct wrapper {
-    typedef Alina::mpi::distributed_matrix<Backend> matrix;
-    typedef boost::property_tree::ptree params;
+struct wrapper
+{
+  typedef Alina::mpi::distributed_matrix<Backend> matrix;
+  typedef boost::property_tree::ptree params;
 
-    type t;
-    void *handle;
+  type t;
+  void* handle;
 
-    wrapper(params prm = params()) : t(prm.get("type",
-#if defined(AMGCL_HAVE_SCOTCH)
-                ptscotch
-#elif defined(AMGCL_HAVE_PARMETIS)
-                parmetis
+  wrapper(params prm = params())
+  : t(prm.get("type",
+#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+              parmetis
 #else
-                merge
+              merge
 #endif
-                )), handle(0)
-    {
-        if (!prm.erase("type")) AMGCL_PARAM_MISSING("type");
+              ))
+  , handle(0)
+  {
+    if (!prm.erase("type"))
+      AMGCL_PARAM_MISSING("type");
 
-        switch (t) {
-            case merge:
-                {
-                    typedef Alina::mpi::partition::merge<Backend> R;
-                    handle = static_cast<void*>(new R(prm));
-                }
-                break;
-#ifdef AMGCL_HAVE_SCOTCH
-            case ptscotch:
-                {
-                    typedef Alina::mpi::partition::ptscotch<Backend> R;
-                    handle = static_cast<void*>(new R(prm));
-                }
-                break;
+    switch (t) {
+    case merge: {
+      typedef Alina::mpi::partition::merge<Backend> R;
+      handle = static_cast<void*>(new R(prm));
+    } break;
+#ifdef ARCANE_ALINA_HAVE_PARMETIS
+    case parmetis: {
+      typedef Alina::mpi::partition::parmetis<Backend> R;
+      handle = static_cast<void*>(new R(prm));
+    } break;
 #endif
-#ifdef AMGCL_HAVE_PARMETIS
-            case parmetis:
-                {
-                    typedef Alina::mpi::partition::parmetis<Backend> R;
-                    handle = static_cast<void*>(new R(prm));
-                }
-                break;
-#endif
-            default:
-                throw std::invalid_argument("Unsupported partition type");
-        }
+    default:
+      throw std::invalid_argument("Unsupported partition type");
     }
+  }
 
-    ~wrapper() {
-        switch(t) {
-            case merge:
-                {
-                    typedef Alina::mpi::partition::merge<Backend> R;
-                    delete static_cast<R*>(handle);
-                }
-                break;
-#ifdef AMGCL_HAVE_SCOTCH
-            case ptscotch:
-                {
-                    typedef Alina::mpi::partition::ptscotch<Backend> R;
-                    delete static_cast<R*>(handle);
-                }
-                break;
+  ~wrapper()
+  {
+    switch (t) {
+    case merge: {
+      typedef Alina::mpi::partition::merge<Backend> R;
+      delete static_cast<R*>(handle);
+    } break;
+#ifdef ARCANE_ALINA_HAVE_PARMETIS
+    case parmetis: {
+      typedef Alina::mpi::partition::parmetis<Backend> R;
+      delete static_cast<R*>(handle);
+    } break;
 #endif
-#ifdef AMGCL_HAVE_PARMETIS
-            case parmetis:
-                {
-                    typedef Alina::mpi::partition::parmetis<Backend> R;
-                    delete static_cast<R*>(handle);
-                }
-                break;
-#endif
-            default:
-                break;
-        }
+    default:
+      break;
     }
+  }
 
-    bool is_needed(const matrix &A) const {
-        switch (t) {
-            case merge:
-                {
-                    typedef Alina::mpi::partition::merge<Backend> R;
-                    return static_cast<const R*>(handle)->is_needed(A);
-                }
-#ifdef AMGCL_HAVE_SCOTCH
-            case ptscotch:
-                {
-                    typedef Alina::mpi::partition::ptscotch<Backend> R;
-                    return static_cast<const R*>(handle)->is_needed(A);
-                }
-#endif
-#ifdef AMGCL_HAVE_PARMETIS
-            case parmetis:
-                {
-                    typedef Alina::mpi::partition::parmetis<Backend> R;
-                    return static_cast<const R*>(handle)->is_needed(A);
-                }
-#endif
-            default:
-                throw std::invalid_argument("Unsupported partition type");
-        }
+  bool is_needed(const matrix& A) const
+  {
+    switch (t) {
+    case merge: {
+      typedef Alina::mpi::partition::merge<Backend> R;
+      return static_cast<const R*>(handle)->is_needed(A);
     }
+#ifdef ARCANE_ALINA_HAVE_PARMETIS
+    case parmetis: {
+      typedef Alina::mpi::partition::parmetis<Backend> R;
+      return static_cast<const R*>(handle)->is_needed(A);
+    }
+#endif
+    default:
+      throw std::invalid_argument("Unsupported partition type");
+    }
+  }
 
-    std::shared_ptr<matrix> operator()(const matrix &A, unsigned block_size = 1) const {
-        switch (t) {
-            case merge:
-                {
-                    typedef Alina::mpi::partition::merge<Backend> R;
-                    return static_cast<const R*>(handle)->operator()(A, block_size);
-                }
-#ifdef AMGCL_HAVE_SCOTCH
-            case ptscotch:
-                {
-                    typedef Alina::mpi::partition::ptscotch<Backend> R;
-                    return static_cast<const R*>(handle)->operator()(A, block_size);
-                }
-#endif
-#ifdef AMGCL_HAVE_PARMETIS
-            case parmetis:
-                {
-                    typedef Alina::mpi::partition::parmetis<Backend> R;
-                    return static_cast<const R*>(handle)->operator()(A, block_size);
-                }
-#endif
-            default:
-                throw std::invalid_argument("Unsupported partition type");
-        }
+  std::shared_ptr<matrix> operator()(const matrix& A, unsigned block_size = 1) const
+  {
+    switch (t) {
+    case merge: {
+      typedef Alina::mpi::partition::merge<Backend> R;
+      return static_cast<const R*>(handle)->operator()(A, block_size);
     }
+#ifdef ARCANE_ALINA_HAVE_PARMETIS
+    case parmetis: {
+      typedef Alina::mpi::partition::parmetis<Backend> R;
+      return static_cast<const R*>(handle)->operator()(A, block_size);
+    }
+#endif
+    default:
+      throw std::invalid_argument("Unsupported partition type");
+    }
+  }
 };
 
-} // namespace partition
-} // namespace mpi
-} // namespace runtime
-} // namespace amgcl
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::runtime::mpi::partition
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif

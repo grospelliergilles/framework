@@ -45,8 +45,8 @@ THE SOFTWARE.
 #include <arcane/alina/io_binary.h>
 #include <arcane/alina/profiler.h>
 
-#if defined(AMGCL_HAVE_PARMETIS)
-#include <arcane/alina/mpi/mp_partition_parmetis.h>
+#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+#  include <arcane/alina/mpi/mp_partition_parmetis.h>
 #endif
 
 using namespace Arcane;
