@@ -5,7 +5,7 @@
 
 #include <amgcl/backend_builtin.h>
 #include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/mpi/distributed_matrix.h>
+#include <amgcl/mpi/mp_distributed_matrix.h>
 #include <amgcl/io_mm.h>
 #include <amgcl/profiler.h>
 

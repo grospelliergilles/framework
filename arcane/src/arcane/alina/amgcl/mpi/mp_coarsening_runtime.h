@@ -38,10 +38,10 @@ THE SOFTWARE.
 #include <boost/property_tree/ptree.hpp>
 
 #include <amgcl/util.h>
-#include <amgcl/mpi/util.h>
-#include <amgcl/mpi/distributed_matrix.h>
-#include <amgcl/mpi/coarsening/aggregation.h>
-#include <amgcl/mpi/coarsening/smoothed_aggregation.h>
+#include <amgcl/mpi/mp_util.h>
+#include <amgcl/mpi/mp_distributed_matrix.h>
+#include <amgcl/mpi/mp_coarsening_aggregation.h>
+#include <amgcl/mpi/mp_coarsening_smoothed_aggregation.h>
 
 namespace amgcl {
 namespace runtime {

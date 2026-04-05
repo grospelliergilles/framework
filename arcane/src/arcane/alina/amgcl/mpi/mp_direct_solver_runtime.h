@@ -38,9 +38,9 @@ THE SOFTWARE.
 #include <boost/property_tree/ptree.hpp>
 
 #include <amgcl/util.h>
-#include <amgcl/mpi/direct_solver/solver_skyline_lu.h>
+#include <amgcl/mpi/mp_direct_solver_skyline_lu.h>
 #ifdef AMGCL_HAVE_EIGEN
-#include <amgcl/mpi/direct_solver/eigen_splu.h>
+#include <amgcl/mpi/mp_direct_solve_eigen_splu.h>
 #endif
 
 namespace amgcl {

@@ -34,7 +34,7 @@ THE SOFTWARE.
 #include <vector>
 #include <memory>
 #include <amgcl/backend_builtin.h>
-#include <amgcl/mpi/util.h>
+#include <amgcl/mpi/mp_util.h>
 
 namespace amgcl {
 namespace mpi {

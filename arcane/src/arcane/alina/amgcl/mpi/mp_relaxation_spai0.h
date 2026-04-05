@@ -33,8 +33,8 @@ THE SOFTWARE.
 
 #include <memory>
 #include <amgcl/backend_interface.h>
-#include <amgcl/mpi/util.h>
-#include <amgcl/mpi/distributed_matrix.h>
+#include <amgcl/mpi/mp_util.h>
+#include <amgcl/mpi/mp_distributed_matrix.h>
 
 namespace amgcl {
 namespace mpi {

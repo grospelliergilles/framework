@@ -42,9 +42,9 @@ THE SOFTWARE.
 #include <amgcl/util.h>
 #include <amgcl/backend_interface.h>
 #include <amgcl/relaxation_runtime.h>
-#include <amgcl/mpi/relaxation/spai0.h>
-#include <amgcl/mpi/util.h>
-#include <amgcl/mpi/distributed_matrix.h>
+#include <amgcl/mpi/mp_relaxation_spai0.h>
+#include <amgcl/mpi/mp_util.h>
+#include <amgcl/mpi/mp_distributed_matrix.h>
 
 namespace amgcl
 {

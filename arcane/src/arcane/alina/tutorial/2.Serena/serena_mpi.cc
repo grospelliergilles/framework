@@ -37,12 +37,12 @@ THE SOFTWARE.
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/adapter_block_matrix.h>
 
-#include <amgcl/mpi/distributed_matrix.h>
-#include <amgcl/mpi/make_solver.h>
-#include <amgcl/mpi/amg.h>
-#include <amgcl/mpi/coarsening/smoothed_aggregation.h>
-#include <amgcl/mpi/relaxation/spai0.h>
-#include <amgcl/mpi/solver/solver_bicgstab.h>
+#include <amgcl/mpi/mp_distributed_matrix.h>
+#include <amgcl/mpi/mp_make_solver.h>
+#include <amgcl/mpi/mp_amg.h>
+#include <amgcl/mpi/mp_coarsening_smoothed_aggregation.h>
+#include <amgcl/mpi/mp_relaxation_spai0.h>
+#include <amgcl/mpi/mp_solver_bicgstab.h>
 
 #include <amgcl/io_binary.h>
 #include <amgcl/profiler.h>

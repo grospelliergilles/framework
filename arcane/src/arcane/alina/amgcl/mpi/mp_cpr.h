@@ -34,8 +34,8 @@ THE SOFTWARE.
 #include <cassert>
 #include <amgcl/backend_builtin.h>
 #include <amgcl/util.h>
-#include <amgcl/mpi/inner_product.h>
-#include <amgcl/mpi/distributed_matrix.h>
+#include <amgcl/mpi/mp_inner_product.h>
+#include <amgcl/mpi/mp_distributed_matrix.h>
 
 namespace amgcl {
 namespace mpi {

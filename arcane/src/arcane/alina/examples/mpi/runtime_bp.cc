@@ -13,9 +13,9 @@
 #include <amgcl/backend_builtin.h>
 #include <amgcl/preconditioner_runtime.h>
 #include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/mpi/make_solver.h>
-#include <amgcl/mpi/solver/solver_runtime.h>
-#include <amgcl/mpi/block_preconditioner.h>
+#include <amgcl/mpi/mp_make_solver.h>
+#include <amgcl/mpi/mp_solver_runtime.h>
+#include <amgcl/mpi/mp_block_preconditioner.h>
 #include <amgcl/profiler.h>
 
 #include "domain_partition.h"

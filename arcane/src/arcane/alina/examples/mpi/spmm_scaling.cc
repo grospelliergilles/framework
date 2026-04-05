@@ -6,8 +6,8 @@
 
 #include <amgcl/backend_builtin.h>
 #include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/mpi/util.h>
-#include <amgcl/mpi/distributed_matrix.h>
+#include <amgcl/mpi/mp_util.h>
+#include <amgcl/mpi/mp_distributed_matrix.h>
 #include <amgcl/profiler.h>
 
 #include "domain_partition.h"

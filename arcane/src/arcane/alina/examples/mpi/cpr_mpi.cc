@@ -8,15 +8,15 @@
 #include <amgcl/io_mm.h>
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/backend_builtin.h>
-#include <amgcl/mpi/make_solver.h>
-#include <amgcl/mpi/cpr.h>
-#include <amgcl/mpi/amg.h>
-#include <amgcl/mpi/coarsening/runtime.h>
-#include <amgcl/mpi/relaxation/relaxation_runtime.h>
-#include <amgcl/mpi/solver/solver_runtime.h>
-#include <amgcl/mpi/relaxation/as_preconditioner.h>
-#include <amgcl/mpi/direct_solver/runtime.h>
-#include <amgcl/mpi/partition/runtime.h>
+#include <amgcl/mpi/mp_make_solver.h>
+#include <amgcl/mpi/mp_cpr.h>
+#include <amgcl/mpi/mp_amg.h>
+#include <amgcl/mpi/mp_coarsening_runtime.h>
+#include <amgcl/mpi/mp_relaxation_runtime.h>
+#include <amgcl/mpi/mp_solver_runtime.h>
+#include <amgcl/mpi/mp_relaxation_as_preconditioner.h>
+#include <amgcl/mpi/mp_direct_solver_runtime.h>
+#include <amgcl/mpi/mp_partition_runtime.h>
 #include <amgcl/profiler.h>
 
 namespace amgcl {

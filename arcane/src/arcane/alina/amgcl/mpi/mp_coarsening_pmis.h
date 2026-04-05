@@ -38,8 +38,8 @@ THE SOFTWARE.
 
 #include <amgcl/backend_builtin.h>
 #include <amgcl/util.h>
-#include <amgcl/mpi/util.h>
-#include <amgcl/mpi/distributed_matrix.h>
+#include <amgcl/mpi/mp_util.h>
+#include <amgcl/mpi/mp_distributed_matrix.h>
 #include <amgcl/coarsening_tentative_prolongation.h>
 
 namespace amgcl {

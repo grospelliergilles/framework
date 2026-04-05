@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_DIRECT_SOLVER_SKYLINE_LU_HPP
-#define AMGCL_MPI_DIRECT_SOLVER_SKYLINE_LU_HPP
+#ifndef AMGCL_MPI_DIRECT_SOLVER_EIGEN_SPLU_HPP
+#define AMGCL_MPI_DIRECT_SOLVER_EIGEN_SPLU_HPP
 
 /*
 The MIT License
@@ -26,11 +26,11 @@ THE SOFTWARE.
 */
 
 /**
-\file   amgcl/mpi/direct_solver/skyline_lu.hpp
+\file   amgcl/mpi/direct_solver/eigen_splu.hpp
 \author Denis Demidov <dennis.demidov@gmail.com>
-\brief  MPI wrapper for Skyline LU factorization solver.
+\brief  MPI wrapper for Eigen::SparseLU solver.
 
-This is a wrapper around Skyline LU factorization solver that provides a
+This is a wrapper around Eigen SparseLU solver that provides a
 distributed direct solver interface but always works sequentially.
 */
 
@@ -38,11 +38,11 @@ distributed direct solver interface but always works sequentially.
 
 #include <memory>
 
+#include <Eigen/SparseLU>
 #include <amgcl/backend_builtin.h>
-#include <amgcl/adapter_crs_tuple.h>
-#include <amgcl/solver_skyline_lu.h>
-#include <amgcl/mpi/util.h>
-#include <amgcl/mpi/direct_solver/solver_base.h>
+#include <amgcl/solver_eigen.h>
+#include <amgcl/mpi/mp_util.h>
+#include <amgcl/mpi/mp_direct_solver_base.h>
 
 namespace amgcl {
 namespace mpi {
@@ -50,23 +50,28 @@ namespace direct {
 
 /// Provides distributed direct solver interface for Skyline LU solver.
 template <typename value_type>
-class skyline_lu : public solver_base< value_type, skyline_lu<value_type> > {
+class eigen_splu : public solver_base< value_type, eigen_splu<value_type> > {
     public:
-        typedef amgcl::solver::skyline_lu<value_type> Solver;
+        typedef
+            amgcl::solver::EigenSolver<
+                Eigen::SparseLU<
+                    Eigen::SparseMatrix<value_type, Eigen::ColMajor, int>
+                    >
+                >
+            Solver;
         typedef typename Solver::params params;
         typedef backend::crs<value_type> build_matrix;
 
         /// Constructor.
         template <class Matrix>
-        skyline_lu(communicator comm, const Matrix &A,
-                const params &prm = params()
-                ) : prm(prm)
+        eigen_splu(communicator comm, const Matrix &A,
+                const params &prm = params()) : prm(prm)
         {
             static_cast<Base*>(this)->init(comm, A);
         }
 
         static size_t coarse_enough() {
-            return Solver::coarse_enough();
+            return Base::coarse_enough();
         }
 
         int comm_size(int /*n*/) const {
@@ -87,7 +92,7 @@ class skyline_lu : public solver_base< value_type, skyline_lu<value_type> > {
             (*S)(rhs, x);
         }
     private:
-        typedef solver_base< value_type, skyline_lu<value_type> > Base;
+        typedef solver_base< value_type, eigen_splu<value_type> > Base;
         params prm;
         std::shared_ptr<Solver> S;
 };

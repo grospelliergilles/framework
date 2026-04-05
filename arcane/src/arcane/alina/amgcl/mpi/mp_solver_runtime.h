@@ -32,7 +32,7 @@ THE SOFTWARE.
  */
 
 #include <amgcl/solver_runtime.h>
-#include <amgcl/mpi/inner_product.h>
+#include <amgcl/mpi/mp_inner_product.h>
 
 namespace amgcl {
 namespace runtime { 

@@ -24,10 +24,10 @@
 #  endif
 #endif
 
-#include <amgcl/mpi/util.h>
-#include <amgcl/mpi/make_solver.h>
-#include <amgcl/mpi/preconditioner.h>
-#include <amgcl/mpi/solver/solver_runtime.h>
+#include <amgcl/mpi/mp_util.h>
+#include <amgcl/mpi/mp_make_solver.h>
+#include <amgcl/mpi/mp_preconditioner.h>
+#include <amgcl/mpi/mp_solver_runtime.h>
 
 #include <amgcl/io_mm.h>
 #include <amgcl/io_binary.h>

@@ -11,7 +11,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-#include <amgcl/mpi/direct_solver/runtime.h>
+#include <amgcl/mpi/mp_direct_solver_runtime.h>
 #include <amgcl/profiler.h>
 
 namespace amgcl {

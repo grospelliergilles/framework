@@ -39,14 +39,14 @@ THE SOFTWARE.
 
 #include <boost/property_tree/ptree.hpp>
 
-#include <amgcl/mpi/amg.h>
-#include <amgcl/mpi/coarsening/runtime.h>
-#include <amgcl/mpi/relaxation/relaxation_runtime.h>
-#include <amgcl/mpi/direct_solver/runtime.h>
-#include <amgcl/mpi/partition/runtime.h>
-#include <amgcl/mpi/relaxation/as_preconditioner.h>
-#include <amgcl/mpi/distributed_matrix.h>
-#include <amgcl/mpi/util.h>
+#include <amgcl/mpi/mp_amg.h>
+#include <amgcl/mpi/mp_coarsening_runtime.h>
+#include <amgcl/mpi/mp_relaxation_runtime.h>
+#include <amgcl/mpi/mp_direct_solver_runtime.h>
+#include <amgcl/mpi/mp_partition_runtime.h>
+#include <amgcl/mpi/mp_relaxation_as_preconditioner.h>
+#include <amgcl/mpi/mp_distributed_matrix.h>
+#include <amgcl/mpi/mp_util.h>
 
 namespace amgcl {
 namespace runtime {

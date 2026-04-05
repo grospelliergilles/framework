@@ -40,12 +40,9 @@ THE SOFTWARE.
 #include <boost/property_tree/ptree.hpp>
 
 #include <amgcl/util.h>
-#include <amgcl/mpi/partition/merge.h>
-#ifdef AMGCL_HAVE_SCOTCH
-#  include <amgcl/mpi/partition/ptscotch.hpp>
-#endif
+#include <amgcl/mpi/mp_partition_merge.h>
 #ifdef AMGCL_HAVE_PARMETIS
-#  include <amgcl/mpi/partition/parmetis.hpp>
+#  include <amgcl/mpi/mp_partition_parmetis.hpp>
 #endif
 
 namespace amgcl {

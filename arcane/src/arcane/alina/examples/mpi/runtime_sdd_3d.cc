@@ -29,9 +29,9 @@
 typedef amgcl::backend::builtin<double> Backend;
 #endif
 
-#include <amgcl/mpi/direct_solver/runtime.h>
-#include <amgcl/mpi/solver/solver_runtime.h>
-#include <amgcl/mpi/subdomain_deflation.h>
+#include <amgcl/mpi/mp_direct_solver_runtime.h>
+#include <amgcl/mpi/mp_solver_runtime.h>
+#include <amgcl/mpi/mp_subdomain_deflation.h>
 #include <amgcl/amg.h>
 #include <amgcl/coarsening_runtime.h>
 #include <amgcl/relaxation_runtime.h>

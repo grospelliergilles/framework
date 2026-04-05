@@ -52,7 +52,7 @@ Bi-orthogonality Properties. ACM Transactions on Mathematical Software, Vol.
 #include <amgcl/util.h>
 
 #ifdef MPI_VERSION
-#  include <amgcl/mpi/util.h>
+#  include <amgcl/mpi/mp_util.h>
 #endif
 
 #ifdef _OPENMP

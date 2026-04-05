@@ -38,9 +38,9 @@ typedef amgcl::backend::builtin<double> Backend;
 #include <amgcl/coarsening_runtime.h>
 #include <amgcl/relaxation_runtime.h>
 #include <amgcl/preconditioner_runtime.h>
-#include <amgcl/mpi/direct_solver/runtime.h>
-#include <amgcl/mpi/solver/solver_runtime.h>
-#include <amgcl/mpi/subdomain_deflation.h>
+#include <amgcl/mpi/mp_direct_solver_runtime.h>
+#include <amgcl/mpi/mp_solver_runtime.h>
+#include <amgcl/mpi/mp_subdomain_deflation.h>
 #include <amgcl/adapter_crs_tuple.h>
 #include <amgcl/adapter_zero_copy.h>
 #include <amgcl/profiler.h>
