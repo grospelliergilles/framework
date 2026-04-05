@@ -104,17 +104,8 @@ set(ARCANE_ALINA_SOURCES
   mpi/mp_partition_runtime.h
   mpi/mp_partition_util.h
   mpi/mp_preconditioner.h
-  mpi/mp_relaxation_as_preconditioner.h
-  mpi/mp_relaxation_chebyshev.h
-  mpi/mp_relaxation_damped_jacobi.h
-  mpi/mp_relaxation_gauss_seidel.h
-  mpi/mp_relaxation_ilu0.h
-  mpi/mp_relaxation_iluk.h
-  mpi/mp_relaxation_ilup.h
-  mpi/mp_relaxation_ilut.h
   mpi/mp_relaxation_runtime.h
-  mpi/mp_relaxation_spai0.h
-  mpi/mp_relaxation_spai1.h
+  mpi/mp_relaxation.h
   mpi/mp_schur_pressure_correction.h
   mpi/mp_solver_bicgstab.h
   mpi/mp_solver_bicgstabl.h

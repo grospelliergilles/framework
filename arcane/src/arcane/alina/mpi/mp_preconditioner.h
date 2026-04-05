@@ -44,7 +44,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_relaxation_runtime.h>
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
 #include <arcane/alina/mpi/mp_partition_runtime.h>
-#include <arcane/alina/mpi/mp_relaxation_as_preconditioner.h>
+#include <arcane/alina/mpi/mp_relaxation.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 #include <arcane/alina/mpi/mp_util.h>
 

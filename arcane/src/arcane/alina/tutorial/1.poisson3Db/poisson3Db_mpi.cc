@@ -39,14 +39,14 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_make_solver.h>
 #include <arcane/alina/mpi/mp_amg.h>
 #include <arcane/alina/mpi/mp_coarsening_smoothed_aggregation.h>
-#include <arcane/alina/mpi/mp_relaxation_spai0.h>
+#include <arcane/alina/mpi/mp_relaxation.h>
 #include <arcane/alina/mpi/mp_solver_bicgstab.h>
 
 #include <arcane/alina/io_binary.h>
 #include <arcane/alina/profiler.h>
 
 #if defined(AMGCL_HAVE_PARMETIS)
-#  include <arcane/alina/mpi/mp_partition_parmetis.hpp>
+#include <arcane/alina/mpi/mp_partition_parmetis.hpp>
 #endif
 
 //---------------------------------------------------------------------------

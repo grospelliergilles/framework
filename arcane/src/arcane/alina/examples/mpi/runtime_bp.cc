@@ -31,17 +31,8 @@
 #include <arcane/alina/mpi/mp_solver_runtime.h>
 
 // Pour test compilation uniquement
-#include <arcane/alina/mpi/mp_relaxation_as_preconditioner.h>
-#include <arcane/alina/mpi/mp_relaxation_chebyshev.h>
-#include <arcane/alina/mpi/mp_relaxation_damped_jacobi.h>
-#include <arcane/alina/mpi/mp_relaxation_gauss_seidel.h>
-#include <arcane/alina/mpi/mp_relaxation_ilu0.h>
-#include <arcane/alina/mpi/mp_relaxation_iluk.h>
-#include <arcane/alina/mpi/mp_relaxation_ilup.h>
-#include <arcane/alina/mpi/mp_relaxation_ilut.h>
 #include <arcane/alina/mpi/mp_relaxation_runtime.h>
-#include <arcane/alina/mpi/mp_relaxation_spai0.h>
-#include <arcane/alina/mpi/mp_relaxation_spai1.h>
+#include <arcane/alina/mpi/mp_relaxation.h>
 
 #include "domain_partition.h"
 
