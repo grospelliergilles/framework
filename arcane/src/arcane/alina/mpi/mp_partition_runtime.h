@@ -45,7 +45,7 @@ THE SOFTWARE.
 #  include <arcane/alina/mpi/mp_partition_parmetis.h>
 #endif
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace runtime {
 namespace mpi {
 namespace partition {
@@ -109,7 +109,7 @@ inline std::istream& operator>>(std::istream &in, type &s)
 
 template <class Backend>
 struct wrapper {
-    typedef amgcl::mpi::distributed_matrix<Backend> matrix;
+    typedef Alina::mpi::distributed_matrix<Backend> matrix;
     typedef boost::property_tree::ptree params;
 
     type t;
@@ -130,14 +130,14 @@ struct wrapper {
         switch (t) {
             case merge:
                 {
-                    typedef amgcl::mpi::partition::merge<Backend> R;
+                    typedef Alina::mpi::partition::merge<Backend> R;
                     handle = static_cast<void*>(new R(prm));
                 }
                 break;
 #ifdef AMGCL_HAVE_SCOTCH
             case ptscotch:
                 {
-                    typedef amgcl::mpi::partition::ptscotch<Backend> R;
+                    typedef Alina::mpi::partition::ptscotch<Backend> R;
                     handle = static_cast<void*>(new R(prm));
                 }
                 break;
@@ -145,7 +145,7 @@ struct wrapper {
 #ifdef AMGCL_HAVE_PARMETIS
             case parmetis:
                 {
-                    typedef amgcl::mpi::partition::parmetis<Backend> R;
+                    typedef Alina::mpi::partition::parmetis<Backend> R;
                     handle = static_cast<void*>(new R(prm));
                 }
                 break;
@@ -159,14 +159,14 @@ struct wrapper {
         switch(t) {
             case merge:
                 {
-                    typedef amgcl::mpi::partition::merge<Backend> R;
+                    typedef Alina::mpi::partition::merge<Backend> R;
                     delete static_cast<R*>(handle);
                 }
                 break;
 #ifdef AMGCL_HAVE_SCOTCH
             case ptscotch:
                 {
-                    typedef amgcl::mpi::partition::ptscotch<Backend> R;
+                    typedef Alina::mpi::partition::ptscotch<Backend> R;
                     delete static_cast<R*>(handle);
                 }
                 break;
@@ -174,7 +174,7 @@ struct wrapper {
 #ifdef AMGCL_HAVE_PARMETIS
             case parmetis:
                 {
-                    typedef amgcl::mpi::partition::parmetis<Backend> R;
+                    typedef Alina::mpi::partition::parmetis<Backend> R;
                     delete static_cast<R*>(handle);
                 }
                 break;
@@ -188,20 +188,20 @@ struct wrapper {
         switch (t) {
             case merge:
                 {
-                    typedef amgcl::mpi::partition::merge<Backend> R;
+                    typedef Alina::mpi::partition::merge<Backend> R;
                     return static_cast<const R*>(handle)->is_needed(A);
                 }
 #ifdef AMGCL_HAVE_SCOTCH
             case ptscotch:
                 {
-                    typedef amgcl::mpi::partition::ptscotch<Backend> R;
+                    typedef Alina::mpi::partition::ptscotch<Backend> R;
                     return static_cast<const R*>(handle)->is_needed(A);
                 }
 #endif
 #ifdef AMGCL_HAVE_PARMETIS
             case parmetis:
                 {
-                    typedef amgcl::mpi::partition::parmetis<Backend> R;
+                    typedef Alina::mpi::partition::parmetis<Backend> R;
                     return static_cast<const R*>(handle)->is_needed(A);
                 }
 #endif
@@ -214,20 +214,20 @@ struct wrapper {
         switch (t) {
             case merge:
                 {
-                    typedef amgcl::mpi::partition::merge<Backend> R;
+                    typedef Alina::mpi::partition::merge<Backend> R;
                     return static_cast<const R*>(handle)->operator()(A, block_size);
                 }
 #ifdef AMGCL_HAVE_SCOTCH
             case ptscotch:
                 {
-                    typedef amgcl::mpi::partition::ptscotch<Backend> R;
+                    typedef Alina::mpi::partition::ptscotch<Backend> R;
                     return static_cast<const R*>(handle)->operator()(A, block_size);
                 }
 #endif
 #ifdef AMGCL_HAVE_PARMETIS
             case parmetis:
                 {
-                    typedef amgcl::mpi::partition::parmetis<Backend> R;
+                    typedef Alina::mpi::partition::parmetis<Backend> R;
                     return static_cast<const R*>(handle)->operator()(A, block_size);
                 }
 #endif

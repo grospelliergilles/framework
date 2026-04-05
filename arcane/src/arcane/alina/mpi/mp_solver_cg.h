@@ -34,13 +34,13 @@ THE SOFTWARE.
 #include <arcane/alina/solver_cg.h>
 #include <arcane/alina/mpi/mp_inner_product.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 namespace solver {
 
 template <class Backend, class InnerProduct = mpi::inner_product>
-class cg : public amgcl::solver::cg<Backend, InnerProduct> {
-    typedef amgcl::solver::cg<Backend, InnerProduct> Base;
+class cg : public Alina::solver::cg<Backend, InnerProduct> {
+    typedef Alina::solver::cg<Backend, InnerProduct> Base;
     public:
         using Base::Base;
 };

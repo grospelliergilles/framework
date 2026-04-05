@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace coarsening {
 
 // Create rigid body modes from coordinate vector.

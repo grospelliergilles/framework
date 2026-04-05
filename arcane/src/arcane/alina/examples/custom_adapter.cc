@@ -11,6 +11,8 @@
 #include <arcane/alina/solver_cg.h>
 #include <arcane/alina/profiler.h>
 
+using namespace Arcane;
+
 class sparse_matrix {
     public:
         typedef std::map<int, double> sparse_row;
@@ -36,7 +38,7 @@ class sparse_matrix {
         std::vector<sparse_row> _rows;
 };
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace backend {
 
 // Let AMGCL know the value type of our matrix:
@@ -104,7 +106,7 @@ template<> struct row_begin_impl<sparse_matrix> {
 profiler<> prof;
 } // namespace amgcl
 
-using amgcl::prof;
+using Alina::prof;
 
 int main() {
     // Discretize a 1D Poisson problem
@@ -125,14 +127,14 @@ int main() {
     }
 
     // Create an AMGCL solver for the problem.
-    typedef amgcl::backend::builtin<double> Backend;
-    amgcl::make_solver<
-        amgcl::amg<
+    typedef Alina::backend::builtin<double> Backend;
+    Alina::make_solver<
+        Alina::amg<
             Backend,
-            amgcl::coarsening::aggregation,
-            amgcl::relaxation::spai0
+            Alina::coarsening::aggregation,
+            Alina::relaxation::spai0
             >,
-        amgcl::solver::cg<Backend>
+        Alina::solver::cg<Backend>
         > solve( A );
 
     std::cout << solve.precond() << std::endl;

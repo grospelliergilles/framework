@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/adapter_crs_tuple.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace backend {
 
 // Make builtin backend recognize ublas vectors as its own:

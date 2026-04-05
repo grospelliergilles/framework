@@ -20,16 +20,18 @@
 
 #include <arcane/alina/profiler.h>
 
-namespace amgcl { profiler<> prof; }
-using amgcl::prof;
-using amgcl::precondition;
+using namespace Arcane;
+
+namespace Arcane::Alina { profiler<> prof; }
+using Alina::prof;
+using Alina::precondition;
 
 //---------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
     namespace po = boost::program_options;
-    namespace io = amgcl::io;
+    namespace io = Alina::io;
 
-    using amgcl::prof;
+    using Alina::prof;
     using std::vector;
     using std::string;
 
@@ -117,7 +119,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("prm")) {
         for(const string &v : vm["prm"].as<vector<string> >()) {
-            amgcl::put(prm, v);
+            Alina::put(prm, v);
         }
     }
 
@@ -192,7 +194,7 @@ int main(int argc, char *argv[]) {
 
             precondition(m * ndim == rows && (ndim == 2 || ndim == 3), "Coordinate matrix has wrong size");
 
-            nv = amgcl::coarsening::rigid_body_modes(ndim, coo, z, /*transpose = */true);
+            nv = Alina::coarsening::rigid_body_modes(ndim, coo, z, /*transpose = */true);
         }
 
         prm.put("nvec", nv);
@@ -207,10 +209,10 @@ int main(int argc, char *argv[]) {
     if (vm["single-level"].as<bool>())
         prm.put("precond.class", "relaxation");
 
-    typedef amgcl::backend::builtin<double> Backend;
-    typedef amgcl::deflated_solver<
-        amgcl::runtime::preconditioner<Backend>,
-        amgcl::runtime::solver::wrapper<Backend>
+    typedef Alina::backend::builtin<double> Backend;
+    typedef Alina::deflated_solver<
+        Alina::runtime::preconditioner<Backend>,
+        Alina::runtime::solver::wrapper<Backend>
         > Solver;
 
     auto A = std::tie(rows, ptr, col, val);
@@ -225,14 +227,14 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("output")) {
         auto t = prof.scoped_tic("write");
-        amgcl::io::mm_write(vm["output"].as<string>(), x.data(), x.size());
+        Alina::io::mm_write(vm["output"].as<string>(), x.data(), x.size());
     }
 
     std::vector<double> r(rows);
-    amgcl::backend::residual(rhs, A, x, r);
+    Alina::backend::residual(rhs, A, x, r);
 
     std::cout << "Iterations: " << iters << std::endl
               << "Error:      " << error << std::endl
-              << "True error: " << sqrt(amgcl::backend::inner_product(r, r)) / sqrt(amgcl::backend::inner_product(rhs, rhs))
+              << "True error: " << sqrt(Alina::backend::inner_product(r, r)) / sqrt(Alina::backend::inner_product(rhs, rhs))
               << prof << std::endl;
 }

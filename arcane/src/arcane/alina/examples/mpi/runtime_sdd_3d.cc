@@ -17,13 +17,13 @@
 #if defined(SOLVER_BACKEND_CUDA)
 #  include <arcane/alina/backend_cuda.h>
 #  include <arcane/alina/relaxation_cusparse_ilu0.h>
-   typedef amgcl::backend::cuda<double> Backend;
+   typedef Arcane::Alina::backend::cuda<double> Backend;
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
 #include <arcane/alina/backend_builtin.h>
-typedef amgcl::backend::builtin<double> Backend;
+typedef Arcane::Alina::backend::builtin<double> Backend;
 #endif
 
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
@@ -35,10 +35,13 @@ typedef amgcl::backend::builtin<double> Backend;
 #include <arcane/alina/relaxation_as_preconditioner.h>
 #include <arcane/alina/profiler.h>
 
+using namespace Arcane;
+
 #include "domain_partition.h"
 
-   namespace amgcl {
-    profiler<> prof;
+namespace Arcane::Alina
+{
+profiler<> prof;
 }
 
 struct deflation_vectors {
@@ -90,7 +93,7 @@ int main(int argc, char *argv[]) {
         MPI_Finalize();
     } BOOST_SCOPE_EXIT_END
 
-    amgcl::mpi::communicator world(MPI_COMM_WORLD);
+    Alina::mpi::communicator world(MPI_COMM_WORLD);
 
     if (world.rank == 0)
         std::cout << "World size: " << world.size << std::endl;
@@ -99,10 +102,10 @@ int main(int argc, char *argv[]) {
     ptrdiff_t n = 128;
     bool constant_deflation = false;
 
-    amgcl::runtime::coarsening::type   coarsening       = amgcl::runtime::coarsening::smoothed_aggregation;
-    amgcl::runtime::relaxation::type   relaxation       = amgcl::runtime::relaxation::spai0;
-    amgcl::runtime::solver::type       iterative_solver = amgcl::runtime::solver::bicgstabl;
-    amgcl::runtime::mpi::direct::type  direct_solver    = amgcl::runtime::mpi::direct::skyline_lu;
+    Alina::runtime::coarsening::type   coarsening       = Alina::runtime::coarsening::smoothed_aggregation;
+    Alina::runtime::relaxation::type   relaxation       = Alina::runtime::relaxation::spai0;
+    Alina::runtime::solver::type       iterative_solver = Alina::runtime::solver::bicgstabl;
+    Alina::runtime::mpi::direct::type  direct_solver    = Alina::runtime::mpi::direct::skyline_lu;
 
     bool just_relax = false;
     bool symm_dirichlet = true;
@@ -125,22 +128,22 @@ int main(int argc, char *argv[]) {
         )
         (
          "coarsening,c",
-         po::value<amgcl::runtime::coarsening::type>(&coarsening)->default_value(coarsening),
+         po::value<Alina::runtime::coarsening::type>(&coarsening)->default_value(coarsening),
          "ruge_stuben, aggregation, smoothed_aggregation, smoothed_aggr_emin"
         )
         (
          "relaxation,r",
-         po::value<amgcl::runtime::relaxation::type>(&relaxation)->default_value(relaxation),
+         po::value<Alina::runtime::relaxation::type>(&relaxation)->default_value(relaxation),
          "gauss_seidel, ilu0, iluk, ilut, damped_jacobi, spai0, spai1, chebyshev"
         )
         (
          "iter_solver,i",
-         po::value<amgcl::runtime::solver::type>(&iterative_solver)->default_value(iterative_solver),
+         po::value<Alina::runtime::solver::type>(&iterative_solver)->default_value(iterative_solver),
          "cg, bicgstab, bicgstabl, gmres"
         )
         (
          "dir_solver,d",
-         po::value<amgcl::runtime::mpi::direct::type>(&direct_solver)->default_value(direct_solver),
+         po::value<Alina::runtime::mpi::direct::type>(&direct_solver)->default_value(direct_solver),
          "skyline_lu"
 #ifdef AMGCL_HAVE_EIGEN
          ", eigen_splu"
@@ -188,7 +191,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("prm")) {
         for(const std::string &v : vm["prm"].as< std::vector<std::string> >()) {
-            amgcl::put(prm, v);
+            Alina::put(prm, v);
         }
     }
 
@@ -200,7 +203,7 @@ int main(int argc, char *argv[]) {
     boost::array<ptrdiff_t, 3> lo = { {0,   0,   0  } };
     boost::array<ptrdiff_t, 3> hi = { {n-1, n-1, n-1} };
 
-    using amgcl::prof;
+    using Alina::prof;
 
     prof.tic("partition");
     domain_partition<3> part(lo, hi, world.size);
@@ -208,8 +211,8 @@ int main(int argc, char *argv[]) {
 
     std::vector<ptrdiff_t> domain(world.size + 1);
     MPI_Allgather(
-            &chunk, 1, amgcl::mpi::datatype<ptrdiff_t>(),
-            &domain[1], 1, amgcl::mpi::datatype<ptrdiff_t>(), world);
+            &chunk, 1, Alina::mpi::datatype<ptrdiff_t>(),
+            &domain[1], 1, Alina::mpi::datatype<ptrdiff_t>(), world);
     std::partial_sum(domain.begin(), domain.end(), domain.begin());
 
     lo = part.domain(world.rank).min_corner();
@@ -310,7 +313,7 @@ int main(int argc, char *argv[]) {
     auto f = Backend::copy_vector(rhs, bprm);
     auto x = Backend::create_vector(chunk, bprm);
 
-    amgcl::backend::clear(*x);
+    Alina::backend::clear(*x);
 
     size_t iters;
     double resid, tm_setup, tm_solve;
@@ -325,10 +328,10 @@ int main(int argc, char *argv[]) {
 
         prof.tic("setup");
         typedef
-            amgcl::mpi::subdomain_deflation<
-                amgcl::relaxation::as_preconditioner<Backend, amgcl::runtime::relaxation::wrapper >,
-                amgcl::runtime::mpi::solver::wrapper<Backend>,
-                amgcl::runtime::mpi::direct::solver<double>
+            Alina::mpi::subdomain_deflation<
+                Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::wrapper >,
+                Alina::runtime::mpi::solver::wrapper<Backend>,
+                Alina::runtime::mpi::direct::solver<double>
             > SDD;
 
         SDD solve(world, std::tie(chunk, ptr, col, val), prm, bprm);
@@ -343,10 +346,10 @@ int main(int argc, char *argv[]) {
 
         prof.tic("setup");
         typedef
-            amgcl::mpi::subdomain_deflation<
-                amgcl::amg<Backend, amgcl::runtime::coarsening::wrapper, amgcl::runtime::relaxation::wrapper>,
-                amgcl::runtime::mpi::solver::wrapper<Backend>,
-                amgcl::runtime::mpi::direct::solver<double>
+            Alina::mpi::subdomain_deflation<
+                Alina::amg<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
+                Alina::runtime::mpi::solver::wrapper<Backend>,
+                Alina::runtime::mpi::direct::solver<double>
             > SDD;
 
         SDD solve(world, std::tie(chunk, ptr, col, val), prm, bprm);

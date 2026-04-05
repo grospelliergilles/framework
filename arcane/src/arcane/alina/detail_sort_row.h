@@ -31,7 +31,7 @@ THE SOFTWARE.
  * \brief  Sort row of CRS matrix by columns.
  */
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace detail {
 
 template <typename Col, typename Val>

@@ -30,9 +30,9 @@ template <class T, int N, int M>
 using BlockMatrix = Eigen::Matrix<T, N, M>;
 #  else
      template <class T, int N, int M>
-     using BlockMatrix = amgcl::static_matrix<T, N, M>;
+     using BlockMatrix = Arcane::Alina::static_matrix<T, N, M>;
 #endif
-   template <class T> using Backend = amgcl::backend::builtin<T>;
+template <class T> using Backend = Arcane::Alina::backend::builtin<T>;
 #endif
 
 #include <arcane/alina/io_mm.h>
@@ -43,9 +43,11 @@ using BlockMatrix = Eigen::Matrix<T, N, M>;
 #  define AMGCL_BLOCK_SIZES (3)(4)
 #endif
 
-namespace amgcl { profiler<> prof; }
-using amgcl::prof;
-using amgcl::precondition;
+using namespace Arcane;
+
+namespace Arcane::Alina { profiler<> prof; }
+using Alina::prof;
+using Alina::precondition;
 
 //---------------------------------------------------------------------------
 template <class USolver, class PSolver, class Matrix>
@@ -59,29 +61,29 @@ void solve_schur(const Matrix &K, const std::vector<double> &rhs, boost::propert
     std::cout << ctx << std::endl;
     bprm.q = ctx;
 
-    const int UB = amgcl::math::static_rows<typename USolver::backend_type::value_type>::value;
-    const int PB = amgcl::math::static_rows<typename PSolver::backend_type::value_type>::value;
+    const int UB = Alina::math::static_rows<typename USolver::backend_type::value_type>::value;
+    const int PB = Alina::math::static_rows<typename PSolver::backend_type::value_type>::value;
 
     std::list<vex::scoped_program_header> headers;
-    if (UB > 1) headers.emplace_back(ctx, amgcl::backend::vexcl_static_matrix_declaration<float,UB>());
-    if (PB > 1) headers.emplace_back(ctx, amgcl::backend::vexcl_static_matrix_declaration<float,PB>());
+    if (UB > 1) headers.emplace_back(ctx, Alina::backend::vexcl_static_matrix_declaration<float,UB>());
+    if (PB > 1) headers.emplace_back(ctx, Alina::backend::vexcl_static_matrix_declaration<float,PB>());
 #endif
 
     auto t1 = prof.scoped_tic("schur_complement");
 
     prof.tic("setup");
-    amgcl::make_solver<
-        amgcl::preconditioner::schur_pressure_correction<USolver, PSolver>,
-        amgcl::runtime::solver::wrapper<SBackend>
+    Alina::make_solver<
+        Alina::preconditioner::schur_pressure_correction<USolver, PSolver>,
+        Alina::runtime::solver::wrapper<SBackend>
         > solve(K, prm, bprm);
     prof.toc("setup");
 
     std::cout << solve << std::endl;
 
-    auto A = SBackend::copy_matrix(std::make_shared<amgcl::backend::crs<double>>(K), bprm);
+    auto A = SBackend::copy_matrix(std::make_shared<Alina::backend::crs<double>>(K), bprm);
     auto f = SBackend::copy_vector(rhs, bprm);
     auto x = SBackend::create_vector(rhs.size(), bprm);
-    amgcl::backend::clear(*x);
+    Alina::backend::clear(*x);
 
     size_t iters;
     double error;
@@ -97,9 +99,9 @@ void solve_schur(const Matrix &K, const std::vector<double> &rhs, boost::propert
 #define AMGCL_BLOCK_PSOLVER(z, data, B)                 \
   case B: {                                             \
     typedef Backend<BlockMatrix<float, B, B>> BBackend; \
-    typedef amgcl::make_block_solver<                   \
-        amgcl::runtime::preconditioner<BBackend>,       \
-        amgcl::runtime::solver::wrapper<BBackend> >     \
+    typedef ::Arcane::Alina::make_block_solver<                   \
+        ::Arcane::Alina::runtime::preconditioner<BBackend>,       \
+        ::Arcane::Alina::runtime::solver::wrapper<BBackend> >     \
         PSolver;                                        \
     solve_schur<USolver, PSolver>(K, rhs, prm);         \
   } break;
@@ -112,9 +114,9 @@ void solve_schur(int pb, const Matrix &K, const std::vector<double> &rhs, boost:
         case 1:
             {
                 typedef
-                    amgcl::make_solver<
-                        amgcl::runtime::preconditioner<Backend<float>>,
-                        amgcl::runtime::solver::wrapper<Backend<float>>
+                    Alina::make_solver<
+                        Alina::runtime::preconditioner<Backend<float>>,
+                        Alina::runtime::solver::wrapper<Backend<float>>
                         >
                     PSolver;
                 solve_schur<USolver, PSolver>(K, rhs, prm);
@@ -131,9 +133,9 @@ void solve_schur(int pb, const Matrix &K, const std::vector<double> &rhs, boost:
 #define AMGCL_BLOCK_USOLVER(z, data, B)                 \
   case B: {                                             \
     typedef Backend<BlockMatrix<float, B, B>> BBackend; \
-    typedef amgcl::make_block_solver<                   \
-        amgcl::runtime::preconditioner<BBackend>,       \
-        amgcl::runtime::solver::wrapper<BBackend> >     \
+    typedef ::Arcane::Alina::make_block_solver<                   \
+        ::Arcane::Alina::runtime::preconditioner<BBackend>,       \
+        ::Arcane::Alina::runtime::solver::wrapper<BBackend> >     \
         USolver;                                        \
     solve_schur<USolver>(pb, K, rhs, prm);              \
   } break;
@@ -146,9 +148,9 @@ void solve_schur(int ub, int pb, const Matrix &K, const std::vector<double> &rhs
         case 1:
             {
                 typedef
-                    amgcl::make_solver<
-                        amgcl::runtime::preconditioner<Backend<float>>,
-                        amgcl::runtime::solver::wrapper<Backend<float>>
+                    Alina::make_solver<
+                        Alina::runtime::preconditioner<Backend<float>>,
+                        Alina::runtime::solver::wrapper<Backend<float>>
                         >
                     USolver;
                 solve_schur<USolver>(pb, K, rhs, prm);
@@ -168,7 +170,7 @@ int main(int argc, char *argv[]) {
     using std::vector;
 
     namespace po = boost::program_options;
-    namespace io = amgcl::io;
+    namespace io = Alina::io;
 
     po::options_description desc("Options");
 
@@ -241,7 +243,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("prm")) {
         for(const string &v : vm["prm"].as<vector<string> >()) {
-            amgcl::put(prm, v);
+            Alina::put(prm, v);
         }
     }
 
@@ -293,7 +295,7 @@ int main(int argc, char *argv[]) {
                 default:
                     {
                         size_t n, m;
-                        std::tie(n, m) = amgcl::io::mm_reader(pmask)(pm);
+                        std::tie(n, m) = Alina::io::mm_reader(pmask)(pm);
                         precondition(n == rows && m == 1, "Mask file has wrong size");
                         prm.put("precond.pmask", static_cast<void*>(&pm[0]));
                     }

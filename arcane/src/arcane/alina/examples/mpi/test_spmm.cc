@@ -11,11 +11,13 @@
 
 #include <arcane/alina/profiler.h>
 
-namespace amgcl {
+using namespace Arcane;
+
+namespace Arcane::Alina {
     profiler<> prof;
 }
 
-namespace math = amgcl::math;
+namespace math = Alina::math;
 
 template <class Val>
 void assemble(
@@ -58,7 +60,7 @@ template <class Val>
 void test() {
     typedef typename math::rhs_of<Val>::type Rhs;
 
-    amgcl::mpi::communicator comm(MPI_COMM_WORLD);
+    Alina::mpi::communicator comm(MPI_COMM_WORLD);
 
     int n = 16;
     int chunk_len = (n + comm.size - 1) / comm.size;
@@ -82,26 +84,26 @@ void test() {
 
     for(int i = 0; i < chunk; ++i) x[i] = math::constant<Rhs>(drand48());
 
-    typedef amgcl::backend::builtin<Val> Backend;
-    typedef amgcl::mpi::distributed_matrix<Backend> Matrix; 
+    typedef Alina::backend::builtin<Val> Backend;
+    typedef Alina::mpi::distributed_matrix<Backend> Matrix; 
 
     Matrix A(comm, std::tie(chunk, ptr, col, val), chunk);
 
-    auto B = amgcl::mpi::product(A, A);
+    auto B = Alina::mpi::product(A, A);
     B->move_to_backend();
 
-    amgcl::backend::spmv(1, *B, x, 0, y);
+    Alina::backend::spmv(1, *B, x, 0, y);
 
     std::vector<Rhs> X(n), R(n);
-    MPI_Gatherv(&x[0], chunk, amgcl::mpi::datatype<Rhs>(), &X[0], &chunks[0], &displ[0], amgcl::mpi::datatype<Rhs>(), 0, comm);
-    MPI_Gatherv(&y[0], chunk, amgcl::mpi::datatype<Rhs>(), &R[0], &chunks[0], &displ[0], amgcl::mpi::datatype<Rhs>(), 0, comm);
+    MPI_Gatherv(&x[0], chunk, Alina::mpi::datatype<Rhs>(), &X[0], &chunks[0], &displ[0], Alina::mpi::datatype<Rhs>(), 0, comm);
+    MPI_Gatherv(&y[0], chunk, Alina::mpi::datatype<Rhs>(), &R[0], &chunks[0], &displ[0], Alina::mpi::datatype<Rhs>(), 0, comm);
 
     if (comm.rank == 0) {
         std::vector<Rhs> Y(n);
         assemble(n, 0, n, ptr, col, val);
 
-        amgcl::backend::crs<Val> A( std::tie(n, ptr, col, val) );
-        amgcl::backend::spmv(1, *amgcl::backend::product(A, A), X, 0, Y);
+        Alina::backend::crs<Val> A( std::tie(n, ptr, col, val) );
+        Alina::backend::spmv(1, *Alina::backend::product(A, A), X, 0, Y);
 
         double s = 0;
         for(int i = 0; i < n; ++i) {
@@ -119,5 +121,5 @@ int main(int argc, char *argv[]) {
     } BOOST_SCOPE_EXIT_END
 
     test< double >();
-    test< amgcl::static_matrix<double,2,2> >();
+    test< Alina::static_matrix<double,2,2> >();
 }

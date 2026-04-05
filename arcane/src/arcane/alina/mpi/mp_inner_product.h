@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 
 struct inner_product {

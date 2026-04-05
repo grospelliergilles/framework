@@ -73,7 +73,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <arcane/alina/reorder_cuthill_mckee.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace solver {
 
 /// Direct solver that uses skyline LU factorization.
@@ -87,7 +87,7 @@ class skyline_lu {
         typedef typename math::scalar_of<value_type>::type scalar_type;
         typedef typename math::rhs_of<value_type>::type    rhs_type;
 
-        typedef amgcl::detail::empty_params params;
+        typedef Alina::detail::empty_params params;
 
         static size_t coarse_enough() {
             return 3000 / math::static_rows<value_type>::value;

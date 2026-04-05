@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace relaxation {
 
 /// Sparse approximate interface smoother.
@@ -53,7 +53,7 @@ struct spai0 {
 
     typedef typename math::scalar_of<value_type>::type scalar_type;
     /// Relaxation parameters.
-    typedef amgcl::detail::empty_params params;
+    typedef Alina::detail::empty_params params;
 
     /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
     template <class Matrix>

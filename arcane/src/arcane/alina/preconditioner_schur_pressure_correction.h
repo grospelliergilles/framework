@@ -51,7 +51,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/io_mm.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace preconditioner {
 
 /// Schur-complement pressure correction preconditioner

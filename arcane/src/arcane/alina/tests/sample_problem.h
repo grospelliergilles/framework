@@ -29,7 +29,7 @@ int sample_problem(
     val.reserve(n3 * 7);
     rhs.reserve(n3);
 
-    const auto one = amgcl::math::identity<ValueType>();
+    const auto one = Arcane::Alina::math::identity<ValueType>();
 
     double hx = 1;
     double hy = hx * anisotropy;
@@ -72,7 +72,7 @@ int sample_problem(
                     val.push_back(-1.0/(hz * hz) * one);
                 }
 
-                rhs.push_back( amgcl::math::constant<RhsType>(1.0) );
+                rhs.push_back( Arcane::Alina::math::constant<RhsType>(1.0) );
                 ptr.push_back( static_cast<PtrType>(col.size()) );
             }
         }

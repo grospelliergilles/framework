@@ -46,7 +46,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 
-namespace amgcl
+namespace Arcane::Alina
 {
 namespace runtime
 {
@@ -65,7 +65,7 @@ namespace runtime
         runtime::relaxation::type r;
         void* handle;
 
-        wrapper(const amgcl::mpi::distributed_matrix<Backend>& A,
+        wrapper(const Alina::mpi::distributed_matrix<Backend>& A,
                 params prm, const backend_params& bprm = backend_params())
         : r(prm.get("type", runtime::relaxation::spai0))
         , handle(0)
@@ -77,17 +77,17 @@ namespace runtime
 
 #define AMGCL_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
-    handle = static_cast<void*>(new amgcl::mpi::relaxation::type<Backend>(A, prm, bprm)); \
+    handle = static_cast<void*>(new ::Arcane::Alina::mpi::relaxation::type<Backend>(A, prm, bprm)); \
     break
 
 #define AMGCL_RELAX_LOCAL_DISTR(type) \
   case runtime::relaxation::type: \
-    handle = call_constructor<amgcl::relaxation::type>(A, prm, bprm); \
+    handle = call_constructor<::Arcane::Alina::relaxation::type>(A, prm, bprm); \
     break;
 
 #define AMGCL_RELAX_LOCAL_LOCAL(type) \
   case runtime::relaxation::type: \
-    handle = call_constructor<amgcl::relaxation::type>(*A.local(), prm, bprm); \
+    handle = call_constructor<::Arcane::Alina::relaxation::type>(*A.local(), prm, bprm); \
     break;
 
             AMGCL_RELAX_DISTR(spai0);
@@ -114,12 +114,12 @@ namespace runtime
           switch (r) {
 #define AMGCL_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
-    delete static_cast<amgcl::mpi::relaxation::type<Backend>*>(handle); \
+    delete static_cast<::Arcane::Alina::mpi::relaxation::type<Backend>*>(handle); \
     break
 
 #define AMGCL_RELAX_LOCAL(type) \
   case runtime::relaxation::type: \
-    delete static_cast<amgcl::relaxation::type<Backend>*>(handle); \
+    delete static_cast<::Arcane::Alina::relaxation::type<Backend>*>(handle); \
     break;
 
             AMGCL_RELAX_DISTR(spai0);
@@ -147,17 +147,17 @@ namespace runtime
 
 #define AMGCL_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
-    static_cast<const amgcl::mpi::relaxation::type<Backend>*>(handle)->apply_pre(A, rhs, x, tmp); \
+    static_cast<const ::Arcane::Alina::mpi::relaxation::type<Backend>*>(handle)->apply_pre(A, rhs, x, tmp); \
     break
 
 #define AMGCL_RELAX_LOCAL_DISTR(type) \
   case runtime::relaxation::type: \
-    call_apply_pre<amgcl::relaxation::type>(A, rhs, x, tmp); \
+    call_apply_pre<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break;
 
 #define AMGCL_RELAX_LOCAL_LOCAL(type) \
   case runtime::relaxation::type: \
-    call_apply_pre<amgcl::relaxation::type>(*A.local_backend(), rhs, x, tmp); \
+    call_apply_pre<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x, tmp); \
     break;
 
             AMGCL_RELAX_DISTR(spai0);
@@ -186,17 +186,17 @@ namespace runtime
 
 #define AMGCL_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
-    static_cast<const amgcl::mpi::relaxation::type<Backend>*>(handle)->apply_post(A, rhs, x, tmp); \
+    static_cast<const ::Arcane::Alina::mpi::relaxation::type<Backend>*>(handle)->apply_post(A, rhs, x, tmp); \
     break
 
 #define AMGCL_RELAX_LOCAL_DISTR(type) \
   case runtime::relaxation::type: \
-    call_apply_post<amgcl::relaxation::type>(A, rhs, x, tmp); \
+    call_apply_post<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break;
 
 #define AMGCL_RELAX_LOCAL_LOCAL(type) \
   case runtime::relaxation::type: \
-    call_apply_post<amgcl::relaxation::type>(*A.local_backend(), rhs, x, tmp); \
+    call_apply_post<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x, tmp); \
     break;
 
             AMGCL_RELAX_DISTR(spai0);
@@ -225,17 +225,17 @@ namespace runtime
 
 #define AMGCL_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
-    static_cast<const amgcl::mpi::relaxation::type<Backend>*>(handle)->apply(A, rhs, x); \
+    static_cast<const ::Arcane::Alina::mpi::relaxation::type<Backend>*>(handle)->apply(A, rhs, x); \
     break
 
 #define AMGCL_RELAX_LOCAL_DISTR(type) \
   case runtime::relaxation::type: \
-    call_apply<amgcl::relaxation::type>(A, rhs, x); \
+    call_apply<::Arcane::Alina::relaxation::type>(A, rhs, x); \
     break;
 
 #define AMGCL_RELAX_LOCAL_LOCAL(type) \
   case runtime::relaxation::type: \
-    call_apply<amgcl::relaxation::type>(*A.local_backend(), rhs, x); \
+    call_apply<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x); \
     break;
 
             AMGCL_RELAX_DISTR(spai0);

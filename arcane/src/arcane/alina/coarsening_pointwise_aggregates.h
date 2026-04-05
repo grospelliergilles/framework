@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/coarsening_plain_aggregates.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace coarsening {
 
 /// Pointwise aggregation.

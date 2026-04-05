@@ -11,10 +11,10 @@
 #if defined(SOLVER_BACKEND_CUDA)
 #  include <arcane/alina/backend/cuda.hpp>
 #  include <arcane/alina/relaxation/cusparse_ilu0.hpp>
-   typedef amgcl::backend::cuda<double> Backend;
+   typedef Arcane::Alina::backend::cuda<double> Backend;
 #elif defined(SOLVER_BACKEND_EIGEN)
 #include <arcane/alina/EigenBackend.h>
-typedef amgcl::backend::EigenBackend<double> Backend;
+typedef Arcane::Alina::backend::EigenBackend<double> Backend;
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
@@ -22,7 +22,7 @@ typedef amgcl::backend::EigenBackend<double> Backend;
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/value_type_static_matrix.h>
 #include <arcane/alina/adapter_block_matrix.h>
-typedef amgcl::backend::builtin<double> Backend;
+typedef Arcane::Alina::backend::builtin<double> Backend;
 #endif
 
 #include <arcane/alina/relaxation_runtime.h>
@@ -45,9 +45,11 @@ typedef amgcl::backend::builtin<double> Backend;
 #  define AMGCL_BLOCK_SIZES (3)(4)
 #endif
 
-namespace amgcl { profiler<> prof; }
-using amgcl::prof;
-using amgcl::precondition;
+using namespace Arcane;
+
+namespace Arcane::Alina { profiler<> prof; }
+using Alina::prof;
+using Alina::precondition;
 
 #ifdef SOLVER_BACKEND_BUILTIN
 //---------------------------------------------------------------------------
@@ -63,23 +65,23 @@ std::tuple<size_t, double> block_solve(
         bool reorder
         )
 {
-    typedef amgcl::static_matrix<double, B, B> value_type;
-    typedef amgcl::static_matrix<double, B, 1> rhs_type;
-    typedef amgcl::backend::builtin<value_type> BBackend;
+    typedef Alina::static_matrix<double, B, B> value_type;
+    typedef Alina::static_matrix<double, B, 1> rhs_type;
+    typedef Alina::backend::builtin<value_type> BBackend;
 
-    typedef amgcl::make_solver<
-        amgcl::runtime::preconditioner<BBackend>,
-        amgcl::runtime::solver::wrapper<BBackend>
+    typedef Alina::make_solver<
+        Alina::runtime::preconditioner<BBackend>,
+        Alina::runtime::solver::wrapper<BBackend>
         > Solver;
 
     auto As = std::tie(rows, ptr, col, val);
-    auto Ab = amgcl::adapter::block_matrix<value_type>(As);
+    auto Ab = Alina::adapter::block_matrix<value_type>(As);
 
     std::tuple<size_t, double> info;
 
     if (reorder) {
         prof.tic("reorder");
-        amgcl::adapter::reorder<> perm(Ab);
+        Alina::adapter::reorder<> perm(Ab);
         prof.toc("reorder");
 
         prof.tic("setup");
@@ -91,8 +93,8 @@ std::tuple<size_t, double> block_solve(
         rhs_type const * fptr = reinterpret_cast<rhs_type const *>(&rhs[0]);
         rhs_type       * xptr = reinterpret_cast<rhs_type       *>(&x[0]);
 
-        amgcl::backend::numa_vector<rhs_type> F(perm(amgcl::make_iterator_range(fptr, fptr + rows/B)));
-        amgcl::backend::numa_vector<rhs_type> X(perm(amgcl::make_iterator_range(xptr, xptr + rows/B)));
+        Alina::backend::numa_vector<rhs_type> F(perm(Alina::make_iterator_range(fptr, fptr + rows/B)));
+        Alina::backend::numa_vector<rhs_type> X(perm(Alina::make_iterator_range(xptr, xptr + rows/B)));
 
         prof.tic("solve");
         info = solve(F, X);
@@ -109,8 +111,8 @@ std::tuple<size_t, double> block_solve(
         rhs_type const * fptr = reinterpret_cast<rhs_type const *>(&rhs[0]);
         rhs_type       * xptr = reinterpret_cast<rhs_type       *>(&x[0]);
 
-        amgcl::backend::numa_vector<rhs_type> F(fptr, fptr + rows/B);
-        amgcl::backend::numa_vector<rhs_type> X(xptr, xptr + rows/B);
+        Alina::backend::numa_vector<rhs_type> F(fptr, fptr + rows/B);
+        Alina::backend::numa_vector<rhs_type> X(xptr, xptr + rows/B);
 
         prof.tic("solve");
         info = solve(F, X);
@@ -137,13 +139,13 @@ std::tuple<size_t, double> block_solve(
         bool reorder
         )
 {
-    typedef amgcl::static_matrix<double, B, B> value_type;
-    typedef amgcl::static_matrix<double, B, 1> rhs_type;
-    typedef amgcl::backend::vexcl<value_type> BBackend;
+    typedef Alina::static_matrix<double, B, B> value_type;
+    typedef Alina::static_matrix<double, B, 1> rhs_type;
+    typedef Alina::backend::vexcl<value_type> BBackend;
 
-    typedef amgcl::make_solver<
-        amgcl::runtime::preconditioner<BBackend>,
-        amgcl::runtime::solver::wrapper<BBackend>
+    typedef Alina::make_solver<
+        Alina::runtime::preconditioner<BBackend>,
+        Alina::runtime::solver::wrapper<BBackend>
         > Solver;
 
     typename BBackend::params bprm;
@@ -154,16 +156,16 @@ std::tuple<size_t, double> block_solve(
     bprm.fast_matrix_setup = prm.get("fast", true);
 
     vex::scoped_program_header header(ctx,
-            amgcl::backend::vexcl_static_matrix_declaration<double,B>());
+            Alina::backend::vexcl_static_matrix_declaration<double,B>());
 
     auto As = std::tie(rows, ptr, col, val);
-    auto Ab = amgcl::adapter::block_matrix<value_type>(As);
+    auto Ab = Alina::adapter::block_matrix<value_type>(As);
 
     std::tuple<size_t, double> info;
 
     if (reorder) {
         prof.tic("reorder");
-        amgcl::adapter::reorder<> perm(Ab);
+        Alina::adapter::reorder<> perm(Ab);
         prof.toc("reorder");
 
         prof.tic("setup");
@@ -177,10 +179,10 @@ std::tuple<size_t, double> block_solve(
 
         std::vector<rhs_type> tmp(rows / B);
 
-        perm.forward(amgcl::make_iterator_range(fptr, fptr + rows/B), tmp);
+        perm.forward(Alina::make_iterator_range(fptr, fptr + rows/B), tmp);
         vex::vector<rhs_type> f_b(ctx, tmp);
 
-        perm.forward(amgcl::make_iterator_range(xptr, xptr + rows/B), tmp);
+        perm.forward(Alina::make_iterator_range(xptr, xptr + rows/B), tmp);
         vex::vector<rhs_type> x_b(ctx, tmp);
 
         prof.tic("solve");
@@ -247,16 +249,16 @@ std::tuple<size_t, double> scalar_solve(
     }
 #endif
 
-    typedef amgcl::make_solver<
-        amgcl::runtime::preconditioner<Backend>,
-        amgcl::runtime::solver::wrapper<Backend>
+    typedef Alina::make_solver<
+        Alina::runtime::preconditioner<Backend>,
+        Alina::runtime::solver::wrapper<Backend>
         > Solver;
 
     std::tuple<size_t, double> info;
 
     if (reorder) {
         prof.tic("reorder");
-        amgcl::adapter::reorder<> perm(std::tie(rows, ptr, col, val));
+        Alina::adapter::reorder<> perm(std::tie(rows, ptr, col, val));
         prof.toc("reorder");
 
         prof.tic("setup");
@@ -348,9 +350,9 @@ std::tuple<size_t, double> solve(
 //---------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
     namespace po = boost::program_options;
-    namespace io = amgcl::io;
+    namespace io = Alina::io;
 
-    using amgcl::prof;
+    using Alina::prof;
     using std::vector;
     using std::string;
 
@@ -495,7 +497,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("prm")) {
         for(const string &v : vm["prm"].as<vector<string> >()) {
-            amgcl::put(prm, v);
+            Alina::put(prm, v);
         }
     }
 
@@ -567,7 +569,7 @@ int main(int argc, char *argv[]) {
 
             precondition(m * ndim == rows && (ndim == 2 || ndim == 3), "Coordinate matrix has wrong size");
 
-            nv = amgcl::coarsening::rigid_body_modes(ndim, coo, null);
+            nv = Alina::coarsening::rigid_body_modes(ndim, coo, null);
         }
 
         if (nv) {
@@ -626,7 +628,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("output")) {
         auto t = prof.scoped_tic("write");
-        amgcl::io::mm_write(vm["output"].as<string>(), &x[0], x.size());
+        Alina::io::mm_write(vm["output"].as<string>(), &x[0], x.size());
     }
 
     std::cout << "Iterations: " << iters << std::endl

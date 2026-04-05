@@ -48,9 +48,9 @@ THE SOFTWARE.
 
 #if defined(AMGCL_HAVE_PARMETIS)
 #  include <amgcl/mpi/partition/parmetis.hpp>
-#elif defined(AMGCL_HAVE_SCOTCH)
-#  include <amgcl/mpi/partition/ptscotch.hpp>
 #endif
+
+using namespace Arcane;
 
 int main(int argc, char *argv[]) {
     // The command line should contain the matrix, the RHS, and the coordinate files:
@@ -59,16 +59,16 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    amgcl::mpi::init mpi(&argc, &argv);
-    amgcl::mpi::communicator world(MPI_COMM_WORLD);
+    Alina::mpi::init mpi(&argc, &argv);
+    Alina::mpi::communicator world(MPI_COMM_WORLD);
 
     // The profiler:
-    amgcl::profiler<> prof("Nullspace");
+    Alina::profiler<> prof("Nullspace");
 
     // Read the system matrix, the RHS, and the coordinates:
     prof.tic("read");
     // Get the global size of the matrix:
-    ptrdiff_t rows = amgcl::io::crs_size<ptrdiff_t>(argv[1]);
+    ptrdiff_t rows = Alina::io::crs_size<ptrdiff_t>(argv[1]);
 
     // Split the matrix into approximately equal chunks of rows, and
     // make sure each chunk size is divisible by 3.
@@ -82,14 +82,14 @@ int main(int argc, char *argv[]) {
     // Read our part of the system matrix, the RHS and the coordinates.
     std::vector<ptrdiff_t> ptr, col;
     std::vector<double> val, rhs, coo;
-    amgcl::io::read_crs(argv[1], rows, ptr, col, val, row_beg, row_end);
+    Alina::io::read_crs(argv[1], rows, ptr, col, val, row_beg, row_end);
 
     ptrdiff_t n, m;
-    amgcl::io::read_dense(argv[2], n, m, rhs, row_beg, row_end);
-    amgcl::precondition(n == rows && m == 1, "The RHS file has wrong dimensions");
+    Alina::io::read_dense(argv[2], n, m, rhs, row_beg, row_end);
+    Alina::precondition(n == rows && m == 1, "The RHS file has wrong dimensions");
 
-    amgcl::io::read_dense(argv[3], n, m, coo, row_beg / 3, row_end / 3);
-    amgcl::precondition(n * 3 == rows && m == 3, "The coordinate file has wrong dimensions");
+    Alina::io::read_dense(argv[3], n, m, coo, row_beg / 3, row_end / 3);
+    Alina::precondition(n * 3 == rows && m == 3, "The coordinate file has wrong dimensions");
     prof.toc("read");
 
     if (world.rank == 0) {
@@ -100,31 +100,27 @@ int main(int argc, char *argv[]) {
     }
 
     // Declare the backends and the solver type
-    typedef amgcl::backend::builtin<double> SBackend; // the solver backend
-    typedef amgcl::backend::builtin<float>  PBackend; // the preconditioner backend
+    typedef Alina::backend::builtin<double> SBackend; // the solver backend
+    typedef Alina::backend::builtin<float>  PBackend; // the preconditioner backend
 
-    typedef amgcl::mpi::make_solver<
-        amgcl::mpi::amg<
+    typedef Alina::mpi::make_solver<
+        Alina::mpi::amg<
             PBackend,
-            amgcl::mpi::coarsening::smoothed_aggregation<PBackend>,
-            amgcl::mpi::relaxation::spai0<PBackend>
+            Alina::mpi::coarsening::smoothed_aggregation<PBackend>,
+            Alina::mpi::relaxation::spai0<PBackend>
             >,
-        amgcl::mpi::solver::cg<PBackend>
+        Alina::mpi::solver::cg<PBackend>
         > Solver;
 
     // The distributed matrix
-    auto A = std::make_shared<amgcl::mpi::distributed_matrix<SBackend>>(
+    auto A = std::make_shared<Alina::mpi::distributed_matrix<SBackend>>(
             world, std::tie(chunk, ptr, col, val));
 
     // Partition the matrix, the RHS vector, and the coordinates.
     // If neither ParMETIS not PT-SCOTCH are not available,
     // just keep the current naive partitioning.
-#if defined(AMGCL_HAVE_PARMETIS) || defined(AMGCL_HAVE_SCOTCH)
 #  if defined(AMGCL_HAVE_PARMETIS)
-    typedef amgcl::mpi::partition::parmetis<SBackend> Partition;
-#  elif defined(AMGCL_HAVE_SCOTCH)
-    typedef amgcl::mpi::partition::ptscotch<SBackend> Partition;
-#  endif
+    typedef Alina::mpi::partition::parmetis<SBackend> Partition;
 
     if (world.size > 1) {
         auto t = prof.scoped_tic("partition");
@@ -143,8 +139,8 @@ int main(int argc, char *argv[]) {
         R->move_to_backend();
         std::vector<double> new_rhs(R->loc_rows());
         std::vector<double> new_coo(R->loc_rows());
-        amgcl::backend::spmv(1, *R, rhs, 0, new_rhs);
-        amgcl::backend::spmv(1, *R, coo, 0, new_coo);
+        Alina::backend::spmv(1, *R, rhs, 0, new_rhs);
+        Alina::backend::spmv(1, *R, coo, 0, new_coo);
         rhs.swap(new_rhs);
         coo.swap(new_coo);
 
@@ -163,7 +159,7 @@ int main(int argc, char *argv[]) {
     // The function returns the number of near null-space vectors
     // (3 in 2D case, 6 in 3D case) and writes the vectors to the
     // std::vector<double> specified as the last argument:
-    prm.precond.coarsening.aggr.nullspace.cols = amgcl::coarsening::rigid_body_modes(
+    prm.precond.coarsening.aggr.nullspace.cols = Alina::coarsening::rigid_body_modes(
             3, coo, prm.precond.coarsening.aggr.nullspace.B);
 
     // Initialize the solver with the system matrix.

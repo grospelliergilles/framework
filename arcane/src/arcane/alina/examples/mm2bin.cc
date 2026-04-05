@@ -8,13 +8,14 @@
 #include <arcane/alina/io_mm.h>
 #include <arcane/alina/io_binary.h>
 
-namespace io = amgcl::io;
+using namespace Arcane;
+namespace io = Alina::io;
 namespace po = boost::program_options;
-using amgcl::precondition;
+using Alina::precondition;
 
 //---------------------------------------------------------------------------
 template <class T>
-void convert(amgcl::io::mm_reader &ifile, const std::string &ofile) {
+void convert(Alina::io::mm_reader &ifile, const std::string &ofile) {
     std::ofstream f(ofile, std::ios::binary);
     precondition(f, "Failed to open output file for writing.");
 

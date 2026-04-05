@@ -20,14 +20,16 @@
 #include <arcane/alina/io_binary.h>
 #include <arcane/alina/profiler.h>
 
-namespace amgcl {
+using namespace Arcane;
+
+namespace Arcane::Alina {
     profiler<> prof;
 }
 
-namespace math = amgcl::math;
+namespace math = Alina::math;
 
 //---------------------------------------------------------------------------
-ptrdiff_t assemble_poisson3d(amgcl::mpi::communicator comm,
+ptrdiff_t assemble_poisson3d(Alina::mpi::communicator comm,
         ptrdiff_t n, int block_size,
         std::vector<ptrdiff_t> &ptr,
         std::vector<ptrdiff_t> &col,
@@ -100,7 +102,7 @@ ptrdiff_t assemble_poisson3d(amgcl::mpi::communicator comm,
 
 //---------------------------------------------------------------------------
 void solve_scalar(
-        amgcl::mpi::communicator comm,
+        Alina::mpi::communicator comm,
         ptrdiff_t chunk,
         const std::vector<ptrdiff_t> &ptr,
         const std::vector<ptrdiff_t> &col,
@@ -109,16 +111,16 @@ void solve_scalar(
         const std::vector<std::complex<double>> &rhs
         )
 {
-    typedef amgcl::backend::builtin<std::complex<double>> Backend;
+    typedef Alina::backend::builtin<std::complex<double>> Backend;
 
     typedef
-        amgcl::mpi::make_solver<
-            amgcl::runtime::mpi::preconditioner<Backend>,
-            amgcl::runtime::mpi::solver::wrapper<Backend>
+        Alina::mpi::make_solver<
+            Alina::runtime::mpi::preconditioner<Backend>,
+            Alina::runtime::mpi::solver::wrapper<Backend>
             >
         Solver;
 
-    using amgcl::prof;
+    using Alina::prof;
 
     prof.tic("setup");
     Solver solve(comm, std::tie(chunk, ptr, col, val), prm);
@@ -147,13 +149,13 @@ void solve_scalar(
 
 //---------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
-    amgcl::mpi::init_thread mpi(&argc, &argv);
-    amgcl::mpi::communicator comm(MPI_COMM_WORLD);
+    Alina::mpi::init_thread mpi(&argc, &argv);
+    Alina::mpi::communicator comm(MPI_COMM_WORLD);
 
     if (comm.rank == 0)
         std::cout << "World size: " << comm.size << std::endl;
 
-    using amgcl::prof;
+    using Alina::prof;
 
     // Read configuration from command line
     namespace po = boost::program_options;
@@ -199,7 +201,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("prm")) {
         for(const std::string &v : vm["prm"].as<std::vector<std::string> >()) {
-            amgcl::put(prm, v);
+            Alina::put(prm, v);
         }
     }
 

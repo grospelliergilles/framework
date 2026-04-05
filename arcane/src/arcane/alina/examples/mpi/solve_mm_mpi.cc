@@ -25,15 +25,17 @@
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
 #include <arcane/alina/profiler.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
     profiler<> prof;
 }
 
-using amgcl::precondition;
+using namespace Arcane;
+
+using Alina::precondition;
 
 //---------------------------------------------------------------------------
 std::vector<ptrdiff_t> read_problem(
-        const amgcl::mpi::communicator &world,
+        const Alina::mpi::communicator &world,
         const std::string &A_file,
         const std::string &rhs_file,
         const std::string &part_file,
@@ -201,16 +203,16 @@ int main(int argc, char *argv[]) {
         MPI_Finalize();
     } BOOST_SCOPE_EXIT_END
 
-    amgcl::mpi::communicator world(MPI_COMM_WORLD);
+    Alina::mpi::communicator world(MPI_COMM_WORLD);
 
     if (world.rank == 0)
         std::cout << "World size: " << world.size << std::endl;
 
     // Read configuration from command line
-    amgcl::runtime::coarsening::type    coarsening       = amgcl::runtime::coarsening::smoothed_aggregation;
-    amgcl::runtime::relaxation::type    relaxation       = amgcl::runtime::relaxation::spai0;
-    amgcl::runtime::solver::type        iterative_solver = amgcl::runtime::solver::bicgstabl;
-    amgcl::runtime::mpi::direct::type   direct_solver    = amgcl::runtime::mpi::direct::skyline_lu;
+    Alina::runtime::coarsening::type    coarsening       = Alina::runtime::coarsening::smoothed_aggregation;
+    Alina::runtime::relaxation::type    relaxation       = Alina::runtime::relaxation::spai0;
+    Alina::runtime::solver::type        iterative_solver = Alina::runtime::solver::bicgstabl;
+    Alina::runtime::mpi::direct::type   direct_solver    = Alina::runtime::mpi::direct::skyline_lu;
     std::string parameter_file;
     std::string A_file    = "A.mtx";
     std::string rhs_file  = "b.mtx";
@@ -224,22 +226,22 @@ int main(int argc, char *argv[]) {
         ("help,h", "show help")
         (
          "coarsening,c",
-         po::value<amgcl::runtime::coarsening::type>(&coarsening)->default_value(coarsening),
+         po::value<Alina::runtime::coarsening::type>(&coarsening)->default_value(coarsening),
          "ruge_stuben, aggregation, smoothed_aggregation, smoothed_aggr_emin"
         )
         (
          "relaxation,r",
-         po::value<amgcl::runtime::relaxation::type>(&relaxation)->default_value(relaxation),
+         po::value<Alina::runtime::relaxation::type>(&relaxation)->default_value(relaxation),
          "gauss_seidel, ilu0, damped_jacobi, spai0, chebyshev"
         )
         (
          "iter_solver,i",
-         po::value<amgcl::runtime::solver::type>(&iterative_solver)->default_value(iterative_solver),
+         po::value<Alina::runtime::solver::type>(&iterative_solver)->default_value(iterative_solver),
          "cg, bicgstab, bicgstabl, gmres"
         )
         (
          "dir_solver,d",
-         po::value<amgcl::runtime::mpi::direct::type>(&direct_solver)->default_value(direct_solver),
+         po::value<Alina::runtime::mpi::direct::type>(&direct_solver)->default_value(direct_solver),
          "skyline_lu"
 #ifdef AMGCL_HAVE_PASTIX
          ", pastix"
@@ -290,7 +292,7 @@ int main(int argc, char *argv[]) {
     prm.put("isolver.type",          iterative_solver);
     prm.put("dsolver.type",          direct_solver);
 
-    using amgcl::prof;
+    using Alina::prof;
 
     int block_size = prm.get("precond.coarsening.aggr.block_size", 1);
 
@@ -309,17 +311,17 @@ int main(int argc, char *argv[]) {
 
     prof.tic("setup");
     typedef
-        amgcl::mpi::subdomain_deflation<
-            amgcl::amg<
-                amgcl::backend::builtin<double>,
-                amgcl::runtime::coarsening::wrapper,
-                amgcl::runtime::relaxation::wrapper
+        Alina::mpi::subdomain_deflation<
+            Alina::amg<
+                Alina::backend::builtin<double>,
+                Alina::runtime::coarsening::wrapper,
+                Alina::runtime::relaxation::wrapper
                 >,
-            amgcl::runtime::mpi::solver::wrapper<amgcl::backend::builtin<double>>,
-            amgcl::runtime::mpi::direct::solver<double>
+            Alina::runtime::mpi::solver::wrapper<Alina::backend::builtin<double>>,
+            Alina::runtime::mpi::direct::solver<double>
         > SDD;
 
-    std::function<double(ptrdiff_t,unsigned)> dv = amgcl::mpi::constant_deflation(block_size);
+    std::function<double(ptrdiff_t,unsigned)> dv = Alina::mpi::constant_deflation(block_size);
     prm.put("num_def_vec", block_size);
     prm.put("def_vec", &dv);
 

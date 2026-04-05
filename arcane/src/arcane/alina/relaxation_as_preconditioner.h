@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include <memory>
 #include <arcane/alina/backend_builtin.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace relaxation {
 
 /// Allows to use an amgcl smoother as standalone preconditioner.

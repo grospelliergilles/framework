@@ -44,7 +44,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/relaxation_ilu0.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace relaxation {
 namespace detail {
 

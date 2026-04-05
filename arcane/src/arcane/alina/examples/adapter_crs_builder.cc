@@ -13,7 +13,9 @@
 
 #include "sample_problem.h"
 
-namespace amgcl {
+using namespace Arcane;
+
+namespace Arcane::Alina {
     profiler<> prof;
 }
 
@@ -66,12 +68,12 @@ struct poisson_2d {
 //---------------------------------------------------------------------------
 template <class Vec>
 double norm(const Vec &v) {
-    return sqrt(amgcl::backend::inner_product(v, v));
+  return sqrt(Arcane::Alina::backend::inner_product(v, v));
 }
 
 //---------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
-    using amgcl::prof;
+  using Arcane::Alina::prof;
 
     int m = argc > 1 ? atoi(argv[1]) : 1024;
     int n = m * m;
@@ -80,17 +82,17 @@ int main(int argc, char *argv[]) {
     // The use of make_matrix() from crs_builder.hpp allows to construct the
     // system matrix on demand row by row.
     prof.tic("build");
-    typedef amgcl::make_solver<
-        amgcl::amg<
-            amgcl::backend::builtin<double>,
-            amgcl::coarsening::smoothed_aggregation,
-            amgcl::relaxation::gauss_seidel
+    typedef Alina::make_solver<
+        Alina::amg<
+            Alina::backend::builtin<double>,
+            Alina::coarsening::smoothed_aggregation,
+            Alina::relaxation::gauss_seidel
             >,
-        amgcl::solver::cg<
-            amgcl::backend::builtin<double>
+        Alina::solver::cg<
+            Alina::backend::builtin<double>
             >
         > Solver;
-    Solver solve( amgcl::adapter::make_matrix( poisson_2d(m) ) );
+    Solver solve( Alina::adapter::make_matrix( poisson_2d(m) ) );
     prof.toc("build");
 
     std::cout << solve.precond() << std::endl;
@@ -118,7 +120,7 @@ int main(int argc, char *argv[]) {
     //
     // Nesting iterative solvers in this way allows to shave last bits off the
     // error.
-    amgcl::solver::cg< amgcl::backend::builtin<double> > S(n);
+    Alina::solver::cg< Alina::backend::builtin<double> > S(n);
     std::fill(x.begin(), x.end(), 0);
 
     prof.tic("nested solver");

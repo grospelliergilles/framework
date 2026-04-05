@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace preconditioner {
 
 template <class PPrecond, class SPrecond>

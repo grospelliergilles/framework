@@ -46,15 +46,15 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace amgcl::mpi::relaxation
+namespace Arcane::Alina::mpi::relaxation
 {
 
 template <class Backend>
 struct chebyshev
-: public amgcl::relaxation::chebyshev<Backend>
+: public Alina::relaxation::chebyshev<Backend>
 {
   typedef Backend backend_type;
-  typedef amgcl::relaxation::chebyshev<Backend> Base;
+  typedef Alina::relaxation::chebyshev<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -70,10 +70,10 @@ struct chebyshev
 
 template <class Backend>
 struct damped_jacobi
-: public amgcl::relaxation::damped_jacobi<Backend>
+: public Alina::relaxation::damped_jacobi<Backend>
 {
   typedef Backend backend_type;
-  typedef amgcl::relaxation::damped_jacobi<Backend> Base;
+  typedef Alina::relaxation::damped_jacobi<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -89,10 +89,10 @@ struct damped_jacobi
 
 template <class Backend>
 struct gauss_seidel
-: public amgcl::relaxation::gauss_seidel<Backend>
+: public Alina::relaxation::gauss_seidel<Backend>
 {
   typedef Backend backend_type;
-  typedef amgcl::relaxation::gauss_seidel<Backend> Base;
+  typedef Alina::relaxation::gauss_seidel<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -127,10 +127,10 @@ struct gauss_seidel
 
 template <class Backend>
 struct ilu0
-: public amgcl::relaxation::ilu0<Backend>
+: public Alina::relaxation::ilu0<Backend>
 {
   typedef Backend backend_type;
-  typedef amgcl::relaxation::ilu0<Backend> Base;
+  typedef Alina::relaxation::ilu0<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -145,10 +145,10 @@ struct ilu0
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct iluk : public amgcl::relaxation::iluk<Backend>
+struct iluk : public Alina::relaxation::iluk<Backend>
 {
   typedef Backend backend_type;
-  typedef amgcl::relaxation::iluk<Backend> Base;
+  typedef Alina::relaxation::iluk<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -163,10 +163,10 @@ struct iluk : public amgcl::relaxation::iluk<Backend>
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct ilup : public amgcl::relaxation::ilup<Backend>
+struct ilup : public Alina::relaxation::ilup<Backend>
 {
   typedef Backend backend_type;
-  typedef amgcl::relaxation::ilup<Backend> Base;
+  typedef Alina::relaxation::ilup<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -181,10 +181,10 @@ struct ilup : public amgcl::relaxation::ilup<Backend>
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct ilut : public amgcl::relaxation::ilut<Backend>
+struct ilut : public Alina::relaxation::ilut<Backend>
 {
   typedef Backend backend_type;
-  typedef amgcl::relaxation::ilut<Backend> Base;
+  typedef Alina::relaxation::ilut<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -205,7 +205,7 @@ struct spai0
   typedef typename Backend::value_type value_type;
   typedef typename Backend::matrix_diagonal matrix_diagonal;
   typedef typename math::scalar_of<value_type>::type scalar_type;
-  typedef amgcl::detail::empty_params params;
+  typedef Alina::detail::empty_params params;
   typedef typename Backend::params backend_params;
 
   spai0(const distributed_matrix<Backend>& A,
@@ -280,10 +280,10 @@ struct spai0
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct spai1 : public amgcl::relaxation::spai1<Backend>
+struct spai1 : public Alina::relaxation::spai1<Backend>
 {
   typedef Backend backend_type;
-  typedef amgcl::relaxation::spai1<Backend> Base;
+  typedef Alina::relaxation::spai1<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 

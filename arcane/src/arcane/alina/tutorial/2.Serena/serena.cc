@@ -45,6 +45,8 @@ THE SOFTWARE.
 #include <arcane/alina/io_mm.h>
 #include <arcane/alina/profiler.h>
 
+using namespace Arcane;
+
 int main(int argc, char *argv[]) {
     // The command line should contain the matrix file name:
     if (argc < 2) {
@@ -53,7 +55,7 @@ int main(int argc, char *argv[]) {
     }
 
     // The profiler:
-    amgcl::profiler<> prof("Serena");
+    Alina::profiler<> prof("Serena");
 
     // Read the system matrix:
     ptrdiff_t rows, cols;
@@ -61,7 +63,7 @@ int main(int argc, char *argv[]) {
     std::vector<double> val;
 
     prof.tic("read");
-    std::tie(rows, cols) = amgcl::io::mm_reader(argv[1])(ptr, col, val);
+    std::tie(rows, cols) = Alina::io::mm_reader(argv[1])(ptr, col, val);
     std::cout << "Matrix " << argv[1] << ": " << rows << "x" << cols << std::endl;
     prof.toc("read");
 
@@ -94,20 +96,20 @@ int main(int argc, char *argv[]) {
     auto A = std::tie(rows, ptr, col, val);
 
     // Compose the solver type
-    typedef amgcl::static_matrix<double, 3, 3> dmat_type; // matrix value type in double precision
-    typedef amgcl::static_matrix<double, 3, 1> dvec_type; // the corresponding vector value type
-    typedef amgcl::static_matrix<float,  3, 3> smat_type; // matrix value type in single precision
+    typedef Alina::static_matrix<double, 3, 3> dmat_type; // matrix value type in double precision
+    typedef Alina::static_matrix<double, 3, 1> dvec_type; // the corresponding vector value type
+    typedef Alina::static_matrix<float,  3, 3> smat_type; // matrix value type in single precision
 
-    typedef amgcl::backend::builtin<dmat_type> SBackend; // the solver backend
-    typedef amgcl::backend::builtin<smat_type> PBackend; // the preconditioner backend
+    typedef Alina::backend::builtin<dmat_type> SBackend; // the solver backend
+    typedef Alina::backend::builtin<smat_type> PBackend; // the preconditioner backend
 
-    typedef amgcl::make_solver<
-        amgcl::amg<
+    typedef Alina::make_solver<
+        Alina::amg<
             PBackend,
-            amgcl::coarsening::smoothed_aggregation,
-            amgcl::relaxation::spai0
+            Alina::coarsening::smoothed_aggregation,
+            Alina::relaxation::spai0
             >,
-        amgcl::solver::cg<SBackend>
+        Alina::solver::cg<SBackend>
         > Solver;
 
     // Solver parameters
@@ -118,7 +120,7 @@ int main(int argc, char *argv[]) {
     // Use the block_matrix adapter to convert the matrix into
     // the block format on the fly:
     prof.tic("setup");
-    auto Ab = amgcl::adapter::block_matrix<dmat_type>(A);
+    auto Ab = Alina::adapter::block_matrix<dmat_type>(A);
     Solver solve(Ab, prm);
     prof.toc("setup");
 
@@ -133,8 +135,8 @@ int main(int argc, char *argv[]) {
     // Reinterpret both the RHS and the solution vectors as block-valued:
     auto f_ptr = reinterpret_cast<dvec_type*>(f.data());
     auto x_ptr = reinterpret_cast<dvec_type*>(x.data());
-    auto F = amgcl::make_iterator_range(f_ptr, f_ptr + rows / 3);
-    auto X = amgcl::make_iterator_range(x_ptr, x_ptr + rows / 3);
+    auto F = Alina::make_iterator_range(f_ptr, f_ptr + rows / 3);
+    auto X = Alina::make_iterator_range(x_ptr, x_ptr + rows / 3);
 
     prof.tic("solve");
     std::tie(iters, error) = solve(Ab, F, X);

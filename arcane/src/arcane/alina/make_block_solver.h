@@ -7,7 +7,7 @@
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 
 namespace backend {
 

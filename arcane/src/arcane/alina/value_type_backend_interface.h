@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #include <type_traits>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace math {
 
 /// Scalar type of a non-scalar type.

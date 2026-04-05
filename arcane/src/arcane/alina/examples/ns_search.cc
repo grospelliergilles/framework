@@ -21,16 +21,18 @@
 
 #include <arcane/alina/profiler.h>
 
-namespace amgcl { profiler<> prof; }
-using amgcl::prof;
-using amgcl::precondition;
+using namespace Arcane;
+
+namespace Arcane::Alina { profiler<> prof; }
+using Alina::prof;
+using Alina::precondition;
 
 //---------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
     namespace po = boost::program_options;
-    namespace io = amgcl::io;
+    namespace io = Alina::io;
 
-    using amgcl::prof;
+    using Alina::prof;
     using std::vector;
     using std::string;
 
@@ -114,7 +116,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("prm")) {
         for(const string &v : vm["prm"].as<vector<string> >()) {
-            amgcl::put(prm, v);
+            Alina::put(prm, v);
         }
     }
 
@@ -198,14 +200,14 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    typedef amgcl::backend::builtin<double> Backend;
-    typedef amgcl::make_solver<
-        amgcl::amg<
+    typedef Alina::backend::builtin<double> Backend;
+    typedef Alina::make_solver<
+        Alina::amg<
             Backend,
-            amgcl::runtime::coarsening::wrapper,
-            amgcl::runtime::relaxation::wrapper
+            Alina::runtime::coarsening::wrapper,
+            Alina::runtime::relaxation::wrapper
             >,
-        amgcl::runtime::solver::wrapper<Backend>
+        Alina::runtime::solver::wrapper<Backend>
         > Solver;
 
     std::mt19937 rng;
@@ -260,11 +262,11 @@ int main(int argc, char *argv[]) {
 
         // Orthonormalize the new vector
         for(const auto &z : Z) {
-            double c = amgcl::backend::inner_product(x,z) / amgcl::backend::inner_product(z,z);
-            amgcl::backend::axpby(-c, z, 1, x);
+            double c = Alina::backend::inner_product(x,z) / Alina::backend::inner_product(z,z);
+            Alina::backend::axpby(-c, z, 1, x);
         }
 
-        double nx = sqrt(amgcl::backend::inner_product(x, x));
+        double nx = sqrt(Alina::backend::inner_product(x, x));
         for(auto &v : x) v /= nx;
         Z.push_back(x);
     }
@@ -297,7 +299,7 @@ int main(int argc, char *argv[]) {
                   << "-------------------------" << std::endl
                   << S << std::endl;
 
-        amgcl::backend::clear(x);
+        Alina::backend::clear(x);
 
         int iters;
         double error;
@@ -312,7 +314,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("output")) {
         auto t = prof.scoped_tic("write");
-        amgcl::io::mm_write(vm["output"].as<string>(), N.data(), rows, numvec);
+        Alina::io::mm_write(vm["output"].as<string>(), N.data(), rows, numvec);
     }
 
     std::cout << prof << std::endl;

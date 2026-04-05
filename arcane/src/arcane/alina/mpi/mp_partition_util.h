@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 namespace partition {
 
@@ -70,7 +70,7 @@ void symm_graph(const distributed_matrix<Backend> &A,
 
 #pragma omp parallel for
     for(ptrdiff_t i = 0; i < n; ++i) {
-        using amgcl::detail::sort_row;
+        using Alina::detail::sort_row;
 
         ptrdiff_t A_loc_beg = A_loc.ptr[i];
         ptrdiff_t A_loc_end = A_loc.ptr[i+1];

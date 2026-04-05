@@ -8,7 +8,7 @@ BOOST_AUTO_TEST_SUITE( test_solvers )
 
 BOOST_AUTO_TEST_CASE(test_eigen_backend)
 {
-  test_backend<amgcl::backend::EigenBackend<double>>();
+  test_backend<Alina::backend::EigenBackend<double>>();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

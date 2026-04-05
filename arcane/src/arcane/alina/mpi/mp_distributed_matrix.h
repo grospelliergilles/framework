@@ -44,7 +44,7 @@ THE SOFTWARE.
  * \brief  Distributed matrix implementation.
  */
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 
 template <class Backend>

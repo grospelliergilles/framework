@@ -91,7 +91,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/value_type_backend_interface.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace detail {
 
 enum storage_order {
@@ -388,7 +388,7 @@ class QR {
             if (math::is_zero(xnorm2)) return tau;
 
             scalar_type beta = -std::abs(sqrt(sqr(math::norm(alpha)) + xnorm2));
-            if (amgcl::detail::real(alpha) < 0) beta = -beta;
+            if (Alina::detail::real(alpha) < 0) beta = -beta;
 
             tau = math::identity<value_type>() - math::inverse(beta) * alpha;
             alpha = math::inverse(alpha - beta * math::identity<value_type>());
@@ -468,7 +468,7 @@ template <class value_type>
 class QR<value_type, typename std::enable_if<math::is_static_matrix<value_type>::value>::type>
 {
     public:
-        typedef typename amgcl::math::rhs_of<value_type>::type rhs_type;
+        typedef typename Alina::math::rhs_of<value_type>::type rhs_type;
 
         QR() {}
 
@@ -571,7 +571,7 @@ class QR<value_type, typename std::enable_if<math::is_static_matrix<value_type>:
         }
 
     private:
-        typedef typename amgcl::math::scalar_of<value_type>::type scalar_type;
+        typedef typename Alina::math::scalar_of<value_type>::type scalar_type;
 
         int m, n;
         value_type *r;

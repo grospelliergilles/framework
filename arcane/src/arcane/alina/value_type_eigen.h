@@ -36,7 +36,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/value_type_backend_interface.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace backend {
 
 /// Enable Eigen matrix as a value-type.

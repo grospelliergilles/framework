@@ -48,7 +48,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 #include <arcane/alina/mpi/mp_util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace runtime {
 namespace mpi {
 
@@ -94,11 +94,11 @@ class preconditioner {
         typedef typename backend_type::params backend_params;
         typedef boost::property_tree::ptree params;
         typedef typename backend_type::value_type value_type;
-        typedef amgcl::mpi::distributed_matrix<backend_type> matrix;
+        typedef Alina::mpi::distributed_matrix<backend_type> matrix;
 
         template <class Matrix>
         preconditioner(
-                amgcl::mpi::communicator comm,
+                Alina::mpi::communicator comm,
                 const Matrix &Astrip,
                 params prm = params(),
                 const backend_params &bprm = backend_params()
@@ -108,7 +108,7 @@ class preconditioner {
         }
 
         preconditioner(
-                amgcl::mpi::communicator,
+                Alina::mpi::communicator,
                 std::shared_ptr<matrix> A,
                 params prm = params(),
                 const backend_params &bprm = backend_params()
@@ -122,12 +122,12 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            amgcl::mpi::amg<
+                            Alina::mpi::amg<
                                 Backend,
-                                amgcl::runtime::mpi::coarsening::wrapper<Backend>,
-                                amgcl::runtime::mpi::relaxation::wrapper<Backend>,
-                                amgcl::runtime::mpi::direct::solver<value_type>,
-                                amgcl::runtime::mpi::partition::wrapper<Backend>
+                                Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                                Alina::runtime::mpi::relaxation::wrapper<Backend>,
+                                Alina::runtime::mpi::direct::solver<value_type>,
+                                Alina::runtime::mpi::partition::wrapper<Backend>
                                 >
                             Precond;
 
@@ -137,8 +137,8 @@ class preconditioner {
                 case precond_class::relaxation:
                     {
                         typedef
-                            amgcl::mpi::relaxation::as_preconditioner<
-                                amgcl::runtime::mpi::relaxation::wrapper<Backend>
+                            Alina::mpi::relaxation::as_preconditioner<
+                                Alina::runtime::mpi::relaxation::wrapper<Backend>
                                 >
                             Precond;
 
@@ -160,12 +160,12 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            amgcl::mpi::amg<
+                            Alina::mpi::amg<
                                 Backend,
-                                amgcl::runtime::mpi::coarsening::wrapper<Backend>,
-                                amgcl::runtime::mpi::relaxation::wrapper<Backend>,
-                                amgcl::runtime::mpi::direct::solver<value_type>,
-                                amgcl::runtime::mpi::partition::wrapper<Backend>
+                                Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                                Alina::runtime::mpi::relaxation::wrapper<Backend>,
+                                Alina::runtime::mpi::direct::solver<value_type>,
+                                Alina::runtime::mpi::partition::wrapper<Backend>
                                 >
                             Precond;
 
@@ -184,12 +184,12 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            amgcl::mpi::amg<
+                            Alina::mpi::amg<
                                 Backend,
-                                amgcl::runtime::mpi::coarsening::wrapper<Backend>,
-                                amgcl::runtime::mpi::relaxation::wrapper<Backend>,
-                                amgcl::runtime::mpi::direct::solver<value_type>,
-                                amgcl::runtime::mpi::partition::wrapper<Backend>
+                                Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                                Alina::runtime::mpi::relaxation::wrapper<Backend>,
+                                Alina::runtime::mpi::direct::solver<value_type>,
+                                Alina::runtime::mpi::partition::wrapper<Backend>
                                 >
                             Precond;
 
@@ -199,8 +199,8 @@ class preconditioner {
                 case precond_class::relaxation:
                     {
                         typedef
-                            amgcl::mpi::relaxation::as_preconditioner<
-                                amgcl::runtime::mpi::relaxation::wrapper<Backend>
+                            Alina::mpi::relaxation::as_preconditioner<
+                                Alina::runtime::mpi::relaxation::wrapper<Backend>
                                 >
                             Precond;
 
@@ -218,12 +218,12 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            amgcl::mpi::amg<
+                            Alina::mpi::amg<
                                 Backend,
-                                amgcl::runtime::mpi::coarsening::wrapper<Backend>,
-                                amgcl::runtime::mpi::relaxation::wrapper<Backend>,
-                                amgcl::runtime::mpi::direct::solver<value_type>,
-                                amgcl::runtime::mpi::partition::wrapper<Backend>
+                                Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                                Alina::runtime::mpi::relaxation::wrapper<Backend>,
+                                Alina::runtime::mpi::direct::solver<value_type>,
+                                Alina::runtime::mpi::partition::wrapper<Backend>
                                 >
                             Precond;
 
@@ -232,8 +232,8 @@ class preconditioner {
                 case precond_class::relaxation:
                     {
                         typedef
-                            amgcl::mpi::relaxation::as_preconditioner<
-                                amgcl::runtime::mpi::relaxation::wrapper<Backend>
+                            Alina::mpi::relaxation::as_preconditioner<
+                                Alina::runtime::mpi::relaxation::wrapper<Backend>
                                 >
                             Precond;
 
@@ -253,12 +253,12 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            amgcl::mpi::amg<
+                            Alina::mpi::amg<
                                 Backend,
-                                amgcl::runtime::mpi::coarsening::wrapper<Backend>,
-                                amgcl::runtime::mpi::relaxation::wrapper<Backend>,
-                                amgcl::runtime::mpi::direct::solver<value_type>,
-                                amgcl::runtime::mpi::partition::wrapper<Backend>
+                                Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                                Alina::runtime::mpi::relaxation::wrapper<Backend>,
+                                Alina::runtime::mpi::direct::solver<value_type>,
+                                Alina::runtime::mpi::partition::wrapper<Backend>
                                 >
                             Precond;
 
@@ -267,8 +267,8 @@ class preconditioner {
                 case precond_class::relaxation:
                     {
                         typedef
-                            amgcl::mpi::relaxation::as_preconditioner<
-                                amgcl::runtime::mpi::relaxation::wrapper<Backend>
+                            Alina::mpi::relaxation::as_preconditioner<
+                                Alina::runtime::mpi::relaxation::wrapper<Backend>
                                 >
                             Precond;
 
@@ -290,12 +290,12 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            amgcl::mpi::amg<
+                            Alina::mpi::amg<
                                 Backend,
-                                amgcl::runtime::mpi::coarsening::wrapper<Backend>,
-                                amgcl::runtime::mpi::relaxation::wrapper<Backend>,
-                                amgcl::runtime::mpi::direct::solver<value_type>,
-                                amgcl::runtime::mpi::partition::wrapper<Backend>
+                                Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                                Alina::runtime::mpi::relaxation::wrapper<Backend>,
+                                Alina::runtime::mpi::direct::solver<value_type>,
+                                Alina::runtime::mpi::partition::wrapper<Backend>
                                 >
                             Precond;
 
@@ -305,8 +305,8 @@ class preconditioner {
                 case precond_class::relaxation:
                     {
                         typedef
-                            amgcl::mpi::relaxation::as_preconditioner<
-                                amgcl::runtime::mpi::relaxation::wrapper<Backend>
+                            Alina::mpi::relaxation::as_preconditioner<
+                                Alina::runtime::mpi::relaxation::wrapper<Backend>
                                 >
                             Precond;
 

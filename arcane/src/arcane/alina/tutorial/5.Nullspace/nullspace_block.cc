@@ -47,6 +47,8 @@ THE SOFTWARE.
 #include <arcane/alina/io_mm.h>
 #include <arcane/alina/profiler.h>
 
+using namespace Arcane;
+
 int main(int argc, char *argv[]) {
     // The command line should contain the matrix, the RHS, and the coordinate files:
     if (argc < 4) {
@@ -55,7 +57,7 @@ int main(int argc, char *argv[]) {
     }
 
     // The profiler:
-    amgcl::profiler<> prof("Nullspace");
+    Alina::profiler<> prof("Nullspace");
 
     // Read the system matrix, the RHS, and the coordinates:
     ptrdiff_t rows, cols, ndim, ncoo;
@@ -63,12 +65,12 @@ int main(int argc, char *argv[]) {
     std::vector<double> val, rhs, coo;
 
     prof.tic("read");
-    std::tie(rows, rows) = amgcl::io::mm_reader(argv[1])(ptr, col, val);
-    std::tie(rows, cols) = amgcl::io::mm_reader(argv[2])(rhs);
-    std::tie(ncoo, ndim) = amgcl::io::mm_reader(argv[3])(coo);
+    std::tie(rows, rows) = Alina::io::mm_reader(argv[1])(ptr, col, val);
+    std::tie(rows, cols) = Alina::io::mm_reader(argv[2])(rhs);
+    std::tie(ncoo, ndim) = Alina::io::mm_reader(argv[3])(coo);
     prof.toc("read");
 
-    amgcl::precondition(ncoo * ndim == rows && (ndim == 2 || ndim == 3),
+    Alina::precondition(ncoo * ndim == rows && (ndim == 2 || ndim == 3),
             "The coordinate file has wrong dimensions");
 
     std::cout << "Matrix " << argv[1] << ": " << rows << "x" << rows << std::endl;
@@ -76,20 +78,20 @@ int main(int argc, char *argv[]) {
     std::cout << "Coords " << argv[3] << ": " << ncoo << "x" << ndim << std::endl;
 
     // Declare the solver type
-    typedef amgcl::static_matrix<double, 3, 3> DBlock;
-    typedef amgcl::static_matrix<float, 3, 3> FBlock;
-    typedef amgcl::backend::builtin<DBlock> SBackend; // the solver backend
-    typedef amgcl::backend::builtin<FBlock> PBackend; // the preconditioner backend
+    typedef Alina::static_matrix<double, 3, 3> DBlock;
+    typedef Alina::static_matrix<float, 3, 3> FBlock;
+    typedef Alina::backend::builtin<DBlock> SBackend; // the solver backend
+    typedef Alina::backend::builtin<FBlock> PBackend; // the preconditioner backend
 
-    typedef amgcl::make_solver<
-        amgcl::amg<
+    typedef Alina::make_solver<
+        Alina::amg<
             PBackend,
-            amgcl::coarsening::as_scalar<
-                amgcl::coarsening::smoothed_aggregation
+            Alina::coarsening::as_scalar<
+                Alina::coarsening::smoothed_aggregation
                 >::type,
-            amgcl::relaxation::ilu0
+            Alina::relaxation::ilu0
             >,
-        amgcl::solver::cg<SBackend>
+        Alina::solver::cg<SBackend>
         > Solver;
 
     // Solver parameters:
@@ -101,12 +103,12 @@ int main(int argc, char *argv[]) {
     // The function returns the number of near null-space vectors
     // (3 in 2D case, 6 in 3D case) and writes the vectors to the
     // std::vector<double> specified as the last argument:
-    prm.precond.coarsening.nullspace.cols = amgcl::coarsening::rigid_body_modes(
+    prm.precond.coarsening.nullspace.cols = Alina::coarsening::rigid_body_modes(
             ndim, coo, prm.precond.coarsening.nullspace.B);
 
     // We use the tuple of CRS arrays to represent the system matrix.
     auto A = std::tie(rows, ptr, col, val);
-    auto Ab = amgcl::adapter::block_matrix<DBlock>(A);
+    auto Ab = Alina::adapter::block_matrix<DBlock>(A);
 
     // Initialize the solver with the system matrix.
     prof.tic("setup");
@@ -122,8 +124,8 @@ int main(int argc, char *argv[]) {
     std::vector<double> x(rows, 0.0);
 
     // Reinterpret both the RHS and the solution vectors as block-valued:
-    auto F = amgcl::backend::reinterpret_as_rhs<DBlock>(rhs);
-    auto X = amgcl::backend::reinterpret_as_rhs<DBlock>(x);
+    auto F = Alina::backend::reinterpret_as_rhs<DBlock>(rhs);
+    auto X = Alina::backend::reinterpret_as_rhs<DBlock>(x);
 
     prof.tic("solve");
     std::tie(iters, error) = solve(Ab, F, X);

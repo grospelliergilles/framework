@@ -34,13 +34,13 @@ THE SOFTWARE.
 #include <arcane/alina/solver_idrs.h>
 #include <arcane/alina/mpi/mp_inner_product.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 namespace solver {
 
 template <class Backend, class InnerProduct = mpi::inner_product>
-class idrs : public amgcl::solver::idrs<Backend, InnerProduct> {
-    typedef amgcl::solver::idrs<Backend, InnerProduct> Base;
+class idrs : public Alina::solver::idrs<Backend, InnerProduct> {
+    typedef Alina::solver::idrs<Backend, InnerProduct> Base;
     public:
         using Base::Base;
 };

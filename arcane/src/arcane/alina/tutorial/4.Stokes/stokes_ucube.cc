@@ -50,6 +50,8 @@ THE SOFTWARE.
 #include <arcane/alina/io_binary.h>
 #include <arcane/alina/profiler.h>
 
+using namespace Arcane;
+
 //---------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
     // The command line should contain the matrix and the RHS file names,
@@ -60,7 +62,7 @@ int main(int argc, char *argv[]) {
     }
 
     // The profiler:
-    amgcl::profiler<> prof("UCube4");
+    Alina::profiler<> prof("UCube4");
 
     // Read the system matrix:
     ptrdiff_t rows, cols;
@@ -68,8 +70,8 @@ int main(int argc, char *argv[]) {
     std::vector<double> val, rhs;
 
     prof.tic("read");
-    amgcl::io::read_crs(argv[1], rows, ptr, col, val);
-    amgcl::io::read_dense(argv[2], rows, cols, rhs);
+    Alina::io::read_crs(argv[1], rows, ptr, col, val);
+    Alina::io::read_dense(argv[2], rows, cols, rhs);
     std::cout << "Matrix " << argv[1] << ": " << rows << "x" << rows << std::endl;
     std::cout << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
     prof.toc("read");
@@ -83,30 +85,30 @@ int main(int argc, char *argv[]) {
     auto A = std::tie(rows, ptr, col, val);
 
     // Compose the solver type
-    typedef amgcl::backend::builtin<double> SBackend; // the outer iterative solver backend
-    typedef amgcl::backend::builtin<float> PBackend;  // the PSolver backend
-    typedef amgcl::backend::builtin<
-        amgcl::static_matrix<float,3,3>> UBackend;    // the USolver backend
+    typedef Alina::backend::builtin<double> SBackend; // the outer iterative solver backend
+    typedef Alina::backend::builtin<float> PBackend;  // the PSolver backend
+    typedef Alina::backend::builtin<
+        Alina::static_matrix<float,3,3>> UBackend;    // the USolver backend
 
-    typedef amgcl::make_solver<
-        amgcl::preconditioner::schur_pressure_correction<
-            amgcl::make_block_solver<
-                amgcl::amg<
+    typedef Alina::make_solver<
+        Alina::preconditioner::schur_pressure_correction<
+            Alina::make_block_solver<
+                Alina::amg<
                     UBackend,
-                    amgcl::coarsening::aggregation,
-                    amgcl::relaxation::ilu0
+                    Alina::coarsening::aggregation,
+                    Alina::relaxation::ilu0
                     >,
-                amgcl::solver::preonly<UBackend>
+                Alina::solver::preonly<UBackend>
                 >,
-            amgcl::make_solver<
-                amgcl::relaxation::as_preconditioner<
+            Alina::make_solver<
+                Alina::relaxation::as_preconditioner<
                     PBackend,
-                    amgcl::relaxation::spai0
+                    Alina::relaxation::spai0
                     >,
-                amgcl::solver::preonly<PBackend>
+                Alina::solver::preonly<PBackend>
                 >
             >,
-        amgcl::solver::cg<SBackend>
+        Alina::solver::cg<SBackend>
         > Solver;
 
     // Solver parameters

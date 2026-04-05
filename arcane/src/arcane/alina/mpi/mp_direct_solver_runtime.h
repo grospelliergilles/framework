@@ -43,7 +43,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_direct_solve_eigen_splu.h>
 #endif
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace runtime {
 namespace mpi {
 namespace direct {
@@ -117,7 +117,7 @@ class solver {
         typedef boost::property_tree::ptree params;
 
         template <class Matrix>
-        solver(amgcl::mpi::communicator comm, const Matrix &A, params prm = params())
+        solver(Alina::mpi::communicator comm, const Matrix &A, params prm = params())
             : s(prm.get("type", skyline_lu))
         {
             if (!prm.erase("type")) AMGCL_PARAM_MISSING("type");
@@ -125,14 +125,14 @@ class solver {
             switch (s) {
                 case skyline_lu:
                     {
-                        typedef amgcl::mpi::direct::skyline_lu<value_type> S;
+                        typedef Alina::mpi::direct::skyline_lu<value_type> S;
                         handle = static_cast<void*>(new S(comm, A, prm));
                     }
                     break;
 #ifdef AMGCL_HAVE_EIGEN
                 case eigen_splu:
                     {
-                        typedef amgcl::mpi::direct::eigen_splu<value_type> S;
+                        typedef Alina::mpi::direct::eigen_splu<value_type> S;
                         do_construct<S, value_type>(comm, A, prm);
                     }
                     break;
@@ -140,13 +140,13 @@ class solver {
 #ifdef AMGCL_HAVE_PASTIX
                 case dpastix:
                     {
-                        typedef amgcl::mpi::direct::pastix<value_type,true> S;
+                        typedef Alina::mpi::direct::pastix<value_type,true> S;
                         do_construct<S, value_type>(comm, A, prm);
                     }
                     break;
                 case spastix:
                     {
-                        typedef amgcl::mpi::direct::pastix<value_type,false> S;
+                        typedef Alina::mpi::direct::pastix<value_type,false> S;
                         do_construct<S, value_type>(comm, A, prm);
                     }
                     break;
@@ -165,14 +165,14 @@ class solver {
             switch (s) {
                 case skyline_lu:
                     {
-                        typedef amgcl::mpi::direct::skyline_lu<value_type> S;
+                        typedef Alina::mpi::direct::skyline_lu<value_type> S;
                         static_cast<const S*>(handle)->operator()(rhs, x);
                     }
                     break;
 #ifdef AMGCL_HAVE_EIGEN
                 case eigen_splu:
                     {
-                        typedef amgcl::mpi::direct::eigen_splu<value_type> S;
+                        typedef Alina::mpi::direct::eigen_splu<value_type> S;
                         do_solve<S, value_type>(rhs, x);
                     }
                     break;
@@ -180,13 +180,13 @@ class solver {
 #ifdef AMGCL_HAVE_PASTIX
                 case dpastix:
                     {
-                        typedef amgcl::mpi::direct::pastix<value_type, true> S;
+                        typedef Alina::mpi::direct::pastix<value_type, true> S;
                         do_solve<S, value_type>(rhs, x);
                     }
                     break;
                 case spastix:
                     {
-                        typedef amgcl::mpi::direct::pastix<value_type, false> S;
+                        typedef Alina::mpi::direct::pastix<value_type, false> S;
                         do_solve<S, value_type>(rhs, x);
                     }
                     break;
@@ -200,14 +200,14 @@ class solver {
             switch (s) {
                 case skyline_lu:
                     {
-                        typedef amgcl::mpi::direct::skyline_lu<value_type> S;
+                        typedef Alina::mpi::direct::skyline_lu<value_type> S;
                         delete static_cast<S*>(handle);
                     }
                     break;
 #ifdef AMGCL_HAVE_EIGEN
                 case eigen_splu:
                     {
-                        typedef amgcl::mpi::direct::eigen_splu<value_type> S;
+                        typedef Alina::mpi::direct::eigen_splu<value_type> S;
                         do_destruct<S, value_type>();
                     }
                     break;
@@ -215,13 +215,13 @@ class solver {
 #ifdef AMGCL_HAVE_PASTIX
                 case dpastix:
                     {
-                        typedef amgcl::mpi::direct::pastix<value_type, true> S;
+                        typedef Alina::mpi::direct::pastix<value_type, true> S;
                         do_destruct<S, value_type>();
                     }
                     break;
                 case spastix:
                     {
-                        typedef amgcl::mpi::direct::pastix<value_type, false> S;
+                        typedef Alina::mpi::direct::pastix<value_type, false> S;
                         do_destruct<S, value_type>();
                     }
                     break;
@@ -239,7 +239,7 @@ class solver {
             std::is_same<V, float>::value || std::is_same<V, double>::value,
             void
         >::type
-        do_construct(amgcl::mpi::communicator comm, const Matrix &A, const params &prm) {
+        do_construct(Alina::mpi::communicator comm, const Matrix &A, const params &prm) {
             handle = static_cast<void*>(new S(comm, A, prm));
         }
 
@@ -248,7 +248,7 @@ class solver {
             !std::is_same<V, float>::value && !std::is_same<V, double>::value,
             void
         >::type
-        do_construct(amgcl::mpi::communicator, const Matrix&, const params&) {
+        do_construct(Alina::mpi::communicator, const Matrix&, const params&) {
             throw std::logic_error("The direct solver does not support the value type");
         }
 

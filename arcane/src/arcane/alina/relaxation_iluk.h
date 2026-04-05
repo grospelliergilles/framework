@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/relaxation_detail_ilu_solve.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace relaxation {
 
 /// ILU(k) smoother.

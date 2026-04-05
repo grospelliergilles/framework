@@ -40,7 +40,7 @@ THE SOFTWARE.
 #include <arcane/alina/coarsening_tentative_prolongation.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 
 /// Coarsening strategies
 namespace coarsening {

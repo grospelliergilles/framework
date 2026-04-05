@@ -39,7 +39,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace solver {
 
 template < class Solver >
@@ -48,7 +48,7 @@ class EigenSolver {
         typedef typename Solver::MatrixType MatrixType;
         typedef typename Solver::Scalar     value_type;
 
-        typedef amgcl::detail::empty_params params;
+        typedef Alina::detail::empty_params params;
 
         static size_t coarse_enough() {
             return 3000 / math::static_rows<value_type>::value;

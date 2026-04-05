@@ -39,7 +39,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/solver_skyline_lu.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace backend {
 
 /// Sparse matrix in Block CRS format.

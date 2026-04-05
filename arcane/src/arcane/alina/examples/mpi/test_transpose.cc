@@ -9,7 +9,9 @@
 #include <arcane/alina/io_mm.h>
 #include <arcane/alina/profiler.h>
 
-namespace amgcl
+using namespace Arcane;
+
+namespace Arcane::Alina
 {
     profiler<> prof;
 }
@@ -21,7 +23,7 @@ int main(int argc, char* argv[])
         MPI_Finalize();
     } BOOST_SCOPE_EXIT_END
 
-    amgcl::mpi::communicator comm(MPI_COMM_WORLD);
+    Alina::mpi::communicator comm(MPI_COMM_WORLD);
 
     int n = 16;
     int chunk_len = (n + comm.size - 1) / comm.size;
@@ -55,21 +57,21 @@ int main(int argc, char* argv[])
         ptr.push_back(col.size());
     }
 
-    typedef amgcl::backend::builtin<double> Backend;
-    typedef amgcl::mpi::distributed_matrix<Backend> Matrix; 
+    typedef Alina::backend::builtin<double> Backend;
+    typedef Alina::mpi::distributed_matrix<Backend> Matrix; 
 
     Matrix A(comm, std::tie(chunk, ptr, col, val), chunk);
 
     {
         std::ostringstream fname;
         fname << "A_loc_" << comm.rank << ".mtx";
-        amgcl::io::mm_write(fname.str(), *A.local());
+        Alina::io::mm_write(fname.str(), *A.local());
     }
 
     {
         std::ostringstream fname;
         fname << "A_rem_" << comm.rank << ".mtx";
-        amgcl::io::mm_write(fname.str(), *A.remote());
+        Alina::io::mm_write(fname.str(), *A.remote());
     }
 
     auto B = transpose(A);
@@ -77,13 +79,13 @@ int main(int argc, char* argv[])
     {
         std::ostringstream fname;
         fname << "B_loc_" << comm.rank << ".mtx";
-        amgcl::io::mm_write(fname.str(), *B->local());
+        Alina::io::mm_write(fname.str(), *B->local());
     }
 
     {
         std::ostringstream fname;
         fname << "B_rem_" << comm.rank << ".mtx";
-        amgcl::io::mm_write(fname.str(), *B->remote());
+        Alina::io::mm_write(fname.str(), *B->remote());
     }
 
 }

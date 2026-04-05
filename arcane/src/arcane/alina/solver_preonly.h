@@ -36,7 +36,7 @@ THE SOFTWARE.
 #include <arcane/alina/solver_detail_default_inner_product.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 
 /// Iterative solvers
 namespace solver {
@@ -66,7 +66,7 @@ class preonly {
             >::return_type coef_type;
 
         /// Solver parameters.
-        typedef amgcl::detail::empty_params params;
+        typedef Alina::detail::empty_params params;
 
         /// Preallocates necessary data structures for the system of size \p n.
         preonly(

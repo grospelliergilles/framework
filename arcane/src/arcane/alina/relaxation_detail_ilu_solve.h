@@ -37,7 +37,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_builtin_hybrid.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace relaxation {
 namespace detail {
 

@@ -34,7 +34,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 namespace direct {
 

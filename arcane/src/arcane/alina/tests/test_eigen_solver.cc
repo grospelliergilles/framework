@@ -8,11 +8,13 @@
 #include <arcane/alina/profiler.h>
 #include "sample_problem.h"
 
-namespace amgcl {
+namespace Arcane::Alina {
     profiler<> prof;
 }
 
 BOOST_AUTO_TEST_SUITE( test_eigen_solver )
+
+using namespace Arcane;
 
 BOOST_AUTO_TEST_CASE(eigen_solver)
 {
@@ -22,10 +24,10 @@ BOOST_AUTO_TEST_CASE(eigen_solver)
     std::vector<double> rhs;
 
     size_t n = sample_problem(16, val, col, ptr, rhs);
-    amgcl::backend::crs<double> A(std::tie(n, ptr, col, val));
+    Alina::backend::crs<double> A(std::tie(n, ptr, col, val));
 
     typedef
-        amgcl::solver::EigenSolver<Eigen::SparseLU<Eigen::SparseMatrix<double, Eigen::ColMajor, int> > >
+        Alina::solver::EigenSolver<Eigen::SparseLU<Eigen::SparseMatrix<double, Eigen::ColMajor, int> > >
         Solver;
 
     Solver solve(A);
@@ -35,9 +37,9 @@ BOOST_AUTO_TEST_CASE(eigen_solver)
 
     solve(rhs, x);
 
-    amgcl::backend::residual(rhs, A, x, r);
+    Alina::backend::residual(rhs, A, x, r);
 
-    BOOST_CHECK_SMALL(sqrt(amgcl::backend::inner_product(r, r)), 1e-8);
+    BOOST_CHECK_SMALL(sqrt(Alina::backend::inner_product(r, r)), 1e-8);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

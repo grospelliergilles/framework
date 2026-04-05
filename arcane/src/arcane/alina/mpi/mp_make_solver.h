@@ -46,14 +46,14 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_inner_product.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 
 template <
     class Precond,
     class IterativeSolver
     >
-class make_solver : public amgcl::detail::non_copyable {
+class make_solver : public Alina::detail::non_copyable {
     static_assert(
             backend::backends_compatible<
                 typename IterativeSolver::backend_type,
@@ -63,7 +63,7 @@ class make_solver : public amgcl::detail::non_copyable {
             );
     public:
         typedef typename IterativeSolver::backend_type backend_type;
-        typedef amgcl::mpi::distributed_matrix<typename Precond::backend_type> matrix;
+        typedef Alina::mpi::distributed_matrix<typename Precond::backend_type> matrix;
         typedef typename backend_type::value_type value_type;
         typedef typename backend_type::params backend_params;
         typedef typename backend::builtin<value_type>::matrix build_matrix;

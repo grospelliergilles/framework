@@ -56,6 +56,8 @@ THE SOFTWARE.
 // Block size
 const int B = 3;
 
+using namespace Arcane;
+
 //---------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
     // The command line should contain the matrix file name:
@@ -64,15 +66,15 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    amgcl::mpi::init mpi(&argc, &argv);
-    amgcl::mpi::communicator world(MPI_COMM_WORLD);
+    Alina::mpi::init mpi(&argc, &argv);
+    Alina::mpi::communicator world(MPI_COMM_WORLD);
 
     // The profiler:
-    amgcl::profiler<> prof("Serena MPI");
+    Alina::profiler<> prof("Serena MPI");
 
     prof.tic("read");
     // Get the global size of the matrix:
-    ptrdiff_t rows = amgcl::io::crs_size<ptrdiff_t>(argv[1]);
+    ptrdiff_t rows = Alina::io::crs_size<ptrdiff_t>(argv[1]);
 
     // Split the matrix into approximately equal chunks of rows, and
     // make sure each chunk size is divisible by the block size.
@@ -86,7 +88,7 @@ int main(int argc, char *argv[]) {
     // Read our part of the system matrix.
     std::vector<ptrdiff_t> ptr, col;
     std::vector<double> val;
-    amgcl::io::read_crs(argv[1], rows, ptr, col, val, row_beg, row_end);
+    Alina::io::read_crs(argv[1], rows, ptr, col, val, row_beg, row_end);
     prof.toc("read");
 
     if (world.rank == 0) std::cout
@@ -94,19 +96,19 @@ int main(int argc, char *argv[]) {
         << "Matrix " << argv[1] << ": " << rows << "x" << rows << std::endl;
 
     // Declare the backend and the solver types
-    typedef amgcl::static_matrix<double, B, B> dmat_type;
-    typedef amgcl::static_matrix<double, B, 1> dvec_type;
-    typedef amgcl::static_matrix<float,  B, B> fmat_type;
-    typedef amgcl::backend::builtin<dmat_type> DBackend;
-    typedef amgcl::backend::builtin<fmat_type> FBackend;
+    typedef Alina::static_matrix<double, B, B> dmat_type;
+    typedef Alina::static_matrix<double, B, 1> dvec_type;
+    typedef Alina::static_matrix<float,  B, B> fmat_type;
+    typedef Alina::backend::builtin<dmat_type> DBackend;
+    typedef Alina::backend::builtin<fmat_type> FBackend;
 
-    typedef amgcl::mpi::make_solver<
-        amgcl::mpi::amg<
+    typedef Alina::mpi::make_solver<
+        Alina::mpi::amg<
             FBackend,
-            amgcl::mpi::coarsening::smoothed_aggregation<FBackend>,
-            amgcl::mpi::relaxation::spai0<FBackend>
+            Alina::mpi::coarsening::smoothed_aggregation<FBackend>,
+            Alina::mpi::relaxation::spai0<FBackend>
             >,
-        amgcl::mpi::solver::bicgstab<DBackend>
+        Alina::mpi::solver::bicgstab<DBackend>
         > Solver;
 
     // Solver parameters
@@ -135,16 +137,16 @@ int main(int argc, char *argv[]) {
     d_ptr.back() = chunk;
 
     // Create the distributed diagonal matrix:
-    amgcl::mpi::distributed_matrix<DBackend> D(world,
-            amgcl::adapter::block_matrix<dmat_type>(
+    Alina::mpi::distributed_matrix<DBackend> D(world,
+            Alina::adapter::block_matrix<dmat_type>(
                 std::tie(chunk, d_ptr, d_col, dia)));
 
     // The scaled matrix is formed as product D * A * D,
     // where A is the local chunk of the matrix
     // converted to the block format on the fly.
     auto A = product(D, *product(
-                amgcl::mpi::distributed_matrix<DBackend>(world,
-                    amgcl::adapter::block_matrix<dmat_type>(
+                Alina::mpi::distributed_matrix<DBackend>(world,
+                    Alina::adapter::block_matrix<dmat_type>(
                         std::tie(chunk, ptr, col, val))),
                 D));
     prof.toc("scale");
@@ -160,9 +162,9 @@ int main(int argc, char *argv[]) {
     // just keep the current naive partitioning.
 #if defined(AMGCL_HAVE_PARMETIS) || defined(AMGCL_HAVE_SCOTCH)
 #  if defined(AMGCL_HAVE_PARMETIS)
-    typedef amgcl::mpi::partition::parmetis<DBackend> Partition;
+    typedef Alina::mpi::partition::parmetis<DBackend> Partition;
 #  elif defined(AMGCL_HAVE_SCOTCH)
-    typedef amgcl::mpi::partition::ptscotch<DBackend> Partition;
+    typedef Alina::mpi::partition::ptscotch<DBackend> Partition;
 #  endif
 
     if (world.size > 1) {
@@ -179,7 +181,7 @@ int main(int argc, char *argv[]) {
         // and the RHS vector:
         std::vector<dvec_type> new_rhs(R->loc_rows());
         R->move_to_backend();
-        amgcl::backend::spmv(1, *R, rhs, 0, new_rhs);
+        Alina::backend::spmv(1, *R, rhs, 0, new_rhs);
         rhs.swap(new_rhs);
 
         // Update the number of the local rows
@@ -202,7 +204,7 @@ int main(int argc, char *argv[]) {
     // Solve the system with the zero initial approximation:
     int iters;
     double error;
-    std::vector<dvec_type> x(chunk, amgcl::math::zero<dvec_type>());
+    std::vector<dvec_type> x(chunk, Alina::math::zero<dvec_type>());
 
     prof.tic("solve");
     std::tie(iters, error) = solve(*A, rhs, x);

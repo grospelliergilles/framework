@@ -39,7 +39,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/detail_qr.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace coarsening {
 namespace detail {
     struct skip_negative {
@@ -167,7 +167,7 @@ std::shared_ptr<Matrix> tentative_prolongation(
 
 #pragma omp parallel
         {
-            amgcl::detail::QR<double> qr;
+            Alina::detail::QR<double> qr;
             std::vector<double> Bpart;
 
 #pragma omp for
@@ -184,7 +184,7 @@ std::shared_ptr<Matrix> tentative_prolongation(
                         Bpart[jj + d * k] = nullspace.B[ib + k];
                 }
 
-                qr.factorize(d, nullspace.cols, &Bpart[0], amgcl::detail::col_major);
+                qr.factorize(d, nullspace.cols, &Bpart[0], Alina::detail::col_major);
 
                 for(int ii = 0, kk = 0; ii < nullspace.cols; ++ii)
                     for(int jj = 0; jj < nullspace.cols; ++jj, ++kk)

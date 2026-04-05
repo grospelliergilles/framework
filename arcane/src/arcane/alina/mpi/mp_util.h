@@ -41,7 +41,7 @@ THE SOFTWARE.
 
 #include <mpi.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 
 /// Converts C type to MPI datatype.

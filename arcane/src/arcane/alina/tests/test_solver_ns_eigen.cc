@@ -9,7 +9,7 @@ BOOST_AUTO_TEST_SUITE( test_solvers )
 
 BOOST_AUTO_TEST_CASE(test_nonscalar_backend)
 {
-    test_backend< amgcl::backend::builtin< Eigen::Matrix<double, 2, 2> > >();
+    test_backend< Alina::backend::builtin< Eigen::Matrix<double, 2, 2> > >();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

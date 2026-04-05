@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_inner_product.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 
 template <class USolver, class PSolver>
@@ -116,7 +116,7 @@ class schur_pressure_correction {
 
                 n = p.get("pmask_size", n);
 
-                amgcl::precondition(n > 0,
+                Alina::precondition(n > 0,
                         "Error in schur_complement parameters: "
                         "pmask_size is not set");
 
@@ -145,14 +145,14 @@ class schur_pressure_correction {
                             }
                             break;
                         default:
-                            amgcl::precondition(false, "Unknown pattern in pmask_pattern");
+                            Alina::precondition(false, "Unknown pattern in pmask_pattern");
                     }
                 } else if (p.count("pmask")) {
                     void *pm = 0;
                     pm = p.get("pmask", pm);
                     pmask.assign(static_cast<char*>(pm), static_cast<char*>(pm) + n);
                 } else {
-                    amgcl::precondition(false,
+                    Alina::precondition(false,
                             "Error in schur_complement parameters: "
                             "neither pmask_pattern, nor pmask is set"
                             );

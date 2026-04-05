@@ -40,7 +40,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/backend_detail_matrix_ops.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace adapter {
 
 template <class Matrix>
@@ -176,7 +176,7 @@ struct is_builtin_vector< adapter::reordered_vector<Vector> >
 
 namespace adapter {
 
-template <class ordering = amgcl::reorder::cuthill_mckee<false> >
+template <class ordering = Alina::reorder::cuthill_mckee<false> >
 class reorder {
     public:
         template <class Matrix>

@@ -36,7 +36,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/backend_interface.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace backend {
 namespace detail {
 

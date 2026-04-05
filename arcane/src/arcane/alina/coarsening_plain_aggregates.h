@@ -37,7 +37,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/backend_builtin.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace coarsening {
 
 /**

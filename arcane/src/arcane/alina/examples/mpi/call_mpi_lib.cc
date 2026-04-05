@@ -15,6 +15,8 @@ double STDCALL constant_deflation(int, ptrdiff_t, void*) {
     return 1;
 }
 
+using namespace Arcane;
+
 int main(int argc, char *argv[]) {
     int provided;
     MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
@@ -41,8 +43,8 @@ int main(int argc, char *argv[]) {
 
     std::vector<ptrdiff_t> domain(size + 1);
     MPI_Allgather(
-            &chunk, 1, amgcl::mpi::datatype<ptrdiff_t>(),
-            &domain[1], 1, amgcl::mpi::datatype<ptrdiff_t>(),
+            &chunk, 1, Alina::mpi::datatype<ptrdiff_t>(),
+            &domain[1], 1, Alina::mpi::datatype<ptrdiff_t>(),
             MPI_COMM_WORLD);
     std::partial_sum(domain.begin(), domain.end(), domain.begin());
 

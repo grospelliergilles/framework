@@ -46,8 +46,10 @@ THE SOFTWARE.
 #include <arcane/alina/profiler.h>
 
 #if defined(AMGCL_HAVE_PARMETIS)
-#include <arcane/alina/mpi/mp_partition_parmetis.hpp>
+#include <arcane/alina/mpi/mp_partition_parmetis.h>
 #endif
+
+using namespace Arcane;
 
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
@@ -58,16 +60,16 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  amgcl::mpi::init mpi(&argc, &argv);
-  amgcl::mpi::communicator world(MPI_COMM_WORLD);
+  Alina::mpi::init mpi(&argc, &argv);
+  Alina::mpi::communicator world(MPI_COMM_WORLD);
 
   // The profiler:
-  amgcl::profiler<> prof("poisson3Db MPI");
+  Alina::profiler<> prof("poisson3Db MPI");
 
   // Read the system matrix and the RHS:
   prof.tic("read");
   // Get the global size of the matrix:
-  ptrdiff_t rows = amgcl::io::crs_size<ptrdiff_t>(argv[1]);
+  ptrdiff_t rows = Alina::io::crs_size<ptrdiff_t>(argv[1]);
   ptrdiff_t cols;
 
   // Split the matrix into approximately equal chunks of rows
@@ -79,8 +81,8 @@ int main(int argc, char* argv[])
   // Read our part of the system matrix and the RHS.
   std::vector<ptrdiff_t> ptr, col;
   std::vector<double> val, rhs;
-  amgcl::io::read_crs(argv[1], rows, ptr, col, val, row_beg, row_end);
-  amgcl::io::read_dense(argv[2], rows, cols, rhs, row_beg, row_end);
+  Alina::io::read_crs(argv[1], rows, ptr, col, val, row_beg, row_end);
+  Alina::io::read_dense(argv[2], rows, cols, rhs, row_beg, row_end);
   prof.toc("read");
 
   if (world.rank == 0)
@@ -90,25 +92,25 @@ int main(int argc, char* argv[])
     << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
 
   // Compose the solver type
-  typedef amgcl::backend::builtin<double> DBackend;
-  typedef amgcl::backend::builtin<float> FBackend;
-  typedef amgcl::mpi::make_solver<
-  amgcl::mpi::amg<
+  typedef Alina::backend::builtin<double> DBackend;
+  typedef Alina::backend::builtin<float> FBackend;
+  typedef Alina::mpi::make_solver<
+  Alina::mpi::amg<
   FBackend,
-  amgcl::mpi::coarsening::smoothed_aggregation<FBackend>,
-  amgcl::mpi::relaxation::spai0<FBackend>>,
-  amgcl::mpi::solver::bicgstab<DBackend>>
+  Alina::mpi::coarsening::smoothed_aggregation<FBackend>,
+  Alina::mpi::relaxation::spai0<FBackend>>,
+  Alina::mpi::solver::bicgstab<DBackend>>
   Solver;
 
   // Create the distributed matrix from the local parts.
-  auto A = std::make_shared<amgcl::mpi::distributed_matrix<DBackend>>(
+  auto A = std::make_shared<Alina::mpi::distributed_matrix<DBackend>>(
   world, std::tie(chunk, ptr, col, val));
 
   // Partition the matrix and the RHS vector.
   // If neither ParMETIS not PT-SCOTCH are not available,
   // just keep the current naive partitioning.
 #if defined(AMGCL_HAVE_PARMETIS)
-  typedef amgcl::mpi::partition::parmetis<DBackend> Partition;
+  typedef Alina::mpi::partition::parmetis<DBackend> Partition;
 
   if (world.size > 1) {
     prof.tic("partition");
@@ -124,7 +126,7 @@ int main(int argc, char* argv[])
     // and the RHS vector:
     std::vector<double> new_rhs(R->loc_rows());
     R->move_to_backend(typename DBackend::params());
-    amgcl::backend::spmv(1, *R, rhs, 0, new_rhs);
+    Alina::backend::spmv(1, *R, rhs, 0, new_rhs);
     rhs.swap(new_rhs);
 
     // Update the number of the local rows

@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/backend_detail_matrix_ops.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace adapter {
 
 template <class Matrix>
@@ -165,7 +165,7 @@ namespace backend {
 namespace detail {
 
 template <class Matrix>
-struct use_builtin_matrix_ops< amgcl::adapter::complex_adapter<Matrix> >
+struct use_builtin_matrix_ops< Alina::adapter::complex_adapter<Matrix> >
     : std::true_type
 {};
 

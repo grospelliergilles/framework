@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include <arcane/alina/perf_counter_clock.h>
 #include <arcane/alina/ios_saver.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 
 /// Profiler class.
 /**
@@ -50,7 +50,7 @@ namespace amgcl {
  *
  * Provides simple to use, hierarchical profile with nicely formatted output.
  */
-template <class Counter = amgcl::perf_counter::clock, unsigned SHIFT_WIDTH = 2>
+template <class Counter = Alina::perf_counter::clock, unsigned SHIFT_WIDTH = 2>
 class profiler {
     public:
         typedef typename Counter::value_type value_type;

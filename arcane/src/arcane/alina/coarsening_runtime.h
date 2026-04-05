@@ -1,34 +1,24 @@
-#ifndef AMGCL_COARSENING_RUNTIME_HPP
-#define AMGCL_COARSENING_RUNTIME_HPP
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* coarsening_runtime.h                                        (C) 2000-2026 */
+/*                                                                           */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_COARSENING_RUNTIME_H
+#define ARCANE_ALINA_COARSENING_RUNTIME_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   alina/coarsening/runtime.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Runtime-configurable coarsening.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
 
 #include <iostream>
@@ -36,7 +26,7 @@ THE SOFTWARE.
 #include <type_traits>
 
 #ifdef AMGCL_NO_BOOST
-#  error Runtime interface relies on Boost.PropertyTree!
+#error Runtime interface relies on Boost.PropertyTree!
 #endif
 
 #include <boost/property_tree/ptree.hpp>
@@ -49,252 +39,251 @@ THE SOFTWARE.
 #include <arcane/alina/coarsening_smoothed_aggr_emin.h>
 #include <arcane/alina/coarsening_as_scalar.h>
 
-namespace amgcl {
-namespace runtime {
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
-/// Coarsening kinds.
-namespace coarsening {
+namespace Arcane::Alina::runtime::coarsening
+{
 
-enum type {
-    ruge_stuben,            ///< Ruge-Stueben coarsening
-    aggregation,            ///< Aggregation
-    smoothed_aggregation,   ///< Smoothed aggregation
-    smoothed_aggr_emin      ///< Smoothed aggregation with energy minimization
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+enum type
+{
+  ruge_stuben, ///< Ruge-Stueben coarsening
+  aggregation, ///< Aggregation
+  smoothed_aggregation, ///< Smoothed aggregation
+  smoothed_aggr_emin ///< Smoothed aggregation with energy minimization
 };
 
-inline std::ostream& operator<<(std::ostream &os, type c) {
-    switch (c) {
-        case ruge_stuben:
-            return os << "ruge_stuben";
-        case aggregation:
-            return os << "aggregation";
-        case smoothed_aggregation:
-            return os << "smoothed_aggregation";
-        case smoothed_aggr_emin:
-            return os << "smoothed_aggr_emin";
-        default:
-            return os << "???";
-    }
-}
-
-inline std::istream& operator>>(std::istream &in, type &c)
+inline std::ostream& operator<<(std::ostream& os, type c)
 {
-    std::string val;
-    in >> val;
-
-    if (val == "ruge_stuben")
-        c = ruge_stuben;
-    else if (val == "aggregation")
-        c = aggregation;
-    else if (val == "smoothed_aggregation")
-        c = smoothed_aggregation;
-    else if (val == "smoothed_aggr_emin")
-        c = smoothed_aggr_emin;
-    else
-        throw std::invalid_argument("Invalid coarsening value. Valid choices are: "
-                "ruge_stuben, aggregation, smoothed_aggregation, smoothed_aggr_emin.");
-
-    return in;
+  switch (c) {
+  case ruge_stuben:
+    return os << "ruge_stuben";
+  case aggregation:
+    return os << "aggregation";
+  case smoothed_aggregation:
+    return os << "smoothed_aggregation";
+  case smoothed_aggr_emin:
+    return os << "smoothed_aggr_emin";
+  default:
+    return os << "???";
+  }
 }
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+inline std::istream& operator>>(std::istream& in, type& c)
+{
+  std::string val;
+  in >> val;
+
+  if (val == "ruge_stuben")
+    c = ruge_stuben;
+  else if (val == "aggregation")
+    c = aggregation;
+  else if (val == "smoothed_aggregation")
+    c = smoothed_aggregation;
+  else if (val == "smoothed_aggr_emin")
+    c = smoothed_aggr_emin;
+  else
+    throw std::invalid_argument("Invalid coarsening value. Valid choices are: "
+                                "ruge_stuben, aggregation, smoothed_aggregation, smoothed_aggr_emin.");
+
+  return in;
+}
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct wrapper {
-    typedef boost::property_tree::ptree params;
-    type c;
-    bool as_scalar;
-    void *handle;
+struct wrapper
+{
+  typedef boost::property_tree::ptree params;
+  type c;
+  bool as_scalar;
+  void* handle;
 
-    wrapper(params prm = params())
-        : c(prm.get("type", runtime::coarsening::smoothed_aggregation)),
-          handle(0)
-    {
-        if (!prm.erase("type"))
-            AMGCL_PARAM_MISSING("type");
+  wrapper(params prm = params())
+  : c(prm.get("type", runtime::coarsening::smoothed_aggregation))
+  , handle(0)
+  {
+    if (!prm.erase("type"))
+      AMGCL_PARAM_MISSING("type");
 
-        typedef typename backend::value_type<Backend>::type value_type;
-        const bool block_value_type = math::static_rows<value_type>::value > 1;
+    typedef typename backend::value_type<Backend>::type value_type;
+    const bool block_value_type = math::static_rows<value_type>::value > 1;
 
-        as_scalar = (
-                block_value_type &&
-                c != ruge_stuben &&
-                prm.get("nullspace.cols", 0) > 0
-                );
-        std::cout << "PreconditionerCoarseningType=" << c << "\n";
-        switch(c) {
+    as_scalar = (block_value_type &&
+                 c != ruge_stuben &&
+                 prm.get("nullspace.cols", 0) > 0);
+    std::cout << "PreconditionerCoarseningType=" << c << "\n";
+    switch (c) {
 
 #define AMGCL_RUNTIME_COARSENING(t) \
-            case t: \
-                if (as_scalar) { \
-                    handle = call_constructor<amgcl::coarsening::as_scalar<amgcl::coarsening::t>::type>(prm); \
-                } else { \
-                    handle = call_constructor<amgcl::coarsening::t>(prm); \
-                } \
-                break
+  case t: \
+    if (as_scalar) { \
+      handle = call_constructor<Arcane::Alina::coarsening::as_scalar<Arcane::Alina::coarsening::t>::type>(prm); \
+    } \
+    else { \
+      handle = call_constructor<Arcane::Alina::coarsening::t>(prm); \
+    } \
+    break
 
-            AMGCL_RUNTIME_COARSENING(ruge_stuben);
-            AMGCL_RUNTIME_COARSENING(aggregation);
-            AMGCL_RUNTIME_COARSENING(smoothed_aggregation);
-            AMGCL_RUNTIME_COARSENING(smoothed_aggr_emin);
+      AMGCL_RUNTIME_COARSENING(ruge_stuben);
+      AMGCL_RUNTIME_COARSENING(aggregation);
+      AMGCL_RUNTIME_COARSENING(smoothed_aggregation);
+      AMGCL_RUNTIME_COARSENING(smoothed_aggr_emin);
 
 #undef AMGCL_RUNTIME_COARSENING
 
-            default:
-                throw std::invalid_argument("Unsupported coarsening type");
-        }
+    default:
+      throw std::invalid_argument("Unsupported coarsening type");
     }
+  }
 
-    ~wrapper() {
-        switch(c) {
+  ~wrapper()
+  {
+    switch (c) {
 
 #define AMGCL_RUNTIME_COARSENING(t) \
-            case t: \
-                if (as_scalar) { \
-                    call_destructor<amgcl::coarsening::as_scalar<amgcl::coarsening::t>::type>(); \
-                } else { \
-                    call_destructor<amgcl::coarsening::t>(); \
-                } \
-                break
+  case t: \
+    if (as_scalar) { \
+      call_destructor<Arcane::Alina::coarsening::as_scalar<::Arcane::Alina::coarsening::t>::type>(); \
+    } \
+    else { \
+      call_destructor<::Arcane::Alina::coarsening::t>(); \
+    } \
+    break
 
-            AMGCL_RUNTIME_COARSENING(ruge_stuben);
-            AMGCL_RUNTIME_COARSENING(aggregation);
-            AMGCL_RUNTIME_COARSENING(smoothed_aggregation);
-            AMGCL_RUNTIME_COARSENING(smoothed_aggr_emin);
+      AMGCL_RUNTIME_COARSENING(ruge_stuben);
+      AMGCL_RUNTIME_COARSENING(aggregation);
+      AMGCL_RUNTIME_COARSENING(smoothed_aggregation);
+      AMGCL_RUNTIME_COARSENING(smoothed_aggr_emin);
 
 #undef AMGCL_RUNTIME_COARSENING
-        }
     }
+  }
 
-    template <class Matrix>
-    std::tuple<
-        std::shared_ptr<Matrix>,
-        std::shared_ptr<Matrix>
-        >
-    transfer_operators(const Matrix &A) {
-        switch(c) {
+  template <class Matrix>
+  std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>
+  transfer_operators(const Matrix& A)
+  {
+    switch (c) {
 
 #define AMGCL_RUNTIME_COARSENING(t) \
-            case t: \
-                if (as_scalar) { \
-                    return make_operators<amgcl::coarsening::as_scalar<amgcl::coarsening::t>::type>(A); \
-                } \
-                return make_operators<amgcl::coarsening::t>(A)
+  case t: \
+    if (as_scalar) { \
+      return make_operators<::Arcane::Alina::coarsening::as_scalar<::Arcane::Alina::coarsening::t>::type>(A); \
+    } \
+    return make_operators<::Arcane::Alina::coarsening::t>(A)
 
-            AMGCL_RUNTIME_COARSENING(ruge_stuben);
-            AMGCL_RUNTIME_COARSENING(aggregation);
-            AMGCL_RUNTIME_COARSENING(smoothed_aggregation);
-            AMGCL_RUNTIME_COARSENING(smoothed_aggr_emin);
-
-#undef AMGCL_RUNTIME_COARSENING
-
-            default:
-                throw std::invalid_argument("Unsupported coarsening type");
-        }
-    }
-
-    template <class Matrix>
-    std::shared_ptr<Matrix>
-    coarse_operator(const Matrix &A, const Matrix &P, const Matrix &R) const {
-        switch(c) {
-
-#define AMGCL_RUNTIME_COARSENING(t) \
-            case t: \
-                if (as_scalar) { \
-                    return make_coarse<amgcl::coarsening::as_scalar<amgcl::coarsening::t>::type>(A, P, R); \
-                } \
-                return make_coarse<amgcl::coarsening::t>(A, P, R)
-
-            AMGCL_RUNTIME_COARSENING(ruge_stuben);
-            AMGCL_RUNTIME_COARSENING(aggregation);
-            AMGCL_RUNTIME_COARSENING(smoothed_aggregation);
-            AMGCL_RUNTIME_COARSENING(smoothed_aggr_emin);
+      AMGCL_RUNTIME_COARSENING(ruge_stuben);
+      AMGCL_RUNTIME_COARSENING(aggregation);
+      AMGCL_RUNTIME_COARSENING(smoothed_aggregation);
+      AMGCL_RUNTIME_COARSENING(smoothed_aggr_emin);
 
 #undef AMGCL_RUNTIME_COARSENING
 
-            default:
-                throw std::invalid_argument("Unsupported coarsening type");
-        }
+    default:
+      throw std::invalid_argument("Unsupported coarsening type");
     }
+  }
 
-    template <template <class> class Coarsening>
-    typename std::enable_if<
-        backend::coarsening_is_supported<Backend, Coarsening>::value,
-        void*
-    >::type
-    call_constructor(const params &prm) {
-        return static_cast<void*>(new Coarsening<Backend>(prm));
-    }
+  template <class Matrix> std::shared_ptr<Matrix>
+  coarse_operator(const Matrix& A, const Matrix& P, const Matrix& R) const
+  {
+    switch (c) {
 
-    template <template <class> class Coarsening>
-    typename std::enable_if<
-        !backend::coarsening_is_supported<Backend, Coarsening>::value,
-        void*
-    >::type
-    call_constructor(const params&) {
-        throw std::logic_error("The coarsening is not supported by the backend");
-    }
+#define AMGCL_RUNTIME_COARSENING(t) \
+  case t: \
+    if (as_scalar) { \
+      return make_coarse<::Arcane::Alina::coarsening::as_scalar<::Arcane::Alina::coarsening::t>::type>(A, P, R); \
+    } \
+    return make_coarse<::Arcane::Alina::coarsening::t>(A, P, R)
 
-    template <template <class> class Coarsening>
-    typename std::enable_if<
-        backend::coarsening_is_supported<Backend, Coarsening>::value,
-        void
-    >::type
-    call_destructor() {
-        delete static_cast<Coarsening<Backend>*>(handle);
-    }
+      AMGCL_RUNTIME_COARSENING(ruge_stuben);
+      AMGCL_RUNTIME_COARSENING(aggregation);
+      AMGCL_RUNTIME_COARSENING(smoothed_aggregation);
+      AMGCL_RUNTIME_COARSENING(smoothed_aggr_emin);
 
-    template <template <class> class Coarsening>
-    typename std::enable_if<
-        !backend::coarsening_is_supported<Backend, Coarsening>::value,
-        void
-    >::type
-    call_destructor() {
-    }
+#undef AMGCL_RUNTIME_COARSENING
 
-    template <template <class> class Coarsening, class Matrix>
-    typename std::enable_if<
-        backend::coarsening_is_supported<Backend, Coarsening>::value,
-        std::tuple<
-            std::shared_ptr<Matrix>,
-            std::shared_ptr<Matrix>
-            >
-    >::type
-    make_operators(const Matrix &A) const {
-        return static_cast<Coarsening<Backend>*>(handle)->transfer_operators(A);
+    default:
+      throw std::invalid_argument("Unsupported coarsening type");
     }
+  }
 
-    template <template <class> class Coarsening, class Matrix>
-    typename std::enable_if<
-        !backend::coarsening_is_supported<Backend, Coarsening>::value,
-        std::tuple<
-            std::shared_ptr<Matrix>,
-            std::shared_ptr<Matrix>
-            >
-    >::type
-    make_operators(const Matrix&) {
-        throw std::logic_error("The coarsening is not supported by the backend");
-    }
+  template <template <class> class Coarsening>
+  typename std::enable_if<backend::coarsening_is_supported<Backend, Coarsening>::value, void*>::type
+  call_constructor(const params& prm)
+  {
+    return static_cast<void*>(new Coarsening<Backend>(prm));
+  }
 
-    template <template <class> class Coarsening, class Matrix>
-    typename std::enable_if<
-        backend::coarsening_is_supported<Backend, Coarsening>::value,
-        std::shared_ptr<Matrix>
-    >::type
-    make_coarse(const Matrix &A, const Matrix &P, const Matrix &R) const {
-        return static_cast<Coarsening<Backend>*>(handle)->coarse_operator(A, P, R);
-    }
+  template <template <class> class Coarsening>
+  typename std::enable_if<!backend::coarsening_is_supported<Backend, Coarsening>::value, void*>::type
+  call_constructor(const params&)
+  {
+    throw std::logic_error("The coarsening is not supported by the backend");
+  }
 
-    template <template <class> class Coarsening, class Matrix>
-    typename std::enable_if<
-        !backend::coarsening_is_supported<Backend, Coarsening>::value,
-        std::shared_ptr<Matrix>
-    >::type
-    make_coarse(const Matrix&, const Matrix&, const Matrix&) const {
-        throw std::logic_error("The coarsening is not supported by the backend");
-    }
+  template <template <class> class Coarsening>
+  typename std::enable_if<backend::coarsening_is_supported<Backend, Coarsening>::value, void>::type
+  call_destructor()
+  {
+    delete static_cast<Coarsening<Backend>*>(handle);
+  }
+
+  template <template <class> class Coarsening>
+  typename std::enable_if<!backend::coarsening_is_supported<Backend, Coarsening>::value, void>::type
+  call_destructor()
+  {
+  }
+
+  template <template <class> class Coarsening, class Matrix>
+  typename std::enable_if<backend::coarsening_is_supported<Backend, Coarsening>::value,
+                          std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>>::type
+  make_operators(const Matrix& A) const
+  {
+    return static_cast<Coarsening<Backend>*>(handle)->transfer_operators(A);
+  }
+
+  template <template <class> class Coarsening, class Matrix>
+  typename std::enable_if<!backend::coarsening_is_supported<Backend, Coarsening>::value,
+                          std::tuple<
+                          std::shared_ptr<Matrix>,
+                          std::shared_ptr<Matrix>>>::type
+  make_operators(const Matrix&)
+  {
+    throw std::logic_error("The coarsening is not supported by the backend");
+  }
+
+  template <template <class> class Coarsening, class Matrix>
+  typename std::enable_if<backend::coarsening_is_supported<Backend, Coarsening>::value,
+                          std::shared_ptr<Matrix>>::type
+  make_coarse(const Matrix& A, const Matrix& P, const Matrix& R) const
+  {
+    return static_cast<Coarsening<Backend>*>(handle)->coarse_operator(A, P, R);
+  }
+
+  template <template <class> class Coarsening, class Matrix>
+  typename std::enable_if<!backend::coarsening_is_supported<Backend, Coarsening>::value,
+                          std::shared_ptr<Matrix>>::type
+  make_coarse(const Matrix&, const Matrix&, const Matrix&) const
+  {
+    throw std::logic_error("The coarsening is not supported by the backend");
+  }
 };
 
-} // namespace coarsening
-} // namespace runtime
-} // namespace amgcl
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::runtime::coarsening
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif

@@ -44,7 +44,7 @@ THE SOFTWARE.
 #include <arcane/alina/coarsening_tentative_prolongation.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace coarsening {
 
 /// Smoothed aggregation coarsening.

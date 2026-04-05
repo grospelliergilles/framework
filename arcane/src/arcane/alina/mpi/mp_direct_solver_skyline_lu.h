@@ -44,7 +44,7 @@ distributed direct solver interface but always works sequentially.
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_direct_solver_base.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 namespace direct {
 
@@ -52,7 +52,7 @@ namespace direct {
 template <typename value_type>
 class skyline_lu : public solver_base< value_type, skyline_lu<value_type> > {
     public:
-        typedef amgcl::solver::skyline_lu<value_type> Solver;
+        typedef Alina::solver::skyline_lu<value_type> Solver;
         typedef typename Solver::params params;
         typedef backend::crs<value_type> build_matrix;
 

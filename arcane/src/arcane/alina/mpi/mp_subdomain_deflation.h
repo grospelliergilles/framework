@@ -47,7 +47,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_inner_product.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 
 /// Pointwise constant deflation vectors.
@@ -138,7 +138,7 @@ class subdomain_deflation {
                 void *ptr = 0;
                 ptr = p.get("def_vec", ptr);
 
-                amgcl::precondition(ptr,
+                Alina::precondition(ptr,
                         "Error in subdomain_deflation parameters: "
                         "def_vec is not set");
 

@@ -37,14 +37,16 @@
 #  define AMGCL_BLOCK_SIZES (3)(4)
 #endif
 
-namespace amgcl {
+using namespace Arcane;
+
+namespace Arcane::Alina {
     profiler<> prof;
 }
 
-namespace math = amgcl::math;
+namespace math = Alina::math;
 
 //---------------------------------------------------------------------------
-ptrdiff_t assemble_poisson3d(amgcl::mpi::communicator comm,
+ptrdiff_t assemble_poisson3d(Alina::mpi::communicator comm,
         ptrdiff_t n, int block_size,
         std::vector<ptrdiff_t> &ptr,
         std::vector<ptrdiff_t> &col,
@@ -117,14 +119,14 @@ ptrdiff_t assemble_poisson3d(amgcl::mpi::communicator comm,
 
 //---------------------------------------------------------------------------
 ptrdiff_t read_matrix_market(
-        amgcl::mpi::communicator comm,
+        Alina::mpi::communicator comm,
         const std::string &A_file, const std::string &rhs_file, int block_size,
         std::vector<ptrdiff_t> &ptr,
         std::vector<ptrdiff_t> &col,
         std::vector<double>    &val,
         std::vector<double>    &rhs)
 {
-    amgcl::io::mm_reader A_mm(A_file);
+    Alina::io::mm_reader A_mm(A_file);
     ptrdiff_t n = A_mm.rows();
 
     ptrdiff_t chunk = (n + comm.size - 1) / comm.size;
@@ -143,7 +145,7 @@ ptrdiff_t read_matrix_market(
         rhs.resize(chunk);
         std::fill(rhs.begin(), rhs.end(), 1.0);
     } else {
-        amgcl::io::mm_reader rhs_mm(rhs_file);
+        Alina::io::mm_reader rhs_mm(rhs_file);
         rhs_mm(rhs, row_beg, row_end);
     }
 
@@ -152,14 +154,14 @@ ptrdiff_t read_matrix_market(
 
 //---------------------------------------------------------------------------
 ptrdiff_t read_binary(
-        amgcl::mpi::communicator comm,
+        Alina::mpi::communicator comm,
         const std::string &A_file, const std::string &rhs_file, int block_size,
         std::vector<ptrdiff_t> &ptr,
         std::vector<ptrdiff_t> &col,
         std::vector<double>    &val,
         std::vector<double>    &rhs)
 {
-    ptrdiff_t n = amgcl::io::crs_size<ptrdiff_t>(A_file);
+    ptrdiff_t n = Alina::io::crs_size<ptrdiff_t>(A_file);
 
     ptrdiff_t chunk = (n + comm.size - 1) / comm.size;
     if (chunk % block_size != 0) {
@@ -171,14 +173,14 @@ ptrdiff_t read_binary(
 
     chunk = row_end - row_beg;
 
-    amgcl::io::read_crs(A_file, n, ptr, col, val, row_beg, row_end);
+    Alina::io::read_crs(A_file, n, ptr, col, val, row_beg, row_end);
 
     if (rhs_file.empty()) {
         rhs.resize(chunk);
         std::fill(rhs.begin(), rhs.end(), 1.0);
     } else {
         ptrdiff_t rows, cols;
-        amgcl::io::read_dense(rhs_file, rows, cols, rhs, row_beg, row_end);
+        Alina::io::read_dense(rhs_file, rows, cols, rhs, row_beg, row_end);
     }
 
     return chunk;
@@ -186,33 +188,33 @@ ptrdiff_t read_binary(
 
 //---------------------------------------------------------------------------
 template <class Backend, class Matrix>
-std::shared_ptr< amgcl::mpi::distributed_matrix<Backend> >
-partition(amgcl::mpi::communicator comm, const Matrix &Astrip,
+std::shared_ptr< Alina::mpi::distributed_matrix<Backend> >
+partition(Alina::mpi::communicator comm, const Matrix &Astrip,
         typename Backend::vector &rhs, const typename Backend::params &bprm,
-        amgcl::runtime::mpi::partition::type ptype, int block_size = 1)
+        Alina::runtime::mpi::partition::type ptype, int block_size = 1)
 {
     typedef typename Backend::value_type val_type;
-    typedef typename amgcl::math::rhs_of<val_type>::type rhs_type;
-    typedef amgcl::mpi::distributed_matrix<Backend> DMatrix;
+    typedef typename Alina::math::rhs_of<val_type>::type rhs_type;
+    typedef Alina::mpi::distributed_matrix<Backend> DMatrix;
 
-    using amgcl::prof;
+    using Alina::prof;
 
     auto A = std::make_shared<DMatrix>(comm, Astrip);
 
-    if (comm.size == 1 || ptype == amgcl::runtime::mpi::partition::merge)
+    if (comm.size == 1 || ptype == Alina::runtime::mpi::partition::merge)
         return A;
 
     prof.tic("partition");
     boost::property_tree::ptree prm;
     prm.put("type", ptype);
-    amgcl::runtime::mpi::partition::wrapper<Backend> part(prm);
+    Alina::runtime::mpi::partition::wrapper<Backend> part(prm);
 
     auto I = part(*A, block_size);
     auto J = transpose(*I);
     A = product(*J, *product(*A, *I));
 
 #if defined(SOLVER_BACKEND_BUILTIN)
-    amgcl::backend::numa_vector<rhs_type> new_rhs(J->loc_rows());
+    Alina::backend::numa_vector<rhs_type> new_rhs(J->loc_rows());
 #elif defined(SOLVER_BACKEND_VEXCL)
     vex::vector<rhs_type> new_rhs(bprm.q, J->loc_rows());
 #elif defined(SOLVER_BACKEND_CUDA)
@@ -221,7 +223,7 @@ partition(amgcl::mpi::communicator comm, const Matrix &Astrip,
 
     J->move_to_backend(bprm);
 
-    amgcl::backend::spmv(1, *J, rhs, 0, new_rhs);
+    Alina::backend::spmv(1, *J, rhs, 0, new_rhs);
     rhs.swap(new_rhs);
     prof.toc("partition");
 
@@ -232,40 +234,40 @@ partition(amgcl::mpi::communicator comm, const Matrix &Astrip,
 #if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
 template <int B>
 void solve_block(
-        amgcl::mpi::communicator comm,
+        Alina::mpi::communicator comm,
         ptrdiff_t chunk,
         const std::vector<ptrdiff_t>      &ptr,
         const std::vector<ptrdiff_t>      &col,
         const std::vector<double>         &val,
         const boost::property_tree::ptree &prm,
         const std::vector<double>         &f,
-        amgcl::runtime::mpi::partition::type ptype
+        Alina::runtime::mpi::partition::type ptype
         )
 {
-    typedef amgcl::static_matrix<double, B, B> val_type;
-    typedef amgcl::static_matrix<double, B, 1> rhs_type;
+    typedef Alina::static_matrix<double, B, B> val_type;
+    typedef Alina::static_matrix<double, B, 1> rhs_type;
 
 #if defined(SOLVER_BACKEND_BUILTIN)
-    typedef amgcl::backend::builtin<val_type> Backend;
+    typedef Alina::backend::builtin<val_type> Backend;
 #elif defined(SOLVER_BACKEND_VEXCL)
-    typedef amgcl::backend::vexcl<val_type> Backend;
+    typedef Alina::backend::vexcl<val_type> Backend;
 #endif
 
-    typedef amgcl::mpi::distributed_matrix<Backend> DMatrix;
+    typedef Alina::mpi::distributed_matrix<Backend> DMatrix;
 
     typedef
-        amgcl::mpi::make_solver<
-            amgcl::runtime::mpi::preconditioner<Backend>,
-            amgcl::runtime::mpi::solver::wrapper<Backend>
+        Alina::mpi::make_solver<
+            Alina::runtime::mpi::preconditioner<Backend>,
+            Alina::runtime::mpi::solver::wrapper<Backend>
             >
         Solver;
 
-    using amgcl::prof;
+    using Alina::prof;
 
     typename Backend::params bprm;
 
 #if defined(SOLVER_BACKEND_BUILTIN)
-    amgcl::backend::numa_vector<rhs_type> rhs(
+    Alina::backend::numa_vector<rhs_type> rhs(
             reinterpret_cast<const rhs_type*>(&f[0]),
             reinterpret_cast<const rhs_type*>(&f[0]) + chunk / B
             );
@@ -274,7 +276,7 @@ void solve_block(
     bprm.q = ctx;
 
     vex::scoped_program_header header(ctx,
-            amgcl::backend::vexcl_static_matrix_declaration<double,B>());
+            Alina::backend::vexcl_static_matrix_declaration<double,B>());
 
     if (comm.rank == 0) std::cout << ctx << std::endl;
 
@@ -288,13 +290,13 @@ void solve_block(
 
         if (ptype) {
             A = partition<Backend>(comm,
-                    amgcl::adapter::block_matrix<val_type>(std::tie(chunk, ptr, col, val)),
+                    Alina::adapter::block_matrix<val_type>(std::tie(chunk, ptr, col, val)),
                     rhs, bprm, ptype, prm.get("precond.coarsening.aggr.block_size", 1));
             chunk = A->loc_rows();
         } else {
             A = std::make_shared<DMatrix>(
                 comm,
-                amgcl::adapter::block_matrix<val_type>(std::tie(chunk, ptr, col, val))
+                Alina::adapter::block_matrix<val_type>(std::tie(chunk, ptr, col, val))
             );
         }
 
@@ -331,7 +333,7 @@ void solve_block(
     }
 
 #if defined(SOLVER_BACKEND_BUILTIN)
-    amgcl::backend::numa_vector<rhs_type> x(chunk);
+    Alina::backend::numa_vector<rhs_type> x(chunk);
 #elif defined(SOLVER_BACKEND_VEXCL)
     vex::vector<rhs_type> x(ctx, chunk);
     x = math::zero<rhs_type>();
@@ -355,39 +357,39 @@ void solve_block(
 
 //---------------------------------------------------------------------------
 void solve_scalar(
-        amgcl::mpi::communicator comm,
+        Alina::mpi::communicator comm,
         ptrdiff_t chunk,
         const std::vector<ptrdiff_t> &ptr,
         const std::vector<ptrdiff_t> &col,
         const std::vector<double> &val,
         const boost::property_tree::ptree &prm,
         const std::vector<double> &f,
-        amgcl::runtime::mpi::partition::type ptype
+        Alina::runtime::mpi::partition::type ptype
         )
 {
 #if defined(SOLVER_BACKEND_BUILTIN)
-    typedef amgcl::backend::builtin<double> Backend;
+    typedef Alina::backend::builtin<double> Backend;
 #elif defined(SOLVER_BACKEND_VEXCL)
-    typedef amgcl::backend::vexcl<double> Backend;
+    typedef Alina::backend::vexcl<double> Backend;
 #elif defined(SOLVER_BACKEND_CUDA)
-    typedef amgcl::backend::cuda<double> Backend;
+    typedef Alina::backend::cuda<double> Backend;
 #endif
 
-    typedef amgcl::mpi::distributed_matrix<Backend> DMatrix;
+    typedef Alina::mpi::distributed_matrix<Backend> DMatrix;
 
     typedef
-        amgcl::mpi::make_solver<
-            amgcl::runtime::mpi::preconditioner<Backend>,
-            amgcl::runtime::mpi::solver::wrapper<Backend>
+        Alina::mpi::make_solver<
+            Alina::runtime::mpi::preconditioner<Backend>,
+            Alina::runtime::mpi::solver::wrapper<Backend>
             >
         Solver;
 
-    using amgcl::prof;
+    using Alina::prof;
 
     typename Backend::params bprm;
 
 #if defined(SOLVER_BACKEND_BUILTIN)
-    amgcl::backend::numa_vector<double> rhs(f);
+    Alina::backend::numa_vector<double> rhs(f);
 #elif defined(SOLVER_BACKEND_VEXCL)
     vex::Context ctx(vex::Filter::Env);
     bprm.q = ctx;
@@ -446,7 +448,7 @@ void solve_scalar(
     }
 
 #if defined(SOLVER_BACKEND_BUILTIN)
-    amgcl::backend::numa_vector<double> x(chunk);
+    Alina::backend::numa_vector<double> x(chunk);
 #elif defined(SOLVER_BACKEND_VEXCL)
     vex::vector<double> x(ctx, chunk);
     x = 0.0;
@@ -471,13 +473,13 @@ void solve_scalar(
 
 //---------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
-    amgcl::mpi::init_thread mpi(&argc, &argv);
-    amgcl::mpi::communicator comm(MPI_COMM_WORLD);
+    Alina::mpi::init_thread mpi(&argc, &argv);
+    Alina::mpi::communicator comm(MPI_COMM_WORLD);
 
     if (comm.rank == 0)
         std::cout << "World size: " << comm.size << std::endl;
 
-    using amgcl::prof;
+    using Alina::prof;
 
     // Read configuration from command line
     namespace po = boost::program_options;
@@ -523,13 +525,13 @@ int main(int argc, char *argv[]) {
         )
         (
          "partitioner,r",
-         po::value<amgcl::runtime::mpi::partition::type>()->default_value(
+         po::value<Alina::runtime::mpi::partition::type>()->default_value(
 #if defined(AMGCL_HAVE_SCOTCH)
-             amgcl::runtime::mpi::partition::ptscotch
+             Alina::runtime::mpi::partition::ptscotch
 #elif defined(AMGCL_HAVE_PARMETIS)
-             amgcl::runtime::mpi::partition::parmetis
+             Alina::runtime::mpi::partition::parmetis
 #else
-             amgcl::runtime::mpi::partition::merge
+             Alina::runtime::mpi::partition::merge
 #endif
              ),
          "Repartition the system matrix"
@@ -577,7 +579,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("prm")) {
         for(const std::string &v : vm["prm"].as<std::vector<std::string> >()) {
-            amgcl::put(prm, v);
+            Alina::put(prm, v);
         }
     }
 
@@ -591,7 +593,7 @@ int main(int argc, char *argv[]) {
     int aggr_block = prm.get("precond.coarsening.aggr.block_size", 1);
 
     bool binary = vm["binary"].as<bool>();
-    amgcl::runtime::mpi::partition::type ptype = vm["partitioner"].as<amgcl::runtime::mpi::partition::type>();
+    Alina::runtime::mpi::partition::type ptype = vm["partitioner"].as<Alina::runtime::mpi::partition::type>();
 
     if (vm.count("matrix")) {
         prof.tic("read");
@@ -609,17 +611,17 @@ int main(int argc, char *argv[]) {
         prof.toc("read");
     } else if (vm.count("Ap")) {
         prof.tic("read");
-        ptype = static_cast<amgcl::runtime::mpi::partition::type>(0);
+        ptype = static_cast<Alina::runtime::mpi::partition::type>(0);
 
         std::vector<std::string> Aparts = vm["Ap"].as<std::vector<std::string>>();
         comm.check(Aparts.size() == static_cast<size_t>(comm.size),
                 "--Ap should have single entry per MPI process");
 
         if (binary) {
-            amgcl::io::read_crs(Aparts[comm.rank], n, ptr, col, val);
+            Alina::io::read_crs(Aparts[comm.rank], n, ptr, col, val);
         } else {
             ptrdiff_t m;
-            std::tie(n, m) = amgcl::io::mm_reader(Aparts[comm.rank])(ptr, col, val);
+            std::tie(n, m) = Alina::io::mm_reader(Aparts[comm.rank])(ptr, col, val);
         }
 
         if (vm.count("fp")) {
@@ -631,9 +633,9 @@ int main(int argc, char *argv[]) {
             ptrdiff_t cols;
 
             if (binary) {
-                amgcl::io::read_dense(fparts[comm.rank], rows, cols, rhs);
+                Alina::io::read_dense(fparts[comm.rank], rows, cols, rhs);
             } else {
-                std::tie(rows, cols) = amgcl::io::mm_reader(fparts[comm.rank])(rhs);
+                std::tie(rows, cols) = Alina::io::mm_reader(fparts[comm.rank])(rhs);
             }
 
             comm.check(rhs.size() == static_cast<size_t>(n), "Wrong RHS size");

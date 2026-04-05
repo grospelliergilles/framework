@@ -19,23 +19,25 @@
 #include <arcane/alina/mpi/mp_partition_runtime.h>
 #include <arcane/alina/profiler.h>
 
-namespace amgcl {
+using namespace Arcane;
+
+namespace Arcane::Alina {
     profiler<> prof;
 }
 
-using amgcl::prof;
-using amgcl::precondition;
+using Alina::prof;
+using Alina::precondition;
 
 //---------------------------------------------------------------------------
 ptrdiff_t read_matrix_market(
-        amgcl::mpi::communicator comm,
+        Alina::mpi::communicator comm,
         const std::string &A_file, const std::string &rhs_file, int block_size,
         std::vector<ptrdiff_t> &ptr,
         std::vector<ptrdiff_t> &col,
         std::vector<double>    &val,
         std::vector<double>    &rhs)
 {
-    amgcl::io::mm_reader A_mm(A_file);
+    Alina::io::mm_reader A_mm(A_file);
     ptrdiff_t n = A_mm.rows();
 
     ptrdiff_t chunk = (n + comm.size - 1) / comm.size;
@@ -54,7 +56,7 @@ ptrdiff_t read_matrix_market(
         rhs.resize(chunk);
         std::fill(rhs.begin(), rhs.end(), 1.0);
     } else {
-        amgcl::io::mm_reader rhs_mm(rhs_file);
+        Alina::io::mm_reader rhs_mm(rhs_file);
         rhs_mm(rhs, row_beg, row_end);
     }
 
@@ -63,14 +65,14 @@ ptrdiff_t read_matrix_market(
 
 //---------------------------------------------------------------------------
 ptrdiff_t read_binary(
-        amgcl::mpi::communicator comm,
+        Alina::mpi::communicator comm,
         const std::string &A_file, const std::string &rhs_file, int block_size,
         std::vector<ptrdiff_t> &ptr,
         std::vector<ptrdiff_t> &col,
         std::vector<double>    &val,
         std::vector<double>    &rhs)
 {
-    ptrdiff_t n = amgcl::io::crs_size<ptrdiff_t>(A_file);
+    ptrdiff_t n = Alina::io::crs_size<ptrdiff_t>(A_file);
 
     ptrdiff_t chunk = (n + comm.size - 1) / comm.size;
     if (chunk % block_size != 0) {
@@ -82,14 +84,14 @@ ptrdiff_t read_binary(
 
     chunk = row_end - row_beg;
 
-    amgcl::io::read_crs(A_file, n, ptr, col, val, row_beg, row_end);
+    Alina::io::read_crs(A_file, n, ptr, col, val, row_beg, row_end);
 
     if (rhs_file.empty()) {
         rhs.resize(chunk);
         std::fill(rhs.begin(), rhs.end(), 1.0);
     } else {
         ptrdiff_t rows, cols;
-        amgcl::io::read_dense(rhs_file, rows, cols, rhs, row_beg, row_end);
+        Alina::io::read_dense(rhs_file, rows, cols, rhs, row_beg, row_end);
     }
 
     return chunk;
@@ -97,24 +99,24 @@ ptrdiff_t read_binary(
 
 //---------------------------------------------------------------------------
 template <class Backend, class Matrix>
-std::shared_ptr< amgcl::mpi::distributed_matrix<Backend> >
-partition(amgcl::mpi::communicator comm, const Matrix &Astrip,
+std::shared_ptr< Alina::mpi::distributed_matrix<Backend> >
+partition(Alina::mpi::communicator comm, const Matrix &Astrip,
         std::vector<double> &rhs, const typename Backend::params &bprm,
-        amgcl::runtime::mpi::partition::type ptype, int block_size = 1)
+        Alina::runtime::mpi::partition::type ptype, int block_size = 1)
 {
-    typedef amgcl::mpi::distributed_matrix<Backend> DMatrix;
+    typedef Alina::mpi::distributed_matrix<Backend> DMatrix;
 
-    using amgcl::prof;
+    using Alina::prof;
 
     auto A = std::make_shared<DMatrix>(comm, Astrip);
 
-    if (comm.size == 1 || ptype == amgcl::runtime::mpi::partition::merge)
+    if (comm.size == 1 || ptype == Alina::runtime::mpi::partition::merge)
         return A;
 
     prof.tic("partition");
     boost::property_tree::ptree prm;
     prm.put("type", ptype);
-    amgcl::runtime::mpi::partition::wrapper<Backend> part(prm);
+    Alina::runtime::mpi::partition::wrapper<Backend> part(prm);
 
     auto I = part(*A, block_size);
     auto J = transpose(*I);
@@ -124,7 +126,7 @@ partition(amgcl::mpi::communicator comm, const Matrix &Astrip,
 
     J->move_to_backend(bprm);
 
-    amgcl::backend::spmv(1, *J, rhs, 0, new_rhs);
+    Alina::backend::spmv(1, *J, rhs, 0, new_rhs);
     rhs.swap(new_rhs);
     prof.toc("partition");
 
@@ -139,12 +141,12 @@ int main(int argc, char *argv[]) {
         MPI_Finalize();
     } BOOST_SCOPE_EXIT_END
 
-    amgcl::mpi::communicator comm(MPI_COMM_WORLD);
+    Alina::mpi::communicator comm(MPI_COMM_WORLD);
 
     if (comm.rank == 0)
         std::cout << "World size: " << comm.size << std::endl;
 
-    using amgcl::prof;
+    using Alina::prof;
 
     // Read configuration from command line
     namespace po = boost::program_options;
@@ -177,13 +179,13 @@ int main(int argc, char *argv[]) {
         )
         (
          "partitioner,r",
-         po::value<amgcl::runtime::mpi::partition::type>()->default_value(
+         po::value<Alina::runtime::mpi::partition::type>()->default_value(
 #if defined(AMGCL_HAVE_SCOTCH)
-             amgcl::runtime::mpi::partition::ptscotch
+             Alina::runtime::mpi::partition::ptscotch
 #elif defined(AMGCL_HAVE_PASTIX)
-             amgcl::runtime::mpi::partition::parmetis
+             Alina::runtime::mpi::partition::parmetis
 #else
-             amgcl::runtime::mpi::partition::merge
+             Alina::runtime::mpi::partition::merge
 #endif
              ),
          "Repartition the system matrix"
@@ -218,7 +220,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("prm")) {
         for(const std::string &v : vm["prm"].as<std::vector<std::string> >()) {
-            amgcl::put(prm, v);
+            Alina::put(prm, v);
         }
     }
 
@@ -245,29 +247,29 @@ int main(int argc, char *argv[]) {
     }
     prof.toc("read");
 
-    typedef amgcl::backend::builtin<double> Backend;
+    typedef Alina::backend::builtin<double> Backend;
 
     auto A = partition<Backend>(comm,
             std::tie(n, ptr, col, val), rhs, Backend::params(),
-            vm["partitioner"].as<amgcl::runtime::mpi::partition::type>(),
+            vm["partitioner"].as<Alina::runtime::mpi::partition::type>(),
             block_size);
 
     prof.tic("setup");
     typedef
-        amgcl::mpi::make_solver<
-            amgcl::mpi::cpr<
-                amgcl::mpi::amg<
+        Alina::mpi::make_solver<
+            Alina::mpi::cpr<
+                Alina::mpi::amg<
                     Backend,
-                    amgcl::runtime::mpi::coarsening::wrapper<Backend>,
-                    amgcl::runtime::mpi::relaxation::wrapper<Backend>,
-                    amgcl::runtime::mpi::direct::solver<double>,
-                    amgcl::runtime::mpi::partition::wrapper<Backend>
+                    Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                    Alina::runtime::mpi::relaxation::wrapper<Backend>,
+                    Alina::runtime::mpi::direct::solver<double>,
+                    Alina::runtime::mpi::partition::wrapper<Backend>
                     >,
-                amgcl::mpi::relaxation::as_preconditioner<
-                    amgcl::runtime::mpi::relaxation::wrapper<Backend>
+                Alina::mpi::relaxation::as_preconditioner<
+                    Alina::runtime::mpi::relaxation::wrapper<Backend>
                     >
                 >,
-            amgcl::runtime::mpi::solver::wrapper<Backend>
+            Alina::runtime::mpi::solver::wrapper<Backend>
             >
         Solver;
 

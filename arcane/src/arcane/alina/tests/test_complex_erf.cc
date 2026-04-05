@@ -28,7 +28,9 @@
 
 #include "sample_problem.h"
 
-namespace amgcl {
+using namespace Arcane;
+
+namespace Arcane::Alina {
     profiler<> prof;
 }
 
@@ -47,27 +49,27 @@ BOOST_AUTO_TEST_CASE(complex_matrix_adapter)
 
     std::vector<complex> x(n, complex(0.0,0.0));
 
-    typedef amgcl::backend::builtin<double> Backend;
+    typedef Alina::backend::builtin<double> Backend;
 
     boost::property_tree::ptree prm;
     prm.put("precond.coarsening.aggr.block_size", 2);
 
-    amgcl::make_solver<
-        amgcl::amg<
+    Alina::make_solver<
+        Alina::amg<
             Backend,
-            amgcl::coarsening::smoothed_aggregation,
-            amgcl::relaxation::spai0
+            Alina::coarsening::smoothed_aggregation,
+            Alina::relaxation::spai0
             >,
-        amgcl::solver::bicgstab<Backend>
-        > solve( amgcl::adapter::complex_matrix(std::tie(n, ptr, col, val)), prm );
+        Alina::solver::bicgstab<Backend>
+        > solve( Alina::adapter::complex_matrix(std::tie(n, ptr, col, val)), prm );
 
     std::cout << solve.precond() << std::endl;
 
     boost::iterator_range<const double*> f_range =
-        amgcl::adapter::complex_range(rhs);
+        Alina::adapter::complex_range(rhs);
 
     boost::iterator_range<double*> x_range =
-        amgcl::adapter::complex_range(x);
+        Alina::adapter::complex_range(x);
 
     size_t iters;
     double resid;

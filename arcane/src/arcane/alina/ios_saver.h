@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #include <ios>
 
-namespace amgcl {
+namespace Arcane::Alina {
 
 // Save ostream flags in constructor, restore in destructor
 struct ios_saver {

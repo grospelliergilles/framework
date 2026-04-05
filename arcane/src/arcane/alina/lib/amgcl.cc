@@ -23,11 +23,13 @@ namespace amgcl {
 }
 #endif
 
+using namespace Arcane;
+
 //---------------------------------------------------------------------------
-typedef amgcl::backend::builtin<double>           Backend;
-typedef amgcl::amg<Backend, amgcl::runtime::coarsening::wrapper, amgcl::runtime::relaxation::wrapper> AMG;
-typedef amgcl::runtime::solver::wrapper<Backend>  ISolver;
-typedef amgcl::make_solver<AMG, ISolver>          Solver;
+typedef Alina::backend::builtin<double>           Backend;
+typedef Alina::amg<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper> AMG;
+typedef Alina::runtime::solver::wrapper<Backend>  ISolver;
+typedef Alina::make_solver<AMG, ISolver>          Solver;
 typedef boost::property_tree::ptree               Params;
 
 //---------------------------------------------------------------------------
@@ -110,7 +112,7 @@ void STDCALL amgcl_precond_apply(amgclHandle handle, const double *rhs, double *
 {
     AMG *amg = static_cast<AMG*>(handle);
 
-    size_t n = amgcl::backend::rows(amg->system_matrix());
+    size_t n = Alina::backend::rows(amg->system_matrix());
 
     boost::iterator_range<double*> x_range =
         boost::make_iterator_range(x, x + n);

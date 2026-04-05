@@ -42,7 +42,7 @@ THE SOFTWARE.
 #  include <omp.h>
 #endif
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace relaxation {
 
 /// Gauss-Seidel relaxation.

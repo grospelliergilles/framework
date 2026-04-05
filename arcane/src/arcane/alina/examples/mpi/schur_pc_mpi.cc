@@ -18,13 +18,13 @@
 #if defined(SOLVER_BACKEND_CUDA)
 #  include <arcane/alina/backend_cuda.h>
 #  include <arcane/alina/relaxation_cusparse_ilu0.h>
-   typedef amgcl::backend::cuda<double> Backend;
+   typedef Arcane::Alina::cuda<double> Backend;
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
 #include <arcane/alina/backend_builtin.h>
-typedef amgcl::backend::builtin<double> Backend;
+typedef Arcane::Alina::backend::builtin<double> Backend;
 #endif
 
 #include <arcane/alina/io_binary.h>
@@ -42,16 +42,18 @@ typedef amgcl::backend::builtin<double> Backend;
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
 #include <arcane/alina/profiler.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
     profiler<> prof;
 }
 
-using amgcl::prof;
-using amgcl::precondition;
+using namespace Arcane;
+
+using Alina::prof;
+using Alina::precondition;
 
 //---------------------------------------------------------------------------
 std::vector<ptrdiff_t> read_problem(
-        const amgcl::mpi::communicator &world,
+        const Alina::mpi::communicator &world,
         const std::string &A_file,
         const std::string &rhs_file,
         const std::string &part_file,
@@ -66,7 +68,7 @@ std::vector<ptrdiff_t> read_problem(
     std::vector<ptrdiff_t> domain(world.size + 1, 0);
     std::vector<int> part;
 
-    std::tie(n, m) = amgcl::io::mm_reader(part_file)(part);
+    std::tie(n, m) = Alina::io::mm_reader(part_file)(part);
     for(int p : part) {
         ++domain[p+1];
         precondition(p < world.size, "MPI world does not correspond to partition");
@@ -87,7 +89,7 @@ std::vector<ptrdiff_t> read_problem(
 
     // Read matrix chunk
     {
-        using namespace amgcl::io;
+        using namespace Arcane::Alina::io;
 
         std::ifstream A(A_file.c_str(), std::ios::binary);
         precondition(A, "Failed to open matrix file (" + A_file + ")");
@@ -163,7 +165,7 @@ int main(int argc, char *argv[]) {
         MPI_Finalize();
     } BOOST_SCOPE_EXIT_END
 
-    amgcl::mpi::communicator world(MPI_COMM_WORLD);
+    Alina::mpi::communicator world(MPI_COMM_WORLD);
 
     if (world.rank == 0)
         std::cout << "World size: " << world.size << std::endl;
@@ -227,7 +229,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("prm")) {
         for(const string &v : vm["prm"].as<std::vector<string> >()) {
-            amgcl::put(prm, v);
+            Alina::put(prm, v);
         }
     }
 
@@ -262,7 +264,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    std::function<double(ptrdiff_t,unsigned)> dv = amgcl::mpi::constant_deflation(1);
+    std::function<double(ptrdiff_t,unsigned)> dv = Alina::mpi::constant_deflation(1);
     prm.put("precond.psolver.num_def_vec", 1);
     prm.put("precond.psolver.def_vec", &dv);
 
@@ -279,27 +281,27 @@ int main(int argc, char *argv[]) {
     auto f = Backend::copy_vector(rhs, bprm);
     auto x = Backend::create_vector(chunk, bprm);
 
-    amgcl::backend::clear(*x);
+    Alina::backend::clear(*x);
 
     MPI_Barrier(world);
 
     prof.tic("setup");
     typedef
-        amgcl::mpi::make_solver<
-            amgcl::mpi::schur_pressure_correction<
-                amgcl::mpi::make_solver<
-                    amgcl::mpi::block_preconditioner<
-                        amgcl::relaxation::as_preconditioner<Backend, amgcl::runtime::relaxation::wrapper>
+        Alina::mpi::make_solver<
+            Alina::mpi::schur_pressure_correction<
+                Alina::mpi::make_solver<
+                    Alina::mpi::block_preconditioner<
+                        Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::wrapper>
                         >,
-                    amgcl::runtime::mpi::solver::wrapper<Backend>
+                    Alina::runtime::mpi::solver::wrapper<Backend>
                     >,
-                amgcl::mpi::subdomain_deflation<
-                    amgcl::amg<Backend, amgcl::runtime::coarsening::wrapper, amgcl::runtime::relaxation::wrapper>,
-                    amgcl::runtime::mpi::solver::wrapper<Backend>,
-                    amgcl::runtime::mpi::direct::solver<double>
+                Alina::mpi::subdomain_deflation<
+                    Alina::amg<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
+                    Alina::runtime::mpi::solver::wrapper<Backend>,
+                    Alina::runtime::mpi::direct::solver<double>
                     >
                 >,
-            amgcl::runtime::mpi::solver::wrapper<Backend>
+            Alina::runtime::mpi::solver::wrapper<Backend>
             > Solver;
 
     Solver solve(world, std::tie(chunk, ptr, col, val), prm, bprm);

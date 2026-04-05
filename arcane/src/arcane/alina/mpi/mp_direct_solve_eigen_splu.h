@@ -44,7 +44,7 @@ distributed direct solver interface but always works sequentially.
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_direct_solver_base.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 namespace direct {
 
@@ -53,7 +53,7 @@ template <typename value_type>
 class eigen_splu : public solver_base< value_type, eigen_splu<value_type> > {
     public:
         typedef
-            amgcl::solver::EigenSolver<
+            Alina::solver::EigenSolver<
                 Eigen::SparseLU<
                     Eigen::SparseMatrix<value_type, Eigen::ColMajor, int>
                     >

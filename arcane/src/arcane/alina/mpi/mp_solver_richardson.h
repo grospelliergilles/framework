@@ -34,13 +34,13 @@ THE SOFTWARE.
 #include <arcane/alina/solver_richardson.h>
 #include <arcane/alina/mpi/mp_inner_product.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 namespace solver {
 
 template <class Backend, class InnerProduct = mpi::inner_product>
-class richardson : public amgcl::solver::richardson<Backend, InnerProduct> {
-    typedef amgcl::solver::richardson<Backend, InnerProduct> Base;
+class richardson : public Alina::solver::richardson<Backend, InnerProduct> {
+    typedef Alina::solver::richardson<Backend, InnerProduct> Base;
     public:
         using Base::Base;
 };

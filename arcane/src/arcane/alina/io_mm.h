@@ -44,7 +44,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_interface.h>
 #include <arcane/alina/detail_sort_row.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace io {
 
 /// Matrix market reader.
@@ -135,7 +135,7 @@ class mm_reader {
                 )
         {
             precondition(_sparse, format_error("not a sparse matrix"));
-            precondition(amgcl::is_complex<Val>::value == _complex,
+            precondition(Alina::is_complex<Val>::value == _complex,
                     _complex ?
                         "attempt to read complex values into real vector" :
                         "attempt to read real values into complex vector"
@@ -229,7 +229,7 @@ class mm_reader {
                 Idx beg = ptr[i];
                 Idx end = ptr[i+1];
 
-                amgcl::detail::sort_row(&col[0] + beg, &val[0] + beg, end - beg);
+                Alina::detail::sort_row(&col[0] + beg, &val[0] + beg, end - beg);
             }
 
             return std::make_tuple(chunk, m);
@@ -244,7 +244,7 @@ class mm_reader {
                 )
         {
             precondition(!_sparse, format_error("not a dense array"));
-            precondition(amgcl::is_complex<Val>::value == _complex,
+            precondition(Alina::is_complex<Val>::value == _complex,
                     _complex ?
                         "attempt to read complex values into real vector" :
                         "attempt to read real values into complex vector"
@@ -303,7 +303,7 @@ class mm_reader {
         }
 
         template <typename T>
-        typename std::enable_if<amgcl::is_complex<T>::value, T>::type
+        typename std::enable_if<Alina::is_complex<T>::value, T>::type
         read_value(std::istream &s) {
             typename math::scalar_of<T>::type x,y;
             precondition(s >> x >> y, format_error());
@@ -311,7 +311,7 @@ class mm_reader {
         }
 
         template <typename T>
-        typename std::enable_if<!amgcl::is_complex<T>::value, T>::type
+        typename std::enable_if<!Alina::is_complex<T>::value, T>::type
         read_value(std::istream &s) {
             T x;
             if (std::is_same<T, char>::value) {

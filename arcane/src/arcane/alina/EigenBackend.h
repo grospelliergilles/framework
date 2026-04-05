@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include <arcane/alina/EigenAdapter.h>
 #include <arcane/alina/solver_skyline_lu.h>
 
-namespace amgcl::backend
+namespace Arcane::Alina::backend
 {
 
 /// Eigen backend.
@@ -66,7 +66,7 @@ struct EigenBackend
   {};
 
   /// Backend parameters.
-  typedef amgcl::detail::empty_params params;
+  typedef Alina::detail::empty_params params;
 
   static std::string name() { return "eigen"; }
 

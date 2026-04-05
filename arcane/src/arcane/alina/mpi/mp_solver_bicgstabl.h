@@ -34,13 +34,13 @@ THE SOFTWARE.
 #include <arcane/alina/solver_bicgstabl.h>
 #include <arcane/alina/mpi/mp_inner_product.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 namespace solver {
 
 template <class Backend, class InnerProduct = mpi::inner_product>
-class bicgstabl : public amgcl::solver::bicgstabl<Backend, InnerProduct> {
-    typedef amgcl::solver::bicgstabl<Backend, InnerProduct> Base;
+class bicgstabl : public Alina::solver::bicgstabl<Backend, InnerProduct> {
+    typedef Alina::solver::bicgstabl<Backend, InnerProduct> Base;
     public:
         using Base::Base;
 };

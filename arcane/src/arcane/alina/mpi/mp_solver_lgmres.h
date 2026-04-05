@@ -34,13 +34,13 @@ THE SOFTWARE.
 #include <arcane/alina/solver_lgmres.h>
 #include <arcane/alina/mpi/mp_inner_product.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 namespace solver {
 
 template <class Backend, class InnerProduct = mpi::inner_product>
-class lgmres : public amgcl::solver::lgmres<Backend, InnerProduct> {
-    typedef amgcl::solver::lgmres<Backend, InnerProduct> Base;
+class lgmres : public Alina::solver::lgmres<Backend, InnerProduct> {
+    typedef Alina::solver::lgmres<Backend, InnerProduct> Base;
     public:
         using Base::Base;
 };

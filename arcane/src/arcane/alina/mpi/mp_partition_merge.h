@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 #include <arcane/alina/mpi/mp_partition_util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 namespace partition {
 

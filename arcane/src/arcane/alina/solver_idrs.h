@@ -59,7 +59,7 @@ Bi-orthogonality Properties. ACM Transactions on Mathematical Software, Vol.
 #  include <omp.h>
 #endif
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace solver {
 
 /// IDR(s) method (Induced Dimension Reduction)
@@ -259,7 +259,7 @@ class idrs {
             ios_saver ss(std::cout);
 
             scalar_type norm_rhs = norm(rhs);
-            if (norm_rhs < amgcl::detail::eps<scalar_type>(1)) {
+            if (norm_rhs < Alina::detail::eps<scalar_type>(1)) {
                 if (prm.ns_search) {
                     norm_rhs = math::identity<scalar_type>();
                 } else {

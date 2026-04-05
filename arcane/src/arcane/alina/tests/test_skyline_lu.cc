@@ -7,9 +7,10 @@
 #include <arcane/alina/profiler.h>
 #include "sample_problem.h"
 
-namespace amgcl {
+namespace Arcane::Alina {
     profiler<> prof;
 }
+using namespace Arcane;
 
 BOOST_AUTO_TEST_SUITE( test_skyline_lu )
 
@@ -22,18 +23,18 @@ BOOST_AUTO_TEST_CASE(skyline_lu)
 
     size_t n = sample_problem(16, val, col, ptr, rhs);
 
-    auto A = amgcl::adapter::zero_copy(n, ptr.data(), col.data(), val.data());
+    auto A = Alina::adapter::zero_copy(n, ptr.data(), col.data(), val.data());
 
-    amgcl::solver::skyline_lu<double> solve(*A);
+    Alina::solver::skyline_lu<double> solve(*A);
 
     std::vector<double> x(n);
     std::vector<double> r(n);
 
     solve(rhs, x);
 
-    amgcl::backend::residual(rhs, *A, x, r);
+    Alina::backend::residual(rhs, *A, x, r);
 
-    BOOST_CHECK_SMALL(sqrt(amgcl::backend::inner_product(r, r)), 1e-8);
+    BOOST_CHECK_SMALL(sqrt(Alina::backend::inner_product(r, r)), 1e-8);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

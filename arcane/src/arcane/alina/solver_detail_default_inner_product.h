@@ -35,7 +35,7 @@ THE SOFTWARE.
 
 #include <arcane/alina/value_type_backend_interface.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace solver {
 namespace detail {
 

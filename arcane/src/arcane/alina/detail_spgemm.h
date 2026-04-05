@@ -53,7 +53,7 @@ THE SOFTWARE.
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/detail_sort_row.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace backend {
 
 //---------------------------------------------------------------------------
@@ -119,7 +119,7 @@ void spgemm_saad(const AMatrix &A, const BMatrix &B, CMatrix &C, bool sort = tru
                 }
             }
 
-            if (sort) amgcl::detail::sort_row(
+            if (sort) Alina::detail::sort_row(
                     C.col + row_beg, C.val + row_beg, row_end - row_beg);
         }
     }

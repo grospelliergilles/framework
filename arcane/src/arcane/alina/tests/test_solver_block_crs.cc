@@ -8,7 +8,7 @@ BOOST_AUTO_TEST_SUITE( test_solvers )
 
 BOOST_AUTO_TEST_CASE(test_block_crs_backend)
 {
-    test_backend< amgcl::backend::block_crs<double> >();
+    test_backend< Alina::backend::block_crs<double> >();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

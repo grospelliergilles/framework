@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/adapter_block_matrix.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace backend {
 
 // Hybrid backend uses scalar matrices to build the hierarchy,
@@ -51,7 +51,7 @@ struct builtin_hybrid : public builtin<typename math::scalar_of<BlockType>::type
     static std::shared_ptr<matrix>
     copy_matrix(std::shared_ptr<typename Base::matrix> As, const typename Base::params&)
     {
-        return std::make_shared<matrix>(amgcl::adapter::block_matrix<BlockType>(*As));
+        return std::make_shared<matrix>(Alina::adapter::block_matrix<BlockType>(*As));
     }
 };
 

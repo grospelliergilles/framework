@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/solver_detail_default_inner_product.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 
 /// Iterative solvers
 namespace solver {
@@ -151,7 +151,7 @@ class richardson {
             ios_saver ss(std::cout);
 
             scalar_type norm_rhs = norm(rhs);
-            if (norm_rhs < amgcl::detail::eps<scalar_type>(1)) {
+            if (norm_rhs < Alina::detail::eps<scalar_type>(1)) {
                 if (prm.ns_search) {
                     norm_rhs = math::identity<scalar_type>();
                 } else {

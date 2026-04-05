@@ -37,7 +37,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/value_type_backend_interface.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 
 template <typename T, int N, int M>
 struct static_matrix {

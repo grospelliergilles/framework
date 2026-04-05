@@ -21,9 +21,11 @@
 #include <arcane/alina/io_binary.h>
 #include <arcane/alina/profiler.h>
 
-namespace amgcl { profiler<> prof; }
-using amgcl::prof;
-using amgcl::precondition;
+using namespace Arcane;
+
+namespace Arcane::Alina { profiler<> prof; }
+using Alina::prof;
+using Alina::precondition;
 
 //---------------------------------------------------------------------------
 template <class Matrix>
@@ -31,20 +33,20 @@ void solve_cpr(const Matrix &K, const std::vector<double> &rhs, boost::property_
 {
     auto t1 = prof.scoped_tic("CPR");
 
-    typedef amgcl::backend::builtin<double> Backend;
+    typedef Alina::backend::builtin<double> Backend;
 
     typedef
-        amgcl::amg<Backend, amgcl::runtime::coarsening::wrapper, amgcl::runtime::relaxation::wrapper>
+        Alina::amg<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>
         PPrecond;
 
     typedef
-        amgcl::relaxation::as_preconditioner<Backend, amgcl::runtime::relaxation::wrapper>
+        Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::wrapper>
         SPrecond;
 
     prof.tic("setup");
-    amgcl::make_solver<
-        amgcl::preconditioner::cpr<PPrecond, SPrecond>,
-        amgcl::runtime::solver::wrapper<Backend>
+    Alina::make_solver<
+        Alina::preconditioner::cpr<PPrecond, SPrecond>,
+        Alina::runtime::solver::wrapper<Backend>
         > solve(K, prm);
     prof.toc("setup");
 
@@ -69,44 +71,44 @@ void solve_block_cpr(const Matrix &K, const std::vector<double> &rhs, boost::pro
 {
     auto t1 = prof.scoped_tic("CPR");
 
-    typedef amgcl::static_matrix<double, B, B> val_type;
-    typedef amgcl::static_matrix<double, B, 1> rhs_type;
-    typedef amgcl::backend::builtin<val_type>  SBackend;
-    typedef amgcl::backend::builtin<double>    PBackend;
+    typedef Alina::static_matrix<double, B, B> val_type;
+    typedef Alina::static_matrix<double, B, 1> rhs_type;
+    typedef Alina::backend::builtin<val_type>  SBackend;
+    typedef Alina::backend::builtin<double>    PBackend;
 
     typedef
-        amgcl::amg<
+        Alina::amg<
             PBackend,
-            amgcl::runtime::coarsening::wrapper,
-            amgcl::runtime::relaxation::wrapper>
+            Alina::runtime::coarsening::wrapper,
+            Alina::runtime::relaxation::wrapper>
         PPrecond;
 
     typedef
-        amgcl::relaxation::as_preconditioner<
+        Alina::relaxation::as_preconditioner<
             SBackend,
-            amgcl::runtime::relaxation::wrapper
+            Alina::runtime::relaxation::wrapper
             >
         SPrecond;
 
     prof.tic("setup");
-    amgcl::make_solver<
-        amgcl::preconditioner::cpr<PPrecond, SPrecond>,
-        amgcl::runtime::solver::wrapper<SBackend>
-        > solve(amgcl::adapter::block_matrix<val_type>(K), prm);
+    Alina::make_solver<
+        Alina::preconditioner::cpr<PPrecond, SPrecond>,
+        Alina::runtime::solver::wrapper<SBackend>
+        > solve(Alina::adapter::block_matrix<val_type>(K), prm);
     prof.toc("setup");
 
     std::cout << solve.precond() << std::endl;
 
-    std::vector<rhs_type> x(rhs.size(), amgcl::math::zero<rhs_type>());
+    std::vector<rhs_type> x(rhs.size(), Alina::math::zero<rhs_type>());
 
     auto rhs_ptr = reinterpret_cast<const rhs_type*>(rhs.data());
-    size_t n = amgcl::backend::rows(K) / B;
+    size_t n = Alina::backend::rows(K) / B;
 
     size_t iters;
     double error;
 
     prof.tic("solve");
-    std::tie(iters, error) = solve(amgcl::make_iterator_range(rhs_ptr, rhs_ptr + n), x);
+    std::tie(iters, error) = solve(Alina::make_iterator_range(rhs_ptr, rhs_ptr + n), x);
     prof.toc("solve");
 
     std::cout << "Iterations: " << iters << std::endl
@@ -117,11 +119,11 @@ void solve_block_cpr(const Matrix &K, const std::vector<double> &rhs, boost::pro
 int main(int argc, char *argv[]) {
     using std::string;
     using std::vector;
-    using amgcl::prof;
-    using amgcl::precondition;
+    using Alina::prof;
+    using Alina::precondition;
 
     namespace po = boost::program_options;
-    namespace io = amgcl::io;
+    namespace io = Alina::io;
 
     po::options_description desc("Options");
 
@@ -183,7 +185,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("prm")) {
         for(const string &v : vm["prm"].as<vector<string> >()) {
-            amgcl::put(prm, v);
+            Alina::put(prm, v);
         }
     }
 

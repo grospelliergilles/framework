@@ -12,7 +12,9 @@
 
 #include "domain_partition.h"
 
-namespace amgcl {
+using namespace Arcane;
+
+namespace Arcane::Alina {
     profiler<> prof;
 }
 
@@ -39,7 +41,7 @@ int main(int argc, char *argv[]) {
         MPI_Finalize();
     } BOOST_SCOPE_EXIT_END
 
-    amgcl::mpi::communicator world(MPI_COMM_WORLD);
+    Alina::mpi::communicator world(MPI_COMM_WORLD);
 
     if (world.rank == 0)
         std::cout << "World size: " << world.size << std::endl;
@@ -71,7 +73,7 @@ int main(int argc, char *argv[]) {
     boost::array<ptrdiff_t, 3> lo = { {0,   0,   0  } };
     boost::array<ptrdiff_t, 3> hi = { {n-1, n-1, n-1} };
 
-    using amgcl::prof;
+    using Alina::prof;
 
     prof.tic("partition");
     domain_partition<3> part(lo, hi, world.size);
@@ -141,23 +143,23 @@ int main(int argc, char *argv[]) {
     }
     prof.toc("assemble");
 
-    typedef amgcl::backend::builtin<double>         Backend;
-    typedef amgcl::mpi::distributed_matrix<Backend> Matrix;
+    typedef Alina::backend::builtin<double>         Backend;
+    typedef Alina::mpi::distributed_matrix<Backend> Matrix;
 
     prof.tic("create distributed version");
     Matrix A(world, std::tie(chunk, ptr, col, val), chunk);
     prof.toc("create distributed version");
 
     prof.tic("distributed product");
-    auto B = amgcl::mpi::product(A, A);
+    auto B = Alina::mpi::product(A, A);
     prof.toc("distributed product");
 
     if (world.rank == 0) {
         if (world.size == 1) {
-            typedef amgcl::backend::crs<double> matrix;
+            typedef Alina::backend::crs<double> matrix;
             matrix A(std::tie(chunk, ptr, col, val));
             prof.tic("openmp product");
-            auto B = amgcl::backend::product(A, A);
+            auto B = Alina::backend::product(A, A);
             prof.toc("openmp product");
         }
 

@@ -43,7 +43,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/detail_sort_row.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace coarsening {
 
 /// Smoothed aggregation with energy minimization.
@@ -223,7 +223,7 @@ struct smoothed_aggr_emin {
                         }
                     }
 
-                    amgcl::detail::sort_row(
+                    Alina::detail::sort_row(
                             &adap_col[0], &adap_val[0], adap_col.size()
                             );
 

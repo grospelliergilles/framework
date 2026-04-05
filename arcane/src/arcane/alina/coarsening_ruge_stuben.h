@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include <arcane/alina/coarsening_detail_scaled_galerkin.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace coarsening {
 
 /// Classic Ruge-Stuben coarsening with direct interpolation.
@@ -111,7 +111,7 @@ struct ruge_stuben {
 
         const size_t n = rows(A);
 
-        static const Scalar eps = amgcl::detail::eps<Scalar>(1);
+        static const Scalar eps = Alina::detail::eps<Scalar>(1);
 
         static const Val zero = math::zero<Val>();
 
@@ -274,7 +274,7 @@ struct ruge_stuben {
 
             const size_t n   = rows(A);
             const size_t nnz = nonzeros(A);
-            const Scalar eps = amgcl::detail::eps<Scalar>(1);
+            const Scalar eps = Alina::detail::eps<Scalar>(1);
 
             S.nrows = S.ncols = n;
             S.ptr = new Ptr[n+1];

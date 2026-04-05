@@ -42,7 +42,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_direct_solver_skyline_lu.h>
 #include <arcane/alina/mpi/mp_partition_merge.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 
 template <
@@ -136,7 +136,7 @@ class amg {
                         "npre", "npost", "ncycle", "pre_cycles",
                         "allow_rebuild"});
 
-                amgcl::precondition(max_levels > 0, "max_levels should be positive");
+                Alina::precondition(max_levels > 0, "max_levels should be positive");
             }
 
             void get(

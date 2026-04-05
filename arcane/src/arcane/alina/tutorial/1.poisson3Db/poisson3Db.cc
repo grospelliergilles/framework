@@ -43,6 +43,8 @@ THE SOFTWARE.
 #include <arcane/alina/io_mm.h>
 #include <arcane/alina/profiler.h>
 
+using namespace Arcane;
+
 int main(int argc, char *argv[]) {
     // The matrix and the RHS file names should be in the command line options:
     if (argc < 3) {
@@ -51,7 +53,7 @@ int main(int argc, char *argv[]) {
     }
 
     // The profiler:
-    amgcl::profiler<> prof("poisson3Db");
+    Alina::profiler<> prof("poisson3Db");
 
     // Read the system matrix and the RHS:
     ptrdiff_t rows, cols;
@@ -59,10 +61,10 @@ int main(int argc, char *argv[]) {
     std::vector<double> val, rhs;
 
     prof.tic("read");
-    std::tie(rows, cols) = amgcl::io::mm_reader(argv[1])(ptr, col, val);
+    std::tie(rows, cols) = Alina::io::mm_reader(argv[1])(ptr, col, val);
     std::cout << "Matrix " << argv[1] << ": " << rows << "x" << cols << std::endl;
 
-    std::tie(rows, cols) = amgcl::io::mm_reader(argv[2])(rhs);
+    std::tie(rows, cols) = Alina::io::mm_reader(argv[2])(rhs);
     std::cout << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
     prof.toc("read");
 
@@ -73,21 +75,21 @@ int main(int argc, char *argv[]) {
 
     // Compose the solver type
     //   the solver backend:
-    typedef amgcl::backend::builtin<double> SBackend;
+    typedef Alina::backend::builtin<double> SBackend;
     //   the preconditioner backend:
 #ifdef MIXED_PRECISION
-    typedef amgcl::backend::builtin<float> PBackend;
+    typedef Alina::backend::builtin<float> PBackend;
 #else
-    typedef amgcl::backend::builtin<double> PBackend;
+    typedef Alina::backend::builtin<double> PBackend;
 #endif
     
-    typedef amgcl::make_solver<
-        amgcl::amg<
+    typedef Alina::make_solver<
+        Alina::amg<
             PBackend,
-            amgcl::coarsening::smoothed_aggregation,
-            amgcl::relaxation::spai0
+            Alina::coarsening::smoothed_aggregation,
+            Alina::relaxation::spai0
             >,
-        amgcl::solver::bicgstab<SBackend>
+        Alina::solver::bicgstab<SBackend>
         > Solver;
 
     // Initialize the solver with the system matrix:

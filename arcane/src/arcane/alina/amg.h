@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 
 /// Primary namespace.
-namespace amgcl {
+namespace Arcane::Alina {
 
 /// Algebraic multigrid method.
 /**

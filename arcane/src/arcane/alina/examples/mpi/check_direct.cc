@@ -14,9 +14,11 @@
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
 #include <arcane/alina/profiler.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
     profiler<> prof;
 }
+
+using namespace Arcane;
 
 int main(int argc, char *argv[]) {
     int provided;
@@ -25,7 +27,7 @@ int main(int argc, char *argv[]) {
         MPI_Finalize();
     } BOOST_SCOPE_EXIT_END
 
-    amgcl::mpi::communicator comm(MPI_COMM_WORLD);
+    Alina::mpi::communicator comm(MPI_COMM_WORLD);
 
     if (comm.rank == 0)
         std::cout << "World size: " << comm.size << std::endl;
@@ -70,14 +72,14 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("prm")) {
         for(const std::string &v : vm["prm"].as<std::vector<std::string> >()) {
-            amgcl::put(prm, v);
+            Alina::put(prm, v);
         }
     }
 
     const int n = vm["size"].as<int>();
     const int n2 = n * n;
 
-    using amgcl::prof;
+    using Alina::prof;
 
     int chunk       = (n2 + comm.size - 1) / comm.size;
     int chunk_start = comm.rank * chunk;
@@ -90,7 +92,7 @@ int main(int argc, char *argv[]) {
     std::partial_sum(domain.begin(), domain.end(), domain.begin());
 
     prof.tic("assemble");
-    amgcl::backend::crs<double> A;
+    Alina::backend::crs<double> A;
     A.set_size(chunk, domain.back(), true);
     A.set_nonzeros(chunk * 5);
     std::vector<double> rhs(chunk, 1);
@@ -134,7 +136,7 @@ int main(int argc, char *argv[]) {
     prof.toc("assemble");
 
     prof.tic("setup");
-    amgcl::runtime::mpi::direct::solver<double> solve(comm, A, prm);
+    Alina::runtime::mpi::direct::solver<double> solve(comm, A, prm);
     prof.toc("setup");
 
     prof.tic("solve");

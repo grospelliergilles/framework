@@ -43,7 +43,7 @@ THE SOFTWARE.
 #include <arcane/alina/detail_inverse.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace relaxation {
 
 /// Chebyshev polynomial smoother.

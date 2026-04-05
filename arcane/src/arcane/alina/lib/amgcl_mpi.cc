@@ -15,15 +15,17 @@
 
 #include "amgcl_mpi.h"
 
+using namespace Arcane;
+
 //---------------------------------------------------------------------------
-typedef amgcl::backend::builtin<double>                   Backend;
+typedef Alina::backend::builtin<double>                   Backend;
 typedef boost::property_tree::ptree                       Params;
 
 typedef
-    amgcl::mpi::subdomain_deflation<
-        amgcl::amg<Backend, amgcl::runtime::coarsening::wrapper, amgcl::runtime::relaxation::wrapper>,
-        amgcl::runtime::mpi::solver::wrapper<Backend>,
-        amgcl::runtime::mpi::direct::solver<double>
+    Alina::mpi::subdomain_deflation<
+        Alina::amg<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
+        Alina::runtime::mpi::solver::wrapper<Backend>,
+        Alina::runtime::mpi::direct::solver<double>
     > Solver;
 
 //---------------------------------------------------------------------------

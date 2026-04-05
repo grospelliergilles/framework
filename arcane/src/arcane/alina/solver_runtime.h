@@ -53,7 +53,7 @@ THE SOFTWARE.
 #include <arcane/alina/solver_preonly.h>
 #include <arcane/alina/solver_detail_default_inner_product.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace runtime {
 namespace solver {
 
@@ -127,7 +127,7 @@ inline std::istream& operator>>(std::istream &in, type &s)
 
 template <
     class Backend,
-    class InnerProduct = amgcl::solver::detail::default_inner_product
+    class InnerProduct = Alina::solver::detail::default_inner_product
     >
 struct wrapper {
     typedef boost::property_tree::ptree                params;
@@ -152,7 +152,7 @@ struct wrapper {
 
 #define AMGCL_RUNTIME_SOLVER(type) \
             case type: \
-                handle = static_cast<void*>(new amgcl::solver::type<Backend, InnerProduct>(n, prm, bprm, inner_product)); \
+                handle = static_cast<void*>(new Alina::solver::type<Backend, InnerProduct>(n, prm, bprm, inner_product)); \
                 break
 
             AMGCL_RUNTIME_SOLVER(cg);
@@ -177,7 +177,7 @@ struct wrapper {
 
 #define AMGCL_RUNTIME_SOLVER(type) \
             case type: \
-                delete static_cast<amgcl::solver::type<Backend, InnerProduct>*>(handle); \
+                delete static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle); \
                 break
 
             AMGCL_RUNTIME_SOLVER(cg);
@@ -202,7 +202,7 @@ struct wrapper {
 
 #define AMGCL_RUNTIME_SOLVER(type) \
             case type: \
-                return static_cast<amgcl::solver::type<Backend, InnerProduct>*>(handle)->operator()(A, P, rhs, x)
+                return static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle)->operator()(A, P, rhs, x)
 
             AMGCL_RUNTIME_SOLVER(cg);
             AMGCL_RUNTIME_SOLVER(bicgstab);
@@ -233,7 +233,7 @@ struct wrapper {
 
 #define AMGCL_RUNTIME_SOLVER(type) \
             case type: \
-                return os << *static_cast<amgcl::solver::type<Backend, InnerProduct>*>(w.handle)
+                return os << *static_cast<Alina::solver::type<Backend, InnerProduct>*>(w.handle)
 
             AMGCL_RUNTIME_SOLVER(cg);
             AMGCL_RUNTIME_SOLVER(bicgstab);
@@ -257,7 +257,7 @@ struct wrapper {
 
 #define AMGCL_RUNTIME_SOLVER(type) \
             case type: \
-                return backend::bytes(*static_cast<amgcl::solver::type<Backend, InnerProduct>*>(handle))
+                return backend::bytes(*static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle))
 
             AMGCL_RUNTIME_SOLVER(cg);
             AMGCL_RUNTIME_SOLVER(bicgstab);

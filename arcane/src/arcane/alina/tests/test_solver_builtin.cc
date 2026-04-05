@@ -8,10 +8,10 @@ BOOST_AUTO_TEST_SUITE( test_solvers )
 
 BOOST_AUTO_TEST_CASE(test_builtin_backend)
 {
-    test_backend< amgcl::backend::builtin<double> >();
-    test_backend< amgcl::backend::builtin<double, int, ptrdiff_t> >();
-    test_backend< amgcl::backend::builtin<double, int, int> >();
-    test_backend< amgcl::backend::builtin<double, uint32_t, size_t> >();
+    test_backend< Alina::backend::builtin<double> >();
+    test_backend< Alina::backend::builtin<double, int, ptrdiff_t> >();
+    test_backend< Alina::backend::builtin<double, int, int> >();
+    test_backend< Alina::backend::builtin<double, uint32_t, size_t> >();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/detail_qr.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace relaxation {
 
 /// Sparse approximate interface smoother.
@@ -57,7 +57,7 @@ struct spai1 {
     typedef typename math::scalar_of<value_type>::type scalar_type;
 
     /// Relaxation parameters.
-    typedef amgcl::detail::empty_params params;
+    typedef Alina::detail::empty_params params;
 
     /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
     template <class Matrix>
@@ -75,7 +75,7 @@ struct spai1 {
             std::vector<ptrdiff_t> marker(m, -1);
             std::vector<ptrdiff_t> I, J;
             std::vector<value_type> B, ek;
-            amgcl::detail::QR<value_type> qr;
+            Alina::detail::QR<value_type> qr;
 
 #pragma omp for
             for(ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i) {
@@ -112,7 +112,7 @@ struct spai1 {
                 }
 
                 qr.solve(J.size(), I.size(), &B[0], &ek[0], &Ainv->val[row_beg],
-                        amgcl::detail::col_major);
+                        Alina::detail::col_major);
 
                 for(size_t j = 0; j < J.size(); ++j)
                     marker[J[j]] = -1;
@@ -163,7 +163,7 @@ template <class Backend>
 struct relaxation_is_supported<
     Backend, relaxation::spai1,
     typename std::enable_if<
-        (amgcl::math::static_rows<typename Backend::value_type>::value > 1)
+        (Alina::math::static_rows<typename Backend::value_type>::value > 1)
         >::type
     > : std::false_type
 {};

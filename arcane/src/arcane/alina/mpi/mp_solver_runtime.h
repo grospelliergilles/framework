@@ -34,14 +34,14 @@ THE SOFTWARE.
 #include <arcane/alina/solver_runtime.h>
 #include <arcane/alina/mpi/mp_inner_product.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace runtime { 
 namespace mpi {
 namespace solver {
 
-template <class Backend, class InnerProduct = amgcl::mpi::inner_product>
-struct wrapper : public amgcl::runtime::solver::wrapper<Backend, InnerProduct> {
-    typedef amgcl::runtime::solver::wrapper<Backend, InnerProduct> Base;
+template <class Backend, class InnerProduct = Alina::mpi::inner_product>
+struct wrapper : public Alina::runtime::solver::wrapper<Backend, InnerProduct> {
+    typedef Alina::runtime::solver::wrapper<Backend, InnerProduct> Base;
     using Base::Base;
 };
 

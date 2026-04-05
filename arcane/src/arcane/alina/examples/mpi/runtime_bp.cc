@@ -36,9 +36,11 @@
 
 #include "domain_partition.h"
 
-namespace amgcl { profiler<> prof; }
-using amgcl::prof;
-using amgcl::precondition;
+using namespace Arcane;
+
+namespace Arcane::Alina { profiler<> prof; }
+using Alina::prof;
+using Alina::precondition;
 
 //---------------------------------------------------------------------------
 struct renumbering {
@@ -61,19 +63,19 @@ struct renumbering {
 //---------------------------------------------------------------------------
 template <template <class> class Precond, class Matrix>
 std::tuple<size_t, double> solve(
-        const amgcl::mpi::communicator &comm,
+        const Alina::mpi::communicator &comm,
         const boost::property_tree::ptree &prm,
         const Matrix &A
         )
 {
-    typedef amgcl::backend::builtin<double> Backend;
+    typedef Alina::backend::builtin<double> Backend;
 
-    typedef amgcl::mpi::make_solver<
-        amgcl::mpi::block_preconditioner< Precond<Backend> >,
-        amgcl::runtime::mpi::solver::wrapper<Backend>
+    typedef Alina::mpi::make_solver<
+        Alina::mpi::block_preconditioner< Precond<Backend> >,
+        Alina::runtime::mpi::solver::wrapper<Backend>
         > Solver;
 
-    const size_t n = amgcl::backend::rows(A);
+    const size_t n = Alina::backend::rows(A);
 
     std::vector<double> rhs(n, 1), x(n, 0);
 
@@ -91,7 +93,7 @@ std::tuple<size_t, double> solve(
 int main(int argc, char *argv[]) {
     namespace po = boost::program_options;
 
-    using amgcl::prof;
+    using Alina::prof;
     using std::vector;
     using std::string;
 
@@ -147,7 +149,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("prm")) {
         for(const string &v : vm["prm"].as<vector<string> >()) {
-            amgcl::put(prm, v);
+            Alina::put(prm, v);
         }
     }
 
@@ -156,7 +158,7 @@ int main(int argc, char *argv[]) {
         MPI_Finalize();
     } BOOST_SCOPE_EXIT_END
 
-    amgcl::mpi::communicator world(MPI_COMM_WORLD);
+    Alina::mpi::communicator world(MPI_COMM_WORLD);
 
     if (world.rank == 0)
         std::cout << "World size: " << world.size << std::endl;
@@ -173,8 +175,8 @@ int main(int argc, char *argv[]) {
 
     std::vector<ptrdiff_t> domain(world.size + 1);
     MPI_Allgather(
-            &chunk, 1, amgcl::mpi::datatype<ptrdiff_t>(),
-            &domain[1], 1, amgcl::mpi::datatype<ptrdiff_t>(), world);
+            &chunk, 1, Alina::mpi::datatype<ptrdiff_t>(),
+            &domain[1], 1, Alina::mpi::datatype<ptrdiff_t>(), world);
     std::partial_sum(domain.begin(), domain.end(), domain.begin());
 
     lo = part.domain(world.rank).min_corner();
@@ -233,7 +235,7 @@ int main(int argc, char *argv[]) {
     if (single_level)
         prm.put("precond.class", "relaxation");
 
-    std::tie(iters, error) = solve<amgcl::runtime::preconditioner>(
+    std::tie(iters, error) = solve<Alina::runtime::preconditioner>(
             world, prm, std::tie(chunk, ptr, col, val));
 
     if (world.rank == 0) {

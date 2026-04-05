@@ -10,9 +10,9 @@
 int main(int argc, char* argv[])
 {
     namespace po = boost::program_options;
-    namespace io = amgcl::io;
+    namespace io = Arcane::Alina::io;
 
-    using amgcl::precondition;
+    using Arcane::Alina::precondition;
 
     po::options_description desc("Options");
 

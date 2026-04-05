@@ -15,6 +15,8 @@
 #include <arcane/alina/profiler.h>
 
 #include "sample_problem.h"
+using namespace Arcane;
+
 
 typedef boost::numeric::ublas::compressed_matrix<
     double, boost::numeric::ublas::row_major
@@ -22,12 +24,12 @@ typedef boost::numeric::ublas::compressed_matrix<
 
 typedef boost::numeric::ublas::vector<double> ublas_vector;
 
-namespace amgcl {
+namespace Arcane::Alina {
     profiler<> prof;
 }
 
 int main(int argc, char *argv[]) {
-    using amgcl::prof;
+    using Alina::prof;
 
     std::vector<int>    ptr;
     std::vector<int>    col;
@@ -48,16 +50,16 @@ int main(int argc, char *argv[]) {
     prof.toc("assemble");
 
     prof.tic("build");
-    amgcl::make_solver<
-        amgcl::amg<
-            amgcl::backend::builtin<double>,
-            amgcl::coarsening::smoothed_aggregation,
-            amgcl::relaxation::spai0
+    Alina::make_solver<
+        Alina::amg<
+            Alina::backend::builtin<double>,
+            Alina::coarsening::smoothed_aggregation,
+            Alina::relaxation::spai0
             >,
-        amgcl::solver::bicgstabl<
-            amgcl::backend::builtin<double>
+        Alina::solver::bicgstabl<
+            Alina::backend::builtin<double>
             >
-        > solve( amgcl::backend::map(A) );
+        > solve( Alina::backend::map(A) );
     prof.toc("build");
 
     std::cout << solve.precond() << std::endl;

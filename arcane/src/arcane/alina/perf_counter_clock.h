@@ -39,7 +39,7 @@ THE SOFTWARE.
 #  include <ctime>
 #endif
 
-namespace amgcl {
+namespace Arcane::Alina {
 
 /// Performance counters for use with amgcl::profiler
 namespace perf_counter {

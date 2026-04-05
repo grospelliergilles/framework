@@ -43,7 +43,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_coarsening_aggregation.h>
 #include <arcane/alina/mpi/mp_coarsening_smoothed_aggregation.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace runtime {
 namespace mpi {
 namespace coarsening {
@@ -83,7 +83,7 @@ inline std::istream& operator>>(std::istream &in, type &s)
 
 template <class Backend>
 struct wrapper {
-    typedef amgcl::mpi::distributed_matrix<Backend> matrix;
+    typedef Alina::mpi::distributed_matrix<Backend> matrix;
     typedef boost::property_tree::ptree params;
 
     type c;
@@ -97,13 +97,13 @@ struct wrapper {
         switch (c) {
             case aggregation:
                 {
-                    typedef amgcl::mpi::coarsening::aggregation<Backend> C;
+                    typedef Alina::mpi::coarsening::aggregation<Backend> C;
                     handle = static_cast<void*>(new C(prm));
                 }
                 break;
             case smoothed_aggregation:
                 {
-                    typedef amgcl::mpi::coarsening::smoothed_aggregation<Backend> C;
+                    typedef Alina::mpi::coarsening::smoothed_aggregation<Backend> C;
                     handle = static_cast<void*>(new C(prm));
                 }
                 break;
@@ -116,13 +116,13 @@ struct wrapper {
         switch(c) {
             case aggregation:
                 {
-                    typedef amgcl::mpi::coarsening::aggregation<Backend> C;
+                    typedef Alina::mpi::coarsening::aggregation<Backend> C;
                     delete static_cast<C*>(handle);
                 }
                 break;
             case smoothed_aggregation:
                 {
-                    typedef amgcl::mpi::coarsening::smoothed_aggregation<Backend> C;
+                    typedef Alina::mpi::coarsening::smoothed_aggregation<Backend> C;
                     delete static_cast<C*>(handle);
                 }
                 break;
@@ -136,12 +136,12 @@ struct wrapper {
         switch (c) {
             case aggregation:
                 {
-                    typedef amgcl::mpi::coarsening::aggregation<Backend> C;
+                    typedef Alina::mpi::coarsening::aggregation<Backend> C;
                     return static_cast<C*>(handle)->transfer_operators(A);
                 }
             case smoothed_aggregation:
                 {
-                    typedef amgcl::mpi::coarsening::smoothed_aggregation<Backend> C;
+                    typedef Alina::mpi::coarsening::smoothed_aggregation<Backend> C;
                     return static_cast<C*>(handle)->transfer_operators(A);
                 }
             default:
@@ -154,12 +154,12 @@ struct wrapper {
         switch (c) {
             case aggregation:
                 {
-                    typedef amgcl::mpi::coarsening::aggregation<Backend> C;
+                    typedef Alina::mpi::coarsening::aggregation<Backend> C;
                     return static_cast<C*>(handle)->coarse_operator(A, P, R);
                 }
             case smoothed_aggregation:
                 {
-                    typedef amgcl::mpi::coarsening::smoothed_aggregation<Backend> C;
+                    typedef Alina::mpi::coarsening::smoothed_aggregation<Backend> C;
                     return static_cast<C*>(handle)->coarse_operator(A, P, R);
                 }
             default:
@@ -173,12 +173,12 @@ unsigned block_size(const wrapper<Backend> &w) {
     switch (w.c) {
         case aggregation:
             {
-                typedef amgcl::mpi::coarsening::aggregation<Backend> C;
+                typedef Alina::mpi::coarsening::aggregation<Backend> C;
                 return block_size(*static_cast<const C*>(w.handle));
             }
         case smoothed_aggregation:
             {
-                typedef amgcl::mpi::coarsening::smoothed_aggregation<Backend> C;
+                typedef Alina::mpi::coarsening::smoothed_aggregation<Backend> C;
                 return block_size(*static_cast<const C*>(w.handle));
             }
         default:

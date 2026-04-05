@@ -42,7 +42,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 #include <arcane/alina/coarsening_tentative_prolongation.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 namespace coarsening {
 
@@ -59,7 +59,7 @@ struct pmis {
 
     struct params {
         /// Near nullspace parameters.
-        amgcl::coarsening::nullspace_params nullspace;
+        Alina::coarsening::nullspace_params nullspace;
 
         // Strong connectivity threshold
         scalar_type eps_strong;
@@ -878,7 +878,7 @@ struct pmis {
 
 #pragma omp parallel
             {
-                amgcl::detail::QR<double> qr;
+                Alina::detail::QR<double> qr;
                 std::vector<double> Bpart;
 
 #pragma omp for
@@ -895,7 +895,7 @@ struct pmis {
                             Bpart[r + d * c] = src[c];
                     }
 
-                    qr.factorize(d, null_cols, &Bpart[0], amgcl::detail::col_major);
+                    qr.factorize(d, null_cols, &Bpart[0], Alina::detail::col_major);
 
                     for(ptrdiff_t r = 0, k = i * null_cols * null_cols; r < null_cols; ++r)
                         for(int c = 0; c < null_cols; ++c, ++k)

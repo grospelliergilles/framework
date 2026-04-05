@@ -35,14 +35,14 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/detail_inverse.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 
 /// Convenience class that bundles together a preconditioner and an iterative solver.
 template <
     class Precond,
     class IterativeSolver
     >
-class deflated_solver : public amgcl::detail::non_copyable {
+class deflated_solver : public Alina::detail::non_copyable {
     static_assert(
             backend::backends_compatible<
                 typename IterativeSolver::backend_type,

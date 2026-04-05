@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #include <arcane/alina/coarsening_detail_galerkin.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace coarsening {
 namespace detail {
 

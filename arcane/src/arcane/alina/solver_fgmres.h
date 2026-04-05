@@ -42,7 +42,7 @@ THE SOFTWARE.
 #include <arcane/alina/solver_detail_givens_rotations.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace solver {
 
 /** Flexible GMRES method.
@@ -161,7 +161,7 @@ class fgmres {
             ios_saver ss(std::cout);
 
             scalar_type norm_rhs = norm(rhs);
-            if (norm_rhs < amgcl::detail::eps<scalar_type>(1)) {
+            if (norm_rhs < Alina::detail::eps<scalar_type>(1)) {
                 if (prm.ns_search) {
                     norm_rhs = math::identity<scalar_type>();
                 } else {

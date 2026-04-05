@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace preconditioner {
 
 template <class Backend>
@@ -50,7 +50,7 @@ class dummy {
         typedef typename Backend::ptr_type ptr_type;
         typedef typename backend::builtin<value_type, col_type, ptr_type>::matrix build_matrix;
 
-        typedef amgcl::detail::empty_params params;
+        typedef Alina::detail::empty_params params;
         typedef typename Backend::params backend_params;
 
         template <class Matrix>

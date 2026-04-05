@@ -77,7 +77,7 @@ THE SOFTWARE.
 #include <arcane/alina/solver_precond_side.h>
 #include <arcane/alina/util.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace solver {
 
 /** "Loose" GMRES.
@@ -238,7 +238,7 @@ class lgmres {
             }
 
             scalar_type norm_rhs = norm(rhs);
-            if (norm_rhs < amgcl::detail::eps<scalar_type>(1)) {
+            if (norm_rhs < Alina::detail::eps<scalar_type>(1)) {
                 if (prm.ns_search) {
                     norm_rhs = math::identity<scalar_type>();
                 } else {

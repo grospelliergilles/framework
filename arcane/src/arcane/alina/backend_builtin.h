@@ -49,7 +49,7 @@ THE SOFTWARE.
 #include <arcane/alina/detail_spgemm.h>
 #include <arcane/alina/backend_detail_matrix_ops.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace backend {
 
 /// Sparse matrix stored in CRS format.
@@ -339,7 +339,7 @@ void sort_rows(crs<V, C, P> &A) {
     for(ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i) {
         P beg = A.ptr[i];
         P end = A.ptr[i + 1];
-        amgcl::detail::sort_row(A.col + beg, A.val + beg, end - beg);
+        Alina::detail::sort_row(A.col + beg, A.val + beg, end - beg);
     }
 }
 
@@ -477,7 +477,7 @@ sum(Val alpha, const crs<Val,Col,Ptr> &A, Val beta, const crs<Val,Col,Ptr> &B, b
                 }
             }
 
-            if (sort) amgcl::detail::sort_row(
+            if (sort) Alina::detail::sort_row(
                     C->col + row_beg, C->val + row_beg, row_end - row_beg);
         }
     }
@@ -932,7 +932,7 @@ struct builtin {
     typedef solver::skyline_lu<value_type>       direct_solver;
 
     /// The backend has no parameters.
-    typedef amgcl::detail::empty_params params;
+    typedef Alina::detail::empty_params params;
 
     static std::string name() { return "builtin"; }
 
@@ -1344,7 +1344,7 @@ struct reinterpret_as_rhs_impl<
 namespace detail {
 
 template <typename V, typename C, typename P>
-struct use_builtin_matrix_ops< amgcl::backend::crs<V, C, P> >
+struct use_builtin_matrix_ops< Alina::backend::crs<V, C, P> >
     : std::true_type
 {};
 
@@ -1357,11 +1357,11 @@ struct use_builtin_matrix_ops< amgcl::backend::crs<V, C, P> >
 // Allow to use boost::iterator_range as vector in builtin backend:
 namespace boost { template <class Iterator> class iterator_range; }
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace backend {
 
 template <class Iterator>
-struct is_builtin_vector< amgcl::iterator_range<Iterator> > : std::true_type {};
+struct is_builtin_vector< Alina::iterator_range<Iterator> > : std::true_type {};
 
 template <class Iterator>
 struct is_builtin_vector< boost::iterator_range<Iterator> > : std::true_type {};

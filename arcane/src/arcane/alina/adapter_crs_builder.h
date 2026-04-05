@@ -92,7 +92,7 @@ amgcl::make_solver<
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/backend_detail_matrix_ops.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 
 /// Matrix adapters.
 namespace adapter {
@@ -167,7 +167,7 @@ namespace backend {
 namespace detail {
 
 template <class RowBuilder>
-struct use_builtin_matrix_ops< amgcl::adapter::matrix_builder<RowBuilder> >
+struct use_builtin_matrix_ops< Alina::adapter::matrix_builder<RowBuilder> >
     : std::true_type
 {};
 

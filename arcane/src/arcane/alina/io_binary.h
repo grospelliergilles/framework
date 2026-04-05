@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/detail_sort_row.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace io {
 
 /// Read single value from a binary file.
@@ -117,7 +117,7 @@ void read_crs(
     for(ptrdiff_t i = 0; i < chunk; ++i) {
         Ptr beg = ptr[i];
         Ptr end = ptr[i + 1];
-        amgcl::detail::sort_row(&col[beg], &val[beg], end - beg);
+        Alina::detail::sort_row(&col[beg], &val[beg], end - beg);
     }
 }
 

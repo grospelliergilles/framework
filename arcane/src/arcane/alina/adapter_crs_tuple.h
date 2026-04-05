@@ -67,7 +67,7 @@ AMG amg(std::make_tuple(n,
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/backend_detail_matrix_ops.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace backend {
 
 //---------------------------------------------------------------------------

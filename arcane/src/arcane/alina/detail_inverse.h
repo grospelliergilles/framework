@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/value_type_backend_interface.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace detail {
 
     template <typename value_type>

@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 #include <arcane/alina/mpi/mp_coarsening_pmis.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 namespace mpi {
 namespace coarsening {
 
@@ -196,7 +196,7 @@ struct smoothed_aggregation {
             const distributed_matrix<Backend> &R
             ) const
     {
-        return amgcl::coarsening::detail::galerkin(A, P, R);
+        return Alina::coarsening::detail::galerkin(A, P, R);
     }
 
 };
