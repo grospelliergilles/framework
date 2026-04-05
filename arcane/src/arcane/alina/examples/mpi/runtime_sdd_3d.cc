@@ -32,7 +32,6 @@ typedef Arcane::Alina::backend::builtin<double> Backend;
 #include <arcane/alina/amg.h>
 #include <arcane/alina/coarsening_runtime.h>
 #include <arcane/alina/relaxation_runtime.h>
-#include <arcane/alina/relaxation_as_preconditioner.h>
 #include <arcane/alina/profiler.h>
 
 using namespace Arcane;

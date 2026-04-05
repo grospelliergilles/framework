@@ -10,7 +10,7 @@
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/adapter_ublas.h>
 #include <arcane/alina/coarsenin_smoothed_aggregation.h>
-#include <arcane/alina/relaxation_spai0.h>
+#include <arcane/alina/relaxation.h>
 #include <arcane/alina/solver_bicgstabl.h>
 #include <arcane/alina/profiler.h>
 

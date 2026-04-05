@@ -47,22 +47,12 @@ set(ARCANE_ALINA_SOURCES
   preconditioner_dummy.h
   preconditioner_runtime.h
   preconditioner_schur_pressure_correction.h
-  pref_counter_mpi_aggregator.h
+  perf_counter_mpi_aggregator.h
   profiler.h
-  relaxation_as_block.h
-  relaxation_as_preconditioner.h
-  relaxation_chebyshev.h
   relaxation_cusparse_ilu0.h
-  relaxation_damped_jacobi.h
   relaxation_detail_ilu_solve.h
-  relaxation_gauss_seidel.h
-  relaxation_ilu0.h
-  relaxation_iluk.h
-  relaxation_ilup.h
-  relaxation_ilut.h
   relaxation_runtime.h
-  relaxation_spai0.h
-  relaxation_spai1.h
+  relaxation.h
   reorder_cuthill_mckee.h
   solver_bicgstab.h
   solver_bicgstabl.h

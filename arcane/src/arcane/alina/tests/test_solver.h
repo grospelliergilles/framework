@@ -5,7 +5,7 @@
 #include <arcane/alina/solver_runtime.h>
 #include <arcane/alina/coarsening_runtime.h>
 #include <arcane/alina/relaxation_runtime.h>
-#include <arcane/alina/relaxation_as_preconditioner.h>
+#include <arcane/alina/relaxation.h>
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/adapter_zero_copy.h>
 #include <arcane/alina/profiler.h>

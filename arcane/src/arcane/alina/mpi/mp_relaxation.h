@@ -25,14 +25,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/relaxation_chebyshev.h>
-#include <arcane/alina/relaxation_damped_jacobi.h>
-#include <arcane/alina/relaxation_gauss_seidel.h>
-#include <arcane/alina/relaxation_ilu0.h>
-#include <arcane/alina/relaxation_iluk.h>
-#include <arcane/alina/relaxation_ilup.h>
-#include <arcane/alina/relaxation_ilut.h>
-#include <arcane/alina/relaxation_spai1.h>
+#include <arcane/alina/relaxation.h>
 
 #include <arcane/alina/backend_interface.h>
 #include <arcane/alina/backend_builtin.h>

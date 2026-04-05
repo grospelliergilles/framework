@@ -33,15 +33,7 @@
 #include <boost/property_tree/ptree.hpp>
 
 #include <arcane/alina/util.h>
-#include <arcane/alina/relaxation_gauss_seidel.h>
-#include <arcane/alina/relaxation_ilu0.h>
-#include <arcane/alina/relaxation_iluk.h>
-#include <arcane/alina/relaxation_ilup.h>
-#include <arcane/alina/relaxation_ilut.h>
-#include <arcane/alina/relaxation_damped_jacobi.h>
-#include <arcane/alina/relaxation_spai0.h>
-#include <arcane/alina/relaxation_spai1.h>
-#include <arcane/alina/relaxation_chebyshev.h>
+#include <arcane/alina/relaxation.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

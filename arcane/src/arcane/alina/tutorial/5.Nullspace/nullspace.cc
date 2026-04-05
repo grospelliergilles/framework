@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/amg.h>
 #include <arcane/alina/coarsenin_smoothed_aggregation.h>
 #include <arcane/alina/coarsening_rigid_body_modes.h>
-#include <arcane/alina/relaxation_spai0.h>
+#include <arcane/alina/relaxation.h>
 #include <arcane/alina/solver_cg.h>
 
 #include <arcane/alina/io_mm.h>

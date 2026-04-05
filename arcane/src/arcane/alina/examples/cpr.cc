@@ -13,7 +13,7 @@
 #include <arcane/alina/solver_runtime.h>
 #include <arcane/alina/coarsening_runtime.h>
 #include <arcane/alina/relaxation_runtime.h>
-#include <arcane/alina/relaxation_as_preconditioner.h>
+#include <arcane/alina/relaxation.h>
 #include <arcane/alina/preconditioner_cpr.h>
 #include <arcane/alina/adapter_crs_tuple.h>
 #include <arcane/alina/adapter_block_matrix.h>

@@ -43,9 +43,7 @@ THE SOFTWARE.
 #include <arcane/alina/solver_bicgstab.h>
 #include <arcane/alina/solver_preonly.h>
 #include <arcane/alina/coarsening_aggregation.h>
-#include <arcane/alina/relaxation_ilu0.h>
-#include <arcane/alina/relaxation_spai0.h>
-#include <arcane/alina/relaxation_as_preconditioner.h>
+#include <arcane/alina/relaxation.h>
 
 #include <arcane/alina/io_mm.h>
 #include <arcane/alina/profiler.h>

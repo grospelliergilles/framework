@@ -7,7 +7,7 @@
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/adapter_crs_builder.h>
 #include <arcane/alina/coarsenin_smoothed_aggregation.h>
-#include <arcane/alina/relaxation_gauss_seidel.h>
+#include <arcane/alina/relaxation.h>
 #include <arcane/alina/solver_cg.h>
 #include <arcane/alina/profiler.h>
 

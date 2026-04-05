@@ -5,7 +5,7 @@
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/amg.h>
 #include <arcane/alina/coarsenin_smoothed_aggregation.h>
-#include <arcane/alina/relaxation_spai0.h>
+#include <arcane/alina/relaxation.h>
 #include <arcane/alina/solver_cg.h>
 #include <arcane/alina/profiler.h>
 

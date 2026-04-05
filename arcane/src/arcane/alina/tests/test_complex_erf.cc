@@ -11,12 +11,7 @@
 #include <arcane/alina/coarsenin_smoothed_aggregation.h>
 #include <arcane/alina/coarsening_smoothed_aggr_emin.h>
 
-#include <arcane/alina/relaxation_damped_jacobi.h>
-#include <arcane/alina/relaxation_gauss_seidel.h>
-#include <arcane/alina/relaxation_spai0.h>
-#include <arcane/alina/relaxation_ilu0.h>
-#include <arcane/alina/relaxation_ilut.h>
-#include <arcane/alina/relaxation_chebyshev.h>
+#include <arcane/alina/relaxation.h>
 
 #include <arcane/alina/solver_cg.h>
 #include <arcane/alina/solver_bicgstab.h>
