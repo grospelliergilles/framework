@@ -7,7 +7,7 @@
 #include <arcane/alina/relaxation_runtime.h>
 #include <arcane/alina/relaxation.h>
 #include <arcane/alina/make_solver.h>
-#include <arcane/alina/adapter_zero_copy.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/profiler.h>
 
 #include <boost/assign/std/vector.hpp>

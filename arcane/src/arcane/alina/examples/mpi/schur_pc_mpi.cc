@@ -29,7 +29,7 @@ typedef Arcane::Alina::backend::builtin<double> Backend;
 
 #include <arcane/alina/io_binary.h>
 #include <arcane/alina/io_mm.h>
-#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/amg.h>
 #include <arcane/alina/coarsening_runtime.h>
 #include <arcane/alina/relaxation_runtime.h>

@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include <mpi.h>
 
 #include <arcane/alina/backend_builtin.h>
-#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_direct_solver_skyline_lu.h>
 #include <arcane/alina/mpi/mp_inner_product.h>

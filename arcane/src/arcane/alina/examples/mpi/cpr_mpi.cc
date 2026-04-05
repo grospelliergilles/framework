@@ -6,7 +6,7 @@
 
 #include <arcane/alina/io_binary.h>
 #include <arcane/alina/io_mm.h>
-#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/mpi/mp_make_solver.h>
 #include <arcane/alina/mpi/mp_cpr.h>

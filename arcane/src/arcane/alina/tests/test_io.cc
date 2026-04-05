@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <arcane/alina/io_mm.h>
-#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/profiler.h>
 #include "sample_problem.h"
 

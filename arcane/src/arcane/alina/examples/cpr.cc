@@ -15,8 +15,7 @@
 #include <arcane/alina/relaxation_runtime.h>
 #include <arcane/alina/relaxation.h>
 #include <arcane/alina/preconditioner_cpr.h>
-#include <arcane/alina/adapter_crs_tuple.h>
-#include <arcane/alina/adapter_block_matrix.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/io_mm.h>
 #include <arcane/alina/io_binary.h>
 #include <arcane/alina/profiler.h>

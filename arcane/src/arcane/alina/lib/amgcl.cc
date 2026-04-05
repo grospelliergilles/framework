@@ -12,7 +12,7 @@
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/amg.h>
 #include <arcane/alina/backend_builtin.h>
-#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/Adapters.h>
 
 #include "amgcl.h"
 

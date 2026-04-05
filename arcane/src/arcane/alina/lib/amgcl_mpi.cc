@@ -11,7 +11,7 @@
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
 #include <arcane/alina/mpi/mp_subdomain_deflation.h>
 #include <arcane/alina/backend_builtin.h>
-#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/Adapters.h>
 
 #include "amgcl_mpi.h"
 

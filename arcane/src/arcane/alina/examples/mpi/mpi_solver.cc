@@ -9,15 +9,11 @@
 
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/value_type_static_matrix.h>
-#include <arcane/alina/adapter_crs_tuple.h>
-#include <arcane/alina/adapter_block_matrix.h>
+#include <arcane/alina/Adapters.h>
 
-#if defined(SOLVER_BACKEND_VEXCL)
-#  include <amgcl/backend/vexcl.hpp>
-#  include <amgcl/backend/vexcl_static_matrix.hpp>
-#elif defined(SOLVER_BACKEND_CUDA)
-#  include <amgcl/backend/cuda.hpp>
-#  include <amgcl/relaxation/cusparse_ilu0.hpp>
+#if defined(SOLVER_BACKEND_CUDA)
+#  include <arcane/alina/backend_cuda.h>
+#  include <arcane/alina/relaxation_cusparse_ilu0.h>
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN

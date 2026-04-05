@@ -14,8 +14,7 @@
 #include <arcane/alina/solver_bicgstab.h>
 #include <arcane/alina/solver_gmres.h>
 
-#include <arcane/alina/adapter_crs_tuple.h>
-#include <arcane/alina/adapter_complex.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/profiler.h>
 
 #include "sample_problem.h"

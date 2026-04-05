@@ -36,7 +36,7 @@ THE SOFTWARE.
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 #include <arcane/alina/backend_builtin.h>
-#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/Adapters.h>
 
 namespace Arcane::Alina {
 namespace backend {

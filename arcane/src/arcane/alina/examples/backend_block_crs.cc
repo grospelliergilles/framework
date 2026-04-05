@@ -5,7 +5,7 @@
 
 #include <arcane/alina/amg.h>
 
-#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/backend_block_crs.h>
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>

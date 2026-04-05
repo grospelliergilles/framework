@@ -12,8 +12,7 @@
 #include <arcane/alina/preconditioner_runtime.h>
 #include <arcane/alina/deflated_solver.h>
 #include <arcane/alina/amg.h>
-#include <arcane/alina/adapter_crs_tuple.h>
-#include <arcane/alina/adapter_reorder.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/io_mm.h>
 #include <arcane/alina/io_binary.h>
 

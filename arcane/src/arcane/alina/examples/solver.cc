@@ -21,7 +21,7 @@ typedef Arcane::Alina::backend::EigenBackend<double> Backend;
 #  endif
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/value_type_static_matrix.h>
-#include <arcane/alina/adapter_block_matrix.h>
+#include <arcane/alina/Adapters.h>
 typedef Arcane::Alina::backend::builtin<double> Backend;
 #endif
 
@@ -31,8 +31,7 @@ typedef Arcane::Alina::backend::builtin<double> Backend;
 #include <arcane/alina/preconditioner_runtime.h>
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/amg.h>
-#include <arcane/alina/adapter_crs_tuple.h>
-#include <arcane/alina/adapter_reorder.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/io_mm.h>
 #include <arcane/alina/io_binary.h>
 

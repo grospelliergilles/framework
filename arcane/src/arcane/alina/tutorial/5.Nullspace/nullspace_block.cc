@@ -34,8 +34,7 @@ THE SOFTWARE.
 
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/value_type_static_matrix.h>
-#include <arcane/alina/adapter_crs_tuple.h>
-#include <arcane/alina/adapter_block_matrix.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/amg.h>
 #include <arcane/alina/coarsening.h>

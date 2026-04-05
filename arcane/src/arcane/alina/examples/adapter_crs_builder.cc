@@ -5,7 +5,7 @@
 #include <arcane/alina/amg.h>
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/backend_builtin.h>
-#include <arcane/alina/adapter_crs_builder.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
 #include <arcane/alina/solver_cg.h>

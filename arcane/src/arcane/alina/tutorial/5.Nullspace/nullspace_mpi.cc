@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include <iostream>
 
 #include <arcane/alina/backend_builtin.h>
-#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/coarsening.h>
 
 #include <arcane/alina/mpi/mp_distributed_matrix.h>

@@ -20,7 +20,7 @@ typedef Arcane::Alina::backend::builtin<double> Backend;
 
 #if defined(SOLVER_BACKEND_BUILTIN)
 #include <arcane/alina/value_type_static_matrix.h>
-#include <arcane/alina/adapter_block_matrix.h>
+#include <arcane/alina/Adapters.h>
 #endif
 
 #include <arcane/alina/make_solver.h>
@@ -30,7 +30,7 @@ typedef Arcane::Alina::backend::builtin<double> Backend;
 #include <arcane/alina/relaxation_runtime.h>
 #include <arcane/alina/relaxation.h>
 #include <arcane/alina/preconditioner_cpr_drs.h>
-#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/io_mm.h>
 #include <arcane/alina/io_binary.h>
 #include <arcane/alina/profiler.h>

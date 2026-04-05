@@ -5,7 +5,7 @@
 #include <boost/program_options.hpp>
 
 #include <arcane/alina/backend_builtin.h>
-#include <arcane/alina/adapter_crs_tuple.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 #include <arcane/alina/profiler.h>

@@ -1,12 +1,6 @@
 set(ARCANE_ALINA_SOURCES
-  adapter_block_matrix.h
-  adapter_complex.h
-  adapter_crs_builder.h
-  adapter_crs_tuple.h
-  adapter_reorder.h
-  adapter_scaled_problem.h
+  Adapters.h
   adapter_ublas.h
-  adapter_zero_copy.h
   amg.h
   backend_block_crs.h
   backend_builtin.h

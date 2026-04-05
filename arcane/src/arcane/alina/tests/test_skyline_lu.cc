@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE TestSkylineLU
 #include <boost/test/unit_test.hpp>
 
-#include <arcane/alina/adapter_zero_copy.h>
+#include <arcane/alina/Adapters.h>
 #include <arcane/alina/solver_skyline_lu.h>
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/profiler.h>

@@ -10,8 +10,7 @@
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/value_type_complex.h>
 #include <arcane/alina/value_type_static_matrix.h>
-#include <arcane/alina/adapter_crs_tuple.h>
-#include <arcane/alina/adapter_block_matrix.h>
+#include <arcane/alina/Adapters.h>
 
 #include <arcane/alina/solver_runtime.h>
 #include <arcane/alina/coarsening_runtime.h>
@@ -27,13 +26,16 @@
 #include "sample_problem.h"
 
 #ifndef AMGCL_BLOCK_SIZES
-#  define AMGCL_BLOCK_SIZES (2)(3)(4)
+#define AMGCL_BLOCK_SIZES (2)(3)(4)
 #endif
 using namespace Arcane;
 
-namespace Arcane::Alina { profiler<> prof; }
-using Alina::prof;
+namespace Arcane::Alina
+{
+profiler<> prof;
+}
 using Alina::precondition;
+using Alina::prof;
 
 //---------------------------------------------------------------------------
 template <class Precond, class Matrix>
