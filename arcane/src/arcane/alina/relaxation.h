@@ -239,7 +239,7 @@ class as_preconditioner
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /// Chebyshev polynomial smoother.
-/**
+/*!
  * \param Backend Backend for temporary structures allocation.
  * \ingroup relaxation
  *
@@ -415,7 +415,7 @@ class chebyshev
 /*---------------------------------------------------------------------------*/
 
 /// Damped Jacobi relaxation.
-/**
+/*!
  * \param Backend Backend for temporary structures allocation.
  * \ingroup relaxation
  */
@@ -452,11 +452,11 @@ struct damped_jacobi
   std::shared_ptr<typename Backend::matrix_diagonal> dia;
 
   /// Constructs smoother for the system matrix.
-  /**
-     * \param A           The system matrix.
-     * \param prm         Relaxation parameters.
-     * \param backend_prm Backend parameters.
-     */
+  /*!
+   * \param A           The system matrix.
+   * \param prm         Relaxation parameters.
+   * \param backend_prm Backend parameters.
+   */
   template <class Matrix>
   damped_jacobi(const Matrix& A,
                 const params& prm,
@@ -466,13 +466,13 @@ struct damped_jacobi
   {}
 
   /// Apply pre-relaxation
-  /**
-     * \param A   System matrix.
-     * \param rhs Right-hand side.
-     * \param x   Solution vector.
-     * \param tmp Scratch vector.
-     * \param prm Relaxation parameters.
-     */
+  /*!
+   * \param A   System matrix.
+   * \param rhs Right-hand side.
+   * \param x   Solution vector.
+   * \param tmp Scratch vector.
+   * \param prm Relaxation parameters.
+   */
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -481,13 +481,13 @@ struct damped_jacobi
   }
 
   /// Apply post-relaxation
-  /**
-     * \param A   System matrix.
-     * \param rhs Right-hand side.
-     * \param x   Solution vector.
-     * \param tmp Scratch vector.
-     * \param prm Relaxation parameters.
-     */
+  /*!
+   * \param A   System matrix.
+   * \param rhs Right-hand side.
+   * \param x   Solution vector.
+   * \param tmp Scratch vector.
+   * \param prm Relaxation parameters.
+   */
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -860,34 +860,9 @@ struct gauss_seidel
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-} // namespace Arcane::Alina::relaxation
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-namespace Arcane::Alina::backend
-{
-template <class Backend>
-struct relaxation_is_supported<Backend,
-                               relaxation::gauss_seidel,
-                               typename std::enable_if<
-                               !Backend::provides_row_iterator::value>::type> : std::false_type
-{};
-
-} // namespace Arcane::Alina::backend
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-namespace Arcane::Alina::relaxation
-{
-
-/// ILU(0) smoother.
-/**
+/*!
  * \note ILU(0) is a serial algorithm and is only applicable to backends that
- * support matrix row iteration (e.g. amgcl::backend::builtin or
- * amgcl::backend::eigen).
+ * support matrix row iteration (e.g. backend::builtin or backend::eigen).
  *
  * \param Backend Backend for temporary structures allocation.
  * \ingroup relaxation
@@ -1556,9 +1531,7 @@ struct ilup
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-/// ILUT(p, tau) smoother.
-/**
+/*!
  * \note ILUT is a serial algorithm and is only applicable to backends that
  * support matrix row iteration (e.g. amgcl::backend::builtin or
  * amgcl::backend::eigen).
@@ -1772,8 +1745,7 @@ struct ilut
       }
     };
 
-    typedef std::priority_queue<int, std::vector<int>, comp_indices>
-    priority_queue;
+    typedef std::priority_queue<int, std::vector<int>, comp_indices> priority_queue;
 
     std::vector<nonzero> nz;
     std::vector<ptrdiff_t> idx;
@@ -2151,6 +2123,13 @@ namespace Arcane::Alina::backend
 template <class Backend>
 struct relaxation_is_supported<Backend, relaxation::spai1,
                                typename std::enable_if<(Alina::math::static_rows<typename Backend::value_type>::value > 1)>::type> : std::false_type
+{};
+
+template <class Backend>
+struct relaxation_is_supported<Backend,
+                               relaxation::gauss_seidel,
+                               typename std::enable_if<
+                               !Backend::provides_row_iterator::value>::type> : std::false_type
 {};
 
 } // namespace Arcane::Alina::backend
