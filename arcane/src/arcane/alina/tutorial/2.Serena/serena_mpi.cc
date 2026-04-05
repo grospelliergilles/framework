@@ -43,7 +43,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_relaxation.h>
 #include <arcane/alina/mpi/mp_solver.h>
 
-#include <arcane/alina/io_binary.h>
+#include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
 #if defined(ARCANE_ALINA_HAVE_PARMETIS)
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 
     prof.tic("read");
     // Get the global size of the matrix:
-    ptrdiff_t rows = Alina::io::crs_size<ptrdiff_t>(argv[1]);
+    ptrdiff_t rows = Alina::IO::crs_size<ptrdiff_t>(argv[1]);
 
     // Split the matrix into approximately equal chunks of rows, and
     // make sure each chunk size is divisible by the block size.
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
     // Read our part of the system matrix.
     std::vector<ptrdiff_t> ptr, col;
     std::vector<double> val;
-    Alina::io::read_crs(argv[1], rows, ptr, col, val, row_beg, row_end);
+    Alina::IO::read_crs(argv[1], rows, ptr, col, val, row_beg, row_end);
     prof.toc("read");
 
     if (world.rank == 0) std::cout

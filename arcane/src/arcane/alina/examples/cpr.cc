@@ -16,8 +16,7 @@
 #include <arcane/alina/relaxation.h>
 #include <arcane/alina/preconditioner_cpr.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/io_mm.h>
-#include <arcane/alina/io_binary.h>
+#include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
 using namespace Arcane;
@@ -122,7 +121,7 @@ int main(int argc, char *argv[]) {
     using Alina::precondition;
 
     namespace po = boost::program_options;
-    namespace io = Alina::io;
+    namespace io = Alina::IO;
 
     po::options_description desc("Options");
 

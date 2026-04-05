@@ -4,13 +4,12 @@
 #include <boost/program_options.hpp>
 #include <arcane/alina/util.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/io_mm.h>
-#include <arcane/alina/io_binary.h>
+#include <arcane/alina/IO.h>
 
 int main(int argc, char* argv[])
 {
     namespace po = boost::program_options;
-    namespace io = Arcane::Alina::io;
+    namespace io = Arcane::Alina::IO;
 
     using Arcane::Alina::precondition;
 

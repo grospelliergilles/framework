@@ -16,8 +16,7 @@
 #include <arcane/alina/mpi/mp_preconditioner.h>
 #include <arcane/alina/mpi/mp_solver_runtime.h>
 
-#include <arcane/alina/io_mm.h>
-#include <arcane/alina/io_binary.h>
+#include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
 using namespace Arcane;

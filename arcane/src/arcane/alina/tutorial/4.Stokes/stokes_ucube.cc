@@ -44,7 +44,7 @@ THE SOFTWARE.
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
 
-#include <arcane/alina/io_binary.h>
+#include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
 using namespace Arcane;
@@ -67,8 +67,8 @@ int main(int argc, char *argv[]) {
     std::vector<double> val, rhs;
 
     prof.tic("read");
-    Alina::io::read_crs(argv[1], rows, ptr, col, val);
-    Alina::io::read_dense(argv[2], rows, cols, rhs);
+    Alina::IO::read_crs(argv[1], rows, ptr, col, val);
+    Alina::IO::read_dense(argv[2], rows, cols, rhs);
     std::cout << "Matrix " << argv[1] << ": " << rows << "x" << rows << std::endl;
     std::cout << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
     prof.toc("read");

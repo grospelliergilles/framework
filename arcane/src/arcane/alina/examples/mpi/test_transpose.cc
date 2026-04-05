@@ -6,7 +6,7 @@
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
-#include <arcane/alina/io_mm.h>
+#include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
 using namespace Arcane;
@@ -65,13 +65,13 @@ int main(int argc, char* argv[])
     {
         std::ostringstream fname;
         fname << "A_loc_" << comm.rank << ".mtx";
-        Alina::io::mm_write(fname.str(), *A.local());
+        Alina::IO::mm_write(fname.str(), *A.local());
     }
 
     {
         std::ostringstream fname;
         fname << "A_rem_" << comm.rank << ".mtx";
-        Alina::io::mm_write(fname.str(), *A.remote());
+        Alina::IO::mm_write(fname.str(), *A.remote());
     }
 
     auto B = transpose(A);
@@ -79,13 +79,13 @@ int main(int argc, char* argv[])
     {
         std::ostringstream fname;
         fname << "B_loc_" << comm.rank << ".mtx";
-        Alina::io::mm_write(fname.str(), *B->local());
+        Alina::IO::mm_write(fname.str(), *B->local());
     }
 
     {
         std::ostringstream fname;
         fname << "B_rem_" << comm.rank << ".mtx";
-        Alina::io::mm_write(fname.str(), *B->remote());
+        Alina::IO::mm_write(fname.str(), *B->remote());
     }
 
 }

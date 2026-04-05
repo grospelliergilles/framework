@@ -49,7 +49,7 @@ THE SOFTWARE.
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/backend_detail_mixing.h>
 #include <arcane/alina/util.h>
-#include <arcane/alina/io_mm.h>
+#include <arcane/alina/IO.h>
 
 namespace Arcane::Alina {
 namespace preconditioner {
@@ -420,8 +420,8 @@ class schur_pressure_correction {
             }
 
             if (prm.verbose >= 2) {
-                io::mm_write("Kuu.mtx", *Kuu);
-                io::mm_write("Kpp.mtx", *Kpp);
+                IO::mm_write("Kuu.mtx", *Kuu);
+                IO::mm_write("Kpp.mtx", *Kpp);
             }
 
             std::shared_ptr<backend::numa_vector<value_type>> Kuu_dia;

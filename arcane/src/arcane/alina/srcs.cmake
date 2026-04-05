@@ -22,8 +22,7 @@ set(ARCANE_ALINA_SOURCES
   EigenAdapter.h
   EigenBackend.h
   EpetraAdapter.h
-  io_binary.h
-  io_mm.h
+  IO.h
   ios_saver.h
   make_block_solver.h
   make_solver.h

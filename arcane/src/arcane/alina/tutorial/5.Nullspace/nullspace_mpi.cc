@@ -43,7 +43,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_relaxation.h>
 #include <arcane/alina/mpi/mp_solver.h>
 
-#include <arcane/alina/io_binary.h>
+#include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
 #if defined(ARCANE_ALINA_HAVE_PARMETIS)
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
     // Read the system matrix, the RHS, and the coordinates:
     prof.tic("read");
     // Get the global size of the matrix:
-    ptrdiff_t rows = Alina::io::crs_size<ptrdiff_t>(argv[1]);
+    ptrdiff_t rows = Alina::IO::crs_size<ptrdiff_t>(argv[1]);
 
     // Split the matrix into approximately equal chunks of rows, and
     // make sure each chunk size is divisible by 3.
@@ -83,13 +83,13 @@ int main(int argc, char* argv[])
     // Read our part of the system matrix, the RHS and the coordinates.
     std::vector<ptrdiff_t> ptr, col;
     std::vector<double> val, rhs, coo;
-    Alina::io::read_crs(argv[1], rows, ptr, col, val, row_beg, row_end);
+    Alina::IO::read_crs(argv[1], rows, ptr, col, val, row_beg, row_end);
 
     ptrdiff_t n, m;
-    Alina::io::read_dense(argv[2], n, m, rhs, row_beg, row_end);
+    Alina::IO::read_dense(argv[2], n, m, rhs, row_beg, row_end);
     Alina::precondition(n == rows && m == 1, "The RHS file has wrong dimensions");
 
-    Alina::io::read_dense(argv[3], n, m, coo, row_beg / 3, row_end / 3);
+    Alina::IO::read_dense(argv[3], n, m, coo, row_beg / 3, row_end / 3);
     Alina::precondition(n * 3 == rows && m == 3, "The coordinate file has wrong dimensions");
     prof.toc("read");
 

@@ -27,8 +27,7 @@
 typedef Arcane::Alina::backend::builtin<double> Backend;
 #endif
 
-#include <arcane/alina/io_binary.h>
-#include <arcane/alina/io_mm.h>
+#include <arcane/alina/IO.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/amg.h>
 #include <arcane/alina/coarsening_runtime.h>
@@ -67,7 +66,7 @@ std::vector<ptrdiff_t> read_problem(
     std::vector<ptrdiff_t> domain(world.size + 1, 0);
     std::vector<int> part;
 
-    std::tie(n, m) = Alina::io::mm_reader(part_file)(part);
+    std::tie(n, m) = Alina::IO::mm_reader(part_file)(part);
     for(int p : part) {
         ++domain[p+1];
         precondition(p < world.size, "MPI world does not correspond to partition");
@@ -88,7 +87,7 @@ std::vector<ptrdiff_t> read_problem(
 
     // Read matrix chunk
     {
-        using namespace Arcane::Alina::io;
+        using namespace Arcane::Alina::IO;
 
         std::ifstream A(A_file.c_str(), std::ios::binary);
         precondition(A, "Failed to open matrix file (" + A_file + ")");

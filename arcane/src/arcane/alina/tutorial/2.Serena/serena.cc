@@ -42,7 +42,7 @@ THE SOFTWARE.
 #include <arcane/alina/value_type_static_matrix.h>
 #include <arcane/alina/Adapters.h>
 
-#include <arcane/alina/io_mm.h>
+#include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
 using namespace Arcane;
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
     std::vector<double> val;
 
     prof.tic("read");
-    std::tie(rows, cols) = Alina::io::mm_reader(argv[1])(ptr, col, val);
+    std::tie(rows, cols) = Alina::IO::mm_reader(argv[1])(ptr, col, val);
     std::cout << "Matrix " << argv[1] << ": " << rows << "x" << cols << std::endl;
     prof.toc("read");
 

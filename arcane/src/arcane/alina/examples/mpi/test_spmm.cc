@@ -7,7 +7,7 @@
 #include <arcane/alina/value_type_static_matrix.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
-#include <arcane/alina/io_mm.h>
+#include <arcane/alina/IO.h>
 
 #include <arcane/alina/profiler.h>
 

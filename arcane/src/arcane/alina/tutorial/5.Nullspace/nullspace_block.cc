@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include <arcane/alina/relaxation.h>
 #include <arcane/alina/solver_cg.h>
 
-#include <arcane/alina/io_mm.h>
+#include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
 using namespace Arcane;
@@ -62,9 +62,9 @@ int main(int argc, char *argv[]) {
     std::vector<double> val, rhs, coo;
 
     prof.tic("read");
-    std::tie(rows, rows) = Alina::io::mm_reader(argv[1])(ptr, col, val);
-    std::tie(rows, cols) = Alina::io::mm_reader(argv[2])(rhs);
-    std::tie(ncoo, ndim) = Alina::io::mm_reader(argv[3])(coo);
+    std::tie(rows, rows) = Alina::IO::mm_reader(argv[1])(ptr, col, val);
+    std::tie(rows, cols) = Alina::IO::mm_reader(argv[2])(rhs);
+    std::tie(ncoo, ndim) = Alina::IO::mm_reader(argv[3])(coo);
     prof.toc("read");
 
     Alina::precondition(ncoo * ndim == rows && (ndim == 2 || ndim == 3),

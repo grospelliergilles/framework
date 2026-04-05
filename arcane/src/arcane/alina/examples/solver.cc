@@ -32,8 +32,7 @@ typedef Arcane::Alina::backend::builtin<double> Backend;
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/amg.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/io_mm.h>
-#include <arcane/alina/io_binary.h>
+#include <arcane/alina/IO.h>
 
 #include <arcane/alina/profiler.h>
 
@@ -348,7 +347,7 @@ std::tuple<size_t, double> solve(
 //---------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
     namespace po = boost::program_options;
-    namespace io = Alina::io;
+    namespace io = Alina::IO;
 
     using Alina::prof;
     using std::vector;
@@ -626,7 +625,7 @@ int main(int argc, char *argv[]) {
 
     if (vm.count("output")) {
         auto t = prof.scoped_tic("write");
-        Alina::io::mm_write(vm["output"].as<string>(), &x[0], x.size());
+        Alina::IO::mm_write(vm["output"].as<string>(), &x[0], x.size());
     }
 
     std::cout << "Iterations: " << iters << std::endl

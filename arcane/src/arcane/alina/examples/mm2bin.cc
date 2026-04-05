@@ -5,17 +5,17 @@
 #include <boost/program_options.hpp>
 #include <arcane/alina/util.h>
 #include <arcane/alina/value_type_complex.h>
-#include <arcane/alina/io_mm.h>
-#include <arcane/alina/io_binary.h>
+#include <arcane/alina/IO.h>
 
 using namespace Arcane;
-namespace io = Alina::io;
+namespace io = Alina::IO;
 namespace po = boost::program_options;
 using Alina::precondition;
 
 //---------------------------------------------------------------------------
 template <class T>
-void convert(Alina::io::mm_reader &ifile, const std::string &ofile) {
+void convert(Alina::IO::mm_reader &ifile, const std::string &ofile)
+{
     std::ofstream f(ofile, std::ios::binary);
     precondition(f, "Failed to open output file for writing.");
 

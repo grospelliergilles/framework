@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE TestSkylineLU
 #include <boost/test/unit_test.hpp>
 
-#include <arcane/alina/io_mm.h>
+#include <arcane/alina/IO.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/profiler.h>
 #include "sample_problem.h"
@@ -25,11 +25,11 @@ BOOST_AUTO_TEST_CASE(io_mm)
 
     auto A = std::tie(n, ptr, col, val);
 
-    Alina::io::mm_write("test_io_crs.mm", A);
-    Alina::io::mm_write("test_io_vec.mm", rhs.data(), n, 1);
+    Alina::IO::mm_write("test_io_crs.mm", A);
+    Alina::IO::mm_write("test_io_vec.mm", rhs.data(), n, 1);
 
     size_t rows, cols;
-    std::tie(rows, cols) = Alina::io::mm_reader("test_io_crs.mm")(ptr2, col2, val2);
+    std::tie(rows, cols) = Alina::IO::mm_reader("test_io_crs.mm")(ptr2, col2, val2);
 
     BOOST_REQUIRE_EQUAL(n, rows);
     BOOST_REQUIRE_EQUAL(n, cols);
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(io_mm)
         }
     }
 
-    std::tie(rows, cols) = Alina::io::mm_reader("test_io_vec.mm")(rhs2);
+    std::tie(rows, cols) = Alina::IO::mm_reader("test_io_vec.mm")(rhs2);
     BOOST_REQUIRE_EQUAL(n, rows);
     BOOST_REQUIRE_EQUAL(1, cols);
     for(size_t i = 0; i < n; ++i) {

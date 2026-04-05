@@ -30,8 +30,7 @@ template <class T> using Backend = Arcane::Alina::backend::builtin<T>;
 #include <arcane/alina/preconditioner_runtime.h>
 #include <arcane/alina/Adapters.h>
 
-#include <arcane/alina/io_mm.h>
-#include <arcane/alina/io_binary.h>
+#include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
 using namespace Arcane;
@@ -170,7 +169,7 @@ int main(int argc, char *argv[]) {
     using std::vector;
 
     namespace po = boost::program_options;
-    namespace io = Alina::io;
+    namespace io = Alina::IO;
 
     po::options_description desc("Options");
 
@@ -290,7 +289,7 @@ int main(int argc, char *argv[]) {
                 default:
                     {
                         size_t n, m;
-                        std::tie(n, m) = Alina::io::mm_reader(pmask)(pm);
+                        std::tie(n, m) = Alina::IO::mm_reader(pmask)(pm);
                         precondition(n == rows && m == 1, "Mask file has wrong size");
                         prm.put("precond.pmask", static_cast<void*>(&pm[0]));
                     }

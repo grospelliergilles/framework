@@ -4,8 +4,7 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/scope_exit.hpp>
 
-#include <arcane/alina/io_binary.h>
-#include <arcane/alina/io_mm.h>
+#include <arcane/alina/IO.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/mpi/mp_make_solver.h>
@@ -14,7 +13,6 @@
 #include <arcane/alina/mpi/mp_coarsening_runtime.h>
 #include <arcane/alina/mpi/mp_relaxation_runtime.h>
 #include <arcane/alina/mpi/mp_solver_runtime.h>
-#include <arcane/alina/mpi/mp_relaxation.h>
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
 #include <arcane/alina/mpi/mp_partition_runtime.h>
 #include <arcane/alina/profiler.h>
@@ -37,7 +35,7 @@ ptrdiff_t read_matrix_market(
         std::vector<double>    &val,
         std::vector<double>    &rhs)
 {
-    Alina::io::mm_reader A_mm(A_file);
+    Alina::IO::mm_reader A_mm(A_file);
     ptrdiff_t n = A_mm.rows();
 
     ptrdiff_t chunk = (n + comm.size - 1) / comm.size;
@@ -56,7 +54,7 @@ ptrdiff_t read_matrix_market(
         rhs.resize(chunk);
         std::fill(rhs.begin(), rhs.end(), 1.0);
     } else {
-        Alina::io::mm_reader rhs_mm(rhs_file);
+        Alina::IO::mm_reader rhs_mm(rhs_file);
         rhs_mm(rhs, row_beg, row_end);
     }
 
@@ -72,7 +70,7 @@ ptrdiff_t read_binary(
         std::vector<double>    &val,
         std::vector<double>    &rhs)
 {
-    ptrdiff_t n = Alina::io::crs_size<ptrdiff_t>(A_file);
+    ptrdiff_t n = Alina::IO::crs_size<ptrdiff_t>(A_file);
 
     ptrdiff_t chunk = (n + comm.size - 1) / comm.size;
     if (chunk % block_size != 0) {
@@ -84,14 +82,14 @@ ptrdiff_t read_binary(
 
     chunk = row_end - row_beg;
 
-    Alina::io::read_crs(A_file, n, ptr, col, val, row_beg, row_end);
+    Alina::IO::read_crs(A_file, n, ptr, col, val, row_beg, row_end);
 
     if (rhs_file.empty()) {
         rhs.resize(chunk);
         std::fill(rhs.begin(), rhs.end(), 1.0);
     } else {
         ptrdiff_t rows, cols;
-        Alina::io::read_dense(rhs_file, rows, cols, rhs, row_beg, row_end);
+        Alina::IO::read_dense(rhs_file, rows, cols, rhs, row_beg, row_end);
     }
 
     return chunk;
