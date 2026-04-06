@@ -9,6 +9,12 @@
 #include <omp.h>
 #endif
 
+// This seems not defined with CUDA
+namespace boost::math
+{
+class rounding_error{};
+}
+
 #include "domain_partition.h"
 
 #include "mba.h"
@@ -20,11 +26,10 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include <boost/multi_array.hpp>
-
 #if defined(SOLVER_BACKEND_CUDA)
-#include <amgcl/backend/cuda.hpp>
-#include <amgcl/relaxation/cusparse_ilu0.hpp>
-typedef rcane::Alina::backend::cuda<double> Backend;
+#include <arcane/alina/backend_cuda.h>
+#include <arcane/alina/relaxation_cusparse_ilu0.h>
+typedef Arcane::Alina::backend::cuda<double> Backend;
 #else
 #ifndef SOLVER_BACKEND_BUILTIN
 #define SOLVER_BACKEND_BUILTIN

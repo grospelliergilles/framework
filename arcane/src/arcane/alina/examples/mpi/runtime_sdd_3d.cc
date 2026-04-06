@@ -9,6 +9,12 @@
 #include <omp.h>
 #endif
 
+// This seems not defined with CUDA
+namespace boost::math
+{
+class rounding_error{};
+}
+
 #include <boost/scope_exit.hpp>
 #include <boost/program_options.hpp>
 #include <boost/property_tree/ptree.hpp>

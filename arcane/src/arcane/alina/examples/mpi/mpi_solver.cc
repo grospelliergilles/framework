@@ -210,8 +210,6 @@ partition(Alina::mpi::communicator comm, const Matrix &Astrip,
 
 #if defined(SOLVER_BACKEND_BUILTIN)
     Alina::backend::numa_vector<rhs_type> new_rhs(J->loc_rows());
-#elif defined(SOLVER_BACKEND_VEXCL)
-    vex::vector<rhs_type> new_rhs(bprm.q, J->loc_rows());
 #elif defined(SOLVER_BACKEND_CUDA)
     thrust::device_vector<rhs_type> new_rhs(J->loc_rows());
 #endif
@@ -226,7 +224,7 @@ partition(Alina::mpi::communicator comm, const Matrix &Astrip,
 }
 
 //---------------------------------------------------------------------------
-#if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
+#if defined(SOLVER_BACKEND_BUILTIN)
 template <int B>
 void solve_block(
         Alina::mpi::communicator comm,
@@ -242,11 +240,7 @@ void solve_block(
     typedef Alina::static_matrix<double, B, B> val_type;
     typedef Alina::static_matrix<double, B, 1> rhs_type;
 
-#if defined(SOLVER_BACKEND_BUILTIN)
     typedef Alina::backend::builtin<val_type> Backend;
-#elif defined(SOLVER_BACKEND_VEXCL)
-    typedef Alina::backend::vexcl<val_type> Backend;
-#endif
 
     typedef Alina::mpi::distributed_matrix<Backend> DMatrix;
 
@@ -261,22 +255,10 @@ void solve_block(
 
     typename Backend::params bprm;
 
-#if defined(SOLVER_BACKEND_BUILTIN)
     Alina::backend::numa_vector<rhs_type> rhs(
             reinterpret_cast<const rhs_type*>(&f[0]),
             reinterpret_cast<const rhs_type*>(&f[0]) + chunk / B
             );
-#elif defined(SOLVER_BACKEND_VEXCL)
-    vex::Context ctx(vex::Filter::Env);
-    bprm.q = ctx;
-
-    vex::scoped_program_header header(ctx,
-            Alina::backend::vexcl_static_matrix_declaration<double,B>());
-
-    if (comm.rank == 0) std::cout << ctx << std::endl;
-
-    vex::vector<rhs_type> rhs(ctx, chunk / B, reinterpret_cast<const rhs_type*>(&f[0]));
-#endif
 
     auto get_distributed_matrix = [&](){
         auto t = prof.scoped_tic("distributed matrix");
@@ -327,12 +309,7 @@ void solve_block(
         }
     }
 
-#if defined(SOLVER_BACKEND_BUILTIN)
     Alina::backend::numa_vector<rhs_type> x(chunk);
-#elif defined(SOLVER_BACKEND_VEXCL)
-    vex::vector<rhs_type> x(ctx, chunk);
-    x = math::zero<rhs_type>();
-#endif
 
     int    iters;
     double error;
@@ -364,8 +341,6 @@ void solve_scalar(
 {
 #if defined(SOLVER_BACKEND_BUILTIN)
     typedef Alina::backend::builtin<double> Backend;
-#elif defined(SOLVER_BACKEND_VEXCL)
-    typedef Alina::backend::vexcl<double> Backend;
 #elif defined(SOLVER_BACKEND_CUDA)
     typedef Alina::backend::cuda<double> Backend;
 #endif
@@ -385,13 +360,6 @@ void solve_scalar(
 
 #if defined(SOLVER_BACKEND_BUILTIN)
     Alina::backend::numa_vector<double> rhs(f);
-#elif defined(SOLVER_BACKEND_VEXCL)
-    vex::Context ctx(vex::Filter::Env);
-    bprm.q = ctx;
-
-    if (comm.rank == 0) std::cout << ctx << std::endl;
-
-    vex::vector<double> rhs(ctx, f);
 #elif defined(SOLVER_BACKEND_CUDA)
     cusparseCreate(&bprm.cusparse_handle);
     thrust::device_vector<double> rhs(f);
@@ -444,9 +412,6 @@ void solve_scalar(
 
 #if defined(SOLVER_BACKEND_BUILTIN)
     Alina::backend::numa_vector<double> x(chunk);
-#elif defined(SOLVER_BACKEND_VEXCL)
-    vex::vector<double> x(ctx, chunk);
-    x = 0.0;
 #elif defined(SOLVER_BACKEND_CUDA)
     thrust::device_vector<double> x(chunk, 0.0);
 #endif
@@ -652,7 +617,7 @@ int main(int argc, char *argv[]) {
 
     switch(block_size) {
 
-#if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
+#if defined(SOLVER_BACKEND_BUILTIN)
 #  define AMGCL_CALL_BLOCK_SOLVER(z, data, B)                        \
         case B:                                                      \
             solve_block<B>(comm, n, ptr, col, val, prm, rhs, ptype); \

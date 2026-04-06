@@ -32,18 +32,19 @@ THE SOFTWARE.
 #include <vector>
 #include <iostream>
 
-#include <amgcl/backend/cuda.hpp>
-#include <amgcl/adapter/crs_tuple.hpp>
-#include <amgcl/make_solver.hpp>
-#include <amgcl/amg.hpp>
-#include <amgcl/coarsening/smoothed_aggregation.hpp>
-#include <amgcl/relaxation/spai0.hpp>
-#include <amgcl/solver/bicgstab.hpp>
+#include <arcane/alina/backend_cuda.h>
+#include <arcane/alina/Adapters.h>
+#include <arcane/alina/make_solver.h>
+#include <arcane/alina/amg.h>
+#include <arcane/alina/coarsening.h>
+#include <arcane/alina/relaxation.h>
+#include <arcane/alina/solver_bicgstab.h>
 
-#include <amgcl/io/mm.hpp>
-#include <amgcl/profiler.hpp>
+#include <arcane/alina/IO.h>
+#include <arcane/alina/profiler.h>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
     // The matrix and the RHS file names should be in the command line options:
     if (argc < 3) {
         std::cerr << "Usage: " << argv[0] << " <matrix.mtx> <rhs.mtx>" << std::endl;
@@ -58,7 +59,7 @@ int main(int argc, char *argv[]) {
     std::cout << prop.name << std::endl;
 
     // The profiler:
-    amgcl::profiler<> prof("poisson3Db");
+    Arcane::Alina::profiler<> prof("poisson3Db");
 
     // Read the system matrix and the RHS:
     ptrdiff_t rows, cols;
@@ -66,10 +67,10 @@ int main(int argc, char *argv[]) {
     std::vector<double> val, rhs;
 
     prof.tic("read");
-    std::tie(rows, cols) = amgcl::io::mm_reader(argv[1])(ptr, col, val);
+    std::tie(rows, cols) = Arcane::Alina::IO::mm_reader(argv[1])(ptr, col, val);
     std::cout << "Matrix " << argv[1] << ": " << rows << "x" << cols << std::endl;
 
-    std::tie(rows, cols) = amgcl::io::mm_reader(argv[2])(rhs);
+    std::tie(rows, cols) = Arcane::Alina::IO::mm_reader(argv[2])(rhs);
     std::cout << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
     prof.toc("read");
 
@@ -79,14 +80,14 @@ int main(int argc, char *argv[]) {
     auto A = std::tie(rows, ptr, col, val);
 
     // Compose the solver type
-    typedef amgcl::backend::cuda<double> Backend;
-    typedef amgcl::make_solver<
-        amgcl::amg<
+    typedef Arcane::Alina::backend::cuda<double> Backend;
+    typedef Arcane::Alina::make_solver<
+        Arcane::Alina::amg<
             Backend,
-            amgcl::coarsening::smoothed_aggregation,
-            amgcl::relaxation::spai0
+            Arcane::Alina::coarsening::smoothed_aggregation,
+            Arcane::Alina::relaxation::spai0
             >,
-        amgcl::solver::bicgstab<Backend>
+        Arcane::Alina::solver::bicgstab<Backend>
         > Solver;
 
     // We need to initialize the CUSPARSE library and pass the handle to AMGCL

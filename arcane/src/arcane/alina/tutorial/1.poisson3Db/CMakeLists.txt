@@ -6,7 +6,9 @@ target_link_libraries(poisson3Db_mixed PUBLIC arcane_alina)
 target_compile_definitions(poisson3Db_mixed PRIVATE MIXED_PRECISION)
 
 if (TARGET cuda_target)
-  cuda_add_executable(poisson3Db_cuda poisson3Db_cuda.cu)
+  enable_language(CUDA)
+  add_executable(poisson3Db_cuda poisson3Db_cuda.cu)
+  #target_link_libraries(poisson3Db_cuda PUBLIC arcane_alina Arccore::arccore_accelerator)
   target_link_libraries(poisson3Db_cuda PUBLIC arcane_alina cuda_target)
 endif()
 

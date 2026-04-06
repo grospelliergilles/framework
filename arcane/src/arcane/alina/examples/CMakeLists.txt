@@ -7,10 +7,10 @@ endforeach()
 
 function(add_arcane_alina_example_no_test EXAMPLE SOURCES)
   add_executable(${EXAMPLE} ${SOURCES})
-  target_link_libraries(${EXAMPLE} PUBLIC arcane_alina ${Boost_PROGRAM_OPTIONS_LIBRARY})
+  target_link_libraries(${EXAMPLE} PUBLIC arcane_alina Boost::program_options)
   target_include_directories(${EXAMPLE} PUBLIC
           ${CMAKE_CURRENT_SOURCE_DIR}/../tests
-          ${Boost_INCLUDE_DIRS})
+        )
   target_compile_definitions(${EXAMPLE} PUBLIC "AMGCL_BLOCK_SIZES=${AMGCL_BLOCK_SIZES_SEQ}")
 endfunction()
 
@@ -57,19 +57,16 @@ if (TARGET eigen_target)
 endif()
 
 add_arcane_alina_example(call_lib call_lib.cc)
-#target_link_libraries(call_lib PUBLIC arcane_alina_clib)
 
 if (TARGET cuda_target)
+  enable_language(CUDA)
   function(add_cuda_example example)
-    configure_file(
-      ${CMAKE_CURRENT_SOURCE_DIR}/${example}.cpp
-      ${CMAKE_CURRENT_BINARY_DIR}/${example}.cu
-      COPYONLY
-    )
-
-    cuda_add_executable(${example}_cuda ${CMAKE_CURRENT_BINARY_DIR}/${example}.cu
-      OPTIONS -DSOLVER_BACKEND_CUDA)
-    target_link_libraries(${example}_cuda arcane_alina_example cuda_target)
+    add_executable(${example}_cuda ${example}.cc)
+    set_source_files_properties(${example}.cc PROPERTIES LANGUAGE CUDA)
+    target_compile_definitions(${example}_cuda PUBLIC SOLVER_BACKEND_CUDA)
+    target_include_directories(${example}_cuda PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../tests" )
+    target_link_libraries(${example}_cuda PUBLIC arcane_alina cuda_target arccore_cuda_compile_flags Boost::program_options)
+    add_test(alina_${example}_cuda ${example}_cuda)
   endfunction()
 
   add_cuda_example(solver)

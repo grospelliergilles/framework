@@ -18,7 +18,7 @@
 #if defined(SOLVER_BACKEND_CUDA)
 #  include <arcane/alina/backend_cuda.h>
 #  include <arcane/alina/relaxation_cusparse_ilu0.h>
-   typedef Arcane::Alina::cuda<double> Backend;
+typedef Arcane::Alina::backend::cuda<double> Backend;
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN

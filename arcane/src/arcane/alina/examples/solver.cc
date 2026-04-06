@@ -9,8 +9,8 @@
 #include <boost/preprocessor/seq/for_each.hpp>
 
 #if defined(SOLVER_BACKEND_CUDA)
-#  include <arcane/alina/backend/cuda.hpp>
-#  include <arcane/alina/relaxation/cusparse_ilu0.hpp>
+#  include <arcane/alina/backend_cuda.h>
+#  include <arcane/alina/relaxation_cusparse_ilu0.h>
    typedef Arcane::Alina::backend::cuda<double> Backend;
 #elif defined(SOLVER_BACKEND_EIGEN)
 #include <arcane/alina/EigenBackend.h>

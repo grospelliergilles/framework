@@ -47,7 +47,7 @@ THE SOFTWARE.
 #include <thrust/inner_product.h>
 #include <cusparse_v2.h>
 
-namespace amgcl {
+namespace Arcane::Alina {
 
 namespace solver {
 
@@ -103,7 +103,7 @@ inline void cuda_check(cudaError_t rc, const char *file, int line) {
 }
 
 #define AMGCL_CALL_CUDA(rc)                                                    \
-    amgcl::backend::detail::cuda_check(rc, __FILE__, __LINE__)
+    Arcane::Alina::backend::detail::cuda_check(rc, __FILE__, __LINE__)
 
 struct cuda_deleter {
     void operator()(cusparseMatDescr_t handle) {

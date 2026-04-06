@@ -36,7 +36,8 @@ if (WIN32)
   set(Boost_USE_STATIC_LIBS ON)
 endif ()
 
-find_package(Boost COMPONENTS
+find_package(Boost REQUIRED COMPONENTS
+  headers
   program_options
   serialization
   unit_test_framework
@@ -59,9 +60,11 @@ find_package(Boost COMPONENTS
 # )
 
 if (Boost_FOUND)
+  message(STATUS "Found boost")
   target_include_directories(arcane_alina SYSTEM PUBLIC
     ${Boost_INCLUDE_DIRS}
   )
+  target_link_libraries(arcane_alina PUBLIC Boost::headers)
 else()
   target_compile_definitions(arcane_alina INTERFACE AMGCL_NO_BOOST)
 endif()
@@ -122,27 +125,22 @@ endif()
 #----------------------------------------------------------------------------
 # Find CUDA
 #----------------------------------------------------------------------------
-# if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-#     find_package(CUDA)
-#     if (CUDA_FOUND)
-#         set(CUDA_TARGET_ARCH "Kepler Maxwell Pascal" CACHE STRING "Target architecture(s) for CUDA")
-#         cuda_select_nvcc_arch_flags(CUDA_ARCH_FLAGS ${CUDA_TARGET_ARCH})
+if (ARCCORE_HAS_CUDA)
+  #find_package(CUDA)
+  find_package(CUDAToolkit REQUIRED)
+  if (OPENMP_FOUND)
+    list(APPEND CUDA_NVCC_FLAGS -Xcompiler ${OpenMP_CXX_FLAGS})
+  endif()
 
-#         if (OPENMP_FOUND)
-#             list(APPEND CUDA_NVCC_FLAGS -Xcompiler ${OpenMP_CXX_FLAGS})
-#         endif()
+  #if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	#  list(APPEND CUDA_NVCC_FLAGS ${CUDA_ARCH_FLAGS} -Wno-deprecated-gpu-targets)
+  #
+  #  list(APPEND CUDA_NVCC_FLAGS -Xcompiler -fPIC -Xcompiler -Wno-vla)
+  #endif()
 
-#         if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-# 	    list(APPEND CUDA_NVCC_FLAGS
-#                 ${CUDA_ARCH_FLAGS} -Wno-deprecated-gpu-targets)
-
-#             list(APPEND CUDA_NVCC_FLAGS -Xcompiler -fPIC -Xcompiler -Wno-vla)
-#         endif()
-
-#         add_library(cuda_target INTERFACE)
-#         target_link_libraries(cuda_target INTERFACE ${CUDA_cusparse_LIBRARY})
-#     endif()
-# endif()
+  add_library(cuda_target INTERFACE)
+  target_link_libraries(cuda_target INTERFACE ${CUDA_cusparse_LIBRARY})
+endif()
 
 #----------------------------------------------------------------------------
 # Find MPI
@@ -196,17 +194,6 @@ endif()
 #if (AMGCL_BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)
-#endif()
-
-#add_subdirectory(lib)
-
-#add_library(arcane_alina_clib AlinaLib.cc)
-#target_link_libraries(arcane_alina_clib PUBLIC arcane_alina)
-#target_include_directories(arcane_alina_clib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
-#if (TARGET mpi_target)
-#  add_library(arcane_alina_mpi_clib AlinaLibMPI.cc)
-#  target_link_libraries(arcane_alina_mpi_clib PUBLIC arcane_alina_clib mpi_target)
 #endif()
 
 add_subdirectory(examples)

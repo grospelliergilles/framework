@@ -65,16 +65,16 @@ endif()
 
 if (TARGET cuda_target)
   foreach(example runtime_sdd runtime_sdd_3d schur_pc_mpi mpi_solver)
-    configure_file(
-      ${CMAKE_CURRENT_SOURCE_DIR}/${example}.cpp
-      ${CMAKE_CURRENT_BINARY_DIR}/${example}.cu
-      COPYONLY
+    add_executable(${example}_cuda ${example}.cc)
+    set_source_files_properties(${example}.cc PROPERTIES LANGUAGE CUDA)
+    target_compile_definitions(${example}_cuda PUBLIC SOLVER_BACKEND_CUDA)
+    target_link_libraries(${example}_cuda PUBLIC
+      arcane_alina
+      cuda_target
+      mpi_target
+      arccore_cuda_compile_flags
+      Boost::program_options
     )
-    cuda_add_executable(${example}_cuda
-      ${CMAKE_CURRENT_BINARY_DIR}/${example}.cu
-      OPTIONS -DSOLVER_BACKEND_CUDA)
-    target_include_directories(${example}_cuda PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-    target_link_libraries(${example}_cuda PUBLIC arcane_alina_example cuda_target mpi_target)
   endforeach()
 endif()
 
