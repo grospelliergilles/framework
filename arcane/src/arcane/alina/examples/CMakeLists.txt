@@ -8,9 +8,7 @@ endforeach()
 function(add_arcane_alina_example_no_test EXAMPLE SOURCES)
   add_executable(${EXAMPLE} ${SOURCES})
   target_link_libraries(${EXAMPLE} PUBLIC arcane_alina Boost::program_options)
-  target_include_directories(${EXAMPLE} PUBLIC
-          ${CMAKE_CURRENT_SOURCE_DIR}/../tests
-        )
+  target_include_directories(${EXAMPLE} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../tests")
   target_compile_definitions(${EXAMPLE} PUBLIC "AMGCL_BLOCK_SIZES=${AMGCL_BLOCK_SIZES_SEQ}")
 endfunction()
 
@@ -22,7 +20,7 @@ function(add_arcane_alina_example EXAMPLE SOURCES)
   add_arcane_alina_example_no_test(${EXAMPLE} ${SOURCES})
   #target_link_libraries(${EXAMPLE} PUBLIC arcane_alina_example)
   set(TEST_NAME "alina_sample_seq_${EXAMPLE}")
-  add_test(${TEST_NAME} ${EXAMPLE})
+  add_test(NAME ${TEST_NAME} COMMAND ${EXAMPLE} ${ARGN})
   set_property(TEST ${TEST_NAME} APPEND PROPERTY ENVIRONMENT "OMP_NUM_THREADS=2")
 endfunction()
 
@@ -36,13 +34,15 @@ add_arcane_alina_example(custom_adapter custom_adapter.cc)
 add_arcane_alina_example(mixed_precision mixed_precision.cc)
 add_arcane_alina_example(ublas adapter_ublas.cc)
 
+set(SAMPLE_MATRIX_ARGS "--matrix" "${CMAKE_CURRENT_SOURCE_DIR}/../tests/bcsstk02.mtx")
+
 add_arcane_alina_example_no_test(block_crs backend_block_crs.cc)
-add_arcane_alina_example_no_test(cpr cpr.cc)
-add_arcane_alina_example_no_test(cpr_drs cpr_drs.cc)
+add_arcane_alina_example(cpr cpr.cc ${SAMPLE_MATRIX_ARGS})
+add_arcane_alina_example(cpr_drs cpr_drs.cc ${SAMPLE_MATRIX_ARGS})
+add_arcane_alina_example(ns_search ns_search.cc ${SAMPLE_MATRIX_ARGS})
 add_arcane_alina_example_no_test(schur_pressure_correction schur_pressure_correction.cc)
 add_arcane_alina_example_no_test(schurpc_mixed schurpc_mixed.cc)
 add_arcane_alina_example_no_test(deflated_solver deflated_solver.cc)
-add_arcane_alina_example_no_test(ns_search ns_search.cc)
 
 target_link_libraries(ublas PUBLIC ${Boost_SERIALIZATION_LIBRARY})
 
@@ -66,7 +66,7 @@ if (TARGET cuda_target)
     target_compile_definitions(${example}_cuda PUBLIC SOLVER_BACKEND_CUDA)
     target_include_directories(${example}_cuda PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../tests" )
     target_link_libraries(${example}_cuda PUBLIC arcane_alina cuda_target arccore_cuda_compile_flags Boost::program_options)
-    add_test(alina_${example}_cuda ${example}_cuda)
+    add_test(NAME alina_${example}_cuda COMMAND ${example}_cuda ${SAMPLE_MATRIX_ARGS})
   endfunction()
 
   add_cuda_example(solver)

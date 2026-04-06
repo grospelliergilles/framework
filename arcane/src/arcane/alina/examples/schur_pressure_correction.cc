@@ -49,15 +49,7 @@ void solve_schur(const Matrix &K, const std::vector<double> &rhs, boost::propert
 {
     Backend<double>::params bprm;
 
-#if defined(SOLVER_BACKEND_VEXCL)
-    vex::Context ctx(vex::Filter::Env);
-    std::cout << ctx << std::endl;
-    bprm.q = ctx;
-#elif defined(SOLVER_BACKEND_VIENNACL)
-    std::cout
-        << viennacl::ocl::current_device().name()
-        << " (" << viennacl::ocl::current_device().vendor() << ")\n\n";
-#elif defined(SOLVER_BACKEND_CUDA)
+#if defined(SOLVER_BACKEND_CUDA)
     cusparseCreate(&bprm.cusparse_handle);
     {
         int dev;
@@ -121,7 +113,7 @@ void solve_schur(int pb, const Matrix &K, const std::vector<double> &rhs, boost:
                 solve_schur<USolver, PSolver>(K, rhs, prm);
             }
             break;
-#if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
+#if defined(SOLVER_BACKEND_BUILTIN)
         BOOST_PP_SEQ_FOR_EACH(AMGCL_BLOCK_PSOLVER, ~, AMGCL_BLOCK_SIZES)
 #endif
         default:
@@ -155,7 +147,7 @@ void solve_schur(int ub, int pb, const Matrix &K, const std::vector<double> &rhs
       solve_schur<USolver>(pb, K, rhs, prm);
     }
     break;
-#if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
+#if defined(SOLVER_BACKEND_BUILTIN)
     BOOST_PP_SEQ_FOR_EACH(AMGCL_BLOCK_USOLVER, ~, AMGCL_BLOCK_SIZES)
 #endif
   default:
