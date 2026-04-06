@@ -1,0 +1,338 @@
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2000-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* CSRMatrix.h                                                 (C) 2000-2026 */
+/*                                                                           */
+/* Sparse matrix stored in CSR (Compressed Sparse Row) format.               */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_CSRMATRIX_H
+#define ARCANE_ALINA_CSRMATRIX_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
+ */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+#include "arcane/alina/AlinaGlobal.h"
+#include <arcane/alina/util.h>
+
+#include <cstddef>
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+namespace Arcane::Alina::backend
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Sparse matrix stored in CSR (Compressed Sparse Row) format.
+ */
+template <typename val_t = double, typename col_t = ptrdiff_t, typename ptr_t = col_t>
+struct CSRMatrix
+{
+  typedef val_t value_type;
+  typedef val_t val_type;
+  typedef col_t col_type;
+  typedef ptr_t ptr_type;
+
+  size_t nrows = 0;
+  size_t ncols = 0;
+  size_t nnz = 0;
+  ptr_type* ptr = nullptr;
+  col_type* col = nullptr;
+  val_type* val = nullptr;
+  bool own_data = true;
+
+  CSRMatrix() = default;
+
+  template <class PtrRange, class ColRange, class ValRange>
+  CSRMatrix(size_t nrows, size_t ncols, const PtrRange& ptr_range, const ColRange& col_range, const ValRange& val_range)
+  : nrows(nrows)
+  , ncols(ncols)
+  {
+    AMGCL_TIC("CSR copy");
+    precondition(static_cast<ptrdiff_t>(nrows + 1) == std::distance(std::begin(ptr_range), std::end(ptr_range)),
+                 "ptr_range has wrong size in crs constructor");
+
+    nnz = ptr_range[nrows];
+
+    precondition(static_cast<ptrdiff_t>(nnz) == std::distance(std::begin(col_range), std::end(col_range)),
+                 "col_range has wrong size in crs constructor");
+
+    precondition(static_cast<ptrdiff_t>(nnz) == std::distance(std::begin(val_range), std::end(val_range)),
+                 "val_range has wrong size in crs constructor");
+
+    ptr = new ptr_type[nrows + 1];
+    col = new col_type[nnz];
+    val = new val_type[nnz];
+
+    ptr[0] = ptr_range[0];
+#pragma omp parallel for
+    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i) {
+      ptr[i + 1] = ptr_range[i + 1];
+      for (auto j = ptr_range[i]; j < ptr_range[i + 1]; ++j) {
+        col[j] = col_range[j];
+        val[j] = val_range[j];
+      }
+    }
+    AMGCL_TOC("CSR copy");
+  }
+
+  template <class Matrix>
+  CSRMatrix(const Matrix& A)
+  : nrows(backend::rows(A))
+  , ncols(backend::cols(A))
+  {
+    AMGCL_TIC("CSR copy");
+    ptr = new ptr_type[nrows + 1];
+    ptr[0] = 0;
+
+#pragma omp parallel for
+    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i) {
+      int row_width = 0;
+      for (auto a = backend::row_begin(A, i); a; ++a)
+        ++row_width;
+      ptr[i + 1] = row_width;
+    }
+
+    nnz = scan_row_sizes();
+    col = new col_type[nnz];
+    val = new val_type[nnz];
+
+#pragma omp parallel for
+    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i) {
+      ptr_type row_head = ptr[i];
+      for (auto a = backend::row_begin(A, i); a; ++a) {
+        col[row_head] = a.col();
+        val[row_head] = a.value();
+
+        ++row_head;
+      }
+    }
+    AMGCL_TOC("CSR copy");
+  }
+
+  CSRMatrix(const CSRMatrix& other)
+  : nrows(other.nrows)
+  , ncols(other.ncols)
+  , nnz(other.nnz)
+  {
+    if (other.ptr && other.col && other.val) {
+      ptr = new ptr_type[nrows + 1];
+      col = new col_type[nnz];
+      val = new val_type[nnz];
+
+      ptr[0] = other.ptr[0];
+#pragma omp parallel for
+      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i) {
+        ptr[i + 1] = other.ptr[i + 1];
+        for (ptr_type j = other.ptr[i]; j < other.ptr[i + 1]; ++j) {
+          col[j] = other.col[j];
+          val[j] = other.val[j];
+        }
+      }
+    }
+  }
+
+  CSRMatrix(CSRMatrix&& other) noexcept
+  : nrows(other.nrows)
+  , ncols(other.ncols)
+  , nnz(other.nnz)
+  , ptr(other.ptr)
+  , col(other.col)
+  , val(other.val)
+  , own_data(other.own_data)
+  {
+    other.nrows = 0;
+    other.ncols = 0;
+    other.nnz = 0;
+    other.ptr = 0;
+    other.col = 0;
+    other.val = 0;
+  }
+
+  CSRMatrix& operator=(const CSRMatrix& other)
+  {
+    free_data();
+
+    nrows = other.nrows;
+    ncols = other.ncols;
+    nnz = other.nnz;
+
+    if (other.ptr && other.col && other.val) {
+      ptr = new ptr_type[nrows + 1];
+      col = new col_type[nnz];
+      val = new val_type[nnz];
+
+      ptr[0] = other.ptr[0];
+#pragma omp parallel for
+      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i) {
+        ptr[i + 1] = other.ptr[i + 1];
+        for (ptr_type j = other.ptr[i]; j < other.ptr[i + 1]; ++j) {
+          col[j] = other.col[j];
+          val[j] = other.val[j];
+        }
+      }
+    }
+
+    return *this;
+  }
+
+  CSRMatrix& operator=(CSRMatrix&& other) noexcept
+  {
+    std::swap(nrows, other.nrows);
+    std::swap(ncols, other.ncols);
+    std::swap(nnz, other.nnz);
+    std::swap(ptr, other.ptr);
+    std::swap(col, other.col);
+    std::swap(val, other.val);
+    std::swap(own_data, other.own_data);
+
+    return *this;
+  }
+
+  void free_data()
+  {
+    if (own_data) {
+      delete[] ptr;
+      ptr = nullptr;
+      delete[] col;
+      col = nullptr;
+      delete[] val;
+      val = nullptr;
+    }
+  }
+
+  void set_size(size_t n, size_t m, bool clean_ptr = false)
+  {
+    precondition(!ptr, "matrix data has already been allocated!");
+
+    nrows = n;
+    ncols = m;
+
+    ptr = new ptr_type[nrows + 1];
+
+    if (clean_ptr) {
+      ptr[0] = 0;
+#pragma omp parallel for
+      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i)
+        ptr[i + 1] = 0;
+    }
+  }
+
+  ptr_type scan_row_sizes()
+  {
+    std::partial_sum(ptr, ptr + nrows + 1, ptr);
+    return ptr[nrows];
+  }
+
+  void set_nonzeros()
+  {
+    set_nonzeros(ptr[nrows]);
+
+#pragma omp parallel for
+    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i) {
+      ptrdiff_t row_beg = ptr[i];
+      ptrdiff_t row_end = ptr[i + 1];
+      for (ptrdiff_t j = row_beg; j < row_end; ++j) {
+        col[j] = 0;
+        val[j] = math::zero<val_type>();
+      }
+    }
+  }
+
+  void set_nonzeros(size_t n, bool need_values = true)
+  {
+    precondition(!col && !val, "matrix data has already been allocated!");
+
+    nnz = n;
+
+    col = new col_type[nnz];
+
+    if (need_values)
+      val = new val_type[nnz];
+  }
+
+  ~CSRMatrix()
+  {
+    free_data();
+  }
+
+  class row_iterator
+  {
+   public:
+
+    row_iterator(const col_type* col, const col_type* end, const val_type* val)
+    : m_col(col)
+    , m_end(end)
+    , m_val(val)
+    {}
+
+    operator bool() const
+    {
+      return m_col < m_end;
+    }
+
+    row_iterator& operator++()
+    {
+      ++m_col;
+      ++m_val;
+      return *this;
+    }
+
+    col_type col() const
+    {
+      return *m_col;
+    }
+
+    val_type value() const
+    {
+      return *m_val;
+    }
+
+   private:
+
+    const col_type* m_col = nullptr;
+    const col_type* m_end = nullptr;
+    const val_type* m_val = nullptr;
+  };
+
+  row_iterator row_begin(size_t row) const
+  {
+    ptr_type p = ptr[row];
+    ptr_type e = ptr[row + 1];
+    return row_iterator(col + p, col + e, val + p);
+  }
+
+  size_t bytes() const
+  {
+    if (own_data) {
+      return sizeof(ptr_type) * (nrows + 1) + sizeof(col_type) * nnz + sizeof(val_type) * nnz;
+    }
+    else {
+      return 0;
+    }
+  }
+};
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::backend
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+#endif

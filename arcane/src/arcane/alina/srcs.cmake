@@ -11,6 +11,7 @@ set(ARCANE_SOURCES
   backend_detail_matrix_ops.h
   backend_detail_mixing.h
   backend_interface.h
+  CSRMatrix.h
   coarsening.h
   coarsening_detail_galerkin.h
   coarsening_detail_scaled_galerkin.h
