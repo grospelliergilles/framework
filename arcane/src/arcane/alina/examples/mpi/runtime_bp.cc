@@ -5,8 +5,6 @@
 #include <numeric>
 
 #include <boost/program_options.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/scope_exit.hpp>
 
@@ -17,6 +15,7 @@
 #include <arcane/alina/mpi/mp_solver_runtime.h>
 #include <arcane/alina/mpi/mp_block_preconditioner.h>
 #include <arcane/alina/profiler.h>
+#include <arcane/alina/util.h>
 
 // Pour test compilation uniquement
 #include <arcane/alina/mpi/mp_solver.h>
@@ -55,7 +54,7 @@ struct renumbering {
 template <template <class> class Precond, class Matrix>
 std::tuple<size_t, double> solve(
         const Alina::mpi::communicator &comm,
-        const boost::property_tree::ptree &prm,
+        const Alina::PropertyTree &prm,
         const Matrix &A
         )
 {
@@ -133,9 +132,9 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    boost::property_tree::ptree prm;
+    Alina::PropertyTree prm;
     if (vm.count("prm-file")) {
-        read_json(vm["prm-file"].as<string>(), prm);
+      prm.read_json(vm["prm-file"].as<string>());
     }
 
     if (vm.count("prm")) {

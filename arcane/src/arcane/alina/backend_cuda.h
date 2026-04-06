@@ -468,17 +468,15 @@ struct cuda {
 
         params(cusparseHandle_t handle = 0) : cusparse_handle(handle) {}
 
-#ifndef AMGCL_NO_BOOST
-        params(const boost::property_tree::ptree &p)
+        params(const PropertyTree &p)
             : AMGCL_PARAMS_IMPORT_VALUE(p, cusparse_handle)
         {
             check_params(p, {"cusparse_handle"});
         }
 
-        void get(boost::property_tree::ptree &p, const std::string &path) const {
+        void get(PropertyTree &p, const std::string &path) const {
             AMGCL_PARAMS_EXPORT_VALUE(p, path, cusparse_handle);
         }
-#endif
     };
 
     static std::string name() { return "cuda"; }

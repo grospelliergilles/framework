@@ -57,7 +57,7 @@ struct merge {
         {}
 
 #ifndef AMGCL_NO_BOOST
-        params(const boost::property_tree::ptree &p)
+        params(const Alina::PropertyTree &p)
             : AMGCL_PARAMS_IMPORT_VALUE(p, enable),
               AMGCL_PARAMS_IMPORT_VALUE(p, min_per_proc),
               AMGCL_PARAMS_IMPORT_VALUE(p, shrink_ratio)
@@ -66,7 +66,7 @@ struct merge {
         }
 
         void get(
-                boost::property_tree::ptree &p,
+                Alina::PropertyTree &p,
                 const std::string &path = ""
                 ) const
         {

@@ -116,8 +116,7 @@ class amg {
                 allow_rebuild(false)
             {}
 
-#ifndef AMGCL_NO_BOOST
-            params(const boost::property_tree::ptree &p)
+            params(const PropertyTree &p)
                 : AMGCL_PARAMS_IMPORT_CHILD(p, coarsening),
                   AMGCL_PARAMS_IMPORT_CHILD(p, relax),
                   AMGCL_PARAMS_IMPORT_CHILD(p, direct),
@@ -139,8 +138,7 @@ class amg {
                 Alina::precondition(max_levels > 0, "max_levels should be positive");
             }
 
-            void get(
-                    boost::property_tree::ptree &p,
+            void get(                    Alina::PropertyTree &p,
                     const std::string &path = ""
                     ) const
             {
@@ -157,7 +155,6 @@ class amg {
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, pre_cycles);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, allow_rebuild);
             }
-#endif
         } prm;
 
         template <class Matrix>

@@ -73,19 +73,17 @@ struct aggregation {
 
         params() : over_interp(1.5f) { }
 
-#ifndef AMGCL_NO_BOOST
-        params(const boost::property_tree::ptree &p)
+        params(const Alina::PropertyTree &p)
             : AMGCL_PARAMS_IMPORT_CHILD(p, aggr),
               AMGCL_PARAMS_IMPORT_VALUE(p, over_interp)
         {
             check_params(p, {"aggr", "over_interp"});
         }
 
-        void get(boost::property_tree::ptree &p, const std::string &path) const {
+        void get(Alina::PropertyTree &p, const std::string &path) const {
             AMGCL_PARAMS_EXPORT_CHILD(p, path, aggr);
             AMGCL_PARAMS_EXPORT_VALUE(p, path, over_interp);
         }
-#endif
     } prm;
 
     aggregation(const params &prm = params()) : prm(prm) {}

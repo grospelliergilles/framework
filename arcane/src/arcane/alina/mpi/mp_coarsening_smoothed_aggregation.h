@@ -73,7 +73,7 @@ struct smoothed_aggregation {
         { }
 
 #ifndef AMGCL_NO_BOOST
-        params(const boost::property_tree::ptree &p)
+        params(const Alina::PropertyTree &p)
             : AMGCL_PARAMS_IMPORT_CHILD(p, aggr),
               AMGCL_PARAMS_IMPORT_VALUE(p, relax),
               AMGCL_PARAMS_IMPORT_VALUE(p, estimate_spectral_radius),
@@ -82,7 +82,7 @@ struct smoothed_aggregation {
             check_params(p, {"aggr", "relax", "estimate_spectral_radius", "power_iters"});
         }
 
-        void get(boost::property_tree::ptree &p, const std::string &path) const {
+        void get(Alina::PropertyTree &p, const std::string &path) const {
             AMGCL_PARAMS_EXPORT_CHILD(p, path, aggr);
             AMGCL_PARAMS_EXPORT_VALUE(p, path, relax);
             AMGCL_PARAMS_EXPORT_VALUE(p, path, estimate_spectral_radius);

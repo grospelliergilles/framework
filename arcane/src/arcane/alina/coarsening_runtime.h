@@ -25,12 +25,6 @@
 #include <stdexcept>
 #include <type_traits>
 
-#ifdef AMGCL_NO_BOOST
-#error Runtime interface relies on Boost.PropertyTree!
-#endif
-
-#include <boost/property_tree/ptree.hpp>
-
 #include <arcane/alina/util.h>
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/coarsening.h>
@@ -97,7 +91,7 @@ inline std::istream& operator>>(std::istream& in, type& c)
 template <class Backend>
 struct wrapper
 {
-  typedef boost::property_tree::ptree params;
+  typedef Alina::PropertyTree params;
   type c;
   bool as_scalar;
   void* handle;

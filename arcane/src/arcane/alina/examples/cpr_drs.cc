@@ -2,8 +2,6 @@
 #include <string>
 
 #include <boost/program_options.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 
 #if defined(SOLVER_BACKEND_CUDA)
@@ -42,7 +40,7 @@ using Alina::precondition;
 
 //---------------------------------------------------------------------------
 template <class Matrix>
-void solve_cpr(const Matrix &K, const std::vector<double> &rhs, boost::property_tree::ptree &prm)
+void solve_cpr(const Matrix &K, const std::vector<double> &rhs, Alina::PropertyTree &prm)
 {
     using Alina::prof;
     Backend::params bprm;
@@ -104,7 +102,7 @@ void solve_cpr(const Matrix &K, const std::vector<double> &rhs, boost::property_
 #if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
 //---------------------------------------------------------------------------
 template <int B, class Matrix>
-void solve_block_cpr(const Matrix &K, const std::vector<double> &rhs, boost::property_tree::ptree &prm)
+void solve_block_cpr(const Matrix &K, const std::vector<double> &rhs, Alina::PropertyTree &prm)
 {
     using Alina::prof;
 
@@ -249,8 +247,9 @@ int main(int argc, char *argv[]) {
 
     po::notify(vm);
 
-    boost::property_tree::ptree prm;
-    if (vm.count("params")) read_json(vm["params"].as<string>(), prm);
+    Alina::PropertyTree prm;
+    if (vm.count("params"))
+      prm.read_json(vm["params"].as<string>());
 
     if (vm.count("prm")) {
         for(const string &v : vm["prm"].as<vector<string> >()) {

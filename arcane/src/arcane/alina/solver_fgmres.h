@@ -94,7 +94,7 @@ class fgmres {
             { }
 
 #ifndef AMGCL_NO_BOOST
-            params(const boost::property_tree::ptree &p)
+            params(const Alina::PropertyTree &p)
                 : AMGCL_PARAMS_IMPORT_VALUE(p, M),
                   AMGCL_PARAMS_IMPORT_VALUE(p, maxiter),
                   AMGCL_PARAMS_IMPORT_VALUE(p, tol),
@@ -105,7 +105,7 @@ class fgmres {
                 check_params(p, {"M", "maxiter", "tol", "abstol", "ns_search", "verbose"});
             }
 
-            void get(boost::property_tree::ptree &p, const std::string &path) const {
+            void get(Alina::PropertyTree &p, const std::string &path) const {
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, M);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, maxiter);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, tol);

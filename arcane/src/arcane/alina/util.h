@@ -20,6 +20,8 @@
 
 #pragma GCC diagnostic ignored "-Wconversion"
 
+#include "arcane/alina/AlinaGlobal.h"
+
 #include <iostream>
 #include <iomanip>
 #include <iterator>
@@ -42,9 +44,60 @@ namespace Arcane::Alina
 #  include <boost/property_tree/ptree.hpp>
 #endif
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+namespace Arcane::Alina
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+// Class to wrap 'boost::property_tree::ptree' to ease removing it
+class ARCANE_ALINA_EXPORT PropertyTree
+: public boost::property_tree::ptree
+{
+  using Base = boost::property_tree::ptree;
+
+ public:
+
+  PropertyTree() = default;
+  PropertyTree(const boost::property_tree::ptree& x)
+  : Base(x)
+  {}
+  template <typename... Args>
+  PropertyTree(Args&&... args)
+  : Base(std::forward<Args>(args)...)
+  {}
+
+ public:
+
+  void read_json(const std::string& filename);
+};
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina
+
+namespace boost::property_tree::json_parser
+{
+
+inline void
+read_json(const std::string& filename, Arcane::Alina::PropertyTree& prm)
+{
+  prm.read_json(filename);
+}
+
+} // namespace boost::property_tree::json_parser
+
+  /*---------------------------------------------------------------------------*/
+  /*---------------------------------------------------------------------------*/
+
 #include <arcane/alina/ios_saver.h>
 
-/* Performance measurement macros
+/*!
+ * \brief Performance measurement macros.
  *
  * If AMGCL_PROFILING macro is defined at compilation, then AMGCL_TIC(name) and
  * AMGCL_TOC(name) macros correspond to prof.tic(name) and prof.toc(name).

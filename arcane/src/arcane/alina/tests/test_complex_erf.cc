@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(complex_matrix_adapter)
 
     typedef Alina::backend::builtin<double> Backend;
 
-    boost::property_tree::ptree prm;
+    Alina::PropertyTree prm;
     prm.put("precond.coarsening.aggr.block_size", 2);
 
     Alina::make_solver<

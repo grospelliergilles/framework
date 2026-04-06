@@ -31,12 +31,6 @@ THE SOFTWARE.
  * \brief  Runtime wrapper for distributed direct solvers.
  */
 
-#ifdef AMGCL_NO_BOOST
-#  error Runtime interface relies on Boost.PropertyTree!
-#endif
-
-#include <boost/property_tree/ptree.hpp>
-
 #include <arcane/alina/util.h>
 #include <arcane/alina/mpi/mp_direct_solver_skyline_lu.h>
 #ifdef AMGCL_HAVE_EIGEN
@@ -114,7 +108,7 @@ inline std::istream& operator>>(std::istream &in, type &s)
 template <class value_type>
 class solver {
     public:
-        typedef boost::property_tree::ptree params;
+        typedef Alina::PropertyTree params;
 
         template <class Matrix>
         solver(Alina::mpi::communicator comm, const Matrix &A, params prm = params())
@@ -133,20 +127,6 @@ class solver {
                 case eigen_splu:
                     {
                         typedef Alina::mpi::direct::eigen_splu<value_type> S;
-                        do_construct<S, value_type>(comm, A, prm);
-                    }
-                    break;
-#endif
-#ifdef AMGCL_HAVE_PASTIX
-                case dpastix:
-                    {
-                        typedef Alina::mpi::direct::pastix<value_type,true> S;
-                        do_construct<S, value_type>(comm, A, prm);
-                    }
-                    break;
-                case spastix:
-                    {
-                        typedef Alina::mpi::direct::pastix<value_type,false> S;
                         do_construct<S, value_type>(comm, A, prm);
                     }
                     break;

@@ -2,9 +2,6 @@
 #include <string>
 
 #include <boost/program_options.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-
 
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/RelaxationRuntime.h>
@@ -106,9 +103,9 @@ int main(int argc, char *argv[]) {
     }
     std::cout << std::endl;
 
-    boost::property_tree::ptree prm;
+    Alina::PropertyTree prm;
     if (vm.count("prm-file")) {
-        read_json(vm["prm-file"].as<string>(), prm);
+        prm.read_json(vm["prm-file"].as<string>());
     }
 
     if (vm.count("prm")) {

@@ -2,8 +2,6 @@
 #include <string>
 
 #include <boost/program_options.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 
@@ -40,7 +38,7 @@ using Alina::prof;
 template <class Precond, class Matrix>
 std::tuple<size_t, double>
 solve(const Matrix& A,
-      const boost::property_tree::ptree& prm,
+      const Alina::PropertyTree& prm,
       std::vector<std::complex<double>> const& f,
       std::vector<std::complex<double>>& x)
 {
@@ -142,9 +140,9 @@ int main(int argc, char* argv[])
     return 0;
   }
 
-  boost::property_tree::ptree prm;
+  Alina::PropertyTree prm;
   if (vm.count("prm-file")) {
-    read_json(vm["prm-file"].as<string>(), prm);
+    prm.read_json(vm["prm-file"].as<string>());
   }
 
   if (vm.count("prm")) {

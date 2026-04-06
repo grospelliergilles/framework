@@ -64,14 +64,14 @@ class ilu_solve {
             params() : iters(2), damping(0.72) {}
 
 #ifndef AMGCL_NO_BOOST
-            params(const boost::property_tree::ptree &p)
+            params(const Alina::PropertyTree &p)
                 : AMGCL_PARAMS_IMPORT_VALUE(p, iters)
                 , AMGCL_PARAMS_IMPORT_VALUE(p, damping)
             {
                 check_params(p, {"iters", "damping"});
             }
 
-            void get(boost::property_tree::ptree &p, const std::string &path) const {
+            void get(Alina::PropertyTree &p, const std::string &path) const {
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, iters);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, damping);
             }
@@ -146,17 +146,15 @@ class ilu_solve< backend::builtin<value_type, col_type, ptr_type> > {
 
             params() : serial(num_threads() < 4) {}
 
-#ifndef AMGCL_NO_BOOST
-            params(const boost::property_tree::ptree &p)
+            params(const PropertyTree &p)
                 : AMGCL_PARAMS_IMPORT_VALUE(p, serial)
             {
                 check_params(p, {"serial"});
             }
 
-            void get(boost::property_tree::ptree &p, const std::string &path) const {
+            void get(PropertyTree &p, const std::string &path) const {
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, serial);
             }
-#endif
         } prm;
 
         ilu_solve(

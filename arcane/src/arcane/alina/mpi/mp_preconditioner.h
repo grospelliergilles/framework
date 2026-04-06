@@ -31,13 +31,7 @@ THE SOFTWARE.
  * \brief  Runtime wrapper around mpi preconditioners.
  */
 
-#ifdef AMGCL_NO_BOOST
-#  error Runtime interface relies on Boost.PropertyTree!
-#endif
-
 #include <iostream>
-
-#include <boost/property_tree/ptree.hpp>
 
 #include <arcane/alina/mpi/mp_amg.h>
 #include <arcane/alina/mpi/mp_coarsening_runtime.h>
@@ -92,7 +86,7 @@ class preconditioner {
     public:
         typedef Backend backend_type;
         typedef typename backend_type::params backend_params;
-        typedef boost::property_tree::ptree params;
+        typedef Alina::PropertyTree params;
         typedef typename backend_type::value_type value_type;
         typedef Alina::mpi::distributed_matrix<backend_type> matrix;
 

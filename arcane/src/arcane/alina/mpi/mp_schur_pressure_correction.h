@@ -103,8 +103,7 @@ class schur_pressure_correction {
 
             params() : type(1), approx_schur(false), simplec_dia(true), verbose(0) {}
 
-#ifndef AMGCL_NO_BOOST
-            params(const boost::property_tree::ptree &p)
+            params(const Alina::PropertyTree &p)
                 : AMGCL_PARAMS_IMPORT_CHILD(p, usolver),
                   AMGCL_PARAMS_IMPORT_CHILD(p, psolver),
                   AMGCL_PARAMS_IMPORT_VALUE(p, type),
@@ -165,7 +164,7 @@ class schur_pressure_correction {
                         {"pmask", "pmask_pattern"});
             }
 
-            void get(boost::property_tree::ptree &p, const std::string &path = "") const
+            void get(PropertyTree &p, const std::string &path = "") const
             {
                 AMGCL_PARAMS_EXPORT_CHILD(p, path, usolver);
                 AMGCL_PARAMS_EXPORT_CHILD(p, path, psolver);
@@ -174,7 +173,7 @@ class schur_pressure_correction {
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, simplec_dia);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, verbose);
             }
-#endif
+
         } prm;
 
         template <class Matrix>

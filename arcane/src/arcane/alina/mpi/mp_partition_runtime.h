@@ -26,12 +26,6 @@
 
 #include <memory>
 
-#ifdef AMGCL_NO_BOOST
-#error Runtime interface relies on Boost.PropertyTree!
-#endif
-
-#include <boost/property_tree/ptree.hpp>
-
 #include <arcane/alina/util.h>
 #include <arcane/alina/mpi/mp_partition_merge.h>
 #if defined(ARCANE_ALINA_HAVE_PARMETIS)
@@ -101,7 +95,7 @@ template <class Backend>
 struct wrapper
 {
   typedef Alina::mpi::distributed_matrix<Backend> matrix;
-  typedef boost::property_tree::ptree params;
+  typedef Alina::PropertyTree params;
 
   type t;
   void* handle;

@@ -18,89 +18,88 @@
 using namespace Arcane;
 
 //---------------------------------------------------------------------------
-typedef Alina::backend::builtin<double>                   Backend;
-typedef boost::property_tree::ptree                       Params;
+typedef Alina::backend::builtin<double> Backend;
+typedef Alina::PropertyTree Params;
 
-typedef
-    Alina::mpi::subdomain_deflation<
-        Alina::amg<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
-        Alina::runtime::mpi::solver::wrapper<Backend>,
-        Alina::runtime::mpi::direct::solver<double>
-    > Solver;
+typedef Alina::mpi::subdomain_deflation<
+Alina::amg<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
+Alina::runtime::mpi::solver::wrapper<Backend>,
+Alina::runtime::mpi::direct::solver<double>>
+Solver;
 
 //---------------------------------------------------------------------------
-struct deflation_vectors {
-    int n;
-    amgclDefVecFunction user_func;
-    void *user_data;
+struct deflation_vectors
+{
+  int n;
+  amgclDefVecFunction user_func;
+  void* user_data;
 
-    deflation_vectors(int n, amgclDefVecFunction user_func, void *user_data)
-        : n(n), user_func(user_func), user_data(user_data)
-    {}
+  deflation_vectors(int n, amgclDefVecFunction user_func, void* user_data)
+  : n(n)
+  , user_func(user_func)
+  , user_data(user_data)
+  {}
 
-    int dim() const { return n; }
+  int dim() const { return n; }
 
-    double operator()(int i, ptrdiff_t j) const {
-        return user_func(i, j, user_data);
-    }
+  double operator()(int i, ptrdiff_t j) const
+  {
+    return user_func(i, j, user_data);
+  }
 };
 
 //---------------------------------------------------------------------------
-amgclHandle STDCALL amgcl_mpi_create(
-        MPI_Comm             comm,
-        ptrdiff_t            n,
-        const ptrdiff_t     *ptr,
-        const ptrdiff_t     *col,
-        const double        *val,
-        int                  n_def_vec,
-        amgclDefVecFunction  def_vec_func,
-        void                *def_vec_data,
-        amgclHandle          params
-        )
+amgclHandle STDCALL
+amgcl_mpi_create(MPI_Comm comm,
+                 ptrdiff_t n,
+                 const ptrdiff_t* ptr,
+                 const ptrdiff_t* col,
+                 const double* val,
+                 int n_def_vec,
+                 amgclDefVecFunction def_vec_func,
+                 void* def_vec_data,
+                 amgclHandle params)
 {
-    std::function<double(ptrdiff_t, unsigned)> dv = deflation_vectors(n_def_vec, def_vec_func, def_vec_data);
-    boost::property_tree::ptree prm = *static_cast<Params*>(params);
-    prm.put("num_def_vec", n_def_vec);
-    prm.put("def_vec",     &dv);
+  std::function<double(ptrdiff_t, unsigned)> dv = deflation_vectors(n_def_vec, def_vec_func, def_vec_data);
+  Alina::PropertyTree prm = *static_cast<Params*>(params);
+  prm.put("num_def_vec", n_def_vec);
+  prm.put("def_vec", &dv);
 
-    return static_cast<amgclHandle>(
-            new Solver(
-                comm,
-                std::make_tuple(
-                    n,
-                    boost::make_iterator_range(ptr, ptr + n + 1),
-                    boost::make_iterator_range(col, col + ptr[n]),
-                    boost::make_iterator_range(val, val + ptr[n])
-                    ),
-                prm
-                )
-            );
+  auto* p = new Solver(comm,
+                       std::make_tuple(
+                       n,
+                       boost::make_iterator_range(ptr, ptr + n + 1),
+                       boost::make_iterator_range(col, col + ptr[n]),
+                       boost::make_iterator_range(val, val + ptr[n])),
+                       prm);
+
+  return static_cast<amgclHandle>(p);
 }
 
 //---------------------------------------------------------------------------
-conv_info STDCALL amgcl_mpi_solve(
-        amgclHandle   handle,
-        double const *rhs,
-        double       *x
-        )
+conv_info STDCALL
+amgcl_mpi_solve(amgclHandle handle,
+                double const* rhs,
+                double* x)
 {
-    Solver *solver = static_cast<Solver*>(handle);
+  Solver* solver = static_cast<Solver*>(handle);
 
-    size_t n = solver->size();
+  size_t n = solver->size();
 
-    boost::iterator_range<double*> x_range =
-        boost::make_iterator_range(x, x + n);
+  boost::iterator_range<double*> x_range =
+  boost::make_iterator_range(x, x + n);
 
-    conv_info cnv;
+  conv_info cnv;
 
-    std::tie(cnv.iterations, cnv.residual) = (*solver)(
-            boost::make_iterator_range(rhs, rhs + n), x_range
-            );
+  std::tie(cnv.iterations, cnv.residual) = (*solver)(
+  boost::make_iterator_range(rhs, rhs + n), x_range);
 
-    return cnv;
+  return cnv;
 }
 
 //---------------------------------------------------------------------------
-void STDCALL amgcl_mpi_destroy(amgclHandle handle) {
-    delete static_cast<Solver*>(handle);
+void STDCALL
+amgcl_mpi_destroy(amgclHandle handle)
+{
+  delete static_cast<Solver*>(handle);
 }

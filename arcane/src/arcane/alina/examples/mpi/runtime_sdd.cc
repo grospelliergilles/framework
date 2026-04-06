@@ -24,8 +24,6 @@ class rounding_error{};
 #include <boost/scope_exit.hpp>
 #include <memory>
 #include <boost/program_options.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 
 #include <boost/multi_array.hpp>
 #if defined(SOLVER_BACKEND_CUDA)
@@ -542,9 +540,9 @@ int main(int argc, char* argv[])
     return 0;
   }
 
-  boost::property_tree::ptree prm;
+  Alina::PropertyTree prm;
   if (vm.count("params"))
-    read_json(parameter_file, prm);
+    prm.read_json(parameter_file);
 
   if (vm.count("prm")) {
     for (const std::string& v : vm["prm"].as<std::vector<std::string>>()) {

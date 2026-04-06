@@ -86,8 +86,7 @@ class cg
     , verbose(false)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_VALUE(p, maxiter)
     , AMGCL_PARAMS_IMPORT_VALUE(p, tol)
     , AMGCL_PARAMS_IMPORT_VALUE(p, abstol)
@@ -97,7 +96,7 @@ class cg
       check_params(p, { "maxiter", "tol", "abstol", "ns_search", "verbose" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_VALUE(p, path, maxiter);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, tol);
@@ -105,7 +104,6 @@ class cg
       AMGCL_PARAMS_EXPORT_VALUE(p, path, ns_search);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, verbose);
     }
-#endif
   };
 
   /// Preallocates necessary data structures for the system of size \p n.

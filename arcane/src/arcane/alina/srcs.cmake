@@ -1,5 +1,6 @@
 set(ARCANE_SOURCES
   AlinaGlobal.h
+  AlinaUtils.cc
   Adapters.h
   AlinaLib.h
   AlinaLib.cc

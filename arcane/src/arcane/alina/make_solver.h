@@ -76,14 +76,14 @@ class make_solver
     params() {}
 
 #ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const Alina::PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_CHILD(p, precond)
     , AMGCL_PARAMS_IMPORT_CHILD(p, solver)
     {
       check_params(p, { "precond", "solver" });
     }
 
-    void get(boost::property_tree::ptree& p,
+    void get(Alina::PropertyTree& p,
              const std::string& path = "") const
     {
       AMGCL_PARAMS_EXPORT_CHILD(p, path, precond);
@@ -214,7 +214,7 @@ class make_solver
 
 #ifndef AMGCL_NO_BOOST
   /// Stores the parameters used during construction into the property tree \p p.
-  void get_params(boost::property_tree::ptree& p) const
+  void get_params(Alina::PropertyTree& p) const
   {
     prm.get(p);
   }

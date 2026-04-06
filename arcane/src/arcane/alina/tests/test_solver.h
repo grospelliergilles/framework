@@ -10,6 +10,8 @@
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/profiler.h>
 
+#include <boost/test/unit_test.hpp>
+
 #include <boost/assign/std/vector.hpp>
 using namespace boost::assign;
 
@@ -34,7 +36,7 @@ void test_solver(const Matrix& A,
                  typename Backend::params const& bprm,
                  bool test_null_space = false)
 {
-  boost::property_tree::ptree prm;
+  Alina::PropertyTree prm;
   prm.put("precond.coarse_enough", 500);
   prm.put("precond.coarsening.type", coarsening);
   prm.put("precond.relax.type", relaxation);
@@ -84,7 +86,7 @@ void test_rap(
         typename Backend::params const &bprm
         )
 {
-    boost::property_tree::ptree prm;
+    Alina::PropertyTree prm;
     prm.put("precond.type", relaxation);
     prm.put("solver.type",  solver);
 

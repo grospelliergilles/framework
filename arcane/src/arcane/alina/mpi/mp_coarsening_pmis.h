@@ -70,7 +70,7 @@ struct pmis {
         params() : eps_strong(0.08), block_size(1) { }
 
 #ifndef AMGCL_NO_BOOST
-        params(const boost::property_tree::ptree &p)
+        params(const Alina::PropertyTree &p)
             : AMGCL_PARAMS_IMPORT_CHILD(p, nullspace),
               AMGCL_PARAMS_IMPORT_VALUE(p, eps_strong),
               AMGCL_PARAMS_IMPORT_VALUE(p, block_size)
@@ -78,7 +78,7 @@ struct pmis {
             check_params(p, {"nullspace", "eps_strong", "block_size"});
         }
 
-        void get(boost::property_tree::ptree &p, const std::string &path) const {
+        void get(Alina::PropertyTree &p, const std::string &path) const {
             AMGCL_PARAMS_EXPORT_CHILD(p, path, nullspace);
             AMGCL_PARAMS_EXPORT_VALUE(p, path, eps_strong);
             AMGCL_PARAMS_EXPORT_VALUE(p, path, block_size);

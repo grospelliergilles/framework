@@ -128,8 +128,7 @@ class subdomain_deflation {
 
             params() {}
 
-#ifndef AMGCL_NO_BOOST
-            params(const boost::property_tree::ptree &p)
+            params(const PropertyTree &p)
                 : AMGCL_PARAMS_IMPORT_CHILD(p, local),
                   AMGCL_PARAMS_IMPORT_CHILD(p, isolver),
                   AMGCL_PARAMS_IMPORT_CHILD(p, dsolver),
@@ -147,13 +146,12 @@ class subdomain_deflation {
                 check_params(p, {"local", "isolver", "dsolver", "num_def_vec", "def_vec"});
             }
 
-            void get(boost::property_tree::ptree &p, const std::string &path) const {
+            void get(PropertyTree &p, const std::string &path) const {
                 AMGCL_PARAMS_EXPORT_CHILD(p, path, local);
                 AMGCL_PARAMS_EXPORT_CHILD(p, path, isolver);
                 AMGCL_PARAMS_EXPORT_CHILD(p, path, dsolver);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, num_def_vec);
             }
-#endif
         };
 
         typedef typename backend_type::value_type value_type;

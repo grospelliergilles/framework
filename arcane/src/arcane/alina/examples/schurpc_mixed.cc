@@ -2,8 +2,6 @@
 #include <string>
 
 #include <boost/program_options.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 
 #include <arcane/alina/make_solver.h>
@@ -50,7 +48,7 @@ using Alina::precondition;
 
 //---------------------------------------------------------------------------
 template <class USolver, class PSolver, class Matrix>
-void solve_schur(const Matrix &K, const std::vector<double> &rhs, boost::property_tree::ptree &prm)
+void solve_schur(const Matrix &K, const std::vector<double> &rhs, Alina::PropertyTree &prm)
 {
     typedef Backend<double> SBackend;
     SBackend::params bprm;
@@ -107,7 +105,7 @@ void solve_schur(const Matrix &K, const std::vector<double> &rhs, boost::propert
 
 //---------------------------------------------------------------------------
 template <class USolver, class Matrix>
-void solve_schur(int pb, const Matrix &K, const std::vector<double> &rhs, boost::property_tree::ptree &prm)
+void solve_schur(int pb, const Matrix &K, const std::vector<double> &rhs, Alina::PropertyTree &prm)
 {
     switch (pb) {
         case 1:
@@ -141,7 +139,7 @@ void solve_schur(int pb, const Matrix &K, const std::vector<double> &rhs, boost:
 
 //---------------------------------------------------------------------------
 template <class Matrix>
-void solve_schur(int ub, int pb, const Matrix &K, const std::vector<double> &rhs, boost::property_tree::ptree &prm)
+void solve_schur(int ub, int pb, const Matrix &K, const std::vector<double> &rhs, Alina::PropertyTree &prm)
 {
     switch (ub) {
         case 1:
@@ -237,8 +235,9 @@ int main(int argc, char *argv[]) {
 
     po::notify(vm);
 
-    boost::property_tree::ptree prm;
-    if (vm.count("params")) read_json(vm["params"].as<string>(), prm);
+    Alina::PropertyTree prm;
+    if (vm.count("params"))
+      prm.read_json(vm["params"].as<string>());
 
     if (vm.count("prm")) {
         for(const string &v : vm["prm"].as<vector<string> >()) {

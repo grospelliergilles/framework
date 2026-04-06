@@ -70,8 +70,7 @@ struct nullspace_params
   : cols(0)
   {}
 
-#ifndef AMGCL_NO_BOOST
-  nullspace_params(const boost::property_tree::ptree& p)
+  nullspace_params(const PropertyTree& p)
   : cols(p.get("cols", nullspace_params().cols))
   {
     double* b = 0;
@@ -100,14 +99,14 @@ struct nullspace_params
     check_params(p, { "cols", "rows", "B" });
   }
 
-  void get(boost::property_tree::ptree&, const std::string&) const {}
-#endif
+  void get(PropertyTree&, const std::string&) const {}
 };
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-/// Plain aggregation.
-/**
+/*!
+ * \brief Plain aggregation.
+ *
  * Modification of a greedy aggregation scheme from \cite Vanek1996.
  * Connectivity is defined in a symmetric way, that is, two variables \f$i\f$
  * and \f$j\f$ are considered to be connected to each other if
@@ -138,18 +137,16 @@ struct plain_aggregates
     : eps_strong(0.08f)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_VALUE(p, eps_strong)
     {
       check_params(p, { "eps_strong", "block_size" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_VALUE(p, path, eps_strong);
     }
-#endif
   };
 
   static const ptrdiff_t undefined = -1;
@@ -450,14 +447,14 @@ class pointwise_aggregates
     {}
 
 #ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const Alina::PropertyTree& p)
     : plain_aggregates::params(p)
     , AMGCL_PARAMS_IMPORT_VALUE(p, block_size)
     {
       check_params(p, { "eps_strong", "block_size" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(Alina::PropertyTree& p, const std::string& path) const
     {
       plain_aggregates::params::get(p, path);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, block_size);
@@ -641,7 +638,7 @@ struct aggregation
     {}
 
 #ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const Alina::PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_CHILD(p, aggr)
     , AMGCL_PARAMS_IMPORT_CHILD(p, nullspace)
     , AMGCL_PARAMS_IMPORT_VALUE(p, over_interp)
@@ -649,7 +646,7 @@ struct aggregation
       check_params(p, { "aggr", "nullspace", "over_interp" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(Alina::PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_CHILD(p, path, aggr);
       AMGCL_PARAMS_EXPORT_CHILD(p, path, nullspace);
@@ -922,7 +919,7 @@ struct ruge_stuben
     {}
 
 #ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const Alina::PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_VALUE(p, eps_strong)
     , AMGCL_PARAMS_IMPORT_VALUE(p, do_trunc)
     , AMGCL_PARAMS_IMPORT_VALUE(p, eps_trunc)
@@ -930,7 +927,7 @@ struct ruge_stuben
       check_params(p, { "eps_strong", "do_trunc", "eps_trunc" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(Alina::PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_VALUE(p, path, eps_strong);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, do_trunc);
@@ -1365,7 +1362,7 @@ struct smoothed_aggregation
     {}
 
 #ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const Alina::PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_CHILD(p, aggr)
     , AMGCL_PARAMS_IMPORT_CHILD(p, nullspace)
     , AMGCL_PARAMS_IMPORT_VALUE(p, relax)
@@ -1375,7 +1372,7 @@ struct smoothed_aggregation
       check_params(p, { "aggr", "nullspace", "relax", "estimate_spectral_radius", "power_iters" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(Alina::PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_CHILD(p, path, aggr);
       AMGCL_PARAMS_EXPORT_CHILD(p, path, nullspace);
@@ -1534,20 +1531,18 @@ struct smoothed_aggr_emin
 
     params() {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_CHILD(p, aggr)
     , AMGCL_PARAMS_IMPORT_CHILD(p, nullspace)
     {
       check_params(p, { "aggr", "nullspace" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_CHILD(p, path, aggr);
       AMGCL_PARAMS_EXPORT_CHILD(p, path, nullspace);
     }
-#endif
   } prm;
 
   smoothed_aggr_emin(const params& prm = params())

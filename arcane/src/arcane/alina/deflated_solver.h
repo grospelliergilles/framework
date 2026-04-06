@@ -74,7 +74,7 @@ class deflated_solver : public Alina::detail::non_copyable {
             params() : nvec(0), vec(nullptr) {}
 
 #ifndef AMGCL_NO_BOOST
-            params(const boost::property_tree::ptree &p)
+            params(const Alina::PropertyTree &p)
                 : AMGCL_PARAMS_IMPORT_VALUE(p, nvec),
                   AMGCL_PARAMS_IMPORT_VALUE(p, vec),
                   AMGCL_PARAMS_IMPORT_CHILD(p, precond),
@@ -83,7 +83,7 @@ class deflated_solver : public Alina::detail::non_copyable {
                 check_params(p, {"nvec", "vec", "precond", "solver"});
             }
 
-            void get( boost::property_tree::ptree &p,
+            void get( Alina::PropertyTree &p,
                     const std::string &path = ""
                     ) const
             {
@@ -239,12 +239,10 @@ class deflated_solver : public Alina::detail::non_copyable {
             return P.system_matrix();
         }
 
-#ifndef AMGCL_NO_BOOST
         /// Stores the parameters used during construction into the property tree \p p.
-        void get_params(boost::property_tree::ptree &p) const {
+        void get_params(Alina::PropertyTree &p) const {
             prm.get(p);
         }
-#endif
 
         /// Returns the size of the system matrix.
         size_t size() const {

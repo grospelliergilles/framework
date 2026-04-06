@@ -14,8 +14,6 @@
 #include <boost/scope_exit.hpp>
 
 #include <boost/program_options.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 
 #include <arcane/alina/amg.h>
 #include <arcane/alina/coarsening_runtime.h>
@@ -284,8 +282,9 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    boost::property_tree::ptree prm;
-    if (vm.count("params")) read_json(parameter_file, prm);
+    Alina::PropertyTree prm;
+    if (vm.count("params"))
+      prm.read_json(parameter_file);
 
     prm.put("local.coarsening.type", coarsening);
     prm.put("local.relax.type",      relaxation);

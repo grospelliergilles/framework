@@ -132,7 +132,7 @@ class idrs {
             { }
 
 #ifndef AMGCL_NO_BOOST
-            params(const boost::property_tree::ptree &p)
+            params(const Alina::PropertyTree &p)
                 : AMGCL_PARAMS_IMPORT_VALUE(p, s),
                   AMGCL_PARAMS_IMPORT_VALUE(p, omega),
                   AMGCL_PARAMS_IMPORT_VALUE(p, smoothing),
@@ -147,7 +147,7 @@ class idrs {
                         "maxiter", "tol", "abstol", "ns_search", "verbose"});
             }
 
-            void get(boost::property_tree::ptree &p, const std::string &path) const {
+            void get(Alina::PropertyTree &p, const std::string &path) const {
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, s);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, omega);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, smoothing);

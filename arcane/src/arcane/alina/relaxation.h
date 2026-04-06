@@ -292,8 +292,7 @@ class chebyshev
     , scale(false)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_VALUE(p, degree)
     , AMGCL_PARAMS_IMPORT_VALUE(p, higher)
     , AMGCL_PARAMS_IMPORT_VALUE(p, lower)
@@ -303,7 +302,7 @@ class chebyshev
       check_params(p, { "degree", "higher", "lower", "power_iters", "scale" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_VALUE(p, path, degree);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, higher);
@@ -311,7 +310,6 @@ class chebyshev
       AMGCL_PARAMS_EXPORT_VALUE(p, path, power_iters);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, scale);
     }
-#endif
   } prm;
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
@@ -435,18 +433,16 @@ struct damped_jacobi
     : damping(damping)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_VALUE(p, damping)
     {
       check_params(p, { "damping" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_VALUE(p, path, damping);
     }
-#endif
   } prm;
 
   std::shared_ptr<typename Backend::matrix_diagonal> dia;
@@ -532,18 +528,16 @@ struct gauss_seidel
     : serial(false)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_VALUE(p, serial)
     {
       check_params(p, { "serial" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_VALUE(p, path, serial);
     }
-#endif
   };
 
   bool is_serial;
@@ -893,20 +887,18 @@ struct ilu0
     : damping(1)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_VALUE(p, damping)
     , AMGCL_PARAMS_IMPORT_CHILD(p, solve)
     {
       check_params(p, { "damping", "solve" }, { "k" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_VALUE(p, path, damping);
       AMGCL_PARAMS_EXPORT_CHILD(p, path, solve);
     }
-#endif
   } prm;
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
@@ -1108,8 +1100,7 @@ struct iluk
     , damping(1)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_VALUE(p, k)
     , AMGCL_PARAMS_IMPORT_VALUE(p, damping)
     , AMGCL_PARAMS_IMPORT_CHILD(p, solve)
@@ -1117,13 +1108,12 @@ struct iluk
       check_params(p, { "k", "damping", "solve" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_VALUE(p, path, k);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, damping);
       AMGCL_PARAMS_EXPORT_CHILD(p, path, solve);
     }
-#endif
   } prm;
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
@@ -1444,20 +1434,18 @@ struct ilup
     : k(1)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const PropertyTree& p)
     : BasePrm(p)
     , AMGCL_PARAMS_IMPORT_VALUE(p, k)
     {
       check_params(p, { "k", "damping", "solve" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       BasePrm::get(p, path);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, k);
     }
-#endif
   } prm;
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
@@ -1574,8 +1562,7 @@ struct ilut
     , damping(1)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const boost::property_tree::ptree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_VALUE(p, p)
     , AMGCL_PARAMS_IMPORT_VALUE(p, tau)
     , AMGCL_PARAMS_IMPORT_VALUE(p, damping)
@@ -1584,14 +1571,13 @@ struct ilut
       check_params(p, { "p", "tau", "damping", "solve" });
     }
 
-    void get(boost::property_tree::ptree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_VALUE(p, path, p);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, tau);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, damping);
       AMGCL_PARAMS_EXPORT_CHILD(p, path, solve);
     }
-#endif
   } prm;
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi

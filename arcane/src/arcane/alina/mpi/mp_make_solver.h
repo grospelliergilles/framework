@@ -36,12 +36,6 @@ THE SOFTWARE.
 
 #include <mpi.h>
 
-// If asked explicitly, or if boost is available, enable
-// using boost::propert_tree::ptree as amgcl parameters:
-#ifndef AMGCL_NO_BOOST
-#  include <boost/property_tree/ptree.hpp>
-#endif
-
 #include <arcane/alina/util.h>
 #include <arcane/alina/mpi/mp_inner_product.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
@@ -75,20 +69,18 @@ class make_solver : public Alina::detail::non_copyable {
 
             params() {}
 
-#ifndef AMGCL_NO_BOOST
-            params(const boost::property_tree::ptree &p)
+            params(const PropertyTree &p)
                 : AMGCL_PARAMS_IMPORT_CHILD(p, precond),
                   AMGCL_PARAMS_IMPORT_CHILD(p, solver)
             {
                 check_params(p, {"precond", "solver"});
             }
 
-            void get(boost::property_tree::ptree &p, const std::string &path = "") const
+            void get(PropertyTree &p, const std::string &path = "") const
             {
                 AMGCL_PARAMS_EXPORT_CHILD(p, path, precond);
                 AMGCL_PARAMS_EXPORT_CHILD(p, path, solver);
             }
-#endif
         } prm;
 
         template <class Matrix>
@@ -174,11 +166,9 @@ class make_solver : public Alina::detail::non_copyable {
             return P.system_matrix();
         }
 
-#ifndef AMGCL_NO_BOOST
-        void get_params(boost::property_tree::ptree &p) const {
+        void get_params(Alina::PropertyTree &p) const {
             prm.get(p);
         }
-#endif
 
         size_t size() const {
             return n;

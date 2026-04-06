@@ -19,8 +19,6 @@ class rounding_error{};
 
 #include <boost/scope_exit.hpp>
 #include <boost/program_options.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 
 #if defined(SOLVER_BACKEND_CUDA)
 #  include <arcane/alina/backend_cuda.h>
@@ -193,8 +191,9 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    boost::property_tree::ptree prm;
-    if (vm.count("params")) read_json(parameter_file, prm);
+    Alina::PropertyTree prm;
+    if (vm.count("params"))
+      prm.read_json(parameter_file);
 
     if (vm.count("prm")) {
         for(const std::string &v : vm["prm"].as< std::vector<std::string> >()) {
