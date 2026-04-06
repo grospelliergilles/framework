@@ -61,7 +61,7 @@ if (TARGET Metis::metis)
   )
 endif()
 
-target_link_libraries(call_mpi_lib PUBLIC arcane_alina_mpi_clib)
+#target_link_libraries(call_mpi_lib PUBLIC arcane_alina_mpi_clib)
 
 if (TARGET cuda_target)
   foreach(example runtime_sdd runtime_sdd_3d schur_pc_mpi mpi_solver)

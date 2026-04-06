@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-#include <amgcl.h>
+#include <../AlinaLib.h>
 #include "sample_problem.h"
 
 int main()

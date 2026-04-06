@@ -14,7 +14,7 @@
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/Adapters.h>
 
-#include "amgcl.h"
+#include "AlinaLib.h"
 
 #ifdef AMGCL_PROFILING
 #include <arcane/alina/profiler.h>

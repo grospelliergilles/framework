@@ -198,7 +198,17 @@ endif()
   add_subdirectory(tests)
 #endif()
 
-add_subdirectory(lib)
+#add_subdirectory(lib)
+
+#add_library(arcane_alina_clib AlinaLib.cc)
+#target_link_libraries(arcane_alina_clib PUBLIC arcane_alina)
+#target_include_directories(arcane_alina_clib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+#if (TARGET mpi_target)
+#  add_library(arcane_alina_mpi_clib AlinaLibMPI.cc)
+#  target_link_libraries(arcane_alina_mpi_clib PUBLIC arcane_alina_clib mpi_target)
+#endif()
+
 add_subdirectory(examples)
 add_subdirectory(tutorial)
 

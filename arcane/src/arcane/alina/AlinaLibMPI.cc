@@ -13,7 +13,7 @@
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/Adapters.h>
 
-#include "amgcl_mpi.h"
+#include "AlinaLibMPI.h"
 
 using namespace Arcane;
 

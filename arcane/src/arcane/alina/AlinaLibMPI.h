@@ -32,36 +32,35 @@ THE SOFTWARE.
  */
 
 #include <mpi.h>
-#include <amgcl.h>
+#include "arcane/alina/AlinaLib.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef double (STDCALL *amgclDefVecFunction)(int vec, ptrdiff_t coo, void *data);
+typedef double(STDCALL* amgclDefVecFunction)(int vec, ptrdiff_t coo, void* data);
 
 // Create distributed solver.
-amgclHandle ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_mpi_create(
-        MPI_Comm             comm,
-        ptrdiff_t            n,
-        const ptrdiff_t     *ptr,
-        const ptrdiff_t     *col,
-        const double        *val,
-        int                  n_def_vec,
-        amgclDefVecFunction  def_vec_func,
-        void                *def_vec_data,
-        amgclHandle          params
-        );
+amgclHandle ARCANE_ALINA_EXPORT STDCALL
+amgcl_mpi_create(MPI_Comm comm,
+                 ptrdiff_t n,
+                 const ptrdiff_t* ptr,
+                 const ptrdiff_t* col,
+                 const double* val,
+                 int n_def_vec,
+                 amgclDefVecFunction def_vec_func,
+                 void* def_vec_data,
+                 amgclHandle params);
 
 // Find soltion for the given RHS.
-conv_info ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_mpi_solve(
-        amgclHandle   solver,
-        double const *rhs,
-        double       *x
-        );
+conv_info ARCANE_ALINA_EXPORT STDCALL
+amgcl_mpi_solve(amgclHandle solver,
+                double const* rhs,
+                double* x);
 
 // Destroy the distributed solver.
-void ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_mpi_destroy(amgclHandle solver);
+void ARCANE_ALINA_EXPORT STDCALL
+amgcl_mpi_destroy(amgclHandle solver);
 
 #ifdef __cplusplus
 } // extern "C"

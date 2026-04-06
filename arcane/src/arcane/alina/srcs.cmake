@@ -1,6 +1,10 @@
 set(ARCANE_SOURCES
   AlinaGlobal.h
   Adapters.h
+  AlinaLib.h
+  AlinaLib.cc
+  AlinaLibMPI.h
+  AlinaLibMPI.cc
   adapter_ublas.h
   amg.h
   backend_block_crs.h

@@ -57,7 +57,7 @@ if (TARGET eigen_target)
 endif()
 
 add_arcane_alina_example(call_lib call_lib.cc)
-target_link_libraries(call_lib PUBLIC arcane_alina_clib)
+#target_link_libraries(call_lib PUBLIC arcane_alina_clib)
 
 if (TARGET cuda_target)
   function(add_cuda_example example)

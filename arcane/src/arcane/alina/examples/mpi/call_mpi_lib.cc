@@ -7,12 +7,13 @@
 #include <boost/scope_exit.hpp>
 
 #include <arcane/alina/mpi/mp_util.h>
-#include <amgcl_mpi.h>
+#include <arcane/alina/AlinaLibMPI.h>
 
 #include "domain_partition.h"
 
-double STDCALL constant_deflation(int, ptrdiff_t, void*) {
-    return 1;
+double STDCALL constant_deflation(int, ptrdiff_t, void*)
+{
+  return 1;
 }
 
 using namespace Arcane;
