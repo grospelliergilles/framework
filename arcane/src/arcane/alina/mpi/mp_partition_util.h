@@ -50,7 +50,7 @@ void symm_graph(const distributed_matrix<Backend> &A,
         std::vector<Ptr> &ptr, std::vector<Col> &col)
 {
     typedef typename Backend::value_type value_type;
-    typedef backend::crs<value_type> build_matrix;
+    typedef backend::CSRMatrix<value_type> build_matrix;
 
     AMGCL_TIC("symm graph");
 
@@ -262,7 +262,7 @@ std::shared_ptr< distributed_matrix<Backend> > graph_perm_matrix(
         const std::vector<Idx> &perm)
 {
     typedef typename Backend::value_type value_type;
-    typedef backend::crs<value_type> build_matrix;
+    typedef backend::CSRMatrix<value_type> build_matrix;
 
     AMGCL_TIC("perm matrix");
 

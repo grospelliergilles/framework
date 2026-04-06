@@ -49,7 +49,7 @@ template <class Backend>
 struct aggregation {
     typedef typename Backend::value_type value_type;
     typedef typename math::scalar_of<value_type>::type scalar_type;
-    typedef backend::crs<value_type> build_matrix;
+    typedef backend::CSRMatrix<value_type> build_matrix;
 
     struct params {
         // aggregation params

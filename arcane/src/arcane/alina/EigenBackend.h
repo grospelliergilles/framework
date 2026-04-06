@@ -118,7 +118,7 @@ struct EigenBackend
 
   struct hold_host
   {
-    typedef std::shared_ptr<crs<real, ptrdiff_t, ptrdiff_t>> host_matrix;
+    typedef std::shared_ptr<CSRMatrix<real, ptrdiff_t, ptrdiff_t>> host_matrix;
     host_matrix host;
 
     hold_host(host_matrix host)

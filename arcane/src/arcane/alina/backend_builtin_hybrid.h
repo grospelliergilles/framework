@@ -45,7 +45,7 @@ struct builtin_hybrid : public builtin<typename math::scalar_of<BlockType>::type
 {
     typedef typename math::scalar_of<BlockType>::type ScalarType;
     typedef builtin<ScalarType, ColumnType, PointerType> Base;
-    typedef crs<BlockType, ColumnType, PointerType> matrix;
+    typedef CSRMatrix<BlockType, ColumnType, PointerType> matrix;
     struct provides_row_iterator : std::false_type {};
 
     static std::shared_ptr<matrix>

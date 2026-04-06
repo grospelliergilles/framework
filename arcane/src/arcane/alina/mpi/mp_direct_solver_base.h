@@ -43,7 +43,7 @@ class solver_base {
     public:
         typedef typename math::scalar_of<value_type>::type scalar_type;
         typedef typename math::rhs_of<value_type>::type    rhs_type;
-        typedef backend::crs<value_type> build_matrix;
+        typedef backend::CSRMatrix<value_type> build_matrix;
 
         solver_base() {}
 

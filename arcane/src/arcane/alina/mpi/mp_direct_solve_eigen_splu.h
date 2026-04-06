@@ -60,7 +60,7 @@ class eigen_splu : public solver_base< value_type, eigen_splu<value_type> > {
                 >
             Solver;
         typedef typename Solver::params params;
-        typedef backend::crs<value_type> build_matrix;
+        typedef backend::CSRMatrix<value_type> build_matrix;
 
         /// Constructor.
         template <class Matrix>

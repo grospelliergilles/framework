@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(eigen_solver)
     std::vector<double> rhs;
 
     size_t n = sample_problem(16, val, col, ptr, rhs);
-    Alina::backend::crs<double> A(std::tie(n, ptr, col, val));
+    Alina::backend::CSRMatrix<double> A(std::tie(n, ptr, col, val));
 
     typedef
         Alina::solver::EigenSolver<Eigen::SparseLU<Eigen::SparseMatrix<double, Eigen::ColMajor, int> > >

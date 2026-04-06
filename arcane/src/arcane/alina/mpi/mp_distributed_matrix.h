@@ -349,7 +349,7 @@ class distributed_matrix
   typedef typename Backend::params backend_params;
   typedef typename Backend::matrix matrix;
   typedef comm_pattern<Backend> CommPattern;
-  typedef backend::crs<value_type> build_matrix;
+  typedef backend::CSRMatrix<value_type> build_matrix;
 
   distributed_matrix(communicator comm,
                      std::shared_ptr<build_matrix> a_loc,
@@ -612,7 +612,7 @@ transpose(const distributed_matrix<Backend>& A)
   AMGCL_TIC("MPI Transpose");
   typedef typename Backend::value_type value_type;
   typedef comm_pattern<Backend> CommPattern;
-  typedef backend::crs<value_type> build_matrix;
+  typedef backend::CSRMatrix<value_type> build_matrix;
 
   static const int tag_cnt = 2001;
   static const int tag_col = 2002;
@@ -770,13 +770,13 @@ transpose(const distributed_matrix<Backend>& A)
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-std::shared_ptr<backend::crs<typename Backend::value_type>>
+std::shared_ptr<backend::CSRMatrix<typename Backend::value_type>>
 remote_rows(const comm_pattern<Backend>& C,
             const distributed_matrix<Backend>& B,
             bool need_values = true)
 {
   typedef typename Backend::value_type value_type;
-  typedef backend::crs<value_type> build_matrix;
+  typedef backend::CSRMatrix<value_type> build_matrix;
 
   static const int tag_ptr = 3001;
   static const int tag_col = 3002;
@@ -913,7 +913,7 @@ std::shared_ptr<distributed_matrix<Backend>>
 product(const distributed_matrix<Backend>& A, const distributed_matrix<Backend>& B)
 {
   typedef typename Backend::value_type value_type;
-  typedef backend::crs<value_type> build_matrix;
+  typedef backend::CSRMatrix<value_type> build_matrix;
   AMGCL_TIC("product");
 
   const comm_pattern<Backend>& Acp = A.cpat();
@@ -1138,7 +1138,7 @@ template <class Backend, class T>
 void scale(distributed_matrix<Backend>& A, T s)
 {
   typedef typename Backend::value_type value_type;
-  typedef backend::crs<value_type> build_matrix;
+  typedef backend::CSRMatrix<value_type> build_matrix;
 
   build_matrix& A_loc = *A.local();
   build_matrix& A_rem = *A.remote();
@@ -1232,7 +1232,7 @@ spectral_radius(const mpi::distributed_matrix<Backend>& A, int power_iters = 0)
   typedef typename Backend::value_type value_type;
   typedef typename math::rhs_of<value_type>::type rhs_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
-  typedef backend::crs<value_type> build_matrix;
+  typedef backend::CSRMatrix<value_type> build_matrix;
 
   mpi::communicator comm = A.comm();
 

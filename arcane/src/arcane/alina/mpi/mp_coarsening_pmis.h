@@ -52,9 +52,9 @@ struct pmis {
     typedef typename math::scalar_of<value_type>::type scalar_type;
     typedef distributed_matrix<Backend> matrix;
     typedef comm_pattern<Backend> CommPattern;
-    typedef backend::crs<value_type> build_matrix;
+    typedef backend::CSRMatrix<value_type> build_matrix;
     typedef backend::builtin<char> bool_backend;
-    typedef backend::crs<char>     bool_matrix;
+    typedef backend::CSRMatrix<char>     bool_matrix;
 
 
     struct params {
@@ -336,7 +336,7 @@ struct pmis {
     std::shared_ptr< distributed_matrix<bool_backend> >
     conn_strength(const distributed_matrix<B> &A, scalar_type eps_strong) {
         typedef typename B::value_type val_type;
-        typedef backend::crs<val_type> B_matrix;
+        typedef backend::CSRMatrix<val_type> B_matrix;
 
         AMGCL_TIC("conn_strength");
         ptrdiff_t n = A.loc_rows();

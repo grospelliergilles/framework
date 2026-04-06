@@ -54,7 +54,7 @@ class skyline_lu : public solver_base< value_type, skyline_lu<value_type> > {
     public:
         typedef Alina::solver::skyline_lu<value_type> Solver;
         typedef typename Solver::params params;
-        typedef backend::crs<value_type> build_matrix;
+        typedef backend::CSRMatrix<value_type> build_matrix;
 
         /// Constructor.
         template <class Matrix>

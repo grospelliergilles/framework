@@ -49,7 +49,7 @@ template <class Backend>
 struct smoothed_aggregation {
     typedef typename Backend::value_type value_type;
     typedef typename math::scalar_of<value_type>::type scalar_type;
-    typedef backend::crs<value_type> build_matrix;
+    typedef backend::CSRMatrix<value_type> build_matrix;
 
     struct params {
         // aggregation params
@@ -99,7 +99,7 @@ struct smoothed_aggregation {
         >
     transfer_operators(const distributed_matrix<Backend> &A) {
         typedef distributed_matrix<Backend> DM;
-        typedef backend::crs<char> bool_matrix;
+        typedef backend::CSRMatrix<char> bool_matrix;
 
         pmis<Backend> aggr(A, prm.aggr);
         prm.aggr.eps_strong *= 0.5;

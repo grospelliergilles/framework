@@ -960,7 +960,7 @@ struct ruge_stuben
     static const Val zero = math::zero<Val>();
 
     std::vector<char> cf(n, 'U');
-    backend::crs<char, Col, Ptr> S;
+    backend::CSRMatrix<char, Col, Ptr> S;
 
     AMGCL_TIC("C/F split");
     connect(A, prm.eps_strong, S, cf);
@@ -1121,8 +1121,8 @@ struct ruge_stuben
   // Variables that have no positive connections are marked as F(ine).
   //-------------------------------------------------------------------
   template <typename Val, typename Col, typename Ptr>
-  static void connect(backend::crs<Val, Col, Ptr> const& A, float eps_strong,
-                      backend::crs<char, Col, Ptr>& S,
+  static void connect(backend::CSRMatrix<Val, Col, Ptr> const& A, float eps_strong,
+                      backend::CSRMatrix<char, Col, Ptr>& S,
                       std::vector<char>& cf)
   {
     typedef typename math::scalar_of<Val>::type Scalar;
@@ -1176,8 +1176,8 @@ struct ruge_stuben
 
   // Split variables into C(oarse) and F(ine) sets.
   template <typename Val, typename Col, typename Ptr>
-  static void cfsplit(backend::crs<Val, Col, Ptr> const& A,
-                      backend::crs<char, Col, Ptr> const& S,
+  static void cfsplit(backend::CSRMatrix<Val, Col, Ptr> const& A,
+                      backend::CSRMatrix<char, Col, Ptr> const& S,
                       std::vector<char>& cf)
   {
     const size_t n = rows(A);
@@ -1576,7 +1576,7 @@ struct smoothed_aggr_emin
     rows(A), aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
 
     // Filter the system matrix
-    backend::crs<Val, Col, Ptr> Af;
+    backend::CSRMatrix<Val, Col, Ptr> Af;
     Af.set_size(rows(A), cols(A));
     Af.ptr[0] = 0;
 
@@ -1648,9 +1648,9 @@ struct smoothed_aggr_emin
  private:
 
   template <class AMatrix, typename Val, typename Col, typename Ptr>
-  static std::shared_ptr<backend::crs<Val, Col, Ptr>>
+  static std::shared_ptr<backend::CSRMatrix<Val, Col, Ptr>>
   interpolation(const AMatrix& A, const std::vector<Val>& Adia,
-                const backend::crs<Val, Col, Ptr>& P_tent,
+                const backend::CSRMatrix<Val, Col, Ptr>& P_tent,
                 std::vector<Val>& omega)
   {
     const size_t n = rows(P_tent);
@@ -1771,9 +1771,9 @@ struct smoothed_aggr_emin
   }
 
   template <typename AMatrix, typename Val, typename Col, typename Ptr>
-  static std::shared_ptr<backend::crs<Val, Col, Ptr>>
+  static std::shared_ptr<backend::CSRMatrix<Val, Col, Ptr>>
   restriction(const AMatrix& A, const std::vector<Val>& Adia,
-              const backend::crs<Val, Col, Ptr>& P_tent,
+              const backend::CSRMatrix<Val, Col, Ptr>& P_tent,
               const std::vector<Val>& omega)
   {
     const size_t nc = cols(P_tent);

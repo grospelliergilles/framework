@@ -79,7 +79,7 @@ void solve_schur(const Matrix &K, const std::vector<double> &rhs, boost::propert
 
     std::cout << solve << std::endl;
 
-    auto A = SBackend::copy_matrix(std::make_shared<Alina::backend::crs<double>>(K), bprm);
+    auto A = SBackend::copy_matrix(std::make_shared<Alina::backend::CSRMatrix<double>>(K), bprm);
     auto f = SBackend::copy_vector(rhs, bprm);
     auto x = SBackend::create_vector(rhs.size(), bprm);
     Alina::backend::clear(*x);

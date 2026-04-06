@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     std::partial_sum(domain.begin(), domain.end(), domain.begin());
 
     prof.tic("assemble");
-    Alina::backend::crs<double> A;
+    Alina::backend::CSRMatrix<double> A;
     A.set_size(chunk, domain.back(), true);
     A.set_nonzeros(chunk * 5);
     std::vector<double> rhs(chunk, 1);
