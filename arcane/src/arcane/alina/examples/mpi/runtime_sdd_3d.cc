@@ -9,11 +9,13 @@
 #include <omp.h>
 #endif
 
+#if defined(SOLVER_BACKEND_CUDA)
 // This seems not defined with CUDA
 namespace boost::math
 {
 class rounding_error{};
 }
+#endif
 
 #include <boost/scope_exit.hpp>
 #include <boost/program_options.hpp>
