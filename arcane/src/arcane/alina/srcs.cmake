@@ -7,7 +7,7 @@ set(ARCANE_SOURCES
   AlinaLibMPI.h
   AlinaLibMPI.cc
   adapter_ublas.h
-        AMG.h
+  AMG.h
   backend_block_crs.h
   backend_builtin.h
   backend_builtin_hybrid.h
@@ -16,6 +16,7 @@ set(ARCANE_SOURCES
   backend_detail_matrix_ops.h
   backend_detail_mixing.h
   backend_interface.h
+  BlockCSRMatrix.h
   CSRMatrix.h
   coarsening.h
   coarsening_detail_galerkin.h
