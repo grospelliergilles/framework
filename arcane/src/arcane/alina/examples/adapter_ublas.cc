@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
             Alina::coarsening::smoothed_aggregation,
             Alina::relaxation::spai0
             >,
-        Alina::solver::bicgstabl<
+        Alina::solver::BiCGStabLSolver<
             Alina::backend::builtin<double>
             >
         > solve( Alina::backend::map(A) );

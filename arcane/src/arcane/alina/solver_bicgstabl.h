@@ -79,7 +79,7 @@ namespace Arcane::Alina::solver
  * \brief BiCGStab(L) method.
  */
 template <class Backend, class InnerProduct = detail::default_inner_product>
-class bicgstabl
+class BiCGStabLSolver
 {
  public:
 
@@ -168,7 +168,7 @@ class bicgstabl
   };
 
   /// Preallocates necessary data structures for the system of size \p n.
-  bicgstabl(size_t n,
+  BiCGStabLSolver(size_t n,
             const params& prm = params(),
             const backend_params& backend_prm = backend_params(),
             const InnerProduct& inner_product = InnerProduct())
@@ -468,7 +468,7 @@ class bicgstabl
     return b;
   }
 
-  friend std::ostream& operator<<(std::ostream& os, const bicgstabl& s)
+  friend std::ostream& operator<<(std::ostream& os, const BiCGStabLSolver& s)
   {
     return os << "Type:             BiCGStab(" << s.prm.L << ")"
               << "\nUnknowns:         " << s.n

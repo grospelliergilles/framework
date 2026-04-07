@@ -63,6 +63,7 @@ enum type
   bicgstab, ///< BiConjugate Gradient Stabilized
   BiCGStabSolver = bicgstab, ///< BiConjugate Gradient Stabilized
   bicgstabl, ///< BiCGStab(ell)
+  BiCGStabLSolver = bicgstabl, ///< BiCGStab(ell)
   gmres, ///< GMRES
   GMRESSolver = gmres, ///< GMRES
   lgmres, ///< LGMRES
@@ -132,7 +133,7 @@ inline std::istream& operator>>(std::istream& in, type& s)
 #define ARCANE_ALINA_ALL_RUNTIME_SOLVER() \
   ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient); \
   ARCANE_ALINA_RUNTIME_SOLVER(BiCGStabSolver); \
-  ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl); \
+  ARCANE_ALINA_RUNTIME_SOLVER(BiCGStabLSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(lgmres); \
   ARCANE_ALINA_RUNTIME_SOLVER(fgmres); \
@@ -156,11 +157,10 @@ struct wrapper
   type s;
   void* handle = nullptr;
 
-  wrapper(size_t n, params prm = params(),
-          const backend_params& bprm = backend_params(),
-          const InnerProduct& inner_product = InnerProduct())
+  explicit wrapper(size_t n, params prm = params(),
+                   const backend_params& bprm = backend_params(),
+                   const InnerProduct& inner_product = InnerProduct())
   : s(prm.get("type", runtime::solver::bicgstab))
-  , handle(0)
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");

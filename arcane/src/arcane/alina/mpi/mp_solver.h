@@ -74,9 +74,9 @@ class bicgstab
 
 template <class Backend, class InnerProduct = mpi::inner_product>
 class bicgstabl
-: public Alina::solver::bicgstabl<Backend, InnerProduct>
+: public Alina::solver::BiCGStabLSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::bicgstabl<Backend, InnerProduct> Base;
+  typedef Alina::solver::BiCGStabLSolver<Backend, InnerProduct> Base;
 
  public:
 
