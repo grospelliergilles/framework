@@ -67,12 +67,10 @@ int main(int argc, char *argv[]) {
     ublas_vector x(n, 0);
 
     prof.tic("solve");
-    size_t iters;
-    double resid;
-    std::tie(iters, resid) = solve(rhs, x);
+    Alina::SolverResult r = solve(rhs, x);
     prof.toc("solve");
 
-    std::cout << "Iterations: " << iters << std::endl
-              << "Error:      " << resid << std::endl
+    std::cout << "Iterations: " << r.nbIteration() << std::endl
+              << "Error:      " << r.residual() << std::endl
               << std::endl << prof << std::endl;
 }

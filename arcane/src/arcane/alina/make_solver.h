@@ -126,8 +126,7 @@ class make_solver
    * \endrst
    */
   template <class Matrix, class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type> operator()(
-  const Matrix& A, const Vec1& rhs, Vec2&& x) const
+  SolverResult operator()(const Matrix& A, const Vec1& rhs, Vec2&& x) const
   {
     return S(A, P, rhs, x);
   }
@@ -138,7 +137,7 @@ class make_solver
    * approximation in input and holds the computed solution on output.
    */
   template <class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type> operator()(const Vec1& rhs, Vec2&& x) const
+  SolverResult operator()(const Vec1& rhs, Vec2&& x) const
   {
     return S(P, rhs, x);
   }

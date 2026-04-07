@@ -160,8 +160,7 @@ class GMRESSolver
    * good preconditioner for several subsequent time steps [DeSh12]_.
    */
   template <class Matrix, class Precond, class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type>
-  operator()(Matrix const& A, Precond const& P, Vec1 const& rhs, Vec2& x) const
+  SolverResult operator()(Matrix const& A, Precond const& P, Vec1 const& rhs, Vec2& x) const
   {
     namespace side = preconditioner::side;
 
@@ -177,7 +176,7 @@ class GMRESSolver
       }
       else {
         backend::clear(x);
-        return std::make_tuple(0, norm_rhs);
+        return SolverResult(0, norm_rhs);
       }
     }
 

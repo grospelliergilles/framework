@@ -19,8 +19,9 @@
 #include "sample_problem.h"
 
 using namespace Arcane;
+using namespace Arcane::Alina;
 
-namespace Arcane::Alina
+namespace
 {
 profiler<> prof;
 }
@@ -43,10 +44,9 @@ TEST(alina_test_complex, complex_matrix_adapter)
   Alina::PropertyTree prm;
   prm.put("precond.coarsening.aggr.block_size", 2);
 
-  Alina::make_solver<Alina::AMG<
-                     Backend,
-                     Alina::coarsening::smoothed_aggregation,
-                     Alina::relaxation::spai0>,
+  Alina::make_solver<Alina::AMG<Backend,
+                                Alina::coarsening::smoothed_aggregation,
+                                Alina::relaxation::spai0>,
                      Alina::solver::bicgstab<Backend>>
   solve(Alina::adapter::complex_matrix(std::tie(n, ptr, col, val)), prm);
 
@@ -55,13 +55,10 @@ TEST(alina_test_complex, complex_matrix_adapter)
   boost::iterator_range<const double*> f_range = Alina::adapter::complex_range(rhs);
   boost::iterator_range<double*> x_range = Alina::adapter::complex_range(x);
 
-  size_t iters;
-  double resid;
+  SolverResult r = solve(f_range, x_range);
 
-  std::tie(iters, resid) = solve(f_range, x_range);
+  ASSERT_NEAR(r.residual(), 0.0, 1e-8);
 
-  ASSERT_NEAR(resid, 0.0, 1e-8);
-
-  std::cout << "iters: " << iters << std::endl
-            << "resid: " << resid << std::endl;
+  std::cout << "iters: " << r.nbIteration() << std::endl
+            << "resid: " << r.residual() << std::endl;
 }

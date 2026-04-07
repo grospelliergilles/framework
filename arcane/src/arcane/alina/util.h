@@ -36,7 +36,38 @@
 
 namespace Arcane::Alina
 {
-}
+//! Result of a solving.
+class ARCANE_ALINA_EXPORT SolverResult
+{
+ public:
+
+  SolverResult() = default;
+  SolverResult(const std::tuple<size_t, double>& v)
+  : m_nb_iteration(get<0>(v))
+  , m_residual(get<1>(v))
+  {}
+  SolverResult(const std::tuple<size_t, float>& v)
+  : m_nb_iteration(get<0>(v))
+  , m_residual(get<1>(v))
+  {}
+  SolverResult(size_t nb_iteration, double residual)
+  : m_nb_iteration(nb_iteration)
+  , m_residual(residual)
+  {}
+
+  operator std::tuple<size_t, double>() const { return { m_nb_iteration, m_residual }; }
+
+ public:
+
+  constexpr Int32 nbIteration() const { return static_cast<Int32>(m_nb_iteration); }
+  constexpr double residual() const { return m_residual; }
+
+ private:
+
+  size_t m_nb_iteration = 0;
+  double m_residual = 0.0;
+};
+} // namespace Arcane::Alina
 
 // If asked explicitly, or if boost is available, enable
 // using boost::propert_tree::ptree as amgcl parameters:

@@ -125,13 +125,13 @@ int main(int argc, char *argv[]) {
     auto X = Alina::backend::reinterpret_as_rhs<DBlock>(x);
 
     prof.tic("solve");
-    std::tie(iters, error) = solve(Ab, F, X);
+    Alina::SolverResult r = solve(Ab, F, X);
     prof.toc("solve");
 
     // Output the number of iterations, the relative error,
     // and the profiling data:
-    std::cout << "Iters: " << iters << std::endl
-              << "Error: " << error << std::endl
+    std::cout << "Iters: " << r.nbIteration() << std::endl
+              << "Error: " << r.residual() << std::endl
               << prof << std::endl;
 }
 

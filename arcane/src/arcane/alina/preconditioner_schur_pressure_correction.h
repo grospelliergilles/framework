@@ -628,11 +628,10 @@ class schur_pressure_correction
     return os;
   }
 
-  template <typename I, typename E>
-  void report(const std::string& name, const std::tuple<I, E>& c) const
+  void report(const std::string& name, const SolverResult& r) const
   {
     if (prm.verbose >= 1) {
-      std::cout << name << " (" << std::get<0>(c) << ", " << std::get<1>(c) << ")\n";
+      std::cout << name << " (" << r.nbIteration() << ", " << r.residual() << ")\n";
     }
   }
 };

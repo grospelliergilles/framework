@@ -58,18 +58,15 @@ void test_solver(const Matrix& A,
 
   std::cout << solve.precond() << std::endl;
 
-  size_t iters;
-  double resid;
-
   Alina::backend::clear(*x);
 
-  std::tie(iters, resid) = solve(*f, *x);
+  Alina::SolverResult r = solve(*f, *x);
 
-  std::cout << "Iterations: " << iters << std::endl
-            << "Error:      " << resid << std::endl
+  std::cout << "Iterations: " << r.nbIteration() << std::endl
+            << "Error:      " << r.residual() << std::endl
             << std::endl;
 
-  ASSERT_NEAR(resid, 0.0, 1e-4);
+  ASSERT_NEAR(r.residual(), 0.0, 1e-4);
 }
 
 //---------------------------------------------------------------------------
@@ -92,18 +89,14 @@ void test_rap(const Matrix& A,
 
   std::cout << "Using " << relaxation << " as preconditioner" << std::endl;
 
-  size_t iters;
-  double resid;
-
   Alina::backend::clear(*x);
 
-  std::tie(iters, resid) = solve(*f, *x);
+  Alina::SolverResult r = solve(*f, *x);
 
-  std::cout << "Iterations: " << iters << std::endl
-            << "Error:      " << resid << std::endl
-            << std::endl;
+  std::cout << "Iterations: " << r.nbIteration() << std::endl
+            << "Error:      " << r.residual() << std::endl;
 
-  ASSERT_NEAR(resid, 0.0, 1e-4);
+  ASSERT_NEAR(r.residual(), 0.0, 1e-4);
 }
 
 template <class Backend, class value_type, class col_type, class ptr_type, class rhs_type>

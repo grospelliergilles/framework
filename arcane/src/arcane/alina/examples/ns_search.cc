@@ -244,15 +244,12 @@ int main(int argc, char *argv[]) {
 
         for(auto &v : x) v = rnd(rng);
 
-        int iters;
-        double error;
-
         prof.tic("solve");
-        std::tie(iters, error) = S(zero, x);
+        Alina::SolverResult r = S(zero, x);
         prof.toc("solve");
 
-        std::cout << "Iterations: " << iters << std::endl
-                  << "Error:      " << error << std::endl;
+        std::cout << "Iterations: " << r.nbIteration() << std::endl
+                  << "Error:      " << r.residual() << std::endl;
 
         // Orthonormalize the new vector
         for(const auto &z : Z) {
@@ -295,15 +292,12 @@ int main(int argc, char *argv[]) {
 
         Alina::backend::clear(x);
 
-        int iters;
-        double error;
-
         prof.tic("solve");
-        std::tie(iters, error) = S(rhs, x);
+        Alina::SolverResult r = S(rhs, x);
         prof.toc("solve");
 
-        std::cout << "Iterations: " << iters << std::endl
-            << "Error:      " << error << std::endl;
+        std::cout << "Iterations: " << r.nbIteration() << std::endl
+                  << "Error:      " << r.residual() << std::endl;
     }
 
     if (vm.count("output")) {

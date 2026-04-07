@@ -196,8 +196,7 @@ struct wrapper
   }
 
   template <class Matrix, class Precond, class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type>
-  operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
+  SolverResult operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
     switch (s) {
 
@@ -215,7 +214,7 @@ struct wrapper
   }
 
   template <class Precond, class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type> operator()(const Precond& P, const Vec1& rhs, Vec2&& x) const
+  SolverResult operator()(const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
     return (*this)(P.system_matrix(), P, rhs, x);
   }

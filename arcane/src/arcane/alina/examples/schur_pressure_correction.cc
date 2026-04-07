@@ -42,6 +42,7 @@ using Alina::prof;
 using Alina::precondition;
 
 //---------------------------------------------------------------------------
+
 template <class USolver, class PSolver, class Matrix>
 void solve_schur(const Matrix &K, const std::vector<double> &rhs, Alina::PropertyTree &prm)
 {
@@ -74,15 +75,12 @@ void solve_schur(const Matrix &K, const std::vector<double> &rhs, Alina::Propert
     auto x = Backend<double>::create_vector(rhs.size(), bprm);
     Alina::backend::clear(*x);
 
-    size_t iters;
-    double error;
-
     prof.tic("solve");
-    std::tie(iters, error) = solve(*f, *x);
+    Alina::SolverResult r = solve(*f, *x);
     prof.toc("solve");
 
-    std::cout << "Iterations: " << iters << std::endl
-              << "Error:      " << error << std::endl;
+    std::cout << "Iterations: " << r.nbIteration() << std::endl
+              << "Error:      " << r.residual() << std::endl;
 }
 
 #define ARCANE_ALINA_BLOCK_PSOLVER(z, data, B)                                        \
@@ -97,26 +95,22 @@ void solve_schur(const Matrix &K, const std::vector<double> &rhs, Alina::Propert
 
 //---------------------------------------------------------------------------
 template <class USolver, class Matrix>
-void solve_schur(int pb, const Matrix &K, const std::vector<double> &rhs, Alina::PropertyTree &prm)
+void solve_schur(int pb, const Matrix& K, const std::vector<double>& rhs, Alina::PropertyTree& prm)
 {
-    switch (pb) {
-        case 1:
-            {
-                typedef
-                    Alina::make_solver<
-                        Alina::runtime::preconditioner<Backend<double>>,
-                        Alina::runtime::solver::wrapper<Backend<double>>
-                        >
-                    PSolver;
-                solve_schur<USolver, PSolver>(K, rhs, prm);
-            }
-            break;
+  switch (pb) {
+  case 1: {
+    typedef Alina::make_solver<
+    Alina::runtime::preconditioner<Backend<double>>,
+    Alina::runtime::solver::wrapper<Backend<double>>>
+    PSolver;
+    solve_schur<USolver, PSolver>(K, rhs, prm);
+  } break;
 #if defined(SOLVER_BACKEND_BUILTIN)
-        BOOST_PP_SEQ_FOR_EACH(ARCANE_ALINA_BLOCK_PSOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
+    BOOST_PP_SEQ_FOR_EACH(ARCANE_ALINA_BLOCK_PSOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
 #endif
-        default:
-            precondition(false, "Unsupported block size for pressure");
-    }
+  default:
+    precondition(false, "Unsupported block size for pressure");
+  }
 }
 
 #define ARCANE_ALINA_BLOCK_USOLVER(z, data, B)                                        \
@@ -131,20 +125,14 @@ void solve_schur(int pb, const Matrix &K, const std::vector<double> &rhs, Alina:
 
 //---------------------------------------------------------------------------
 template <class Matrix>
-void solve_schur(int ub, int pb, const Matrix &K, const std::vector<double> &rhs, Alina::PropertyTree &prm)
+void solve_schur(int ub, int pb, const Matrix& K, const std::vector<double>& rhs, Alina::PropertyTree& prm)
 {
   switch (ub) {
-  case 1:
-    {
-      typedef
-      Alina::make_solver<
-        Alina::runtime::preconditioner<Backend<double>>,
-        Alina::runtime::solver::wrapper<Backend<double>>
-        >
-      USolver;
-      solve_schur<USolver>(pb, K, rhs, prm);
-    }
-    break;
+  case 1: {
+    using USolver = Alina::make_solver<Alina::runtime::preconditioner<Backend<double>>,
+                                       Alina::runtime::solver::wrapper<Backend<double>>>;
+    solve_schur<USolver>(pb, K, rhs, prm);
+  } break;
 #if defined(SOLVER_BACKEND_BUILTIN)
     BOOST_PP_SEQ_FOR_EACH(ARCANE_ALINA_BLOCK_USOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
 #endif
@@ -154,142 +142,127 @@ void solve_schur(int ub, int pb, const Matrix &K, const std::vector<double> &rhs
 }
 
 //---------------------------------------------------------------------------
-int main(int argc, char *argv[]) {
-    using std::string;
-    using std::vector;
+int main(int argc, char* argv[])
+{
+  using std::string;
+  using std::vector;
 
-    namespace po = boost::program_options;
-    namespace io = Alina::IO;
+  namespace po = boost::program_options;
+  namespace io = Alina::IO;
 
-    po::options_description desc("Options");
+  po::options_description desc("Options");
 
-    desc.add_options()
-        ("help,h", "show help")
-        (
-         "binary,B",
-         po::bool_switch()->default_value(false),
-         "When specified, treat input files as binary instead of as MatrixMarket. "
-         "It is assumed the files were converted to binary format with mm2bin utility. "
-        )
-        (
-         "matrix,A",
-         po::value<string>()->required(),
-         "The system matrix in MatrixMarket format"
-        )
-        (
-         "rhs,f",
-         po::value<string>(),
-         "The right-hand side in MatrixMarket format"
-        )
-        (
-         "pmask,m",
-         po::value<string>(),
-         "The pressure mask in MatrixMarket format. Or, if the parameter has "
-         "the form '%n:m', then each (n+i*m)-th variable is treated as pressure."
-        )
-        (
-         "ub",
-         po::value<int>()->default_value(1),
-         "Block-size of the 'flow'/'non-pressure' part of the matrix"
-        )
-        (
-         "pb",
-         po::value<int>()->default_value(1),
-         "Block-size of the 'pressure' part of the matrix"
-        )
-        (
-         "params,P",
-         po::value<string>(),
-         "parameter file in json format"
-        )
-        (
-         "prm,p",
-         po::value< vector<string> >()->multitoken(),
-         "Parameters specified as name=value pairs. "
-         "May be provided multiple times. Examples:\n"
-         "  -p solver.tol=1e-3\n"
-         "  -p precond.coarse_enough=300"
-        )
-        ;
+  desc.add_options()("help,h", "show help")(
+  "binary,B",
+  po::bool_switch()->default_value(false),
+  "When specified, treat input files as binary instead of as MatrixMarket. "
+  "It is assumed the files were converted to binary format with mm2bin utility. ")(
+  "matrix,A",
+  po::value<string>()->required(),
+  "The system matrix in MatrixMarket format")(
+  "rhs,f",
+  po::value<string>(),
+  "The right-hand side in MatrixMarket format")(
+  "pmask,m",
+  po::value<string>(),
+  "The pressure mask in MatrixMarket format. Or, if the parameter has "
+  "the form '%n:m', then each (n+i*m)-th variable is treated as pressure.")(
+  "ub",
+  po::value<int>()->default_value(1),
+  "Block-size of the 'flow'/'non-pressure' part of the matrix")(
+  "pb",
+  po::value<int>()->default_value(1),
+  "Block-size of the 'pressure' part of the matrix")(
+  "params,P",
+  po::value<string>(),
+  "parameter file in json format")(
+  "prm,p",
+  po::value<vector<string>>()->multitoken(),
+  "Parameters specified as name=value pairs. "
+  "May be provided multiple times. Examples:\n"
+  "  -p solver.tol=1e-3\n"
+  "  -p precond.coarse_enough=300");
 
-    po::variables_map vm;
-    po::store(po::parse_command_line(argc, argv, desc), vm);
+  po::variables_map vm;
+  po::store(po::parse_command_line(argc, argv, desc), vm);
 
-    if (vm.count("help")) {
-        std::cout << desc << std::endl;
-        return 0;
+  if (vm.count("help")) {
+    std::cout << desc << std::endl;
+    return 0;
+  }
+
+  po::notify(vm);
+
+  Alina::PropertyTree prm;
+  if (vm.count("params"))
+    prm.read_json(vm["params"].as<string>());
+
+  if (vm.count("prm")) {
+    for (const string& v : vm["prm"].as<vector<string>>()) {
+      Alina::put(prm, v);
+    }
+  }
+
+  size_t rows;
+  vector<ptrdiff_t> ptr, col;
+  vector<double> val, rhs;
+  std::vector<char> pm;
+
+  {
+    auto t = prof.scoped_tic("reading");
+
+    string Afile = vm["matrix"].as<string>();
+    bool binary = vm["binary"].as<bool>();
+
+    if (binary) {
+      io::read_crs(Afile, rows, ptr, col, val);
+    }
+    else {
+      size_t cols;
+      std::tie(rows, cols) = io::mm_reader(Afile)(ptr, col, val);
+      precondition(rows == cols, "Non-square system matrix");
     }
 
-    po::notify(vm);
+    if (vm.count("rhs")) {
+      string bfile = vm["rhs"].as<string>();
 
-    Alina::PropertyTree prm;
-    if (vm.count("params"))
-      prm.read_json(vm["params"].as<string>());
+      size_t n, m;
 
-    if (vm.count("prm")) {
-        for(const string &v : vm["prm"].as<vector<string> >()) {
-            Alina::put(prm, v);
-        }
+      if (binary) {
+        io::read_dense(bfile, n, m, rhs);
+      }
+      else {
+        std::tie(n, m) = io::mm_reader(bfile)(rhs);
+      }
+
+      precondition(n == rows && m == 1, "The RHS vector has wrong size");
+    }
+    else {
+      rhs.resize(rows, 1.0);
     }
 
-    size_t rows;
-    vector<ptrdiff_t> ptr, col;
-    vector<double> val, rhs;
-    std::vector<char> pm;
+    if (vm.count("pmask")) {
+      std::string pmask = vm["pmask"].as<string>();
+      prm.put("precond.pmask_size", rows);
 
-    {
-        auto t = prof.scoped_tic("reading");
-
-        string Afile  = vm["matrix"].as<string>();
-        bool   binary = vm["binary"].as<bool>();
-
-        if (binary) {
-            io::read_crs(Afile, rows, ptr, col, val);
-        } else {
-            size_t cols;
-            std::tie(rows, cols) = io::mm_reader(Afile)(ptr, col, val);
-            precondition(rows == cols, "Non-square system matrix");
-        }
-
-        if (vm.count("rhs")) {
-            string bfile = vm["rhs"].as<string>();
-
-            size_t n, m;
-
-            if (binary) {
-                io::read_dense(bfile, n, m, rhs);
-            } else {
-                std::tie(n, m) = io::mm_reader(bfile)(rhs);
-            }
-
-            precondition(n == rows && m == 1, "The RHS vector has wrong size");
-        } else {
-            rhs.resize(rows, 1.0);
-        }
-
-        if(vm.count("pmask")) {
-            std::string pmask = vm["pmask"].as<string>();
-            prm.put("precond.pmask_size", rows);
-
-            switch (pmask[0]) {
-                case '%':
-                case '<':
-                case '>':
-                    prm.put("precond.pmask_pattern", pmask);
-                    break;
-                default:
-                    {
-                        size_t n, m;
-                        std::tie(n, m) = Alina::IO::mm_reader(pmask)(pm);
-                        precondition(n == rows && m == 1, "Mask file has wrong size");
-                        prm.put("precond.pmask", static_cast<void*>(&pm[0]));
-                    }
-            }
-        }
+      switch (pmask[0]) {
+      case '%':
+      case '<':
+      case '>':
+        prm.put("precond.pmask_pattern", pmask);
+        break;
+      default: {
+        size_t n, m;
+        std::tie(n, m) = Alina::IO::mm_reader(pmask)(pm);
+        precondition(n == rows && m == 1, "Mask file has wrong size");
+        prm.put("precond.pmask", static_cast<void*>(&pm[0]));
+      }
+      }
     }
+  }
 
-    solve_schur(vm["ub"].as<int>(), vm["pb"].as<int>(),
-            std::tie(rows, ptr, col, val), rhs, prm);
+  solve_schur(vm["ub"].as<int>(), vm["pb"].as<int>(),
+              std::tie(rows, ptr, col, val), rhs, prm);
 
-    std::cout << prof << std::endl;
+  std::cout << prof << std::endl;
 }

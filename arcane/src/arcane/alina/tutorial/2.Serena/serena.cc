@@ -139,12 +139,12 @@ int main(int argc, char *argv[]) {
     auto X = Alina::make_iterator_range(x_ptr, x_ptr + rows / 3);
 
     prof.tic("solve");
-    std::tie(iters, error) = solve(Ab, F, X);
+    Alina::SolverResult r = solve(Ab, F, X);
     prof.toc("solve");
 
     // Output the number of iterations, the relative error,
     // and the profiling data:
-    std::cout << "Iters: " << iters << std::endl
-              << "Error: " << error << std::endl
+    std::cout << "Iters: " << r.nbIteration() << std::endl
+              << "Error: " << r.residual() << std::endl
               << prof << std::endl;
 }

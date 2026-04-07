@@ -31,6 +31,14 @@ typedef Alina::runtime::solver::wrapper<Backend>  ISolver;
 typedef Alina::make_solver<AMG, ISolver> Solver;
 typedef Alina::PropertyTree Params;
 
+conv_info _toConvInfo(const Alina::SolverResult& r)
+{
+  conv_info x;
+  x.iterations = r.nbIteration();
+  x.residual = r.residual();
+  return x;
+}
+
 //---------------------------------------------------------------------------
 
 amgclHandle STDCALL ARCANE_ALINA_params_create()
@@ -151,21 +159,18 @@ ARCANE_ALINA_solver_destroy(amgclHandle handle)
 //---------------------------------------------------------------------------
 conv_info STDCALL
 ARCANE_ALINA_solver_solve(amgclHandle handle,
-                   const double* rhs,
-                   double* x)
+                          const double* rhs,
+                          double* x)
 {
   Solver* slv = static_cast<Solver*>(handle);
 
   size_t n = slv->size();
 
-  conv_info cnv;
-
   boost::iterator_range<double*> x_range = boost::make_iterator_range(x, x + n);
 
-  std::tie(cnv.iterations, cnv.residual) = (*slv)(
-  boost::make_iterator_range(rhs, rhs + n), x_range);
+  Alina::SolverResult r = (*slv)(boost::make_iterator_range(rhs, rhs + n), x_range);
 
-  return cnv;
+  return _toConvInfo(r);
 }
 
 //---------------------------------------------------------------------------
@@ -181,18 +186,16 @@ ARCANE_ALINA_solver_solve_mtx(amgclHandle handle,
 
   size_t n = slv->size();
 
-  conv_info cnv;
-
   boost::iterator_range<double*> x_range = boost::make_iterator_range(x, x + n);
 
-  std::tie(cnv.iterations, cnv.residual) = (*slv)(
+  Alina::SolverResult r = (*slv)(
   std::make_tuple(n,
                   boost::make_iterator_range(A_ptr, A_ptr + n + 1),
                   boost::make_iterator_range(A_col, A_col + A_ptr[n]),
                   boost::make_iterator_range(A_val, A_val + A_ptr[n])),
   boost::make_iterator_range(rhs, rhs + n), x_range);
 
-  return cnv;
+  return _toConvInfo(r);
 }
 
 /*---------------------------------------------------------------------------*/

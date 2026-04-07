@@ -117,12 +117,12 @@ int main(int argc, char *argv[]) {
     std::vector<double> x(rows, 0.0);
 
     prof.tic("solve");
-    std::tie(iters, error) = solve(A, rhs, x);
+    Alina::SolverResult r = solve(A, rhs, x);
     prof.toc("solve");
 
     // Output the number of iterations, the relative error,
     // and the profiling data:
-    std::cout << "Iters: " << iters << std::endl
-              << "Error: " << error << std::endl
+    std::cout << "Iters: " << r.nbIteration() << std::endl
+              << "Error: " << r.residual() << std::endl
               << prof << std::endl;
 }
