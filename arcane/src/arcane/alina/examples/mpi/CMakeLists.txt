@@ -5,7 +5,7 @@ endif()
 add_library(arcane_alina_mpi_example INTERFACE)
 target_link_libraries(arcane_alina_mpi_example INTERFACE
   arcane_alina mpi_target ${Boost_PROGRAM_OPTIONS_LIBRARY})
-target_compile_definitions(arcane_alina_mpi_example INTERFACE "AMGCL_BLOCK_SIZES=${AMGCL_BLOCK_SIZES_SEQ}")
+target_compile_definitions(arcane_alina_mpi_example INTERFACE "ARCANE_ALINA_BLOCK_SIZES=${ARCANE_ALINA_BLOCK_SIZES_SEQ}")
 
 if (TARGET eigen_target)
   target_link_libraries(arcane_alina_mpi_example INTERFACE eigen_target)

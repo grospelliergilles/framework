@@ -241,7 +241,7 @@ int main(int argc, char *argv[]) {
          "dir_solver,d",
          po::value<Alina::runtime::mpi::direct::type>(&direct_solver)->default_value(direct_solver),
          "skyline_lu"
-#ifdef AMGCL_HAVE_PASTIX
+#ifdef ARCANE_ALINA_HAVE_PASTIX
          ", pastix"
 #endif
         )

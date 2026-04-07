@@ -36,8 +36,8 @@ template <class T> using Backend = Arcane::Alina::backend::builtin<T>;
 #include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
-#ifndef AMGCL_BLOCK_SIZES
-#  define AMGCL_BLOCK_SIZES (3)(4)
+#ifndef ARCANE_ALINA_BLOCK_SIZES
+#  define ARCANE_ALINA_BLOCK_SIZES (3)(4)
 #endif
 
 using namespace Arcane;
@@ -93,7 +93,7 @@ void solve_schur(const Matrix &K, const std::vector<double> &rhs, Alina::Propert
               << "Error:      " << error << std::endl;
 }
 
-#define AMGCL_BLOCK_PSOLVER(z, data, B)                 \
+#define ARCANE_ALINA_BLOCK_PSOLVER(z, data, B)                 \
   case B: {                                             \
     typedef Backend<BlockMatrix<float, B, B>> BBackend; \
     typedef ::Arcane::Alina::make_block_solver<                   \
@@ -120,14 +120,14 @@ void solve_schur(int pb, const Matrix &K, const std::vector<double> &rhs, Alina:
             }
             break;
 #if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
-        BOOST_PP_SEQ_FOR_EACH(AMGCL_BLOCK_PSOLVER, ~, AMGCL_BLOCK_SIZES)
+        BOOST_PP_SEQ_FOR_EACH(ARCANE_ALINA_BLOCK_PSOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
 #endif
         default:
             precondition(false, "Unsupported block size for pressure");
     }
 }
 
-#define AMGCL_BLOCK_USOLVER(z, data, B)                 \
+#define ARCANE_ALINA_BLOCK_USOLVER(z, data, B)                 \
   case B: {                                             \
     typedef Backend<BlockMatrix<float, B, B>> BBackend; \
     typedef ::Arcane::Alina::make_block_solver<                   \
@@ -154,7 +154,7 @@ void solve_schur(int ub, int pb, const Matrix &K, const std::vector<double> &rhs
             }
             break;
 #if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
-        BOOST_PP_SEQ_FOR_EACH(AMGCL_BLOCK_USOLVER, ~, AMGCL_BLOCK_SIZES)
+        BOOST_PP_SEQ_FOR_EACH(ARCANE_ALINA_BLOCK_USOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
 #endif
         default:
             precondition(false, "Unsupported block size for flow");

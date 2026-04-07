@@ -130,7 +130,7 @@ void test_problem(
 
     Alina::runtime::relaxation::type relaxation[] = {
         Alina::runtime::relaxation::spai0
-#ifndef AMGCL_RUNTIME_DISABLE_SPAI1
+#ifndef ARCANE_ALINA_RUNTIME_DISABLE_SPAI1
       , Alina::runtime::relaxation::spai1
 #endif
       , Alina::runtime::relaxation::damped_jacobi
@@ -139,7 +139,7 @@ void test_problem(
       , Alina::runtime::relaxation::iluk
       , Alina::runtime::relaxation::ilup
       , Alina::runtime::relaxation::ilut
-#ifndef AMGCL_RUNTIME_DISABLE_CHEBYSHEV
+#ifndef ARCANE_ALINA_RUNTIME_DISABLE_CHEBYSHEV
       , Alina::runtime::relaxation::chebyshev
 #endif
     };

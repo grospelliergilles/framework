@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_COARSENING_AGGREGATION_HPP
-#define AMGCL_MPI_COARSENING_AGGREGATION_HPP
+#ifndef ARCANE_ALINA_MPI_COARSENING_AGGREGATION_HPP
+#define ARCANE_ALINA_MPI_COARSENING_AGGREGATION_HPP
 
 /*
 The MIT License
@@ -74,15 +74,15 @@ struct aggregation {
         params() : over_interp(1.5f) { }
 
         params(const Alina::PropertyTree &p)
-            : AMGCL_PARAMS_IMPORT_CHILD(p, aggr),
-              AMGCL_PARAMS_IMPORT_VALUE(p, over_interp)
+            : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr),
+              ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, over_interp)
         {
             check_params(p, {"aggr", "over_interp"});
         }
 
         void get(Alina::PropertyTree &p, const std::string &path) const {
-            AMGCL_PARAMS_EXPORT_CHILD(p, path, aggr);
-            AMGCL_PARAMS_EXPORT_VALUE(p, path, over_interp);
+            ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
+            ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, over_interp);
         }
     } prm;
 

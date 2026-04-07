@@ -140,30 +140,30 @@ class bicgstabl
     }
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_VALUE(p, L)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, delta)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, convex)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, pside)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, maxiter)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, tol)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, abstol)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, ns_search)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, verbose)
+    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, L)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, delta)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, convex)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, pside)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
     {
       check_params(p, { "L", "delta", "convex", "pside", "maxiter", "tol", "abstol", "ns_search", "verbose" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, L);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, delta);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, convex);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, pside);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, maxiter);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, tol);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, abstol);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, ns_search);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, verbose);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, L);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, delta);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, convex);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, pside);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
     }
   };
 

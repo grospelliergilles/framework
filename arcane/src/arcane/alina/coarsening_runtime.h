@@ -101,7 +101,7 @@ struct wrapper
   , handle(0)
   {
     if (!prm.erase("type"))
-      AMGCL_PARAM_MISSING("type");
+      ARCANE_ALINA_PARAM_MISSING("type");
 
     typedef typename backend::value_type<Backend>::type value_type;
     const bool block_value_type = math::static_rows<value_type>::value > 1;
@@ -112,7 +112,7 @@ struct wrapper
     std::cout << "PreconditionerCoarseningType=" << c << "\n";
     switch (c) {
 
-#define AMGCL_RUNTIME_COARSENING(t) \
+#define ARCANE_ALINA_RUNTIME_COARSENING(t) \
   case t: \
     if (as_scalar) { \
       handle = call_constructor<Arcane::Alina::coarsening::as_scalar<Arcane::Alina::coarsening::t>::type>(prm); \
@@ -122,12 +122,12 @@ struct wrapper
     } \
     break
 
-      AMGCL_RUNTIME_COARSENING(ruge_stuben);
-      AMGCL_RUNTIME_COARSENING(aggregation);
-      AMGCL_RUNTIME_COARSENING(smoothed_aggregation);
-      AMGCL_RUNTIME_COARSENING(smoothed_aggr_emin);
+      ARCANE_ALINA_RUNTIME_COARSENING(ruge_stuben);
+      ARCANE_ALINA_RUNTIME_COARSENING(aggregation);
+      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggregation);
+      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggr_emin);
 
-#undef AMGCL_RUNTIME_COARSENING
+#undef ARCANE_ALINA_RUNTIME_COARSENING
 
     default:
       throw std::invalid_argument("Unsupported coarsening type");
@@ -138,7 +138,7 @@ struct wrapper
   {
     switch (c) {
 
-#define AMGCL_RUNTIME_COARSENING(t) \
+#define ARCANE_ALINA_RUNTIME_COARSENING(t) \
   case t: \
     if (as_scalar) { \
       call_destructor<Arcane::Alina::coarsening::as_scalar<::Arcane::Alina::coarsening::t>::type>(); \
@@ -148,12 +148,12 @@ struct wrapper
     } \
     break
 
-      AMGCL_RUNTIME_COARSENING(ruge_stuben);
-      AMGCL_RUNTIME_COARSENING(aggregation);
-      AMGCL_RUNTIME_COARSENING(smoothed_aggregation);
-      AMGCL_RUNTIME_COARSENING(smoothed_aggr_emin);
+      ARCANE_ALINA_RUNTIME_COARSENING(ruge_stuben);
+      ARCANE_ALINA_RUNTIME_COARSENING(aggregation);
+      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggregation);
+      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggr_emin);
 
-#undef AMGCL_RUNTIME_COARSENING
+#undef ARCANE_ALINA_RUNTIME_COARSENING
     }
   }
 
@@ -163,19 +163,19 @@ struct wrapper
   {
     switch (c) {
 
-#define AMGCL_RUNTIME_COARSENING(t) \
+#define ARCANE_ALINA_RUNTIME_COARSENING(t) \
   case t: \
     if (as_scalar) { \
       return make_operators<::Arcane::Alina::coarsening::as_scalar<::Arcane::Alina::coarsening::t>::type>(A); \
     } \
     return make_operators<::Arcane::Alina::coarsening::t>(A)
 
-      AMGCL_RUNTIME_COARSENING(ruge_stuben);
-      AMGCL_RUNTIME_COARSENING(aggregation);
-      AMGCL_RUNTIME_COARSENING(smoothed_aggregation);
-      AMGCL_RUNTIME_COARSENING(smoothed_aggr_emin);
+      ARCANE_ALINA_RUNTIME_COARSENING(ruge_stuben);
+      ARCANE_ALINA_RUNTIME_COARSENING(aggregation);
+      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggregation);
+      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggr_emin);
 
-#undef AMGCL_RUNTIME_COARSENING
+#undef ARCANE_ALINA_RUNTIME_COARSENING
 
     default:
       throw std::invalid_argument("Unsupported coarsening type");
@@ -187,19 +187,19 @@ struct wrapper
   {
     switch (c) {
 
-#define AMGCL_RUNTIME_COARSENING(t) \
+#define ARCANE_ALINA_RUNTIME_COARSENING(t) \
   case t: \
     if (as_scalar) { \
       return make_coarse<::Arcane::Alina::coarsening::as_scalar<::Arcane::Alina::coarsening::t>::type>(A, P, R); \
     } \
     return make_coarse<::Arcane::Alina::coarsening::t>(A, P, R)
 
-      AMGCL_RUNTIME_COARSENING(ruge_stuben);
-      AMGCL_RUNTIME_COARSENING(aggregation);
-      AMGCL_RUNTIME_COARSENING(smoothed_aggregation);
-      AMGCL_RUNTIME_COARSENING(smoothed_aggr_emin);
+      ARCANE_ALINA_RUNTIME_COARSENING(ruge_stuben);
+      ARCANE_ALINA_RUNTIME_COARSENING(aggregation);
+      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggregation);
+      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggr_emin);
 
-#undef AMGCL_RUNTIME_COARSENING
+#undef ARCANE_ALINA_RUNTIME_COARSENING
 
     default:
       throw std::invalid_argument("Unsupported coarsening type");

@@ -1,5 +1,5 @@
-#ifndef AMGCL_PROFILER_H
-#define AMGCL_PROFILER_H
+#ifndef ARCANE_ALINA_PROFILER_H
+#define ARCANE_ALINA_PROFILER_H
 
 /*
 The MIT License

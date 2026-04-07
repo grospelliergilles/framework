@@ -326,7 +326,7 @@ int main(int argc, char *argv[]) {
             break;
 
 #if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
-        BOOST_PP_SEQ_FOR_EACH(CALL_BLOCK_SOLVER, ~, AMGCL_BLOCK_SIZES)
+        BOOST_PP_SEQ_FOR_EACH(CALL_BLOCK_SOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
 #endif
 
         default:

@@ -111,7 +111,7 @@ struct wrapper
   , handle(0)
   {
     if (!prm.erase("type"))
-      AMGCL_PARAM_MISSING("type");
+      ARCANE_ALINA_PARAM_MISSING("type");
 
     switch (t) {
     case merge: {

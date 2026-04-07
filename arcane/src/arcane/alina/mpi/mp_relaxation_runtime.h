@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_RELAXATION_RUNTIME_HPP
-#define AMGCL_MPI_RELAXATION_RUNTIME_HPP
+#ifndef ARCANE_ALINA_MPI_RELAXATION_RUNTIME_HPP
+#define ARCANE_ALINA_MPI_RELAXATION_RUNTIME_HPP
 
 /*
 The MIT License
@@ -59,38 +59,38 @@ struct wrapper
   , handle(0)
   {
     if (!prm.erase("type"))
-      AMGCL_PARAM_MISSING("type");
+      ARCANE_ALINA_PARAM_MISSING("type");
 
     switch (r) {
 
-#define AMGCL_RELAX_DISTR(type) \
+#define ARCANE_ALINA_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
     handle = static_cast<void*>(new ::Arcane::Alina::mpi::relaxation::type<Backend>(A, prm, bprm)); \
     break
 
-#define AMGCL_RELAX_LOCAL_DISTR(type) \
+#define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
   case runtime::relaxation::type: \
     handle = call_constructor<::Arcane::Alina::relaxation::type>(A, prm, bprm); \
     break;
 
-#define AMGCL_RELAX_LOCAL_LOCAL(type) \
+#define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
   case runtime::relaxation::type: \
     handle = call_constructor<::Arcane::Alina::relaxation::type>(*A.local(), prm, bprm); \
     break;
 
-      AMGCL_RELAX_DISTR(spai0);
-      AMGCL_RELAX_LOCAL_DISTR(chebyshev);
-      AMGCL_RELAX_LOCAL_LOCAL(damped_jacobi);
-      AMGCL_RELAX_LOCAL_LOCAL(ilu0);
-      AMGCL_RELAX_LOCAL_LOCAL(iluk);
-      AMGCL_RELAX_LOCAL_LOCAL(ilup);
-      AMGCL_RELAX_LOCAL_LOCAL(ilut);
-      AMGCL_RELAX_LOCAL_LOCAL(spai1);
-      AMGCL_RELAX_LOCAL_LOCAL(gauss_seidel);
+      ARCANE_ALINA_RELAX_DISTR(spai0);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(chebyshev);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(damped_jacobi);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ilu0);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(iluk);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ilup);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ilut);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(spai1);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(gauss_seidel);
 
-#undef AMGCL_RELAX_LOCAL_LOCAL
-#undef AMGCL_RELAX_LOCAL_DISTR
-#undef AMGCL_RELAX_DISTR
+#undef ARCANE_ALINA_RELAX_LOCAL_LOCAL
+#undef ARCANE_ALINA_RELAX_LOCAL_DISTR
+#undef ARCANE_ALINA_RELAX_DISTR
 
     default:
       throw std::invalid_argument("Unsupported relaxation type");
@@ -100,28 +100,28 @@ struct wrapper
   ~wrapper()
   {
     switch (r) {
-#define AMGCL_RELAX_DISTR(type) \
+#define ARCANE_ALINA_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
     delete static_cast<::Arcane::Alina::mpi::relaxation::type<Backend>*>(handle); \
     break
 
-#define AMGCL_RELAX_LOCAL(type) \
+#define ARCANE_ALINA_RELAX_LOCAL(type) \
   case runtime::relaxation::type: \
     delete static_cast<::Arcane::Alina::relaxation::type<Backend>*>(handle); \
     break;
 
-      AMGCL_RELAX_DISTR(spai0);
-      AMGCL_RELAX_LOCAL(damped_jacobi);
-      AMGCL_RELAX_LOCAL(ilu0);
-      AMGCL_RELAX_LOCAL(iluk);
-      AMGCL_RELAX_LOCAL(ilup);
-      AMGCL_RELAX_LOCAL(ilut);
-      AMGCL_RELAX_LOCAL(spai1);
-      AMGCL_RELAX_LOCAL(chebyshev);
-      AMGCL_RELAX_LOCAL(gauss_seidel);
+      ARCANE_ALINA_RELAX_DISTR(spai0);
+      ARCANE_ALINA_RELAX_LOCAL(damped_jacobi);
+      ARCANE_ALINA_RELAX_LOCAL(ilu0);
+      ARCANE_ALINA_RELAX_LOCAL(iluk);
+      ARCANE_ALINA_RELAX_LOCAL(ilup);
+      ARCANE_ALINA_RELAX_LOCAL(ilut);
+      ARCANE_ALINA_RELAX_LOCAL(spai1);
+      ARCANE_ALINA_RELAX_LOCAL(chebyshev);
+      ARCANE_ALINA_RELAX_LOCAL(gauss_seidel);
 
-#undef AMGCL_RELAX_LOCAL
-#undef AMGCL_RELAX_DISTR
+#undef ARCANE_ALINA_RELAX_LOCAL
+#undef ARCANE_ALINA_RELAX_DISTR
 
     default:
       break;
@@ -133,34 +133,34 @@ struct wrapper
   {
     switch (r) {
 
-#define AMGCL_RELAX_DISTR(type) \
+#define ARCANE_ALINA_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
     static_cast<const ::Arcane::Alina::mpi::relaxation::type<Backend>*>(handle)->apply_pre(A, rhs, x, tmp); \
     break
 
-#define AMGCL_RELAX_LOCAL_DISTR(type) \
+#define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
   case runtime::relaxation::type: \
     call_apply_pre<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break;
 
-#define AMGCL_RELAX_LOCAL_LOCAL(type) \
+#define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
   case runtime::relaxation::type: \
     call_apply_pre<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x, tmp); \
     break;
 
-      AMGCL_RELAX_DISTR(spai0);
-      AMGCL_RELAX_LOCAL_DISTR(damped_jacobi);
-      AMGCL_RELAX_LOCAL_DISTR(ilu0);
-      AMGCL_RELAX_LOCAL_DISTR(iluk);
-      AMGCL_RELAX_LOCAL_DISTR(ilup);
-      AMGCL_RELAX_LOCAL_DISTR(ilut);
-      AMGCL_RELAX_LOCAL_DISTR(spai1);
-      AMGCL_RELAX_LOCAL_DISTR(chebyshev);
-      AMGCL_RELAX_LOCAL_LOCAL(gauss_seidel);
+      ARCANE_ALINA_RELAX_DISTR(spai0);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(damped_jacobi);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilu0);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(iluk);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilup);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilut);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(spai1);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(chebyshev);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(gauss_seidel);
 
-#undef AMGCL_RELAX_LOCAL_LOCAL
-#undef AMGCL_RELAX_LOCAL_DISTR
-#undef AMGCL_RELAX_DISTR
+#undef ARCANE_ALINA_RELAX_LOCAL_LOCAL
+#undef ARCANE_ALINA_RELAX_LOCAL_DISTR
+#undef ARCANE_ALINA_RELAX_DISTR
 
     default:
       throw std::invalid_argument("Unsupported relaxation type");
@@ -172,34 +172,34 @@ struct wrapper
   {
     switch (r) {
 
-#define AMGCL_RELAX_DISTR(type) \
+#define ARCANE_ALINA_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
     static_cast<const ::Arcane::Alina::mpi::relaxation::type<Backend>*>(handle)->apply_post(A, rhs, x, tmp); \
     break
 
-#define AMGCL_RELAX_LOCAL_DISTR(type) \
+#define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
   case runtime::relaxation::type: \
     call_apply_post<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break;
 
-#define AMGCL_RELAX_LOCAL_LOCAL(type) \
+#define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
   case runtime::relaxation::type: \
     call_apply_post<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x, tmp); \
     break;
 
-      AMGCL_RELAX_DISTR(spai0);
-      AMGCL_RELAX_LOCAL_DISTR(damped_jacobi);
-      AMGCL_RELAX_LOCAL_DISTR(ilu0);
-      AMGCL_RELAX_LOCAL_DISTR(iluk);
-      AMGCL_RELAX_LOCAL_DISTR(ilup);
-      AMGCL_RELAX_LOCAL_DISTR(ilut);
-      AMGCL_RELAX_LOCAL_DISTR(spai1);
-      AMGCL_RELAX_LOCAL_DISTR(chebyshev);
-      AMGCL_RELAX_LOCAL_LOCAL(gauss_seidel);
+      ARCANE_ALINA_RELAX_DISTR(spai0);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(damped_jacobi);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilu0);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(iluk);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilup);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilut);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(spai1);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(chebyshev);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(gauss_seidel);
 
-#undef AMGCL_RELAX_LOCAL_LOCAL
-#undef AMGCL_RELAX_LOCAL_DISTR
-#undef AMGCL_RELAX_DISTR
+#undef ARCANE_ALINA_RELAX_LOCAL_LOCAL
+#undef ARCANE_ALINA_RELAX_LOCAL_DISTR
+#undef ARCANE_ALINA_RELAX_DISTR
 
     default:
       throw std::invalid_argument("Unsupported relaxation type");
@@ -211,34 +211,34 @@ struct wrapper
   {
     switch (r) {
 
-#define AMGCL_RELAX_DISTR(type) \
+#define ARCANE_ALINA_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
     static_cast<const ::Arcane::Alina::mpi::relaxation::type<Backend>*>(handle)->apply(A, rhs, x); \
     break
 
-#define AMGCL_RELAX_LOCAL_DISTR(type) \
+#define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
   case runtime::relaxation::type: \
     call_apply<::Arcane::Alina::relaxation::type>(A, rhs, x); \
     break;
 
-#define AMGCL_RELAX_LOCAL_LOCAL(type) \
+#define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
   case runtime::relaxation::type: \
     call_apply<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x); \
     break;
 
-      AMGCL_RELAX_DISTR(spai0);
-      AMGCL_RELAX_LOCAL_DISTR(damped_jacobi);
-      AMGCL_RELAX_LOCAL_LOCAL(gauss_seidel);
-      AMGCL_RELAX_LOCAL_DISTR(ilu0);
-      AMGCL_RELAX_LOCAL_DISTR(iluk);
-      AMGCL_RELAX_LOCAL_DISTR(ilup);
-      AMGCL_RELAX_LOCAL_DISTR(ilut);
-      AMGCL_RELAX_LOCAL_DISTR(spai1);
-      AMGCL_RELAX_LOCAL_DISTR(chebyshev);
+      ARCANE_ALINA_RELAX_DISTR(spai0);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(damped_jacobi);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(gauss_seidel);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilu0);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(iluk);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilup);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilut);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(spai1);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(chebyshev);
 
-#undef AMGCL_RELAX_LOCAL_LOCAL
-#undef AMGCL_RELAX_LOCAL_DISTR
-#undef AMGCL_RELAX_DISTR
+#undef ARCANE_ALINA_RELAX_LOCAL_LOCAL
+#undef ARCANE_ALINA_RELAX_LOCAL_DISTR
+#undef ARCANE_ALINA_RELAX_DISTR
 
     default:
       throw std::invalid_argument("Unsupported relaxation type");

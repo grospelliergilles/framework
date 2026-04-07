@@ -293,22 +293,22 @@ class chebyshev
     {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_VALUE(p, degree)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, higher)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, lower)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, power_iters)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, scale)
+    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, degree)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, higher)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, lower)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, scale)
     {
       check_params(p, { "degree", "higher", "lower", "power_iters", "scale" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, degree);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, higher);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, lower);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, power_iters);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, scale);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, degree);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, higher);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, lower);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, power_iters);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, scale);
     }
   } prm;
 
@@ -434,14 +434,14 @@ struct damped_jacobi
     {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_VALUE(p, damping)
+    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
     {
       check_params(p, { "damping" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, damping);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
     }
   } prm;
 
@@ -529,14 +529,14 @@ struct gauss_seidel
     {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_VALUE(p, serial)
+    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, serial)
     {
       check_params(p, { "serial" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, serial);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, serial);
     }
   };
 
@@ -888,16 +888,16 @@ struct ilu0
     {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_VALUE(p, damping)
-    , AMGCL_PARAMS_IMPORT_CHILD(p, solve)
+    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
+    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solve)
     {
       check_params(p, { "damping", "solve" }, { "k" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, damping);
-      AMGCL_PARAMS_EXPORT_CHILD(p, path, solve);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solve);
     }
   } prm;
 
@@ -1101,18 +1101,18 @@ struct iluk
     {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_VALUE(p, k)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, damping)
-    , AMGCL_PARAMS_IMPORT_CHILD(p, solve)
+    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, k)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
+    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solve)
     {
       check_params(p, { "k", "damping", "solve" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, k);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, damping);
-      AMGCL_PARAMS_EXPORT_CHILD(p, path, solve);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, k);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solve);
     }
   } prm;
 
@@ -1436,7 +1436,7 @@ struct ilup
 
     params(const PropertyTree& p)
     : BasePrm(p)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, k)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, k)
     {
       check_params(p, { "k", "damping", "solve" });
     }
@@ -1444,7 +1444,7 @@ struct ilup
     void get(PropertyTree& p, const std::string& path) const
     {
       BasePrm::get(p, path);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, k);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, k);
     }
   } prm;
 
@@ -1563,20 +1563,20 @@ struct ilut
     {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_VALUE(p, p)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, tau)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, damping)
-    , AMGCL_PARAMS_IMPORT_CHILD(p, solve)
+    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, p)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tau)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
+    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solve)
     {
       check_params(p, { "p", "tau", "damping", "solve" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, p);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, tau);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, damping);
-      AMGCL_PARAMS_EXPORT_CHILD(p, path, solve);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, p);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tau);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solve);
     }
   } prm;
 

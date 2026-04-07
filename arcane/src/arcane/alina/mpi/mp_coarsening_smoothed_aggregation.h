@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_COARSENING_SMOOTHED_AGGREGATION_HPP
-#define AMGCL_MPI_COARSENING_SMOOTHED_AGGREGATION_HPP
+#ifndef ARCANE_ALINA_MPI_COARSENING_SMOOTHED_AGGREGATION_HPP
+#define ARCANE_ALINA_MPI_COARSENING_SMOOTHED_AGGREGATION_HPP
 
 /*
 The MIT License
@@ -73,19 +73,19 @@ struct smoothed_aggregation {
         { }
 
         params(const PropertyTree &p)
-            : AMGCL_PARAMS_IMPORT_CHILD(p, aggr),
-              AMGCL_PARAMS_IMPORT_VALUE(p, relax),
-              AMGCL_PARAMS_IMPORT_VALUE(p, estimate_spectral_radius),
-              AMGCL_PARAMS_IMPORT_VALUE(p, power_iters)
+            : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr),
+              ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, relax),
+              ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, estimate_spectral_radius),
+              ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
         {
             check_params(p, {"aggr", "relax", "estimate_spectral_radius", "power_iters"});
         }
 
         void get(PropertyTree &p, const std::string &path) const {
-            AMGCL_PARAMS_EXPORT_CHILD(p, path, aggr);
-            AMGCL_PARAMS_EXPORT_VALUE(p, path, relax);
-            AMGCL_PARAMS_EXPORT_VALUE(p, path, estimate_spectral_radius);
-            AMGCL_PARAMS_EXPORT_VALUE(p, path, power_iters);
+            ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
+            ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, relax);
+            ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, estimate_spectral_radius);
+            ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, power_iters);
         }
     } prm;
 
@@ -109,7 +109,7 @@ struct smoothed_aggregation {
         bool_matrix &S_loc = *aggr.conn->local();
         bool_matrix &S_rem = *aggr.conn->remote();
 
-        AMGCL_TIC("filtered matrix");
+        ARCANE_ALINA_TIC("filtered matrix");
         ptrdiff_t n = A.loc_rows();
 
         scalar_type omega = prm.relax;
@@ -177,12 +177,12 @@ struct smoothed_aggregation {
         }
 
         auto Af = std::make_shared<DM>(comm, af_loc, af_rem);
-        AMGCL_TOC("filtered matrix");
+        ARCANE_ALINA_TOC("filtered matrix");
 
         // 5. Smooth tentative prolongation with the filtered matrix.
-        AMGCL_TIC("smoothing");
+        ARCANE_ALINA_TIC("smoothing");
         auto P = product(*Af, *aggr.p_tent);
-        AMGCL_TOC("smoothing");
+        ARCANE_ALINA_TOC("smoothing");
 
         return std::make_tuple(P, transpose(*P));
     }

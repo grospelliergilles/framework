@@ -1,5 +1,5 @@
-#ifndef AMGCL_BACKEND_BLOCK_CRS_HPP
-#define AMGCL_BACKEND_BLOCK_CRS_HPP
+#ifndef ARCANE_ALINA_BACKEND_BLOCK_CRS_HPP
+#define ARCANE_ALINA_BACKEND_BLOCK_CRS_HPP
 
 /*
 The MIT License
@@ -163,12 +163,12 @@ struct block_crs {
         params(size_t block_size = 4) : block_size(block_size) {}
 
         params(const PropertyTree &p)
-            : AMGCL_PARAMS_IMPORT_VALUE(p, block_size)
+            : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
         {
             check_params(p, {"block_size"});
         }
         void get(PropertyTree &p, const std::string &path) const {
-            AMGCL_PARAMS_EXPORT_VALUE(p, path, block_size);
+            ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, block_size);
         }
     };
 

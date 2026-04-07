@@ -1,5 +1,5 @@
-#ifndef AMGCL_PRECONDITIONER_CPR_HPP
-#define AMGCL_PRECONDITIONER_CPR_HPP
+#ifndef ARCANE_ALINA_PRECONDITIONER_CPR_HPP
+#define ARCANE_ALINA_PRECONDITIONER_CPR_HPP
 
 /*
 The MIT License
@@ -89,20 +89,20 @@ class cpr {
                   active_rows(0) {}
 
             params(const PropertyTree &p)
-                : AMGCL_PARAMS_IMPORT_CHILD(p, pprecond),
-                  AMGCL_PARAMS_IMPORT_CHILD(p, sprecond),
-                  AMGCL_PARAMS_IMPORT_VALUE(p, block_size),
-                  AMGCL_PARAMS_IMPORT_VALUE(p, active_rows)
+                : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, pprecond),
+                  ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, sprecond),
+                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size),
+                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, active_rows)
             {
                 check_params(p, {"pprecond", "sprecond", "block_size", "active_rows"});
             }
 
             void get(PropertyTree &p, const std::string &path = "") const
             {
-                AMGCL_PARAMS_EXPORT_CHILD(p, path, pprecond);
-                AMGCL_PARAMS_EXPORT_CHILD(p, path, sprecond);
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, block_size);
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, active_rows);
+                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, pprecond);
+                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, sprecond);
+                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, block_size);
+                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, active_rows);
             }
         } prm;
 
@@ -132,15 +132,15 @@ class cpr {
             const auto one = math::identity<scalar_type>();
             const auto zero = math::zero<scalar_type>();
 
-            AMGCL_TIC("sprecond");
+            ARCANE_ALINA_TIC("sprecond");
             S->apply(rhs, x);
-            AMGCL_TOC("sprecond");
+            ARCANE_ALINA_TOC("sprecond");
             backend::residual(rhs, S->system_matrix(), x, *rs);
 
             backend::spmv(one, *Fpp, *rs, zero, *rp);
-            AMGCL_TIC("pprecond");
+            ARCANE_ALINA_TIC("pprecond");
             P->apply(*rp, *xp);
-            AMGCL_TOC("pprecond");
+            ARCANE_ALINA_TOC("pprecond");
 
             backend::spmv(one, *Scatter, *xp, one, x);
         }
@@ -375,12 +375,12 @@ class cpr {
             for(size_t i = N; i < n; ++i)
                 scatter->ptr[i+1] = scatter->ptr[i];
 
-            AMGCL_TIC("pprecond");
+            ARCANE_ALINA_TIC("pprecond");
             P = std::make_shared<PPrecond>(App, prm.pprecond, bprm);
-            AMGCL_TOC("pprecond");
-            AMGCL_TIC("sprecond");
+            ARCANE_ALINA_TOC("pprecond");
+            ARCANE_ALINA_TIC("sprecond");
             S = std::make_shared<SPrecond>(K,   prm.sprecond, bprm);
-            AMGCL_TOC("sprecond");
+            ARCANE_ALINA_TOC("sprecond");
 
             Fpp     = backend_type_p::copy_matrix(fpp, bprm);
             Scatter = backend_type_p::copy_matrix(scatter, bprm);
@@ -455,12 +455,12 @@ class cpr {
                 }
             }
 
-            AMGCL_TIC("pprecond");
+            ARCANE_ALINA_TIC("pprecond");
             P = std::make_shared<PPrecond>(App, prm.pprecond, bprm);
-            AMGCL_TOC("pprecond");
-            AMGCL_TIC("sprecond");
+            ARCANE_ALINA_TOC("pprecond");
+            ARCANE_ALINA_TIC("sprecond");
             S = std::make_shared<SPrecond>(K,   prm.sprecond, bprm);
-            AMGCL_TOC("sprecond");
+            ARCANE_ALINA_TOC("sprecond");
 
 
             Fpp     = backend_type_p::copy_matrix(fpp, bprm);

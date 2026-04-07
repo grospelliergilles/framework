@@ -1,15 +1,15 @@
 ﻿
-set(AMGCL_BLOCK_SIZES "3;4" CACHE STRING "Block sizes for block solvers in examples")
-set(AMGCL_BLOCK_SIZES_SEQ "")
-foreach(B ${AMGCL_BLOCK_SIZES})
-  set(AMGCL_BLOCK_SIZES_SEQ "${AMGCL_BLOCK_SIZES_SEQ}(${B})")
+set(ARCANE_ALINA_BLOCK_SIZES "3;4" CACHE STRING "Block sizes for block solvers in examples")
+set(ARCANE_ALINA_BLOCK_SIZES_SEQ "")
+foreach(B ${ARCANE_ALINA_BLOCK_SIZES})
+  set(ARCANE_ALINA_BLOCK_SIZES_SEQ "${ARCANE_ALINA_BLOCK_SIZES_SEQ}(${B})")
 endforeach()
 
 function(add_arcane_alina_example_no_test EXAMPLE SOURCES)
   add_executable(${EXAMPLE} ${SOURCES})
   target_link_libraries(${EXAMPLE} PUBLIC arcane_alina Boost::program_options)
   target_include_directories(${EXAMPLE} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../tests")
-  target_compile_definitions(${EXAMPLE} PUBLIC "AMGCL_BLOCK_SIZES=${AMGCL_BLOCK_SIZES_SEQ}")
+  target_compile_definitions(${EXAMPLE} PUBLIC "ARCANE_ALINA_BLOCK_SIZES=${ARCANE_ALINA_BLOCK_SIZES_SEQ}")
 endfunction()
 
 # NOTE:

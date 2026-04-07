@@ -62,18 +62,18 @@ struct parmetis
     {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_VALUE(p, shrink)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, min_per_proc)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, shrink_ratio)
+    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, shrink)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, min_per_proc)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, shrink_ratio)
     {
       check_params(p, { "shrink", "min_per_proc", "shrink_ratio" });
     }
 
     void get(PropertyTree& p, const std::string& path = "") const
     {
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, shrink);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, min_per_proc);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, shrink_ratio);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, shrink);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, min_per_proc);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, shrink_ratio);
     }
 
   } prm;

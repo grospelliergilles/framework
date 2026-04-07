@@ -1,5 +1,5 @@
-#ifndef AMGCL_BACKEND_CUDA_HPP
-#define AMGCL_BACKEND_CUDA_HPP
+#ifndef ARCANE_ALINA_BACKEND_CUDA_HPP
+#define ARCANE_ALINA_BACKEND_CUDA_HPP
 
 /*
 The MIT License
@@ -102,41 +102,41 @@ inline void cuda_check(cudaError_t rc, const char *file, int line) {
     }
 }
 
-#define AMGCL_CALL_CUDA(rc)                                                    \
+#define ARCANE_ALINA_CALL_CUDA(rc)                                                    \
     Arcane::Alina::backend::detail::cuda_check(rc, __FILE__, __LINE__)
 
 struct cuda_deleter {
     void operator()(cusparseMatDescr_t handle) {
-        AMGCL_CALL_CUDA( cusparseDestroyMatDescr(handle) );
+        ARCANE_ALINA_CALL_CUDA( cusparseDestroyMatDescr(handle) );
     }
 
     void operator()(cusparseSpMatDescr_t handle) {
-        AMGCL_CALL_CUDA( cusparseDestroySpMat(handle) );
+        ARCANE_ALINA_CALL_CUDA( cusparseDestroySpMat(handle) );
     }
 
     void operator()(cusparseDnVecDescr_t handle) {
-        AMGCL_CALL_CUDA( cusparseDestroyDnVec(handle) );
+        ARCANE_ALINA_CALL_CUDA( cusparseDestroyDnVec(handle) );
     }
 
     void operator()(cudaEvent_t handle) {
-        AMGCL_CALL_CUDA( cudaEventDestroy(handle) );
+        ARCANE_ALINA_CALL_CUDA( cudaEventDestroy(handle) );
     }
 
     void operator()(csrilu02Info_t handle) {
-        AMGCL_CALL_CUDA( cusparseDestroyCsrilu02Info(handle) );
+        ARCANE_ALINA_CALL_CUDA( cusparseDestroyCsrilu02Info(handle) );
     }
 
 #if CUDART_VERSION >= 11000
     void operator()(cusparseSpSVDescr_t handle) {
-        AMGCL_CALL_CUDA( cusparseSpSV_destroyDescr(handle) );
+        ARCANE_ALINA_CALL_CUDA( cusparseSpSV_destroyDescr(handle) );
     }
 #else
     void operator()(cusparseHybMat_t handle) {
-        AMGCL_CALL_CUDA( cusparseDestroyHybMat(handle) );
+        ARCANE_ALINA_CALL_CUDA( cusparseDestroyHybMat(handle) );
     }
 
     void operator()(csrsv2Info_t handle) {
-        AMGCL_CALL_CUDA( cusparseDestroyCsrsv2Info(handle) );
+        ARCANE_ALINA_CALL_CUDA( cusparseDestroyCsrsv2Info(handle) );
     }
 #endif
 };
@@ -154,7 +154,7 @@ cudaDataType cuda_datatype() {
 template <typename real>
 cusparseDnVecDescr_t cuda_vector_description(thrust::device_vector<real> &x) {
     cusparseDnVecDescr_t desc;
-    AMGCL_CALL_CUDA(
+    ARCANE_ALINA_CALL_CUDA(
             cusparseCreateDnVec(
                 &desc,
                 x.size(),
@@ -168,7 +168,7 @@ cusparseDnVecDescr_t cuda_vector_description(thrust::device_vector<real> &x) {
 template <typename real>
 cusparseDnVecDescr_t cuda_vector_description(const thrust::device_vector<real> &&x) {
     cusparseDnVecDescr_t desc;
-    AMGCL_CALL_CUDA(
+    ARCANE_ALINA_CALL_CUDA(
             cusparseCreateDnVec(
                 &desc,
                 x.size(),
@@ -190,7 +190,7 @@ cusparseSpMatDescr_t cuda_matrix_description(
         )
 {
     cusparseSpMatDescr_t desc;
-    AMGCL_CALL_CUDA(
+    ARCANE_ALINA_CALL_CUDA(
             cusparseCreateCsr(
                 &desc,
                 nrows,
@@ -249,7 +249,7 @@ class cuda_matrix {
                     );
 
             size_t buf_size;
-            AMGCL_CALL_CUDA(
+            ARCANE_ALINA_CALL_CUDA(
                     cusparseSpMV_bufferSize(
                         handle,
                         CUSPARSE_OPERATION_NON_TRANSPOSE,
@@ -267,7 +267,7 @@ class cuda_matrix {
             if (buf.size() < buf_size)
                 buf.resize(buf_size);
 
-            AMGCL_CALL_CUDA(
+            ARCANE_ALINA_CALL_CUDA(
                     cusparseSpMV(
                         handle,
                         CUSPARSE_OPERATION_NON_TRANSPOSE,
@@ -343,7 +343,7 @@ class cuda_matrix {
                 std::false_type
             ) const
         {
-            AMGCL_CALL_CUDA(
+            ARCANE_ALINA_CALL_CUDA(
                     cusparseShybmv(handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
                         &alpha, desc.get(), mat.get(),
                         thrust::raw_pointer_cast(&x[0]), &beta,
@@ -358,7 +358,7 @@ class cuda_matrix {
                 std::true_type
             ) const
         {
-            AMGCL_CALL_CUDA(
+            ARCANE_ALINA_CALL_CUDA(
                     cusparseDhybmv(handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
                         &alpha, desc.get(), mat.get(),
                         thrust::raw_pointer_cast(&x[0]), &beta,
@@ -386,15 +386,15 @@ class cuda_matrix {
 
         static cusparseMatDescr_t create_description() {
             cusparseMatDescr_t desc;
-            AMGCL_CALL_CUDA( cusparseCreateMatDescr(&desc) );
-            AMGCL_CALL_CUDA( cusparseSetMatType(desc, CUSPARSE_MATRIX_TYPE_GENERAL) );
-            AMGCL_CALL_CUDA( cusparseSetMatIndexBase(desc, CUSPARSE_INDEX_BASE_ZERO) );
+            ARCANE_ALINA_CALL_CUDA( cusparseCreateMatDescr(&desc) );
+            ARCANE_ALINA_CALL_CUDA( cusparseSetMatType(desc, CUSPARSE_MATRIX_TYPE_GENERAL) );
+            ARCANE_ALINA_CALL_CUDA( cusparseSetMatIndexBase(desc, CUSPARSE_INDEX_BASE_ZERO) );
             return desc;
         }
 
         static cusparseHybMat_t create_matrix() {
             cusparseHybMat_t mat;
-            AMGCL_CALL_CUDA( cusparseCreateHybMat(&mat) );
+            ARCANE_ALINA_CALL_CUDA( cusparseCreateHybMat(&mat) );
             return mat;
         }
 
@@ -406,7 +406,7 @@ class cuda_matrix {
             thrust::device_vector<int>   c(col, col + ptr[n]);
             thrust::device_vector<float> v(val, val + ptr[n]);
 
-            AMGCL_CALL_CUDA(
+            ARCANE_ALINA_CALL_CUDA(
                     cusparseScsr2hyb(handle, n, m, desc.get(),
                         thrust::raw_pointer_cast(&v[0]),
                         thrust::raw_pointer_cast(&p[0]),
@@ -424,7 +424,7 @@ class cuda_matrix {
             thrust::device_vector<int>    c(col, col + ptr[n]);
             thrust::device_vector<double> v(val, val + ptr[n]);
 
-            AMGCL_CALL_CUDA(
+            ARCANE_ALINA_CALL_CUDA(
                     cusparseDcsr2hyb(handle, n, m, desc.get(),
                         thrust::raw_pointer_cast(&v[0]),
                         thrust::raw_pointer_cast(&p[0]),
@@ -469,13 +469,13 @@ struct cuda {
         params(cusparseHandle_t handle = 0) : cusparse_handle(handle) {}
 
         params(const PropertyTree &p)
-            : AMGCL_PARAMS_IMPORT_VALUE(p, cusparse_handle)
+            : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, cusparse_handle)
         {
             check_params(p, {"cusparse_handle"});
         }
 
         void get(PropertyTree &p, const std::string &path) const {
-            AMGCL_PARAMS_EXPORT_VALUE(p, path, cusparse_handle);
+            ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, cusparse_handle);
         }
     };
 

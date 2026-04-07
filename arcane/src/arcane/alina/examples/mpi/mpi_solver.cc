@@ -26,8 +26,8 @@
 #include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
-#ifndef AMGCL_BLOCK_SIZES
-#  define AMGCL_BLOCK_SIZES (3)(4)
+#ifndef ARCANE_ALINA_BLOCK_SIZES
+#  define ARCANE_ALINA_BLOCK_SIZES (3)(4)
 #endif
 
 using namespace Arcane;
@@ -484,9 +484,9 @@ int main(int argc, char *argv[]) {
         (
          "partitioner,r",
          po::value<Alina::runtime::mpi::partition::type>()->default_value(
-#if defined(AMGCL_HAVE_SCOTCH)
+#if defined(ARCANE_ALINA_HAVE_SCOTCH)
              Alina::runtime::mpi::partition::ptscotch
-#elif defined(AMGCL_HAVE_PARMETIS)
+#elif defined(ARCANE_ALINA_HAVE_PARMETIS)
              Alina::runtime::mpi::partition::parmetis
 #else
              Alina::runtime::mpi::partition::merge
@@ -616,14 +616,14 @@ int main(int argc, char *argv[]) {
     switch(block_size) {
 
 #if defined(SOLVER_BACKEND_BUILTIN)
-#  define AMGCL_CALL_BLOCK_SOLVER(z, data, B)                        \
+#  define ARCANE_ALINA_CALL_BLOCK_SOLVER(z, data, B)                        \
         case B:                                                      \
             solve_block<B>(comm, n, ptr, col, val, prm, rhs, ptype); \
             break;
 
-        BOOST_PP_SEQ_FOR_EACH(AMGCL_CALL_BLOCK_SOLVER, ~, AMGCL_BLOCK_SIZES)
+        BOOST_PP_SEQ_FOR_EACH(ARCANE_ALINA_CALL_BLOCK_SOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
 
-#  undef AMGCL_CALL_BLOCK_SOLVER
+#  undef ARCANE_ALINA_CALL_BLOCK_SOLVER
 #endif
 
         case 1:

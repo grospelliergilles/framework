@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_INNER_PRODUCT_HPP
-#define AMGCL_MPI_INNER_PRODUCT_HPP
+#ifndef ARCANE_ALINA_MPI_INNER_PRODUCT_HPP
+#define ARCANE_ALINA_MPI_INNER_PRODUCT_HPP
 
 /*
 The MIT License
@@ -54,9 +54,9 @@ struct inner_product {
         typedef typename backend::value_type<Vec1>::type value_type;
         typedef typename math::inner_product_impl<value_type>::return_type coef_type;
 
-        AMGCL_TIC("inner product");
+        ARCANE_ALINA_TIC("inner product");
         coef_type sum = comm.reduce(MPI_SUM, backend::inner_product(x, y));
-        AMGCL_TOC("inner product");
+        ARCANE_ALINA_TOC("inner product");
 
         return sum;
     }

@@ -1,5 +1,5 @@
-#ifndef LIB_AMGCL_H
-#define LIB_AMGCL_H
+#ifndef LIB_ARCANE_ALINA_H
+#define LIB_ARCANE_ALINA_H
 
 /*
 The MIT License
@@ -56,26 +56,26 @@ extern "C" {
 typedef void* amgclHandle;
 
 // Create parameter list.
-amgclHandle ARCANE_ALINA_LIB_EXPORT STDCALL amgcl_params_create();
+amgclHandle ARCANE_ALINA_LIB_EXPORT STDCALL ARCANE_ALINA_params_create();
 
 // Set integer parameter in a parameter list.
-void ARCANE_ALINA_EXPORT STDCALL amgcl_params_seti(amgclHandle prm, const char* name, int value);
+void ARCANE_ALINA_EXPORT STDCALL ARCANE_ALINA_params_seti(amgclHandle prm, const char* name, int value);
 
 // Set floating point parameter in a parameter list.
-void ARCANE_ALINA_EXPORT STDCALL amgcl_params_setf(amgclHandle prm, const char* name, float value);
+void ARCANE_ALINA_EXPORT STDCALL ARCANE_ALINA_params_setf(amgclHandle prm, const char* name, float value);
 
 // Set floating point parameter in a parameter list.
-void ARCANE_ALINA_EXPORT STDCALL amgcl_params_sets(amgclHandle prm, const char* name, const char* value);
+void ARCANE_ALINA_EXPORT STDCALL ARCANE_ALINA_params_sets(amgclHandle prm, const char* name, const char* value);
 
 // Read parameters from a JSON file
-void ARCANE_ALINA_EXPORT STDCALL amgcl_params_read_json(amgclHandle prm, const char* fname);
+void ARCANE_ALINA_EXPORT STDCALL ARCANE_ALINA_params_read_json(amgclHandle prm, const char* fname);
 
 // Destroy parameter list.
-void ARCANE_ALINA_EXPORT STDCALL amgcl_params_destroy(amgclHandle prm);
+void ARCANE_ALINA_EXPORT STDCALL ARCANE_ALINA_params_destroy(amgclHandle prm);
 
 // Create AMG preconditioner.
 amgclHandle ARCANE_ALINA_EXPORT STDCALL
-amgcl_precond_create(int n,
+ARCANE_ALINA_precond_create(int n,
                      const int* ptr,
                      const int* col,
                      const double* val,
@@ -84,7 +84,7 @@ amgcl_precond_create(int n,
 // Create AMG preconditioner.
 // ptr and col arrays are 1-based (as in Fortran).
 amgclHandle ARCANE_ALINA_EXPORT STDCALL
-amgcl_precond_create_f(int n,
+ARCANE_ALINA_precond_create_f(int n,
                        const int* ptr,
                        const int* col,
                        const double* val,
@@ -92,19 +92,19 @@ amgcl_precond_create_f(int n,
 
 // Apply AMG preconditioner (x = M^(-1) * rhs).
 void ARCANE_ALINA_EXPORT STDCALL
-amgcl_precond_apply(amgclHandle amg, const double* rhs, double* x);
+ARCANE_ALINA_precond_apply(amgclHandle amg, const double* rhs, double* x);
 
 // Printout preconditioner structure
 void ARCANE_ALINA_EXPORT STDCALL
-amgcl_precond_report(amgclHandle amg);
+ARCANE_ALINA_precond_report(amgclHandle amg);
 
 // Destroy AMG preconditioner
 void ARCANE_ALINA_EXPORT STDCALL
-amgcl_precond_destroy(amgclHandle amg);
+ARCANE_ALINA_precond_destroy(amgclHandle amg);
 
 // Create iterative solver preconditioned by AMG.
 amgclHandle ARCANE_ALINA_EXPORT STDCALL
-amgcl_solver_create(int n,
+ARCANE_ALINA_solver_create(int n,
                     const int* ptr,
                     const int* col,
                     const double* val,
@@ -113,7 +113,7 @@ amgcl_solver_create(int n,
 // Create iterative solver preconditioned by AMG.
 // ptr and col arrays are 1-based (as in Fortran).
 amgclHandle ARCANE_ALINA_EXPORT STDCALL
-amgcl_solver_create_f(int n,
+ARCANE_ALINA_solver_create_f(int n,
                       const int* ptr,
                       const int* col,
                       const double* val,
@@ -128,20 +128,20 @@ struct ARCANE_ALINA_LIB_EXPORT conv_info
 
 // Solve the problem for the given right-hand side.
 conv_info ARCANE_ALINA_EXPORT STDCALL
-amgcl_solver_solve(amgclHandle solver,
+ARCANE_ALINA_solver_solve(amgclHandle solver,
                    double const* rhs,
                    double* x);
 
 // Solve the problem for the given right-hand side.
 void ARCANE_ALINA_EXPORT STDCALL
-amgcl_solver_solve_f(amgclHandle solver,
+ARCANE_ALINA_solver_solve_f(amgclHandle solver,
                      double const* rhs,
                      double* x,
                      conv_info* cnv);
 
 // Solve the problem for the given matrix and the right-hand side.
 conv_info ARCANE_ALINA_EXPORT STDCALL
-amgcl_solver_solve_mtx(amgclHandle solver,
+ARCANE_ALINA_solver_solve_mtx(amgclHandle solver,
                        int const* A_ptr,
                        int const* A_col,
                        double const* A_val,
@@ -150,7 +150,7 @@ amgcl_solver_solve_mtx(amgclHandle solver,
 
 // Solve the problem for the given matrix and the right-hand side.
 void ARCANE_ALINA_EXPORT STDCALL
-amgcl_solver_solve_mtx_f(amgclHandle solver,
+ARCANE_ALINA_solver_solve_mtx_f(amgclHandle solver,
                          int const* A_ptr,
                          int const* A_col,
                          double const* A_val,
@@ -160,11 +160,11 @@ amgcl_solver_solve_mtx_f(amgclHandle solver,
 
 // Printout solver structure
 void ARCANE_ALINA_EXPORT STDCALL
-amgcl_solver_report(amgclHandle solver);
+ARCANE_ALINA_solver_report(amgclHandle solver);
 
 // Destroy iterative solver.
 void ARCANE_ALINA_EXPORT STDCALL
-amgcl_solver_destroy(amgclHandle solver);
+ARCANE_ALINA_solver_destroy(amgclHandle solver);
 
 #ifdef __cplusplus
 } // extern "C"

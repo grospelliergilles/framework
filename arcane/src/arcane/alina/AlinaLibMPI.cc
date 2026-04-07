@@ -50,7 +50,7 @@ struct deflation_vectors
 
 //---------------------------------------------------------------------------
 amgclHandle STDCALL
-amgcl_mpi_create(MPI_Comm comm,
+ARCANE_ALINA_mpi_create(MPI_Comm comm,
                  ptrdiff_t n,
                  const ptrdiff_t* ptr,
                  const ptrdiff_t* col,
@@ -78,7 +78,7 @@ amgcl_mpi_create(MPI_Comm comm,
 
 //---------------------------------------------------------------------------
 conv_info STDCALL
-amgcl_mpi_solve(amgclHandle handle,
+ARCANE_ALINA_mpi_solve(amgclHandle handle,
                 double const* rhs,
                 double* x)
 {
@@ -99,7 +99,7 @@ amgcl_mpi_solve(amgclHandle handle,
 
 //---------------------------------------------------------------------------
 void STDCALL
-amgcl_mpi_destroy(amgclHandle handle)
+ARCANE_ALINA_mpi_destroy(amgclHandle handle)
 {
   delete static_cast<Solver*>(handle);
 }

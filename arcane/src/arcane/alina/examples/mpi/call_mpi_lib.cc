@@ -109,18 +109,18 @@ int main(int argc, char *argv[]) {
     }
 
     // Setup
-    amgclHandle prm    = amgcl_params_create();
+    amgclHandle prm    = ARCANE_ALINA_params_create();
 
-    amgcl_params_sets(prm, "local.coarsening.type", "smoothed_aggregation");
-    amgcl_params_sets(prm, "local.relax.type", "spai0");
-    amgcl_params_sets(prm, "isolver.type", "bicgstabl");
-#ifdef AMGCL_HAVE_PASTIX
-    amgcl_params_sets(prm, "dsolver.type", "pastix");
+    ARCANE_ALINA_params_sets(prm, "local.coarsening.type", "smoothed_aggregation");
+    ARCANE_ALINA_params_sets(prm, "local.relax.type", "spai0");
+    ARCANE_ALINA_params_sets(prm, "isolver.type", "bicgstabl");
+#ifdef ARCANE_ALINA_HAVE_PASTIX
+    ARCANE_ALINA_params_sets(prm, "dsolver.type", "pastix");
 #else
-    amgcl_params_sets(prm, "dsolver.type", "skyline_lu");
+    ARCANE_ALINA_params_sets(prm, "dsolver.type", "skyline_lu");
 #endif
 
-    amgclHandle solver = amgcl_mpi_create(
+    amgclHandle solver = ARCANE_ALINA_mpi_create(
             MPI_COMM_WORLD,
             chunk, ptr.data(), col.data(), val.data(),
             1, constant_deflation, NULL, prm
@@ -128,14 +128,14 @@ int main(int argc, char *argv[]) {
 
     // Solve
     std::vector<double> x(chunk, 0);
-    conv_info cnv = amgcl_mpi_solve(solver, rhs.data(), x.data());
+    conv_info cnv = ARCANE_ALINA_mpi_solve(solver, rhs.data(), x.data());
 
     std::cout << "Iterations: " << cnv.iterations << std::endl
               << "Error:      " << cnv.residual   << std::endl;
 
     // Clean up
-    amgcl_mpi_destroy(solver);
-    amgcl_params_destroy(prm);
+    ARCANE_ALINA_mpi_destroy(solver);
+    ARCANE_ALINA_params_destroy(prm);
 
     if (n <= 4096) {
         if (rank == 0) {

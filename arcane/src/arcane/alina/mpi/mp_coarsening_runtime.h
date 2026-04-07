@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_COARSENING_RUNTIME_HPP
-#define AMGCL_MPI_COARSENING_RUNTIME_HPP
+#ifndef ARCANE_ALINA_MPI_COARSENING_RUNTIME_HPP
+#define ARCANE_ALINA_MPI_COARSENING_RUNTIME_HPP
 
 /*
 The MIT License
@@ -88,7 +88,7 @@ struct wrapper
   , handle(0)
   {
     if (!prm.erase("type"))
-      AMGCL_PARAM_MISSING("type");
+      ARCANE_ALINA_PARAM_MISSING("type");
 
     switch (c) {
     case aggregation: {

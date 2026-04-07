@@ -1,5 +1,5 @@
-#ifndef AMGCL_BACKEND_BUILTIN_HPP
-#define AMGCL_BACKEND_BUILTIN_HPP
+#ifndef ARCANE_ALINA_BACKEND_BUILTIN_HPP
+#define ARCANE_ALINA_BACKEND_BUILTIN_HPP
 
 /*
 The MIT License
@@ -262,7 +262,7 @@ pointwise_matrix(const CSRMatrix<value_type, col_type, ptr_type>& A, unsigned bl
   typedef value_type V;
   typedef typename math::scalar_of<V>::type S;
 
-  AMGCL_TIC("pointwise_matrix");
+  ARCANE_ALINA_TIC("pointwise_matrix");
   const ptrdiff_t n = A.nrows;
   const ptrdiff_t m = A.ncols;
   const ptrdiff_t np = n / block_size;
@@ -418,7 +418,7 @@ pointwise_matrix(const CSRMatrix<value_type, col_type, ptr_type>& A, unsigned bl
     }
   }
 
-  AMGCL_TOC("pointwise_matrix");
+  ARCANE_ALINA_TOC("pointwise_matrix");
   return ap;
 }
 
@@ -571,7 +571,7 @@ template <bool scale, class Matrix>
 static typename math::scalar_of<typename backend::value_type<Matrix>::type>::type
 spectral_radius(const Matrix& A, int power_iters = 0)
 {
-  AMGCL_TIC("spectral radius");
+  ARCANE_ALINA_TIC("spectral radius");
   typedef typename backend::value_type<Matrix>::type value_type;
   typedef typename math::rhs_of<value_type>::type rhs_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
@@ -700,7 +700,7 @@ spectral_radius(const Matrix& A, int power_iters = 0)
       }
     }
   }
-  AMGCL_TOC("spectral radius");
+  ARCANE_ALINA_TOC("spectral radius");
 
   return radius < 0 ? static_cast<scalar_type>(2) : radius;
 }
@@ -965,13 +965,13 @@ struct inner_product_impl<Vec1, Vec2,
   }
 
 #ifdef _OPENMP
-#ifndef AMGCL_MAX_OPENMP_THREADS
-#define AMGCL_MAX_OPENMP_THREADS 64
+#ifndef ARCANE_ALINA_MAX_OPENMP_THREADS
+#define ARCANE_ALINA_MAX_OPENMP_THREADS 64
 #endif
   static return_type parallel(const Vec1& x, const Vec2& y)
   {
     const size_t n = x.size();
-    return_type _sum_stat[AMGCL_MAX_OPENMP_THREADS];
+    return_type _sum_stat[ARCANE_ALINA_MAX_OPENMP_THREADS];
     std::vector<return_type> _sum_dyna;
     return_type* sum;
 

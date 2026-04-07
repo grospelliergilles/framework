@@ -157,10 +157,10 @@ int main(int argc, char *argv[]) {
     // Partition the matrix and the RHS vector.
     // If neither ParMETIS not PT-SCOTCH are not available,
     // just keep the current naive partitioning.
-#if defined(AMGCL_HAVE_PARMETIS) || defined(AMGCL_HAVE_SCOTCH)
-#  if defined(AMGCL_HAVE_PARMETIS)
+#if defined(ARCANE_ALINA_HAVE_PARMETIS) || defined(ARCANE_ALINA_HAVE_SCOTCH)
+#  if defined(ARCANE_ALINA_HAVE_PARMETIS)
     typedef Alina::mpi::partition::parmetis<DBackend> Partition;
-#  elif defined(AMGCL_HAVE_SCOTCH)
+#  elif defined(ARCANE_ALINA_HAVE_SCOTCH)
     typedef Alina::mpi::partition::ptscotch<DBackend> Partition;
 #  endif
 

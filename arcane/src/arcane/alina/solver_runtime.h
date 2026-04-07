@@ -1,5 +1,5 @@
-#ifndef AMGCL_SOLVER_RUNTIME_HPP
-#define AMGCL_SOLVER_RUNTIME_HPP
+#ifndef ARCANE_ALINA_SOLVER_RUNTIME_HPP
+#define ARCANE_ALINA_SOLVER_RUNTIME_HPP
 
 /*
 The MIT License
@@ -140,26 +140,26 @@ struct wrapper
   , handle(0)
   {
     if (!prm.erase("type"))
-      AMGCL_PARAM_MISSING("type");
+      ARCANE_ALINA_PARAM_MISSING("type");
     std::cout << "Solver=" << s << "\n";
     switch (s) {
 
-#define AMGCL_RUNTIME_SOLVER(type) \
+#define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case type: \
     handle = static_cast<void*>(new Alina::solver::type<Backend, InnerProduct>(n, prm, bprm, inner_product)); \
     break
 
-      AMGCL_RUNTIME_SOLVER(cg);
-      AMGCL_RUNTIME_SOLVER(bicgstab);
-      AMGCL_RUNTIME_SOLVER(bicgstabl);
-      AMGCL_RUNTIME_SOLVER(gmres);
-      AMGCL_RUNTIME_SOLVER(lgmres);
-      AMGCL_RUNTIME_SOLVER(fgmres);
-      AMGCL_RUNTIME_SOLVER(idrs);
-      AMGCL_RUNTIME_SOLVER(richardson);
-      AMGCL_RUNTIME_SOLVER(preonly);
+      ARCANE_ALINA_RUNTIME_SOLVER(cg);
+      ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
+      ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
+      ARCANE_ALINA_RUNTIME_SOLVER(gmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(idrs);
+      ARCANE_ALINA_RUNTIME_SOLVER(richardson);
+      ARCANE_ALINA_RUNTIME_SOLVER(preonly);
 
-#undef AMGCL_RUNTIME_SOLVER
+#undef ARCANE_ALINA_RUNTIME_SOLVER
 
     default:
       throw std::invalid_argument("Unsupported solver type");
@@ -170,22 +170,22 @@ struct wrapper
   {
     switch (s) {
 
-#define AMGCL_RUNTIME_SOLVER(type) \
+#define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case type: \
     delete static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle); \
     break
 
-      AMGCL_RUNTIME_SOLVER(cg);
-      AMGCL_RUNTIME_SOLVER(bicgstab);
-      AMGCL_RUNTIME_SOLVER(bicgstabl);
-      AMGCL_RUNTIME_SOLVER(gmres);
-      AMGCL_RUNTIME_SOLVER(lgmres);
-      AMGCL_RUNTIME_SOLVER(fgmres);
-      AMGCL_RUNTIME_SOLVER(idrs);
-      AMGCL_RUNTIME_SOLVER(richardson);
-      AMGCL_RUNTIME_SOLVER(preonly);
+      ARCANE_ALINA_RUNTIME_SOLVER(cg);
+      ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
+      ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
+      ARCANE_ALINA_RUNTIME_SOLVER(gmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(idrs);
+      ARCANE_ALINA_RUNTIME_SOLVER(richardson);
+      ARCANE_ALINA_RUNTIME_SOLVER(preonly);
 
-#undef AMGCL_RUNTIME_SOLVER
+#undef ARCANE_ALINA_RUNTIME_SOLVER
     }
   }
 
@@ -195,21 +195,21 @@ struct wrapper
   {
     switch (s) {
 
-#define AMGCL_RUNTIME_SOLVER(type) \
+#define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case type: \
     return static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle)->operator()(A, P, rhs, x)
 
-      AMGCL_RUNTIME_SOLVER(cg);
-      AMGCL_RUNTIME_SOLVER(bicgstab);
-      AMGCL_RUNTIME_SOLVER(bicgstabl);
-      AMGCL_RUNTIME_SOLVER(gmres);
-      AMGCL_RUNTIME_SOLVER(lgmres);
-      AMGCL_RUNTIME_SOLVER(fgmres);
-      AMGCL_RUNTIME_SOLVER(idrs);
-      AMGCL_RUNTIME_SOLVER(richardson);
-      AMGCL_RUNTIME_SOLVER(preonly);
+      ARCANE_ALINA_RUNTIME_SOLVER(cg);
+      ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
+      ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
+      ARCANE_ALINA_RUNTIME_SOLVER(gmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(idrs);
+      ARCANE_ALINA_RUNTIME_SOLVER(richardson);
+      ARCANE_ALINA_RUNTIME_SOLVER(preonly);
 
-#undef AMGCL_RUNTIME_SOLVER
+#undef ARCANE_ALINA_RUNTIME_SOLVER
 
     default:
       throw std::invalid_argument("Unsupported solver type");
@@ -227,21 +227,21 @@ struct wrapper
   {
     switch (w.s) {
 
-#define AMGCL_RUNTIME_SOLVER(type) \
+#define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case type: \
     return os << *static_cast<Alina::solver::type<Backend, InnerProduct>*>(w.handle)
 
-      AMGCL_RUNTIME_SOLVER(cg);
-      AMGCL_RUNTIME_SOLVER(bicgstab);
-      AMGCL_RUNTIME_SOLVER(bicgstabl);
-      AMGCL_RUNTIME_SOLVER(gmres);
-      AMGCL_RUNTIME_SOLVER(lgmres);
-      AMGCL_RUNTIME_SOLVER(fgmres);
-      AMGCL_RUNTIME_SOLVER(idrs);
-      AMGCL_RUNTIME_SOLVER(richardson);
-      AMGCL_RUNTIME_SOLVER(preonly);
+      ARCANE_ALINA_RUNTIME_SOLVER(cg);
+      ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
+      ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
+      ARCANE_ALINA_RUNTIME_SOLVER(gmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(idrs);
+      ARCANE_ALINA_RUNTIME_SOLVER(richardson);
+      ARCANE_ALINA_RUNTIME_SOLVER(preonly);
 
-#undef AMGCL_RUNTIME_SOLVER
+#undef ARCANE_ALINA_RUNTIME_SOLVER
 
     default:
       throw std::invalid_argument("Unsupported solver type");
@@ -252,21 +252,21 @@ struct wrapper
   {
     switch (s) {
 
-#define AMGCL_RUNTIME_SOLVER(type) \
+#define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case type: \
     return backend::bytes(*static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle))
 
-      AMGCL_RUNTIME_SOLVER(cg);
-      AMGCL_RUNTIME_SOLVER(bicgstab);
-      AMGCL_RUNTIME_SOLVER(bicgstabl);
-      AMGCL_RUNTIME_SOLVER(gmres);
-      AMGCL_RUNTIME_SOLVER(lgmres);
-      AMGCL_RUNTIME_SOLVER(fgmres);
-      AMGCL_RUNTIME_SOLVER(idrs);
-      AMGCL_RUNTIME_SOLVER(richardson);
-      AMGCL_RUNTIME_SOLVER(preonly);
+      ARCANE_ALINA_RUNTIME_SOLVER(cg);
+      ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
+      ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
+      ARCANE_ALINA_RUNTIME_SOLVER(gmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(idrs);
+      ARCANE_ALINA_RUNTIME_SOLVER(richardson);
+      ARCANE_ALINA_RUNTIME_SOLVER(preonly);
 
-#undef AMGCL_RUNTIME_SOLVER
+#undef ARCANE_ALINA_RUNTIME_SOLVER
 
     default:
       throw std::invalid_argument("Unsupported solver type");

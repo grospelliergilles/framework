@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_MAKE_SOLVER_HPP
-#define AMGCL_MPI_MAKE_SOLVER_HPP
+#ifndef ARCANE_ALINA_MPI_MAKE_SOLVER_HPP
+#define ARCANE_ALINA_MPI_MAKE_SOLVER_HPP
 
 /*
 The MIT License
@@ -70,16 +70,16 @@ class make_solver : public Alina::detail::non_copyable {
             params() {}
 
             params(const PropertyTree &p)
-                : AMGCL_PARAMS_IMPORT_CHILD(p, precond),
-                  AMGCL_PARAMS_IMPORT_CHILD(p, solver)
+                : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, precond),
+                  ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solver)
             {
                 check_params(p, {"precond", "solver"});
             }
 
             void get(PropertyTree &p, const std::string &path = "") const
             {
-                AMGCL_PARAMS_EXPORT_CHILD(p, path, precond);
-                AMGCL_PARAMS_EXPORT_CHILD(p, path, solver);
+                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, precond);
+                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solver);
             }
         } prm;
 

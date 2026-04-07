@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_PRECONDITIONER_HPP
-#define AMGCL_MPI_PRECONDITIONER_HPP
+#ifndef ARCANE_ALINA_MPI_PRECONDITIONER_HPP
+#define ARCANE_ALINA_MPI_PRECONDITIONER_HPP
 
 /*
 The MIT License
@@ -278,7 +278,7 @@ class preconditioner {
         void *handle;
 
         void init(std::shared_ptr<matrix> A, params &prm, const backend_params &bprm) {
-            if (!prm.erase("class")) AMGCL_PARAM_MISSING("class");
+            if (!prm.erase("class")) ARCANE_ALINA_PARAM_MISSING("class");
 
             switch(_class) {
                 case precond_class::amg:

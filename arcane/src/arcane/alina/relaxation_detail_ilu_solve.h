@@ -1,5 +1,5 @@
-#ifndef AMGCL_RELAXATION_DETAIL_ILU_SOLVE_HPP
-#define AMGCL_RELAXATION_DETAIL_ILU_SOLVE_HPP
+#ifndef ARCANE_ALINA_RELAXATION_DETAIL_ILU_SOLVE_HPP
+#define ARCANE_ALINA_RELAXATION_DETAIL_ILU_SOLVE_HPP
 
 /*
 The MIT License
@@ -64,15 +64,15 @@ class ilu_solve {
             params() : iters(2), damping(0.72) {}
 
             params(const PropertyTree &p)
-                : AMGCL_PARAMS_IMPORT_VALUE(p, iters)
-                , AMGCL_PARAMS_IMPORT_VALUE(p, damping)
+                : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, iters)
+                , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
             {
                 check_params(p, {"iters", "damping"});
             }
 
             void get(PropertyTree &p, const std::string &path) const {
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, iters);
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, damping);
+                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, iters);
+                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
             }
 
         } prm;
@@ -146,13 +146,13 @@ class ilu_solve< backend::builtin<value_type, col_type, ptr_type> > {
             params() : serial(num_threads() < 4) {}
 
             params(const PropertyTree &p)
-                : AMGCL_PARAMS_IMPORT_VALUE(p, serial)
+                : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, serial)
             {
                 check_params(p, {"serial"});
             }
 
             void get(PropertyTree &p, const std::string &path) const {
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, serial);
+                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, serial);
             }
         } prm;
 

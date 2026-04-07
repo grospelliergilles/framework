@@ -36,8 +36,8 @@ typedef Arcane::Alina::backend::builtin<double> Backend;
 
 #include "sample_problem.h"
 
-#ifndef AMGCL_BLOCK_SIZES
-#  define AMGCL_BLOCK_SIZES (3)(4)
+#ifndef ARCANE_ALINA_BLOCK_SIZES
+#  define ARCANE_ALINA_BLOCK_SIZES (3)(4)
 #endif
 
 using namespace Arcane;
@@ -313,7 +313,7 @@ std::tuple<size_t, double> scalar_solve(
     return info;
 }
 
-#define AMGCL_CALL_BLOCK_SOLVER(z, data, B)                                    \
+#define ARCANE_ALINA_CALL_BLOCK_SOLVER(z, data, B)                                    \
   case B:                                                                      \
     return block_solve<B>(prm, rows, ptr, col, val, rhs, x, reorder);
 
@@ -334,7 +334,7 @@ std::tuple<size_t, double> solve(
         case 1:
             return scalar_solve(prm, rows, ptr, col, val, rhs, x, reorder);
 #if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
-        BOOST_PP_SEQ_FOR_EACH(AMGCL_CALL_BLOCK_SOLVER, ~, AMGCL_BLOCK_SIZES)
+        BOOST_PP_SEQ_FOR_EACH(ARCANE_ALINA_CALL_BLOCK_SOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
 #endif
         default:
             precondition(false, "Unsupported block size");

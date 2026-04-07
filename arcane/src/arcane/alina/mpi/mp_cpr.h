@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_CPR_HPP
-#define AMGCL_MPI_CPR_HPP
+#ifndef ARCANE_ALINA_MPI_CPR_HPP
+#define ARCANE_ALINA_MPI_CPR_HPP
 
 /*
 The MIT License
@@ -74,18 +74,18 @@ class cpr {
             params() : block_size(2) {}
 
             params(const PropertyTree &p)
-                : AMGCL_PARAMS_IMPORT_CHILD(p, pprecond),
-                  AMGCL_PARAMS_IMPORT_CHILD(p, sprecond),
-                  AMGCL_PARAMS_IMPORT_VALUE(p, block_size)
+                : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, pprecond),
+                  ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, sprecond),
+                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
             {
                 check_params(p, {"pprecond", "sprecond", "block_size", "active_rows"});
             }
 
             void get(PropertyTree &p, const std::string &path = "") const
             {
-                AMGCL_PARAMS_EXPORT_CHILD(p, path, pprecond);
-                AMGCL_PARAMS_EXPORT_CHILD(p, path, sprecond);
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, block_size);
+                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, pprecond);
+                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, sprecond);
+                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, block_size);
             }
         } prm;
 

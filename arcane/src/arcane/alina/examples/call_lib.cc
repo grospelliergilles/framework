@@ -13,29 +13,29 @@ int main()
 
     int n = sample_problem(12l, val, col, ptr, rhs);
 
-    amgclHandle prm = amgcl_params_create();
+    amgclHandle prm = ARCANE_ALINA_params_create();
 
-    amgcl_params_seti(prm, "precond.coarse_enough", 1000);
-    amgcl_params_sets(prm, "precond.coarsening.type", "smoothed_aggregation");
-    amgcl_params_setf(prm, "precond.coarsening.aggr.eps_strong", 1e-3f);
-    amgcl_params_sets(prm, "precond.relax.type", "spai0");
+    ARCANE_ALINA_params_seti(prm, "precond.coarse_enough", 1000);
+    ARCANE_ALINA_params_sets(prm, "precond.coarsening.type", "smoothed_aggregation");
+    ARCANE_ALINA_params_setf(prm, "precond.coarsening.aggr.eps_strong", 1e-3f);
+    ARCANE_ALINA_params_sets(prm, "precond.relax.type", "spai0");
 
-    amgcl_params_sets(prm, "solver.type", "bicgstabl");
-    amgcl_params_seti(prm, "solver.L", 1);
-    amgcl_params_seti(prm, "solver.maxiter", 100);
+    ARCANE_ALINA_params_sets(prm, "solver.type", "bicgstabl");
+    ARCANE_ALINA_params_seti(prm, "solver.L", 1);
+    ARCANE_ALINA_params_seti(prm, "solver.maxiter", 100);
 
-    amgclHandle solver = amgcl_solver_create(
+    amgclHandle solver = ARCANE_ALINA_solver_create(
             n, ptr.data(), col.data(), val.data(), prm
             );
 
-    amgcl_params_destroy(prm);
+    ARCANE_ALINA_params_destroy(prm);
 
     std::vector<double> x(n, 0);
-    conv_info cnv = amgcl_solver_solve(solver, rhs.data(), x.data());
+    conv_info cnv = ARCANE_ALINA_solver_solve(solver, rhs.data(), x.data());
 
     // Solve same problem again, but explicitly provide the matrix this time:
     std::fill(x.begin(), x.end(), 0);
-    cnv = amgcl_solver_solve_mtx(
+    cnv = ARCANE_ALINA_solver_solve_mtx(
             solver, ptr.data(), col.data(), val.data(),
             rhs.data(), x.data()
             );
@@ -43,5 +43,5 @@ int main()
     std::cout << "Iterations: " << cnv.iterations << std::endl
               << "Error:      " << cnv.residual   << std::endl;
 
-    amgcl_solver_destroy(solver);
+    ARCANE_ALINA_solver_destroy(solver);
 }

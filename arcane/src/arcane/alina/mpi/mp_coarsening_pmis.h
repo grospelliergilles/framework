@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_COARSENING_PMIS_HPP
-#define AMGCL_MPI_COARSENING_PMIS_HPP
+#ifndef ARCANE_ALINA_MPI_COARSENING_PMIS_HPP
+#define ARCANE_ALINA_MPI_COARSENING_PMIS_HPP
 
 /*
 The MIT License
@@ -70,17 +70,17 @@ struct pmis {
         params() : eps_strong(0.08), block_size(1) { }
 
         params(const PropertyTree &p)
-            : AMGCL_PARAMS_IMPORT_CHILD(p, nullspace),
-              AMGCL_PARAMS_IMPORT_VALUE(p, eps_strong),
-              AMGCL_PARAMS_IMPORT_VALUE(p, block_size)
+            : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace),
+              ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_strong),
+              ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
         {
             check_params(p, {"nullspace", "eps_strong", "block_size"});
         }
 
         void get(PropertyTree &p, const std::string &path) const {
-            AMGCL_PARAMS_EXPORT_CHILD(p, path, nullspace);
-            AMGCL_PARAMS_EXPORT_VALUE(p, path, eps_strong);
-            AMGCL_PARAMS_EXPORT_VALUE(p, path, block_size);
+            ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, nullspace);
+            ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_strong);
+            ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, block_size);
         }
 
     } &prm;
@@ -185,7 +185,7 @@ struct pmis {
         S_loc.ptr[0] = 0;
         S_rem.ptr[0] = 0;
 
-        AMGCL_TIC("analyze");
+        ARCANE_ALINA_TIC("analyze");
 #pragma omp parallel
         {
             std::vector<ptrdiff_t> loc_marker(A_rows,     -1);
@@ -254,12 +254,12 @@ struct pmis {
                 S_loc.ptr[ia + 1] = rem_cols ? loc_cols : 0;
             }
         }
-        AMGCL_TOC("analyze");
+        ARCANE_ALINA_TOC("analyze");
 
         S_loc.set_nonzeros(S_loc.scan_row_sizes(), false);
         S_rem.set_nonzeros(S_rem.scan_row_sizes(), false);
 
-        AMGCL_TIC("compute");
+        ARCANE_ALINA_TIC("compute");
 #pragma omp parallel
         {
             std::vector<ptrdiff_t> loc_marker(A_rows,     -1);
@@ -326,7 +326,7 @@ struct pmis {
                 }
             }
         }
-        AMGCL_TOC("compute");
+        ARCANE_ALINA_TOC("compute");
 
         return std::make_shared< distributed_matrix<bool_backend> >(A.comm(), s_loc, s_rem);
     }
@@ -337,7 +337,7 @@ struct pmis {
         typedef typename B::value_type val_type;
         typedef backend::CSRMatrix<val_type> B_matrix;
 
-        AMGCL_TIC("conn_strength");
+        ARCANE_ALINA_TIC("conn_strength");
         ptrdiff_t n = A.loc_rows();
 
         const B_matrix &A_loc = *A.local();
@@ -407,7 +407,7 @@ struct pmis {
             for(ptrdiff_t j = A_rem.ptr[i], e = A_rem.ptr[i+1]; j < e; ++j)
                 if (S_rem.val[j]) S_rem.col[rem_head++] = A_rem.col[j];
         }
-        AMGCL_TOC("conn_strength");
+        ARCANE_ALINA_TOC("conn_strength");
 
         return std::make_shared< distributed_matrix<bool_backend> >(
                 A.comm(), s_loc, s_rem);
@@ -419,7 +419,7 @@ struct pmis {
             std::vector<int>       &loc_owner
             )
     {
-        AMGCL_TIC("PMIS");
+        ARCANE_ALINA_TIC("PMIS");
         static const int tag_exc_cnt = 4001;
         static const int tag_exc_pts = 4002;
 
@@ -431,12 +431,12 @@ struct pmis {
         communicator comm = A.comm();
 
         // 1. Get symbolic square of the connectivity matrix.
-        AMGCL_TIC("symbolic square");
+        ARCANE_ALINA_TIC("symbolic square");
         auto S = squared_interface(A);
         const bool_matrix &S_loc = *S->local();
         const bool_matrix &S_rem = *S->remote();
         const comm_pattern<bool_backend> &Sp = S->cpat();
-        AMGCL_TOC("symbolic square");
+        ARCANE_ALINA_TOC("symbolic square");
 
         // 2. Apply PMIS algorithm to the symbolic square.
         ptrdiff_t n_undone = 0;
@@ -626,7 +626,7 @@ struct pmis {
 
         // Some of the aggregates could potentially vanish during expansion
         // step (*) above. We need to exclude those and renumber the rest.
-        AMGCL_TIC("drop empty aggregates");
+        ARCANE_ALINA_TIC("drop empty aggregates");
         for(ptrdiff_t i = 0, m = Sp.send.count(); i < m; ++i)
             send_owner[i] = loc_owner[Sp.send.col[i]];
         Sp.exchange(&send_owner[0], &rem_owner[0]);
@@ -701,8 +701,8 @@ struct pmis {
             }
         }
 
-        AMGCL_TOC("drop empty aggregates");
-        AMGCL_TOC("PMIS");
+        ARCANE_ALINA_TOC("drop empty aggregates");
+        ARCANE_ALINA_TOC("PMIS");
 
         return naggr;
     }
@@ -716,7 +716,7 @@ struct pmis {
         build_matrix &P_loc = *p_loc;
         build_matrix &P_rem = *p_rem;
 
-        AMGCL_TIC("tentative prolongation");
+        ARCANE_ALINA_TIC("tentative prolongation");
 
         if (int null_cols = prm.nullspace.cols) {
             ptrdiff_t nba = naggr / prm.block_size;
@@ -839,10 +839,10 @@ struct pmis {
                 MPI_Isend(&send_row[null_cols * p], null_cols * w, datatype<double>(), n, tag_exc_row, comm, &req[2]);
             }
 
-            AMGCL_TIC("MPI Wait");
+            ARCANE_ALINA_TIC("MPI Wait");
             MPI_Waitall(recv_req.size(), recv_req.data(), MPI_STATUSES_IGNORE);
             MPI_Waitall(send_req.size(), send_req.data(), MPI_STATUSES_IGNORE);
-            AMGCL_TOC("MPI Wait");
+            ARCANE_ALINA_TOC("MPI Wait");
 
             // Sort the fine-level points by the aggregate number.
             // The order vector contains tuples of (aggr, dof, src, dst),
@@ -953,10 +953,10 @@ struct pmis {
                 }
             }
 
-            AMGCL_TIC("MPI Wait");
+            ARCANE_ALINA_TIC("MPI Wait");
             MPI_Waitall(snbr, send_req.data(), MPI_STATUSES_IGNORE);
             MPI_Waitall(rnbr, recv_req.data(), MPI_STATUSES_IGNORE);
-            AMGCL_TOC("MPI Wait");
+            ARCANE_ALINA_TOC("MPI Wait");
 
             // Use the P rows computed by the neighbors
             for(ptrdiff_t k = 0; k < send_dofs; ++k) {
@@ -1005,7 +1005,7 @@ struct pmis {
                 }
             }
         }
-        AMGCL_TOC("tentative prolongation");
+        ARCANE_ALINA_TOC("tentative prolongation");
 
         return std::make_shared<matrix>(comm, p_loc, p_rem);
     }

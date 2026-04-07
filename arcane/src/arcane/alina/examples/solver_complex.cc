@@ -22,8 +22,8 @@
 
 #include "sample_problem.h"
 
-#ifndef AMGCL_BLOCK_SIZES
-#define AMGCL_BLOCK_SIZES (2)(3)(4)
+#ifndef ARCANE_ALINA_BLOCK_SIZES
+#define ARCANE_ALINA_BLOCK_SIZES (2)(3)(4)
 #endif
 using namespace Arcane;
 
@@ -237,7 +237,7 @@ int main(int argc, char* argv[])
     std::tie(iters, error) = solve<Alina::runtime::preconditioner<Backend>>(
     std::tie(rows, ptr, col, val), prm, rhs, x);
   } break;
-    BOOST_PP_SEQ_FOR_EACH(CALL_BLOCK_SOLVER, ~, AMGCL_BLOCK_SIZES)
+    BOOST_PP_SEQ_FOR_EACH(CALL_BLOCK_SOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
   }
 
 #undef CALL_BLOCK_SOLVER

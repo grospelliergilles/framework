@@ -1,5 +1,5 @@
-#ifndef AMGCL_ADAPTER_EIGEN_HPP
-#define AMGCL_ADAPTER_EIGEN_HPP
+#ifndef ARCANE_ALINA_ADAPTER_EIGEN_HPP
+#define ARCANE_ALINA_ADAPTER_EIGEN_HPP
 
 /*
 The MIT License
@@ -115,7 +115,7 @@ struct row_begin_impl <
 } // namespace backend
 } // namespace amgcl
 
-#define AMGCL_USE_EIGEN_VECTORS_WITH_BUILTIN_BACKEND()                         \
+#define ARCANE_ALINA_USE_EIGEN_VECTORS_WITH_BUILTIN_BACKEND()                         \
     namespace amgcl { namespace backend {                                      \
         template <class T >                                                    \
         struct is_builtin_vector< Eigen::Matrix<T, Eigen::Dynamic, 1> >        \

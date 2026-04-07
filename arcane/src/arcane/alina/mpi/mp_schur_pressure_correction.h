@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_SCHUR_PRESSURE_CORRECTION_HPP
-#define AMGCL_MPI_SCHUR_PRESSURE_CORRECTION_HPP
+#ifndef ARCANE_ALINA_MPI_SCHUR_PRESSURE_CORRECTION_HPP
+#define ARCANE_ALINA_MPI_SCHUR_PRESSURE_CORRECTION_HPP
 
 /*
 The MIT License
@@ -104,12 +104,12 @@ class schur_pressure_correction {
             params() : type(1), approx_schur(false), simplec_dia(true), verbose(0) {}
 
             params(const Alina::PropertyTree &p)
-                : AMGCL_PARAMS_IMPORT_CHILD(p, usolver),
-                  AMGCL_PARAMS_IMPORT_CHILD(p, psolver),
-                  AMGCL_PARAMS_IMPORT_VALUE(p, type),
-                  AMGCL_PARAMS_IMPORT_VALUE(p, approx_schur),
-                  AMGCL_PARAMS_IMPORT_VALUE(p, simplec_dia),
-                  AMGCL_PARAMS_IMPORT_VALUE(p, verbose)
+                : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, usolver),
+                  ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, psolver),
+                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, type),
+                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, approx_schur),
+                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, simplec_dia),
+                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
             {
                 size_t n = 0;
 
@@ -166,12 +166,12 @@ class schur_pressure_correction {
 
             void get(PropertyTree &p, const std::string &path = "") const
             {
-                AMGCL_PARAMS_EXPORT_CHILD(p, path, usolver);
-                AMGCL_PARAMS_EXPORT_CHILD(p, path, psolver);
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, type);
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, approx_schur);
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, simplec_dia);
-                AMGCL_PARAMS_EXPORT_VALUE(p, path, verbose);
+                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, usolver);
+                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, psolver);
+                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, type);
+                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, approx_schur);
+                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, simplec_dia);
+                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
             }
 
         } prm;
@@ -215,15 +215,15 @@ class schur_pressure_correction {
             ptrdiff_t n = K->loc_rows();
 
             // Count pressure and flow variables.
-            AMGCL_TIC("count pressure/flow vars");
+            ARCANE_ALINA_TIC("count pressure/flow vars");
             std::vector<ptrdiff_t> idx(n);
             ptrdiff_t np = 0, nu = 0;
 
             for(ptrdiff_t i = 0; i < n; ++i)
                 idx[i] = (prm.pmask[i] ? np++ : nu++);
-            AMGCL_TOC("count pressure/flow vars");
+            ARCANE_ALINA_TOC("count pressure/flow vars");
 
-            AMGCL_TIC("setup communication");
+            ARCANE_ALINA_TIC("setup communication");
             // We know what points each of our neighbors needs from us;
             // and we know if those points are pressure or flow.
             // We can immediately provide them with our renumbering scheme.
@@ -245,11 +245,11 @@ class schur_pressure_correction {
 
             C.exchange(&smask[0], &rmask[0]);
             C.exchange(&s_idx[0], &r_idx[0]);
-            AMGCL_TOC("setup communication");
+            ARCANE_ALINA_TOC("setup communication");
 
             // Fill the subblocks of the system matrix.
             // K_rem->col may be used as direct indices into rmask and r_idx.
-            AMGCL_TIC("schur blocks");
+            ARCANE_ALINA_TIC("schur blocks");
             this->K->move_to_backend(bprm);
 
             auto Kpp_loc = make_shared<build_matrix>();
@@ -418,16 +418,16 @@ class schur_pressure_correction {
 
             Kpu->move_to_backend(bprm);
             Kup->move_to_backend(bprm);
-            AMGCL_TOC("schur blocks");
+            ARCANE_ALINA_TOC("schur blocks");
 
-            AMGCL_TIC("usolver")
+            ARCANE_ALINA_TIC("usolver")
             U = make_shared<USolver>(comm, Kuu, prm.usolver, bprm);
-            AMGCL_TOC("usolver")
-            AMGCL_TIC("psolver")
+            ARCANE_ALINA_TOC("usolver")
+            ARCANE_ALINA_TIC("psolver")
             P = make_shared<PSolver>(comm, Kpp, prm.psolver, bprm);
-            AMGCL_TOC("psolver")
+            ARCANE_ALINA_TOC("psolver")
 
-            AMGCL_TIC("other");
+            ARCANE_ALINA_TIC("other");
             rhs_u = backend_type::create_vector(nu, bprm);
             rhs_p = backend_type::create_vector(np, bprm);
 
@@ -438,7 +438,7 @@ class schur_pressure_correction {
 
             if (prm.approx_schur) {
                 std::shared_ptr<backend::numa_vector<value_type>> Kuu_dia;
-                AMGCL_TIC("Kuu diagonal");
+                ARCANE_ALINA_TIC("Kuu diagonal");
                 if (prm.simplec_dia) {
                     Kuu_dia = std::make_shared<backend::numa_vector<value_type>>(nu, false);
 #pragma omp parallel
@@ -457,11 +457,11 @@ class schur_pressure_correction {
                 }
 
                 M = backend_type::copy_vector(Kuu_dia, bprm);
-                AMGCL_TOC("Kuu diagonal");
+                ARCANE_ALINA_TOC("Kuu diagonal");
             }
 
             // Scatter/Gather matrices
-            AMGCL_TIC("scatter/gather");
+            ARCANE_ALINA_TIC("scatter/gather");
             auto x2u = std::make_shared<build_matrix>();
             auto x2p = std::make_shared<build_matrix>();
             auto u2x = std::make_shared<build_matrix>();
@@ -530,7 +530,7 @@ class schur_pressure_correction {
             this->x2p = backend_type::copy_matrix(x2p, bprm);
             this->u2x = backend_type::copy_matrix(u2x, bprm);
             this->p2x = backend_type::copy_matrix(p2x, bprm);
-            AMGCL_TOC("scatter/gather");
+            ARCANE_ALINA_TOC("scatter/gather");
         }
 
         std::shared_ptr<matrix> system_matrix_ptr() const {
@@ -546,54 +546,54 @@ class schur_pressure_correction {
             const auto one = math::identity<scalar_type>();
             const auto zero = math::zero<scalar_type>();
 
-            AMGCL_TIC("split variables");
+            ARCANE_ALINA_TIC("split variables");
             backend::spmv(one, *x2u, rhs, zero, *rhs_u);
             backend::spmv(one, *x2p, rhs, zero, *rhs_p);
-            AMGCL_TOC("split variables");
+            ARCANE_ALINA_TOC("split variables");
 
             if (prm.type == 1) {
                 // Ai u = rhs_u
-                AMGCL_TIC("solve U");
+                ARCANE_ALINA_TIC("solve U");
                 backend::clear(*u);
                 report("U1", (*U)(*rhs_u, *u));
-                AMGCL_TOC("solve U");
+                ARCANE_ALINA_TOC("solve U");
 
                 // rhs_p -= Kpu u
-                AMGCL_TIC("solve P");
+                ARCANE_ALINA_TIC("solve P");
                 backend::spmv(-one, *Kpu, *u, one, *rhs_p);
 
                 // S p = rhs_p
                 backend::clear(*p);
                 report("P", (*P)(*this, *rhs_p, *p));
-                AMGCL_TOC("solve P");
+                ARCANE_ALINA_TOC("solve P");
 
                 // rhs_u -= Kup p
-                AMGCL_TIC("Update U");
+                ARCANE_ALINA_TIC("Update U");
                 backend::spmv(-one, *Kup, *p, one, *rhs_u);
 
                 // Ai u = rhs_u
                 backend::clear(*u);
                 report("U2", (*U)(*rhs_u, *u));
-                AMGCL_TOC("Update U");
+                ARCANE_ALINA_TOC("Update U");
             } else if (prm.type == 2) {
                 // S p = rhs_p
-                AMGCL_TIC("solve P");
+                ARCANE_ALINA_TIC("solve P");
                 backend::clear(*p);
                 report("P", (*P)(*this, *rhs_p, *p));
-                AMGCL_TOC("solve P");
+                ARCANE_ALINA_TOC("solve P");
 
                 // Ai u = fu - Kup p
-                AMGCL_TIC("solve U");
+                ARCANE_ALINA_TIC("solve U");
                 backend::spmv(-one, *Kup, *p, one, *rhs_u);
                 backend::clear(*u);
                 report("U", (*U)(*rhs_u, *u));
-                AMGCL_TOC("solve U");
+                ARCANE_ALINA_TOC("solve U");
             }
 
-            AMGCL_TIC("merge variables");
+            ARCANE_ALINA_TIC("merge variables");
             backend::spmv(one, *u2x, *u, zero, x);
             backend::spmv(one, *p2x, *p, one, x);
-            AMGCL_TOC("merge variables");
+            ARCANE_ALINA_TOC("merge variables");
         }
 
         template <class Alpha, class Vec1, class Beta, class Vec2>
@@ -602,7 +602,7 @@ class schur_pressure_correction {
             const auto zero = math::zero<scalar_type>();
 
             // y = beta y + alpha S x, where S = Kpp - Kpu Kuu^-1 Kup
-            AMGCL_TIC("matrix-free spmv");
+            ARCANE_ALINA_TIC("matrix-free spmv");
             backend::spmv(alpha, P->system_matrix(), x, beta, y);
 
             backend::spmv(one, *Kup, x, zero, *tmp);
@@ -614,7 +614,7 @@ class schur_pressure_correction {
                 (*U)(*tmp, *u);
             }
             backend::spmv(-alpha, *Kpu, *u, one, y);
-            AMGCL_TOC("matrix-free spmv");
+            ARCANE_ALINA_TOC("matrix-free spmv");
         }
     private:
         typedef comm_pattern<backend_type> CommPattern;
@@ -628,7 +628,7 @@ class schur_pressure_correction {
         std::shared_ptr<USolver> U;
         std::shared_ptr<PSolver> P;
 
-#ifdef AMGCL_DEBUG
+#ifdef ARCANE_ALINA_DEBUG
         template <typename I, typename E>
         void report(const std::string &name, const std::tuple<I, E> &c) const {
             if (comm.rank == 0 && prm.report >= 1) {

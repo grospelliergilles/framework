@@ -95,7 +95,7 @@ class comm_pattern
   : comm(comm)
   , loc_cols(n_loc_cols)
   {
-    AMGCL_TIC("communication pattern");
+    ARCANE_ALINA_TIC("communication pattern");
     // Get domain boundaries
     std::vector<ptrdiff_t> domain = comm.exclusive_sum(n_loc_cols);
     loc_beg = domain[comm.rank];
@@ -180,16 +180,16 @@ class comm_pattern
       MPI_Isend(&rem_cols[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
                 datatype<ptrdiff_t>(), recv.nbr[i], tag_exc_cols, comm, &recv.req[i]);
 
-    AMGCL_TIC("MPI Wait");
+    ARCANE_ALINA_TIC("MPI Wait");
     MPI_Waitall(recv.req.size(), recv.req.data(), MPI_STATUSES_IGNORE);
     MPI_Waitall(send.req.size(), send.req.data(), MPI_STATUSES_IGNORE);
-    AMGCL_TOC("MPI Wait");
+    ARCANE_ALINA_TOC("MPI Wait");
 
     // Shift columns to send to local numbering:
     for (ptrdiff_t& c : send.col)
       c -= loc_beg;
 
-    AMGCL_TOC("communication pattern");
+    ARCANE_ALINA_TOC("communication pattern");
   }
 
   template <class OtherBackend>
@@ -281,10 +281,10 @@ class comm_pattern
 
   void finish_exchange() const
   {
-    AMGCL_TIC("MPI Wait");
+    ARCANE_ALINA_TIC("MPI Wait");
     MPI_Waitall(recv.req.size(), recv.req.data(), MPI_STATUSES_IGNORE);
     MPI_Waitall(send.req.size(), send.req.data(), MPI_STATUSES_IGNORE);
-    AMGCL_TOC("MPI Wait");
+    ARCANE_ALINA_TOC("MPI Wait");
 
     if (!recv.val.empty())
       backend::copy(recv.val, *x_rem);
@@ -301,10 +301,10 @@ class comm_pattern
       MPI_Isend(const_cast<T*>(&send_val[send.ptr[i]]), send.ptr[i + 1] - send.ptr[i],
                 datatype<T>(), send.nbr[i], tag_exc_vals, comm, &send.req[i]);
 
-    AMGCL_TIC("MPI Wait");
+    ARCANE_ALINA_TIC("MPI Wait");
     MPI_Waitall(recv.req.size(), recv.req.data(), MPI_STATUSES_IGNORE);
     MPI_Waitall(send.req.size(), send.req.data(), MPI_STATUSES_IGNORE);
-    AMGCL_TOC("MPI Wait");
+    ARCANE_ALINA_TOC("MPI Wait");
   }
 
   communicator mpi_comm() const
@@ -534,7 +534,7 @@ class distributed_matrix
 
   void move_to_backend(const backend_params& bprm = backend_params(), bool keep_src = false)
   {
-    AMGCL_TIC("move to backend");
+    ARCANE_ALINA_TIC("move to backend");
     if (!A_loc) {
       A_loc = Backend::copy_matrix(a_loc, bprm);
     }
@@ -557,7 +557,7 @@ class distributed_matrix
       a_loc.reset();
       a_rem.reset();
     }
-    AMGCL_TOC("move to backend");
+    ARCANE_ALINA_TOC("move to backend");
   }
 
   template <class A, class VecX, class B, class VecY>
@@ -609,7 +609,7 @@ template <class Backend>
 std::shared_ptr<distributed_matrix<Backend>>
 transpose(const distributed_matrix<Backend>& A)
 {
-  AMGCL_TIC("MPI Transpose");
+  ARCANE_ALINA_TIC("MPI Transpose");
   typedef typename Backend::value_type value_type;
   typedef comm_pattern<Backend> CommPattern;
   typedef backend::CSRMatrix<value_type> build_matrix;
@@ -683,9 +683,9 @@ transpose(const distributed_matrix<Backend>& A)
               C.recv.nbr[i], tag_cnt, comm, &send_cnt_req[i]);
   }
 
-  AMGCL_TIC("MPI Wait");
+  ARCANE_ALINA_TIC("MPI Wait");
   MPI_Waitall(recv_cnt_req.size(), recv_cnt_req.data(), MPI_STATUSES_IGNORE);
-  AMGCL_TOC("MPI Wait");
+  ARCANE_ALINA_TOC("MPI Wait");
   std::partial_sum(rem_ptr.begin(), rem_ptr.end(), rem_ptr.begin());
 
   // 2. Start exchange of rem_col, rem_val
@@ -734,10 +734,10 @@ transpose(const distributed_matrix<Backend>& A)
 
   // 4. Finish rem_col and rem_val exchange, and
   //    finish contruction of our remote part.
-  AMGCL_TIC("MPI Wait");
+  ARCANE_ALINA_TIC("MPI Wait");
   MPI_Waitall(recv_col_req.size(), recv_col_req.data(), MPI_STATUSES_IGNORE);
   MPI_Waitall(recv_val_req.size(), recv_val_req.data(), MPI_STATUSES_IGNORE);
-  AMGCL_TOC("MPI Wait");
+  ARCANE_ALINA_TOC("MPI Wait");
 
   for (size_t i = 0; i < C.send.count(); ++i) {
     ptrdiff_t row = C.send.col[i];
@@ -754,13 +754,13 @@ transpose(const distributed_matrix<Backend>& A)
   std::rotate(T_rem.ptr, T_rem.ptr + nrows, T_rem.ptr + nrows + 1);
   T_rem.ptr[0] = 0;
 
-  AMGCL_TIC("MPI Wait");
+  ARCANE_ALINA_TIC("MPI Wait");
   MPI_Waitall(send_cnt_req.size(), send_cnt_req.data(), MPI_STATUSES_IGNORE);
   MPI_Waitall(send_col_req.size(), send_col_req.data(), MPI_STATUSES_IGNORE);
   MPI_Waitall(send_val_req.size(), send_val_req.data(), MPI_STATUSES_IGNORE);
-  AMGCL_TOC("MPI Wait");
+  ARCANE_ALINA_TOC("MPI Wait");
 
-  AMGCL_TOC("MPI Transpose");
+  ARCANE_ALINA_TOC("MPI Transpose");
 
   return std::make_shared<distributed_matrix<Backend>>(
   comm, backend::transpose(A_loc), T_ptr);
@@ -782,7 +782,7 @@ remote_rows(const comm_pattern<Backend>& C,
   static const int tag_col = 3002;
   static const int tag_val = 3003;
 
-  AMGCL_TIC("remote_rows");
+  ARCANE_ALINA_TIC("remote_rows");
   communicator comm = C.mpi_comm();
 
   build_matrix& B_loc = *B.local();
@@ -869,9 +869,9 @@ remote_rows(const comm_pattern<Backend>& C,
               C.recv.nbr[k], tag_ptr, comm, &recv_ptr_req[k]);
   }
 
-  AMGCL_TIC("MPI Wait");
+  ARCANE_ALINA_TIC("MPI Wait");
   MPI_Waitall(recv_ptr_req.size(), recv_ptr_req.data(), MPI_STATUSES_IGNORE);
-  AMGCL_TOC("MPI Wait");
+  ARCANE_ALINA_TOC("MPI Wait");
 
   B_nbr->set_nonzeros(B_nbr->scan_row_sizes(), need_values);
 
@@ -890,7 +890,7 @@ remote_rows(const comm_pattern<Backend>& C,
                 C.recv.nbr[k], tag_val, comm, &recv_val_req[k]);
   }
 
-  AMGCL_TIC("MPI Wait");
+  ARCANE_ALINA_TIC("MPI Wait");
   MPI_Waitall(send_ptr_req.size(), send_ptr_req.data(), MPI_STATUSES_IGNORE);
   MPI_Waitall(send_col_req.size(), send_col_req.data(), MPI_STATUSES_IGNORE);
   MPI_Waitall(recv_col_req.size(), recv_col_req.data(), MPI_STATUSES_IGNORE);
@@ -899,9 +899,9 @@ remote_rows(const comm_pattern<Backend>& C,
     MPI_Waitall(send_val_req.size(), send_val_req.data(), MPI_STATUSES_IGNORE);
     MPI_Waitall(recv_val_req.size(), recv_val_req.data(), MPI_STATUSES_IGNORE);
   }
-  AMGCL_TOC("MPI Wait");
+  ARCANE_ALINA_TOC("MPI Wait");
 
-  AMGCL_TOC("remote_rows");
+  ARCANE_ALINA_TOC("remote_rows");
   return B_nbr;
 }
 
@@ -914,7 +914,7 @@ product(const distributed_matrix<Backend>& A, const distributed_matrix<Backend>&
 {
   typedef typename Backend::value_type value_type;
   typedef backend::CSRMatrix<value_type> build_matrix;
-  AMGCL_TIC("product");
+  ARCANE_ALINA_TIC("product");
 
   const comm_pattern<Backend>& Acp = A.cpat();
 
@@ -963,7 +963,7 @@ product(const distributed_matrix<Backend>& A, const distributed_matrix<Backend>&
   C_loc.ptr[0] = 0;
   C_rem.ptr[0] = 0;
 
-  AMGCL_TIC("analyze");
+  ARCANE_ALINA_TIC("analyze");
 #pragma omp parallel
   {
     std::vector<ptrdiff_t> loc_marker(B_end - B_beg, -1);
@@ -1025,12 +1025,12 @@ product(const distributed_matrix<Backend>& A, const distributed_matrix<Backend>&
       C_rem.ptr[ia + 1] = rem_cols;
     }
   }
-  AMGCL_TOC("analyze");
+  ARCANE_ALINA_TOC("analyze");
 
   C_loc.set_nonzeros(C_loc.scan_row_sizes());
   C_rem.set_nonzeros(C_rem.scan_row_sizes());
 
-  AMGCL_TIC("compute");
+  ARCANE_ALINA_TIC("compute");
 #pragma omp parallel
   {
     std::vector<ptrdiff_t> loc_marker(B_end - B_beg, -1);
@@ -1125,8 +1125,8 @@ product(const distributed_matrix<Backend>& A, const distributed_matrix<Backend>&
       }
     }
   }
-  AMGCL_TOC("compute");
-  AMGCL_TOC("product");
+  ARCANE_ALINA_TOC("compute");
+  ARCANE_ALINA_TOC("product");
 
   return std::make_shared<distributed_matrix<Backend>>(A.comm(), c_loc, c_rem);
 }
@@ -1228,7 +1228,7 @@ template <bool scale, class Backend>
 typename math::scalar_of<typename Backend::value_type>::type
 spectral_radius(const mpi::distributed_matrix<Backend>& A, int power_iters = 0)
 {
-  AMGCL_TIC("spectral radius");
+  ARCANE_ALINA_TIC("spectral radius");
   typedef typename Backend::value_type value_type;
   typedef typename math::rhs_of<value_type>::type rhs_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
@@ -1393,7 +1393,7 @@ spectral_radius(const mpi::distributed_matrix<Backend>& A, int power_iters = 0)
       }
     }
   }
-  AMGCL_TOC("spectral radius");
+  ARCANE_ALINA_TOC("spectral radius");
 
   return radius < 0 ? static_cast<scalar_type>(2) : radius;
 }

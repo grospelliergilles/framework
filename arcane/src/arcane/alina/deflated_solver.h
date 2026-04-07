@@ -1,5 +1,5 @@
-#ifndef AMGCL_DEFLATED_SOLVER_HPP
-#define AMGCL_DEFLATED_SOLVER_HPP
+#ifndef ARCANE_ALINA_DEFLATED_SOLVER_HPP
+#define ARCANE_ALINA_DEFLATED_SOLVER_HPP
 
 /*
 The MIT License
@@ -74,20 +74,20 @@ class deflated_solver : public Alina::detail::non_copyable {
             params() : nvec(0), vec(nullptr) {}
 
             params(const PropertyTree &p)
-                : AMGCL_PARAMS_IMPORT_VALUE(p, nvec),
-                  AMGCL_PARAMS_IMPORT_VALUE(p, vec),
-                  AMGCL_PARAMS_IMPORT_CHILD(p, precond),
-                  AMGCL_PARAMS_IMPORT_CHILD(p, solver)
+                : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, nvec),
+                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, vec),
+                  ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, precond),
+                  ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solver)
             {
                 check_params(p, {"nvec", "vec", "precond", "solver"});
             }
 
             void get( PropertyTree &p, const std::string &path = "") const
             {
-                AMGCL_PARAMS_EXPORT_CHILD(p, path, nvec);
-                AMGCL_PARAMS_EXPORT_CHILD(p, path, vec);
-                AMGCL_PARAMS_EXPORT_CHILD(p, path, precond);
-                AMGCL_PARAMS_EXPORT_CHILD(p, path, solver);
+                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, nvec);
+                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, vec);
+                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, precond);
+                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solver);
             }
 
         } prm;

@@ -1,5 +1,5 @@
-#ifndef AMGCL_MAKE_BLOCK_SOLVER_HPP
-#define AMGCL_MAKE_BLOCK_SOLVER_HPP
+#ifndef ARCANE_ALINA_MAKE_BLOCK_SOLVER_HPP
+#define ARCANE_ALINA_MAKE_BLOCK_SOLVER_HPP
 
 #include <arcane/alina/backend_interface.h>
 #include <arcane/alina/Adapters.h>

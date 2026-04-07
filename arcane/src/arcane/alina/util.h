@@ -40,7 +40,7 @@ namespace Arcane::Alina
 
 // If asked explicitly, or if boost is available, enable
 // using boost::propert_tree::ptree as amgcl parameters:
-#ifndef AMGCL_NO_BOOST
+#ifndef ARCANE_ALINA_NO_BOOST
 #  include <boost/property_tree/ptree.hpp>
 #endif
 
@@ -99,32 +99,32 @@ read_json(const std::string& filename, Arcane::Alina::PropertyTree& prm)
 /*!
  * \brief Performance measurement macros.
  *
- * If AMGCL_PROFILING macro is defined at compilation, then AMGCL_TIC(name) and
- * AMGCL_TOC(name) macros correspond to prof.tic(name) and prof.toc(name).
+ * If ARCANE_ALINA_PROFILING macro is defined at compilation, then ARCANE_ALINA_TIC(name) and
+ * ARCANE_ALINA_TOC(name) macros correspond to prof.tic(name) and prof.toc(name).
  * amgcl::prof should be an instance of amgcl::profiler<> defined in a user
  * code similar to:
  * \code
  * namespace amgcl { profiler<> prof; }
  * \endcode
- * If AMGCL_PROFILING is undefined, then AMGCL_TIC and AMGCL_TOC are noop macros.
+ * If ARCANE_ALINA_PROFILING is undefined, then ARCANE_ALINA_TIC and ARCANE_ALINA_TOC are noop macros.
  */
-#ifdef AMGCL_PROFILING
-#  if !defined(AMGCL_TIC) || !defined(AMGCL_TOC)
+#ifdef ARCANE_ALINA_PROFILING
+#  if !defined(ARCANE_ALINA_TIC) || !defined(ARCANE_ALINA_TOC)
 #    include <arcane/alina/profiler.h>
-#    define AMGCL_TIC(name) amgcl::prof.tic(name);
-#    define AMGCL_TOC(name) amgcl::prof.toc(name);
+#    define ARCANE_ALINA_TIC(name) amgcl::prof.tic(name);
+#    define ARCANE_ALINA_TOC(name) amgcl::prof.toc(name);
 namespace Arcane::Alina { extern profiler<> prof; }
 #  endif
 #else
-#  ifndef AMGCL_TIC
-#    define AMGCL_TIC(name)
+#  ifndef ARCANE_ALINA_TIC
+#    define ARCANE_ALINA_TIC(name)
 #  endif
-#  ifndef AMGCL_TOC
-#    define AMGCL_TOC(name)
+#  ifndef ARCANE_ALINA_TOC
+#    define ARCANE_ALINA_TOC(name)
 #  endif
 #endif
 
-#define AMGCL_DEBUG_SHOW(x)                                                    \
+#define ARCANE_ALINA_DEBUG_SHOW(x)                                                    \
     std::cout << std::setw(20) << #x << ": "                                   \
               << std::setw(15) << std::setprecision(8) << std::scientific      \
               << (x) << std::endl
@@ -147,15 +147,15 @@ void precondition(const Condition& condition, const Message& message)
 #endif
 }
 
-#ifndef AMGCL_NO_BOOST
+#ifndef ARCANE_ALINA_NO_BOOST
 
-#define AMGCL_PARAMS_IMPORT_VALUE(p, name) \
+#define ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, name) \
   name(p.get(#name, params().name))
 
-#define AMGCL_PARAMS_IMPORT_CHILD(p, name) \
+#define ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, name) \
   name(p.get_child(#name, ::Arcane::Alina::detail::empty_ptree()))
 
-#define AMGCL_PARAMS_EXPORT_VALUE(p, path, name) \
+#define ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, name) \
   p.put(std::string(path) + #name, name)
 
 namespace detail
@@ -181,17 +181,17 @@ namespace detail
 
 } // namespace detail
 
-#define AMGCL_PARAMS_EXPORT_CHILD(p, path, name) \
+#define ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, name) \
   ::Arcane::Alina::detail::params_export_child(p, path, #name, name)
 
 // Missing parameter action
-#ifndef AMGCL_PARAM_MISSING
-#define AMGCL_PARAM_MISSING(name) (void)0
+#ifndef ARCANE_ALINA_PARAM_MISSING
+#define ARCANE_ALINA_PARAM_MISSING(name) (void)0
 #endif
 
 // Unknown parameter action
-#ifndef AMGCL_PARAM_UNKNOWN
-#define AMGCL_PARAM_UNKNOWN(name) \
+#ifndef ARCANE_ALINA_PARAM_UNKNOWN
+#define ARCANE_ALINA_PARAM_UNKNOWN(name) \
   std::cerr << "AMGCL WARNING: unknown parameter " << name << std::endl
 #endif
 
@@ -201,12 +201,12 @@ const std::set<std::string>& names)
 {
   for (const auto& n : names) {
     if (!p.count(n)) {
-      AMGCL_PARAM_MISSING(n);
+      ARCANE_ALINA_PARAM_MISSING(n);
     }
   }
   for (const auto& v : p) {
     if (!names.count(v.first)) {
-      AMGCL_PARAM_UNKNOWN(v.first);
+      ARCANE_ALINA_PARAM_UNKNOWN(v.first);
     }
   }
 }
@@ -218,17 +218,17 @@ const std::set<std::string>& opt_names)
 {
   for (const auto& n : names) {
     if (!p.count(n)) {
-      AMGCL_PARAM_MISSING(n);
+      ARCANE_ALINA_PARAM_MISSING(n);
     }
   }
   for (const auto& n : opt_names) {
     if (!p.count(n)) {
-      AMGCL_PARAM_MISSING(n);
+      ARCANE_ALINA_PARAM_MISSING(n);
     }
   }
   for (const auto& v : p) {
     if (!names.count(v.first) && !opt_names.count(v.first)) {
-      AMGCL_PARAM_UNKNOWN(v.first);
+      ARCANE_ALINA_PARAM_UNKNOWN(v.first);
     }
   }
 }
@@ -247,7 +247,7 @@ inline void put(boost::property_tree::ptree& p, const std::string& param)
 namespace detail
 {
 
-#ifndef AMGCL_NO_BOOST
+#ifndef ARCANE_ALINA_NO_BOOST
   inline const boost::property_tree::ptree& empty_ptree()
   {
     static const boost::property_tree::ptree p;
@@ -259,11 +259,11 @@ namespace detail
   {
     empty_params() {}
 
-#ifndef AMGCL_NO_BOOST
+#ifndef ARCANE_ALINA_NO_BOOST
     empty_params(const boost::property_tree::ptree& p)
     {
       for (const auto& v : p) {
-        AMGCL_PARAM_UNKNOWN(v.first);
+        ARCANE_ALINA_PARAM_UNKNOWN(v.first);
       }
     }
     void get(boost::property_tree::ptree&, const std::string&) const {}

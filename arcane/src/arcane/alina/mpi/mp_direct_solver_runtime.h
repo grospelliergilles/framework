@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_DIRECT_SOLVER_RUNTIME_HPP
-#define AMGCL_MPI_DIRECT_SOLVER_RUNTIME_HPP
+#ifndef ARCANE_ALINA_MPI_DIRECT_SOLVER_RUNTIME_HPP
+#define ARCANE_ALINA_MPI_DIRECT_SOLVER_RUNTIME_HPP
 
 /*
 The MIT License
@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #include <arcane/alina/util.h>
 #include <arcane/alina/mpi/mp_direct_solver_skyline_lu.h>
-#ifdef AMGCL_HAVE_EIGEN
+#ifdef ARCANE_ALINA_HAVE_EIGEN
 #include <arcane/alina/mpi/mp_direct_solve_eigen_splu.h>
 #endif
 
@@ -44,10 +44,10 @@ namespace direct {
 
 enum type {
     skyline_lu
-#ifdef AMGCL_HAVE_EIGEN
+#ifdef ARCANE_ALINA_HAVE_EIGEN
   , eigen_splu
 #endif
-#ifdef AMGCL_HAVE_PASTIX
+#ifdef ARCANE_ALINA_HAVE_PASTIX
   , dpastix
   , spastix
 #endif
@@ -58,11 +58,11 @@ inline std::ostream& operator<<(std::ostream &os, type s)
     switch (s) {
         case skyline_lu:
             return os << "skyline_lu";
-#ifdef AMGCL_HAVE_EIGEN
+#ifdef ARCANE_ALINA_HAVE_EIGEN
         case eigen_splu:
             return os << "eigen_splu";
 #endif
-#ifdef AMGCL_HAVE_PASTIX
+#ifdef ARCANE_ALINA_HAVE_PASTIX
         case dpastix:
             return os << "dpastix";
         case spastix:
@@ -80,11 +80,11 @@ inline std::istream& operator>>(std::istream &in, type &s)
 
     if (val == "skyline_lu")
         s = skyline_lu;
-#ifdef AMGCL_HAVE_EIGEN
+#ifdef ARCANE_ALINA_HAVE_EIGEN
     else if (val == "eigen_splu")
         s = eigen_splu;
 #endif
-#ifdef AMGCL_HAVE_PASTIX
+#ifdef ARCANE_ALINA_HAVE_PASTIX
     else if (val == "dpastix")
         s = dpastix;
     else if (val == "spastix")
@@ -93,10 +93,10 @@ inline std::istream& operator>>(std::istream &in, type &s)
     else
         throw std::invalid_argument("Invalid direct solver value. Valid choices are: "
                 "skyline_lu"
-#ifdef AMGCL_HAVE_EIGEN
+#ifdef ARCANE_ALINA_HAVE_EIGEN
                 ", eigen_splu"
 #endif
-#ifdef AMGCL_HAVE_PASTIX
+#ifdef ARCANE_ALINA_HAVE_PASTIX
                 ", dpastix"
                 ", spastix"
 #endif
@@ -114,7 +114,7 @@ class solver {
         solver(Alina::mpi::communicator comm, const Matrix &A, params prm = params())
             : s(prm.get("type", skyline_lu))
         {
-            if (!prm.erase("type")) AMGCL_PARAM_MISSING("type");
+            if (!prm.erase("type")) ARCANE_ALINA_PARAM_MISSING("type");
 
             switch (s) {
                 case skyline_lu:
@@ -123,7 +123,7 @@ class solver {
                         handle = static_cast<void*>(new S(comm, A, prm));
                     }
                     break;
-#ifdef AMGCL_HAVE_EIGEN
+#ifdef ARCANE_ALINA_HAVE_EIGEN
                 case eigen_splu:
                     {
                         typedef Alina::mpi::direct::eigen_splu<value_type> S;
@@ -149,7 +149,7 @@ class solver {
                         static_cast<const S*>(handle)->operator()(rhs, x);
                     }
                     break;
-#ifdef AMGCL_HAVE_EIGEN
+#ifdef ARCANE_ALINA_HAVE_EIGEN
                 case eigen_splu:
                     {
                         typedef Alina::mpi::direct::eigen_splu<value_type> S;
@@ -157,7 +157,7 @@ class solver {
                     }
                     break;
 #endif
-#ifdef AMGCL_HAVE_PASTIX
+#ifdef ARCANE_ALINA_HAVE_PASTIX
                 case dpastix:
                     {
                         typedef Alina::mpi::direct::pastix<value_type, true> S;
@@ -184,7 +184,7 @@ class solver {
                         delete static_cast<S*>(handle);
                     }
                     break;
-#ifdef AMGCL_HAVE_EIGEN
+#ifdef ARCANE_ALINA_HAVE_EIGEN
                 case eigen_splu:
                     {
                         typedef Alina::mpi::direct::eigen_splu<value_type> S;
@@ -192,7 +192,7 @@ class solver {
                     }
                     break;
 #endif
-#ifdef AMGCL_HAVE_PASTIX
+#ifdef ARCANE_ALINA_HAVE_PASTIX
                 case dpastix:
                     {
                         typedef Alina::mpi::direct::pastix<value_type, true> S;

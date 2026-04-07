@@ -1,5 +1,5 @@
-#ifndef AMGCL_PRECONDITIONER_RUNTIME_HPP
-#define AMGCL_PRECONDITIONER_RUNTIME_HPP
+#ifndef ARCANE_ALINA_PRECONDITIONER_RUNTIME_HPP
+#define ARCANE_ALINA_PRECONDITIONER_RUNTIME_HPP
 
 /*
 The MIT License
@@ -109,7 +109,7 @@ class preconditioner {
               handle(0)
         {
             if (!prm.erase("class"))
-                AMGCL_PARAM_MISSING("class");
+                ARCANE_ALINA_PARAM_MISSING("class");
             std::cout << "PreconditionerClass=" << _class << "\n";
             switch(_class) {
                 case precond_class::amg:

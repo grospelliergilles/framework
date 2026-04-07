@@ -177,9 +177,9 @@ int main(int argc, char *argv[]) {
         (
          "partitioner,r",
          po::value<Alina::runtime::mpi::partition::type>()->default_value(
-#if defined(AMGCL_HAVE_SCOTCH)
+#if defined(ARCANE_ALINA_HAVE_SCOTCH)
              Alina::runtime::mpi::partition::ptscotch
-#elif defined(AMGCL_HAVE_PASTIX)
+#elif defined(ARCANE_ALINA_HAVE_PASTIX)
              Alina::runtime::mpi::partition::parmetis
 #else
              Alina::runtime::mpi::partition::merge

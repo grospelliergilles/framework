@@ -1,5 +1,5 @@
-#ifndef AMGCL_BACKEND_INTERFACE_HPP
-#define AMGCL_BACKEND_INTERFACE_HPP
+#ifndef ARCANE_ALINA_BACKEND_INTERFACE_HPP
+#define ARCANE_ALINA_BACKEND_INTERFACE_HPP
 
 /*
 The MIT License
@@ -358,9 +358,9 @@ namespace backend
   Beta beta,
   Vector2& y)
   {
-    AMGCL_TIC("spmv");
+    ARCANE_ALINA_TIC("spmv");
     spmv_impl<Alpha, Matrix, Vector1, Beta, Vector2>::apply(alpha, A, x, beta, y);
-    AMGCL_TOC("spmv");
+    ARCANE_ALINA_TOC("spmv");
   }
 
   /// Computes residual error.
@@ -370,27 +370,27 @@ namespace backend
   template <class Matrix, class Vector1, class Vector2, class Vector3>
   void residual(const Vector1& rhs, const Matrix& A, const Vector2& x, Vector3& r)
   {
-    AMGCL_TIC("residual");
+    ARCANE_ALINA_TIC("residual");
     residual_impl<Matrix, Vector1, Vector2, Vector3>::apply(rhs, A, x, r);
-    AMGCL_TOC("residual");
+    ARCANE_ALINA_TOC("residual");
   }
 
   /// Zeros out a vector.
   template <class Vector>
   void clear(Vector& x)
   {
-    AMGCL_TIC("clear");
+    ARCANE_ALINA_TIC("clear");
     clear_impl<Vector>::apply(x);
-    AMGCL_TOC("clear");
+    ARCANE_ALINA_TOC("clear");
   }
 
   /// Vector copy.
   template <class Vector1, class Vector2>
   void copy(const Vector1& x, Vector2& y)
   {
-    AMGCL_TIC("copy");
+    ARCANE_ALINA_TIC("copy");
     copy_impl<Vector1, Vector2>::apply(x, y);
-    AMGCL_TOC("copy");
+    ARCANE_ALINA_TOC("copy");
   }
 
   /// Computes inner product of two vectors.
@@ -402,9 +402,9 @@ namespace backend
     typedef typename math::inner_product_impl<
     typename value_type<Vector1>::type>::return_type result_type;
 
-    AMGCL_TIC("inner_product");
+    ARCANE_ALINA_TIC("inner_product");
     result_type p = inner_product_impl<Vector1, Vector2>::get(x, y);
-    AMGCL_TOC("inner_product");
+    ARCANE_ALINA_TOC("inner_product");
 
     return p;
   }
@@ -416,9 +416,9 @@ namespace backend
   template <class A, class Vector1, class B, class Vector2>
   void axpby(A a, Vector1 const& x, B b, Vector2& y)
   {
-    AMGCL_TIC("axpby");
+    ARCANE_ALINA_TIC("axpby");
     axpby_impl<A, Vector1, B, Vector2>::apply(a, x, b, y);
-    AMGCL_TOC("axpby");
+    ARCANE_ALINA_TOC("axpby");
   }
 
   /// Computes linear combination of three vectors.
@@ -428,9 +428,9 @@ namespace backend
   template <class A, class Vector1, class B, class Vector2, class C, class Vector3>
   void axpbypcz(A a, Vector1 const& x, B b, Vector2 const& y, C c, Vector3& z)
   {
-    AMGCL_TIC("axpbypcz");
+    ARCANE_ALINA_TIC("axpbypcz");
     axpbypcz_impl<A, Vector1, B, Vector2, C, Vector3>::apply(a, x, b, y, c, z);
-    AMGCL_TOC("axpbypcz");
+    ARCANE_ALINA_TOC("axpbypcz");
   }
 
   /// Computes element-wize vector product.
@@ -440,9 +440,9 @@ namespace backend
   template <class Alpha, class Vector1, class Vector2, class Beta, class Vector3>
   void vmul(Alpha alpha, const Vector1& x, const Vector2& y, Beta beta, Vector3& z)
   {
-    AMGCL_TIC("vmul");
+    ARCANE_ALINA_TIC("vmul");
     vmul_impl<Alpha, Vector1, Vector2, Beta, Vector3>::apply(alpha, x, y, beta, z);
-    AMGCL_TOC("vmul");
+    ARCANE_ALINA_TOC("vmul");
   }
 
   /// Reinterpret the vector to be compatible with the matrix value type

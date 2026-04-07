@@ -126,13 +126,13 @@ class schur_pressure_correction
     {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_CHILD(p, usolver)
-    , AMGCL_PARAMS_IMPORT_CHILD(p, psolver)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, type)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, approx_schur)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, adjust_p)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, simplec_dia)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, verbose)
+    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, usolver)
+    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, psolver)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, type)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, approx_schur)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, adjust_p)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, simplec_dia)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
     {
       size_t n = 0;
 
@@ -184,13 +184,13 @@ class schur_pressure_correction
 
     void get(PropertyTree& p, const std::string& path = "") const
     {
-      AMGCL_PARAMS_EXPORT_CHILD(p, path, usolver);
-      AMGCL_PARAMS_EXPORT_CHILD(p, path, psolver);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, type);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, approx_schur);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, adjust_p);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, simplec_dia);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, verbose);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, usolver);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, psolver);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, type);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, approx_schur);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, adjust_p);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, simplec_dia);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
     }
   } prm;
 

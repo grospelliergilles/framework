@@ -14,7 +14,7 @@
 
 #include "AlinaLib.h"
 
-#ifdef AMGCL_PROFILING
+#ifdef ARCANE_ALINA_PROFILING
 #include <arcane/alina/profiler.h>
 namespace amgcl {
     profiler<> prof;
@@ -31,45 +31,45 @@ typedef Alina::make_solver<AMG, ISolver>          Solver;
 typedef Alina::PropertyTree               Params;
 
 //---------------------------------------------------------------------------
-amgclHandle STDCALL amgcl_params_create()
+amgclHandle STDCALL ARCANE_ALINA_params_create()
 {
   return static_cast<amgclHandle>(new Params());
 }
 
 //---------------------------------------------------------------------------
-void STDCALL amgcl_params_seti(amgclHandle prm, const char* name, int value)
+void STDCALL ARCANE_ALINA_params_seti(amgclHandle prm, const char* name, int value)
 {
   static_cast<Params*>(prm)->put(name, value);
 }
 
 //---------------------------------------------------------------------------
-void STDCALL amgcl_params_setf(amgclHandle prm, const char* name, float value)
+void STDCALL ARCANE_ALINA_params_setf(amgclHandle prm, const char* name, float value)
 {
   static_cast<Params*>(prm)->put(name, value);
 }
 
 //---------------------------------------------------------------------------
-void STDCALL amgcl_params_sets(amgclHandle prm, const char* name, const char* value)
+void STDCALL ARCANE_ALINA_params_sets(amgclHandle prm, const char* name, const char* value)
 {
   static_cast<Params*>(prm)->put(name, value);
 }
 
 //---------------------------------------------------------------------------
-void STDCALL amgcl_params_read_json(amgclHandle prm, const char* fname)
+void STDCALL ARCANE_ALINA_params_read_json(amgclHandle prm, const char* fname)
 {
   Params& p = *static_cast<Params*>(prm);
   p.read_json(fname);
 }
 
 //---------------------------------------------------------------------------
-void STDCALL amgcl_params_destroy(amgclHandle prm)
+void STDCALL ARCANE_ALINA_params_destroy(amgclHandle prm)
 {
   delete static_cast<Params*>(prm);
 }
 
 //---------------------------------------------------------------------------
 amgclHandle STDCALL
-amgcl_precond_create(int n,
+ARCANE_ALINA_precond_create(int n,
                      const int* ptr,
                      const int* col,
                      const double* val,
@@ -88,7 +88,7 @@ amgcl_precond_create(int n,
 
 //---------------------------------------------------------------------------
 amgclHandle STDCALL
-amgcl_precond_create_f(int n,
+ARCANE_ALINA_precond_create_f(int n,
                        const int* ptr,
                        const int* col,
                        const double* val,
@@ -110,7 +110,7 @@ amgcl_precond_create_f(int n,
 
 //---------------------------------------------------------------------------
 void STDCALL
-amgcl_precond_apply(amgclHandle handle, const double* rhs, double* x)
+ARCANE_ALINA_precond_apply(amgclHandle handle, const double* rhs, double* x)
 {
   AMG* amg = static_cast<AMG*>(handle);
 
@@ -124,21 +124,21 @@ amgcl_precond_apply(amgclHandle handle, const double* rhs, double* x)
 
 //---------------------------------------------------------------------------
 void STDCALL
-amgcl_precond_report(amgclHandle handle)
+ARCANE_ALINA_precond_report(amgclHandle handle)
 {
   std::cout << *static_cast<AMG*>(handle) << std::endl;
 }
 
 //---------------------------------------------------------------------------
 void STDCALL
-amgcl_precond_destroy(amgclHandle handle)
+ARCANE_ALINA_precond_destroy(amgclHandle handle)
 {
   delete static_cast<AMG*>(handle);
 }
 
 //---------------------------------------------------------------------------
 amgclHandle STDCALL
-amgcl_solver_create(int n,
+ARCANE_ALINA_solver_create(int n,
                     const int* ptr,
                     const int* col,
                     const double* val,
@@ -157,7 +157,7 @@ amgcl_solver_create(int n,
 
 //---------------------------------------------------------------------------
 amgclHandle STDCALL
-amgcl_solver_create_f(int n,
+ARCANE_ALINA_solver_create_f(int n,
                       const int* ptr,
                       const int* col,
                       const double* val,
@@ -179,21 +179,21 @@ amgcl_solver_create_f(int n,
 
 //---------------------------------------------------------------------------
 void STDCALL
-amgcl_solver_report(amgclHandle handle)
+ARCANE_ALINA_solver_report(amgclHandle handle)
 {
   std::cout << static_cast<Solver*>(handle)->precond() << std::endl;
 }
 
 //---------------------------------------------------------------------------
 void STDCALL
-amgcl_solver_destroy(amgclHandle handle)
+ARCANE_ALINA_solver_destroy(amgclHandle handle)
 {
   delete static_cast<Solver*>(handle);
 }
 
 //---------------------------------------------------------------------------
 conv_info STDCALL
-amgcl_solver_solve(amgclHandle handle,
+ARCANE_ALINA_solver_solve(amgclHandle handle,
                    const double* rhs,
                    double* x)
 {
@@ -213,17 +213,17 @@ amgcl_solver_solve(amgclHandle handle,
 
 //---------------------------------------------------------------------------
 void STDCALL
-amgcl_solver_solve_f(amgclHandle handle,
+ARCANE_ALINA_solver_solve_f(amgclHandle handle,
                      const double* rhs,
                      double* x,
                      conv_info* cnv)
 {
-  *cnv = amgcl_solver_solve(handle, rhs, x);
+  *cnv = ARCANE_ALINA_solver_solve(handle, rhs, x);
 }
 
 //---------------------------------------------------------------------------
 conv_info STDCALL
-amgcl_solver_solve_mtx(amgclHandle handle,
+ARCANE_ALINA_solver_solve_mtx(amgclHandle handle,
                        int const* A_ptr,
                        int const* A_col,
                        double const* A_val,
@@ -251,7 +251,7 @@ amgcl_solver_solve_mtx(amgclHandle handle,
 
 //---------------------------------------------------------------------------
 void STDCALL
-amgcl_solver_solve_mtx_f(amgclHandle handle,
+ARCANE_ALINA_solver_solve_mtx_f(amgclHandle handle,
                          int const* A_ptr,
                          int const* A_col,
                          double const* A_val,

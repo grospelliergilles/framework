@@ -78,25 +78,25 @@ struct wrapper
   , handle(0)
   {
     if (!prm.erase("type"))
-      AMGCL_PARAM_MISSING("type");
+      ARCANE_ALINA_PARAM_MISSING("type");
     switch (r) {
 
-#define AMGCL_RUNTIME_RELAXATION(type) \
+#define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case type: \
     handle = call_constructor<::Arcane::Alina::relaxation::type>(A, prm, bprm); \
     break
 
-      AMGCL_RUNTIME_RELAXATION(gauss_seidel);
-      AMGCL_RUNTIME_RELAXATION(ilu0);
-      AMGCL_RUNTIME_RELAXATION(iluk);
-      AMGCL_RUNTIME_RELAXATION(ilup);
-      AMGCL_RUNTIME_RELAXATION(ilut);
-      AMGCL_RUNTIME_RELAXATION(damped_jacobi);
-      AMGCL_RUNTIME_RELAXATION(spai0);
-      AMGCL_RUNTIME_RELAXATION(spai1);
-      AMGCL_RUNTIME_RELAXATION(chebyshev);
+      ARCANE_ALINA_RUNTIME_RELAXATION(gauss_seidel);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilu0);
+      ARCANE_ALINA_RUNTIME_RELAXATION(iluk);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilup);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilut);
+      ARCANE_ALINA_RUNTIME_RELAXATION(damped_jacobi);
+      ARCANE_ALINA_RUNTIME_RELAXATION(spai0);
+      ARCANE_ALINA_RUNTIME_RELAXATION(spai1);
+      ARCANE_ALINA_RUNTIME_RELAXATION(chebyshev);
 
-#undef AMGCL_RUNTIME_RELAXATION
+#undef ARCANE_ALINA_RUNTIME_RELAXATION
 
     default:
       throw std::invalid_argument("Unsupported relaxation type");
@@ -107,22 +107,22 @@ struct wrapper
   {
     switch (r) {
 
-#define AMGCL_RUNTIME_RELAXATION(type) \
+#define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case type: \
     delete static_cast<::Arcane::Alina::relaxation::type<Backend>*>(handle); \
     break
 
-      AMGCL_RUNTIME_RELAXATION(gauss_seidel);
-      AMGCL_RUNTIME_RELAXATION(ilu0);
-      AMGCL_RUNTIME_RELAXATION(iluk);
-      AMGCL_RUNTIME_RELAXATION(ilup);
-      AMGCL_RUNTIME_RELAXATION(ilut);
-      AMGCL_RUNTIME_RELAXATION(damped_jacobi);
-      AMGCL_RUNTIME_RELAXATION(spai0);
-      AMGCL_RUNTIME_RELAXATION(spai1);
-      AMGCL_RUNTIME_RELAXATION(chebyshev);
+      ARCANE_ALINA_RUNTIME_RELAXATION(gauss_seidel);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilu0);
+      ARCANE_ALINA_RUNTIME_RELAXATION(iluk);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilup);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilut);
+      ARCANE_ALINA_RUNTIME_RELAXATION(damped_jacobi);
+      ARCANE_ALINA_RUNTIME_RELAXATION(spai0);
+      ARCANE_ALINA_RUNTIME_RELAXATION(spai1);
+      ARCANE_ALINA_RUNTIME_RELAXATION(chebyshev);
 
-#undef AMGCL_RUNTIME_RELAXATION
+#undef ARCANE_ALINA_RUNTIME_RELAXATION
     }
   }
 
@@ -134,22 +134,22 @@ struct wrapper
 
     switch (r) {
 
-#define AMGCL_RUNTIME_RELAXATION(type) \
+#define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case type: \
     call_apply_pre<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break
 
-      AMGCL_RUNTIME_RELAXATION(gauss_seidel);
-      AMGCL_RUNTIME_RELAXATION(ilu0);
-      AMGCL_RUNTIME_RELAXATION(iluk);
-      AMGCL_RUNTIME_RELAXATION(ilup);
-      AMGCL_RUNTIME_RELAXATION(ilut);
-      AMGCL_RUNTIME_RELAXATION(damped_jacobi);
-      AMGCL_RUNTIME_RELAXATION(spai0);
-      AMGCL_RUNTIME_RELAXATION(spai1);
-      AMGCL_RUNTIME_RELAXATION(chebyshev);
+      ARCANE_ALINA_RUNTIME_RELAXATION(gauss_seidel);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilu0);
+      ARCANE_ALINA_RUNTIME_RELAXATION(iluk);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilup);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilut);
+      ARCANE_ALINA_RUNTIME_RELAXATION(damped_jacobi);
+      ARCANE_ALINA_RUNTIME_RELAXATION(spai0);
+      ARCANE_ALINA_RUNTIME_RELAXATION(spai1);
+      ARCANE_ALINA_RUNTIME_RELAXATION(chebyshev);
 
-#undef AMGCL_RUNTIME_RELAXATION
+#undef ARCANE_ALINA_RUNTIME_RELAXATION
 
     default:
       throw std::invalid_argument("Unsupported relaxation type");
@@ -163,22 +163,22 @@ struct wrapper
     std::cout << "PreconditionerPostRelaxationType=" << r << "\n";
     switch (r) {
 
-#define AMGCL_RUNTIME_RELAXATION(type) \
+#define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case type: \
     call_apply_post<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break
 
-      AMGCL_RUNTIME_RELAXATION(gauss_seidel);
-      AMGCL_RUNTIME_RELAXATION(ilu0);
-      AMGCL_RUNTIME_RELAXATION(iluk);
-      AMGCL_RUNTIME_RELAXATION(ilup);
-      AMGCL_RUNTIME_RELAXATION(ilut);
-      AMGCL_RUNTIME_RELAXATION(damped_jacobi);
-      AMGCL_RUNTIME_RELAXATION(spai0);
-      AMGCL_RUNTIME_RELAXATION(spai1);
-      AMGCL_RUNTIME_RELAXATION(chebyshev);
+      ARCANE_ALINA_RUNTIME_RELAXATION(gauss_seidel);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilu0);
+      ARCANE_ALINA_RUNTIME_RELAXATION(iluk);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilup);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilut);
+      ARCANE_ALINA_RUNTIME_RELAXATION(damped_jacobi);
+      ARCANE_ALINA_RUNTIME_RELAXATION(spai0);
+      ARCANE_ALINA_RUNTIME_RELAXATION(spai1);
+      ARCANE_ALINA_RUNTIME_RELAXATION(chebyshev);
 
-#undef AMGCL_RUNTIME_RELAXATION
+#undef ARCANE_ALINA_RUNTIME_RELAXATION
 
     default:
       throw std::invalid_argument("Unsupported relaxation type");
@@ -192,22 +192,22 @@ struct wrapper
 
     switch (r) {
 
-#define AMGCL_RUNTIME_RELAXATION(type) \
+#define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case type: \
     call_apply<Arcane::Alina::relaxation::type>(A, rhs, x); \
     break
 
-      AMGCL_RUNTIME_RELAXATION(gauss_seidel);
-      AMGCL_RUNTIME_RELAXATION(ilu0);
-      AMGCL_RUNTIME_RELAXATION(iluk);
-      AMGCL_RUNTIME_RELAXATION(ilup);
-      AMGCL_RUNTIME_RELAXATION(ilut);
-      AMGCL_RUNTIME_RELAXATION(damped_jacobi);
-      AMGCL_RUNTIME_RELAXATION(spai0);
-      AMGCL_RUNTIME_RELAXATION(spai1);
-      AMGCL_RUNTIME_RELAXATION(chebyshev);
+      ARCANE_ALINA_RUNTIME_RELAXATION(gauss_seidel);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilu0);
+      ARCANE_ALINA_RUNTIME_RELAXATION(iluk);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilup);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilut);
+      ARCANE_ALINA_RUNTIME_RELAXATION(damped_jacobi);
+      ARCANE_ALINA_RUNTIME_RELAXATION(spai0);
+      ARCANE_ALINA_RUNTIME_RELAXATION(spai1);
+      ARCANE_ALINA_RUNTIME_RELAXATION(chebyshev);
 
-#undef AMGCL_RUNTIME_RELAXATION
+#undef ARCANE_ALINA_RUNTIME_RELAXATION
 
     default:
       throw std::invalid_argument("Unsupported relaxation type");
@@ -218,21 +218,21 @@ struct wrapper
   {
     switch (r) {
 
-#define AMGCL_RUNTIME_RELAXATION(type) \
+#define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case type: \
     return backend::bytes(*static_cast<::Arcane::Alina::relaxation::type<Backend>*>(handle))
 
-      AMGCL_RUNTIME_RELAXATION(gauss_seidel);
-      AMGCL_RUNTIME_RELAXATION(ilu0);
-      AMGCL_RUNTIME_RELAXATION(iluk);
-      AMGCL_RUNTIME_RELAXATION(ilup);
-      AMGCL_RUNTIME_RELAXATION(ilut);
-      AMGCL_RUNTIME_RELAXATION(damped_jacobi);
-      AMGCL_RUNTIME_RELAXATION(spai0);
-      AMGCL_RUNTIME_RELAXATION(spai1);
-      AMGCL_RUNTIME_RELAXATION(chebyshev);
+      ARCANE_ALINA_RUNTIME_RELAXATION(gauss_seidel);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilu0);
+      ARCANE_ALINA_RUNTIME_RELAXATION(iluk);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilup);
+      ARCANE_ALINA_RUNTIME_RELAXATION(ilut);
+      ARCANE_ALINA_RUNTIME_RELAXATION(damped_jacobi);
+      ARCANE_ALINA_RUNTIME_RELAXATION(spai0);
+      ARCANE_ALINA_RUNTIME_RELAXATION(spai1);
+      ARCANE_ALINA_RUNTIME_RELAXATION(chebyshev);
 
-#undef AMGCL_RUNTIME_RELAXATION
+#undef ARCANE_ALINA_RUNTIME_RELAXATION
 
     default:
       throw std::invalid_argument("Unsupported relaxation type");

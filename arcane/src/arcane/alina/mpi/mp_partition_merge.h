@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_REPARTITION_MERGE_HPP
-#define AMGCL_MPI_REPARTITION_MERGE_HPP
+#ifndef ARCANE_ALINA_MPI_REPARTITION_MERGE_HPP
+#define ARCANE_ALINA_MPI_REPARTITION_MERGE_HPP
 
 /*
 The MIT License
@@ -57,18 +57,18 @@ struct merge {
         {}
 
         params(const PropertyTree &p)
-            : AMGCL_PARAMS_IMPORT_VALUE(p, enable),
-              AMGCL_PARAMS_IMPORT_VALUE(p, min_per_proc),
-              AMGCL_PARAMS_IMPORT_VALUE(p, shrink_ratio)
+            : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, enable),
+              ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, min_per_proc),
+              ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, shrink_ratio)
         {
             check_params(p, {"enable", "min_per_proc", "shrink_ratio"});
         }
 
         void get(PropertyTree &p, const std::string &path = "") const
         {
-          AMGCL_PARAMS_EXPORT_VALUE(p, path, enable);
-          AMGCL_PARAMS_EXPORT_VALUE(p, path, min_per_proc);
-          AMGCL_PARAMS_EXPORT_VALUE(p, path, shrink_ratio);
+          ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, enable);
+          ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, min_per_proc);
+          ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, shrink_ratio);
         }
 
     } prm;

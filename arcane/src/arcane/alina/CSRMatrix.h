@@ -62,7 +62,7 @@ struct CSRMatrix
   : nrows(nrows)
   , ncols(ncols)
   {
-    AMGCL_TIC("CSR copy");
+    ARCANE_ALINA_TIC("CSR copy");
     precondition(static_cast<ptrdiff_t>(nrows + 1) == std::distance(std::begin(ptr_range), std::end(ptr_range)),
                  "ptr_range has wrong size in crs constructor");
 
@@ -87,7 +87,7 @@ struct CSRMatrix
         val[j] = val_range[j];
       }
     }
-    AMGCL_TOC("CSR copy");
+    ARCANE_ALINA_TOC("CSR copy");
   }
 
   template <class Matrix>
@@ -95,7 +95,7 @@ struct CSRMatrix
   : nrows(backend::rows(A))
   , ncols(backend::cols(A))
   {
-    AMGCL_TIC("CSR copy");
+    ARCANE_ALINA_TIC("CSR copy");
     ptr = new ptr_type[nrows + 1];
     ptr[0] = 0;
 
@@ -121,7 +121,7 @@ struct CSRMatrix
         ++row_head;
       }
     }
-    AMGCL_TOC("CSR copy");
+    ARCANE_ALINA_TOC("CSR copy");
   }
 
   CSRMatrix(const CSRMatrix& other)

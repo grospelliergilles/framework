@@ -1,5 +1,5 @@
-#ifndef AMGCL_MPI_UTIL_HPP
-#define AMGCL_MPI_UTIL_HPP
+#ifndef ARCANE_ALINA_MPI_UTIL_HPP
+#define ARCANE_ALINA_MPI_UTIL_HPP
 
 /*
 The MIT License

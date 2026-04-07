@@ -66,7 +66,7 @@ if (Boost_FOUND)
   )
   target_link_libraries(arcane_alina PUBLIC Boost::headers)
 else()
-  target_compile_definitions(arcane_alina INTERFACE AMGCL_NO_BOOST)
+  target_compile_definitions(arcane_alina INTERFACE ARCANE_ALINA_NO_BOOST)
 endif()
 
 #target_include_directories(amgcl INTERFACE
@@ -119,7 +119,7 @@ if (EIGEN_INCLUDE)
     #     $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-copy>
     #     $<$<CXX_COMPILER_ID:Clang>:-Wno-c++11-long-long>
     #     )
-    target_compile_definitions(eigen_target INTERFACE AMGCL_HAVE_EIGEN)
+    target_compile_definitions(eigen_target INTERFACE ARCANE_ALINA_HAVE_EIGEN)
 endif()
 
 #----------------------------------------------------------------------------
@@ -174,24 +174,24 @@ find_library(HWLOC_LIBRARY hwloc)
 arcane_find_package(Parmetis)
 if(Parmetis_FOUND)
   message(STATUS "Found Parmetis for Alina")
-  target_compile_definitions(arcane_alina PUBLIC AMGCL_HAVE_PARMETIS ARCANE_ALINA_HAVE_PARMETIS)
+  target_compile_definitions(arcane_alina PUBLIC ARCANE_ALINA_HAVE_PARMETIS ARCANE_ALINA_HAVE_PARMETIS)
   target_link_libraries(arcane_alina PUBLIC arccon::Parmetis)
 endif()
 
-option(AMGCL_BUILD_TESTS    ON)
-option(AMGCL_BUILD_EXAMPLES ON)
+option(ARCANE_ALINA_BUILD_TESTS    ON)
+option(ARCANE_ALINA_BUILD_EXAMPLES ON)
 
-option(AMGCL_DISABLE_RARE_COMPONENTS OFF)
+option(ARCANE_ALINA_DISABLE_RARE_COMPONENTS OFF)
 
-if(AMGCL_DISABLE_RARE_COMPONENTS)
+if(ARCANE_ALINA_DISABLE_RARE_COMPONENTS)
   add_definitions(
-    -DAMGCL_RUNTIME_DISABLE_MULTICOLOR_GS
-    -DAMGCL_RUNTIME_DISABLE_SPAI1
-    -DAMGCL_RUNTIME_DISABLE_CHEBYSHEV
+    -DARCANE_ALINA_RUNTIME_DISABLE_MULTICOLOR_GS
+    -DARCANE_ALINA_RUNTIME_DISABLE_SPAI1
+    -DARCANE_ALINA_RUNTIME_DISABLE_CHEBYSHEV
   )
 endif()
 
-#if (AMGCL_BUILD_TESTS)
+#if (ARCANE_ALINA_BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)
 #endif()
@@ -199,21 +199,21 @@ endif()
 add_subdirectory(examples)
 add_subdirectory(tutorial)
 
-if (AMGCL_BUILD_EXAMPLES)
+if (ARCANE_ALINA_BUILD_EXAMPLES)
 
   #----------------------------------------------------------------------------
   # Build Fortran example
   #----------------------------------------------------------------------------
-  option(AMGCL_HAVE_FORTRAN "Build Fortran example" OFF)
-  if (AMGCL_HAVE_FORTRAN)
+  option(ARCANE_ALINA_HAVE_FORTRAN "Build Fortran example" OFF)
+  if (ARCANE_ALINA_HAVE_FORTRAN)
     add_subdirectory(fortran)
   endif()
 
   #----------------------------------------------------------------------------
   # Build Python example
   #----------------------------------------------------------------------------
-  option(AMGCL_HAVE_PYTHON "Build Python example" OFF)
-  if (AMGCL_HAVE_PYTHON)
+  option(ARCANE_ALINA_HAVE_PYTHON "Build Python example" OFF)
+  if (ARCANE_ALINA_HAVE_PYTHON)
     add_subdirectory(pyamgcl)
   endif()
 endif()

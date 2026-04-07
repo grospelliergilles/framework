@@ -138,14 +138,14 @@ struct plain_aggregates
     {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_VALUE(p, eps_strong)
+    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_strong)
     {
       check_params(p, { "eps_strong", "block_size" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, eps_strong);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_strong);
     }
   };
 
@@ -319,7 +319,7 @@ tentative_prolongation(size_t n,
 
   auto P = std::make_shared<Matrix>();
 
-  AMGCL_TIC("tentative");
+  ARCANE_ALINA_TIC("tentative");
   if (nullspace.cols > 0) {
     ptrdiff_t nba = naggr / block_size;
 
@@ -414,7 +414,7 @@ tentative_prolongation(size_t n,
       }
     }
   }
-  AMGCL_TOC("tentative");
+  ARCANE_ALINA_TOC("tentative");
 
   return P;
 }
@@ -448,7 +448,7 @@ class pointwise_aggregates
 
     params(const PropertyTree& p)
     : plain_aggregates::params(p)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, block_size)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
     {
       check_params(p, { "eps_strong", "block_size" });
     }
@@ -456,7 +456,7 @@ class pointwise_aggregates
     void get(Alina::PropertyTree& p, const std::string& path) const
     {
       plain_aggregates::params::get(p, path);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, block_size);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, block_size);
     }
   };
 
@@ -636,18 +636,18 @@ struct aggregation
     {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_CHILD(p, aggr)
-    , AMGCL_PARAMS_IMPORT_CHILD(p, nullspace)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, over_interp)
+    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
+    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, over_interp)
     {
       check_params(p, { "aggr", "nullspace", "over_interp" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      AMGCL_PARAMS_EXPORT_CHILD(p, path, aggr);
-      AMGCL_PARAMS_EXPORT_CHILD(p, path, nullspace);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, over_interp);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, nullspace);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, over_interp);
     }
   } prm;
 
@@ -669,14 +669,14 @@ struct aggregation
   {
     const size_t n = rows(A);
 
-    AMGCL_TIC("aggregates");
+    ARCANE_ALINA_TIC("aggregates");
     Aggregates aggr(A, prm.aggr, prm.nullspace.cols);
-    AMGCL_TOC("aggregates");
+    ARCANE_ALINA_TOC("aggregates");
 
-    AMGCL_TIC("interpolation");
+    ARCANE_ALINA_TIC("interpolation");
     auto P = tentative_prolongation<Matrix>(
     n, aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
-    AMGCL_TOC("interpolation");
+    ARCANE_ALINA_TOC("interpolation");
 
     return std::make_tuple(P, transpose(*P));
   }
@@ -915,18 +915,18 @@ struct ruge_stuben
     {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_VALUE(p, eps_strong)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, do_trunc)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, eps_trunc)
+    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_strong)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, do_trunc)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_trunc)
     {
       check_params(p, { "eps_strong", "do_trunc", "eps_trunc" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, eps_strong);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, do_trunc);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, eps_trunc);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_strong);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, do_trunc);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_trunc);
     }
   } prm;
 
@@ -953,12 +953,12 @@ struct ruge_stuben
     std::vector<char> cf(n, 'U');
     backend::CSRMatrix<char, Col, Ptr> S;
 
-    AMGCL_TIC("C/F split");
+    ARCANE_ALINA_TIC("C/F split");
     connect(A, prm.eps_strong, S, cf);
     cfsplit(A, S, cf);
-    AMGCL_TOC("C/F split");
+    ARCANE_ALINA_TOC("C/F split");
 
-    AMGCL_TIC("interpolation");
+    ARCANE_ALINA_TIC("interpolation");
     size_t nc = 0;
     std::vector<ptrdiff_t> cidx(n);
     for (size_t i = 0; i < n; ++i)
@@ -1089,7 +1089,7 @@ struct ruge_stuben
         ++row_head;
       }
     }
-    AMGCL_TOC("interpolation");
+    ARCANE_ALINA_TOC("interpolation");
 
     return std::make_tuple(P, transpose(*P));
   }
@@ -1356,22 +1356,22 @@ struct smoothed_aggregation
     {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_CHILD(p, aggr)
-    , AMGCL_PARAMS_IMPORT_CHILD(p, nullspace)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, relax)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, estimate_spectral_radius)
-    , AMGCL_PARAMS_IMPORT_VALUE(p, power_iters)
+    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
+    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, relax)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, estimate_spectral_radius)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
     {
       check_params(p, { "aggr", "nullspace", "relax", "estimate_spectral_radius", "power_iters" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      AMGCL_PARAMS_EXPORT_CHILD(p, path, aggr);
-      AMGCL_PARAMS_EXPORT_CHILD(p, path, nullspace);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, relax);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, estimate_spectral_radius);
-      AMGCL_PARAMS_EXPORT_VALUE(p, path, power_iters);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, nullspace);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, relax);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, estimate_spectral_radius);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, power_iters);
     }
   } prm;
 
@@ -1389,10 +1389,10 @@ struct smoothed_aggregation
 
     const size_t n = rows(A);
 
-    AMGCL_TIC("aggregates");
+    ARCANE_ALINA_TIC("aggregates");
     Aggregates aggr(A, prm.aggr, prm.nullspace.cols);
     prm.aggr.eps_strong *= 0.5;
-    AMGCL_TOC("aggregates");
+    ARCANE_ALINA_TOC("aggregates");
 
     auto P_tent = tentative_prolongation<Matrix>(
     n, aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
@@ -1408,7 +1408,7 @@ struct smoothed_aggregation
       omega *= static_cast<scalar_type>(2.0 / 3);
     }
 
-    AMGCL_TIC("smoothing");
+    ARCANE_ALINA_TIC("smoothing");
 #pragma omp parallel
     {
       std::vector<ptrdiff_t> marker(P->ncols, -1);
@@ -1486,7 +1486,7 @@ struct smoothed_aggregation
         }
       }
     }
-    AMGCL_TOC("smoothing");
+    ARCANE_ALINA_TOC("smoothing");
 
     return std::make_tuple(P, transpose(*P));
   }
@@ -1524,16 +1524,16 @@ struct smoothed_aggr_emin
     params() {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_CHILD(p, aggr)
-    , AMGCL_PARAMS_IMPORT_CHILD(p, nullspace)
+    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
+    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)
     {
       check_params(p, { "aggr", "nullspace" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      AMGCL_PARAMS_EXPORT_CHILD(p, path, aggr);
-      AMGCL_PARAMS_EXPORT_CHILD(p, path, nullspace);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, nullspace);
     }
   } prm;
 
@@ -1553,12 +1553,12 @@ struct smoothed_aggr_emin
     typedef typename backend::ptr_type<Matrix>::type Ptr;
     typedef ptrdiff_t Idx;
 
-    AMGCL_TIC("aggregates");
+    ARCANE_ALINA_TIC("aggregates");
     Aggregates aggr(A, prm.aggr, prm.nullspace.cols);
     prm.aggr.eps_strong *= 0.5;
-    AMGCL_TOC("aggregates");
+    ARCANE_ALINA_TOC("aggregates");
 
-    AMGCL_TIC("interpolation");
+    ARCANE_ALINA_TIC("interpolation");
     auto P_tent = tentative_prolongation<Matrix>(
     rows(A), aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
 
@@ -1620,7 +1620,7 @@ struct smoothed_aggr_emin
 
     auto P = interpolation(Af, dia, *P_tent, omega);
     auto R = restriction(Af, dia, *P_tent, omega);
-    AMGCL_TOC("interpolation");
+    ARCANE_ALINA_TOC("interpolation");
 
     return std::make_tuple(P, R);
   }

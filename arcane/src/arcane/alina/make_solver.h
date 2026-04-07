@@ -76,16 +76,16 @@ class make_solver
     params() {}
 
     params(const PropertyTree& p)
-    : AMGCL_PARAMS_IMPORT_CHILD(p, precond)
-    , AMGCL_PARAMS_IMPORT_CHILD(p, solver)
+    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, precond)
+    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solver)
     {
       check_params(p, { "precond", "solver" });
     }
 
     void get(PropertyTree& p, const std::string& path = "") const
     {
-      AMGCL_PARAMS_EXPORT_CHILD(p, path, precond);
-      AMGCL_PARAMS_EXPORT_CHILD(p, path, solver);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, precond);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solver);
     }
   } prm;
 
