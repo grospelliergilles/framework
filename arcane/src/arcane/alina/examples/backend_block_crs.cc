@@ -79,17 +79,14 @@ int main()
 
   std::vector<double> x(n, 0);
 
-  Alina::solver::bicgstab<AMG::backend_type> solve(n);
+  Alina::solver::BiCGStabSolver<AMG::backend_type> solve(n);
 
   prof.tic("solve");
-  size_t iters;
-  double resid;
-  std::tie(iters, resid) = solve(amg, rhs, x);
+  Alina::SolverResult r = solve(amg, rhs, x);
   prof.toc("solve");
 
-  std::cout << "Iterations: " << iters << std::endl
-            << "Error:      " << resid << std::endl
-            << std::endl;
+  std::cout << "Iterations: " << r.nbIteration() << std::endl
+            << "Error:      " << r.residual() << std::endl;
 
   std::cout << Alina::prof << std::endl;
 }

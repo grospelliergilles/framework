@@ -61,6 +61,7 @@ enum type
   cg, ///< Conjugate gradients method
   ConjugateGradient = cg, ///< Conjugate gradients method
   bicgstab, ///< BiConjugate Gradient Stabilized
+  BiCGStabSolver = bicgstab, ///< BiConjugate Gradient Stabilized
   bicgstabl, ///< BiCGStab(ell)
   gmres, ///< GMRES
   GMRESSolver = gmres, ///< GMRES
@@ -130,7 +131,7 @@ inline std::istream& operator>>(std::istream& in, type& s)
 
 #define ARCANE_ALINA_ALL_RUNTIME_SOLVER() \
   ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient); \
-  ARCANE_ALINA_RUNTIME_SOLVER(bicgstab); \
+  ARCANE_ALINA_RUNTIME_SOLVER(BiCGStabSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl); \
   ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(lgmres); \

@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
                 Alina::solver::preonly<PBackend>
                 >
             >,
-        Alina::solver::bicgstab<SBackend>
+        Alina::solver::BiCGStabSolver<SBackend>
         > Solver;
 
     // Solver parameters

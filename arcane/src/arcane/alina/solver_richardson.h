@@ -147,8 +147,7 @@ class RichardsonSolver
    * good preconditioner for several subsequent time steps [DeSh12]_.
    */
   template <class Matrix, class Precond, class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type>
-  operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
+  SolverResult operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
     static const coef_type one = math::identity<coef_type>();
 
@@ -161,7 +160,7 @@ class RichardsonSolver
       }
       else {
         backend::clear(x);
-        return std::make_tuple(0, norm_rhs);
+        return SolverResult(0, norm_rhs);
       }
     }
 
@@ -181,7 +180,7 @@ class RichardsonSolver
         std::cout << iter << "\t" << std::scientific << res_norm / norm_rhs << std::endl;
     }
 
-    return std::make_tuple(iter, res_norm / norm_rhs);
+    return SolverResult(iter, res_norm / norm_rhs);
   }
 
   /*!

@@ -40,6 +40,63 @@ namespace Arcane::Alina::solver
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*!
+ * \brief Parameters for BiConjugate Gradient Stabilized solver.
+ */
+struct BiCGStabSolverParams
+{
+  using params = BiCGStabSolverParams;
+
+  /// Preconditioning kind (left/right).
+  preconditioner::side::type pside = preconditioner::side::right;
+
+  /// Maximum number of iterations.
+  size_t maxiter = 100;
+
+  /// Target relative residual error.
+  double tol = 1.0e-8;
+
+  /// Target absolute residual error.
+  double abstol = std::numeric_limits<double>::min();
+
+  /// Always do at least one iteration.
+  bool check_after = false;
+
+  /// Ignore the trivial solution x=0 when rhs is zero.
+  //** Useful for searching for the null-space vectors of the system */
+  bool ns_search = false;
+
+  /// Verbose output (show iterations and error)
+  bool verbose = false;
+
+  BiCGStabSolverParams() = default;
+
+  BiCGStabSolverParams(const PropertyTree& p)
+  : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, pside)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, check_after)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
+  {
+    check_params(p, { "pside", "maxiter", "tol", "abstol", "check_after", "ns_search", "verbose" });
+  }
+
+  void get(PropertyTree& p, const std::string& path) const
+  {
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, pside);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, check_after);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
+  }
+};
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
  * \brief BiConjugate Gradient Stabilized (BiCGSTAB) method.
  *
  * The BiConjugate Gradient Stabilized method (Bi-CGSTAB) was developed to
@@ -47,7 +104,7 @@ namespace Arcane::Alina::solver
  * convergence patterns of the Conjugate Gradient [Barr94]_.
  */
 template <class Backend, class InnerProduct = detail::default_inner_product>
-class bicgstab
+class BiCGStabSolver
 {
  public:
 
@@ -62,70 +119,13 @@ class bicgstab
   typedef typename math::inner_product_impl<
   typename math::rhs_of<value_type>::type>::return_type coef_type;
 
-  /// Solver parameters.
-  struct params
-  {
-    /// Preconditioning kind (left/right).
-    preconditioner::side::type pside;
-
-    /// Maximum number of iterations.
-    size_t maxiter;
-
-    /// Target relative residual error.
-    scalar_type tol;
-
-    /// Target absolute residual error.
-    scalar_type abstol;
-
-    /// Always do at least one iteration.
-    bool check_after;
-
-    /// Ignore the trivial solution x=0 when rhs is zero.
-    //** Useful for searching for the null-space vectors of the system */
-    bool ns_search;
-
-    /// Verbose output (show iterations and error)
-    bool verbose;
-
-    params()
-    : pside(preconditioner::side::right)
-    , maxiter(100)
-    , tol(1e-8)
-    , abstol(std::numeric_limits<scalar_type>::min())
-    , check_after(false)
-    , ns_search(false)
-    , verbose(false)
-    {}
-
-    params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, pside)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, check_after)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
-    {
-      check_params(p, { "pside", "maxiter", "tol", "abstol", "check_after", "ns_search", "verbose" });
-    }
-
-    void get(PropertyTree& p, const std::string& path) const
-    {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, pside);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, check_after);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
-    }
-  };
+  using params = BiCGStabSolverParams;
 
   /// Preallocates necessary data structures for the system of size \p n.
-  bicgstab(size_t n,
-           const params& prm = params(),
-           const backend_params& backend_prm = backend_params(),
-           const InnerProduct& inner_product = InnerProduct())
+  BiCGStabSolver(size_t n,
+                 const params& prm = params(),
+                 const backend_params& backend_prm = backend_params(),
+                 const InnerProduct& inner_product = InnerProduct())
   : prm(prm)
   , n(n)
   , r(Backend::create_vector(n, backend_prm))
@@ -151,8 +151,7 @@ class bicgstab
    * good preconditioner for several subsequent time steps [DeSh12]_.
    */
   template <class Matrix, class Precond, class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type>
-  operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
+  SolverResult operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
     namespace side = preconditioner::side;
 
@@ -168,7 +167,7 @@ class bicgstab
       }
       else {
         backend::clear(x);
-        return std::make_tuple(0, norm_rhs);
+        return SolverResult(0, norm_rhs);
       }
     }
 
@@ -253,8 +252,7 @@ class bicgstab
    * solution on output.
    */
   template <class Precond, class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type>
-  operator()(const Precond& P, const Vec1& rhs, Vec2&& x) const
+  SolverResult operator()(const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
     return (*this)(P.system_matrix(), P, rhs, x);
   }
@@ -270,7 +268,7 @@ class bicgstab
     backend::bytes(*T);
   }
 
-  friend std::ostream& operator<<(std::ostream& os, const bicgstab& s)
+  friend std::ostream& operator<<(std::ostream& os, const BiCGStabSolver& s)
   {
     return os << "Type:             BiCGStab"
               << "\nUnknowns:         " << s.n
