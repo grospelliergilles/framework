@@ -102,9 +102,9 @@ class fgmres
 
 template <class Backend, class InnerProduct = mpi::inner_product>
 class gmres
-: public Alina::solver::gmres<Backend, InnerProduct>
+: public Alina::solver::GMRESSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::gmres<Backend, InnerProduct> Base;
+  typedef Alina::solver::GMRESSolver<Backend, InnerProduct> Base;
 
  public:
 

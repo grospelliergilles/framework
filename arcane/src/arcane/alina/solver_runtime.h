@@ -57,6 +57,7 @@ enum type
   bicgstab, ///< BiConjugate Gradient Stabilized
   bicgstabl, ///< BiCGStab(ell)
   gmres, ///< GMRES
+  GMRESSolver = gmres,
   lgmres, ///< LGMRES
   fgmres, ///< FGMRES
   idrs, ///< IDR(s)
@@ -153,7 +154,7 @@ struct wrapper
       ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
-      ARCANE_ALINA_RUNTIME_SOLVER(gmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver);
       ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
       ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
       ARCANE_ALINA_RUNTIME_SOLVER(idrs);
@@ -179,7 +180,7 @@ struct wrapper
       ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
-      ARCANE_ALINA_RUNTIME_SOLVER(gmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver);
       ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
       ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
       ARCANE_ALINA_RUNTIME_SOLVER(idrs);
@@ -203,7 +204,7 @@ struct wrapper
       ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
-      ARCANE_ALINA_RUNTIME_SOLVER(gmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver);
       ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
       ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
       ARCANE_ALINA_RUNTIME_SOLVER(idrs);
@@ -235,7 +236,7 @@ struct wrapper
       ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
-      ARCANE_ALINA_RUNTIME_SOLVER(gmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver);
       ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
       ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
       ARCANE_ALINA_RUNTIME_SOLVER(idrs);
@@ -260,7 +261,7 @@ struct wrapper
       ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
-      ARCANE_ALINA_RUNTIME_SOLVER(gmres);
+      ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver);
       ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
       ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
       ARCANE_ALINA_RUNTIME_SOLVER(idrs);
