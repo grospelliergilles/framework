@@ -39,6 +39,56 @@ namespace Arcane::Alina::solver
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*!
+ * \brief Parameters for Conjugate Gradient solver.
+ */
+struct ConjugateGradientSolverParams
+{
+  using params = ConjugateGradientSolverParams;
+
+  /// Maximum number of iterations.
+  size_t maxiter = 100;
+
+  /// Target relative residual error.
+  double tol = 1.0e-8;
+
+  /// Target absolute residual error.
+  double abstol = std::numeric_limits<double>::min();
+
+  /*!
+   * \brief Ignore the trivial solution x=0 when rhs is zero.
+   *
+   * Useful for searching for the null-space vectors of the system.
+   */
+  bool ns_search = false;
+
+  /// Verbose output (show iterations and error)
+  bool verbose = false;
+
+  ConjugateGradientSolverParams() = default;
+
+  ConjugateGradientSolverParams(const PropertyTree& p)
+  : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
+  {
+    check_params(p, { "maxiter", "tol", "abstol", "ns_search", "verbose" });
+  }
+
+  void get(PropertyTree& p, const std::string& path) const
+  {
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
+  }
+};
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
  * \brief Conjugate Gradients solver.
  *
  * An effective method for symmetric positive definite systems [Barr94]_.
@@ -60,49 +110,7 @@ class ConjugateGradient
   typedef typename math::inner_product_impl<
   typename math::rhs_of<value_type>::type>::return_type coef_type;
 
-  /// Solver parameters.
-  struct params
-  {
-    /// Maximum number of iterations.
-    size_t maxiter = 100;
-
-    /// Target relative residual error.
-    scalar_type tol = 1.0e-8;
-
-    /// Target absolute residual error.
-    scalar_type abstol = std::numeric_limits<scalar_type>::min();
-
-    /*!
-     * \brief Ignore the trivial solution x=0 when rhs is zero.
-     *
-     * Useful for searching for the null-space vectors of the system.
-     */
-    bool ns_search = false;
-
-    /// Verbose output (show iterations and error)
-    bool verbose = false;
-
-    params() = default;
-
-    params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
-    {
-      check_params(p, { "maxiter", "tol", "abstol", "ns_search", "verbose" });
-    }
-
-    void get(PropertyTree& p, const std::string& path) const
-    {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
-    }
-  };
+  using params = ConjugateGradientSolverParams;
 
   /// Preallocates necessary data structures for the system of size \p n.
   ConjugateGradient(size_t n, const params& prm = params(),
