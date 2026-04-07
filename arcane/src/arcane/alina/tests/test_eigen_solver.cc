@@ -1,5 +1,4 @@
-#define BOOST_TEST_MODULE TestEigenSolver
-#include <boost/test/unit_test.hpp>
+#include <gtest/gtest.h>
 
 #include <Eigen/SparseLU>
 #include <arcane/alina/solver_eigen.h>
@@ -8,39 +7,34 @@
 #include <arcane/alina/profiler.h>
 #include "sample_problem.h"
 
-namespace Arcane::Alina {
-    profiler<> prof;
+namespace
+{
+Arcane::Alina::profiler<> prof;
 }
-
-BOOST_AUTO_TEST_SUITE( test_eigen_solver )
 
 using namespace Arcane;
 
-BOOST_AUTO_TEST_CASE(eigen_solver)
+TEST(alina_test_solvers, eigen_solver)
 {
-    std::vector<int>    ptr;
-    std::vector<int>    col;
-    std::vector<double> val;
-    std::vector<double> rhs;
+  std::vector<int> ptr;
+  std::vector<int> col;
+  std::vector<double> val;
+  std::vector<double> rhs;
 
-    size_t n = sample_problem(16, val, col, ptr, rhs);
-    Alina::backend::CSRMatrix<double> A(std::tie(n, ptr, col, val));
+  size_t n = sample_problem(16, val, col, ptr, rhs);
+  Alina::backend::CSRMatrix<double> A(std::tie(n, ptr, col, val));
 
-    typedef
-        Alina::solver::EigenSolver<Eigen::SparseLU<Eigen::SparseMatrix<double, Eigen::ColMajor, int> > >
-        Solver;
+  typedef Alina::solver::EigenSolver<Eigen::SparseLU<Eigen::SparseMatrix<double, Eigen::ColMajor, int>>>
+  Solver;
 
-    Solver solve(A);
+  Solver solve(A);
 
-    std::vector<double> x(n);
-    std::vector<double> r(n);
+  std::vector<double> x(n);
+  std::vector<double> r(n);
 
-    solve(rhs, x);
+  solve(rhs, x);
 
-    Alina::backend::residual(rhs, A, x, r);
+  Alina::backend::residual(rhs, A, x, r);
 
-    BOOST_CHECK_SMALL(sqrt(Alina::backend::inner_product(r, r)), 1e-8);
+  ASSERT_NEAR(sqrt(Alina::backend::inner_product(r, r)), 0.0, 1e-8);
 }
-
-BOOST_AUTO_TEST_SUITE_END()
-
