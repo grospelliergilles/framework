@@ -43,11 +43,12 @@ namespace Arcane::Alina::solver
  *
  * An effective method for symmetric positive definite systems [Barr94]_.
  */
-template <class Backend, class InnerProduct = detail::default_inner_product>
-class cg
+template <class Backend_, class InnerProduct = detail::default_inner_product>
+class ConjugateGradient
 {
  public:
 
+  using Backend = Backend_;
   typedef Backend backend_type;
 
   typedef typename Backend::vector vector;
@@ -63,28 +64,25 @@ class cg
   struct params
   {
     /// Maximum number of iterations.
-    size_t maxiter;
+    size_t maxiter = 100;
 
     /// Target relative residual error.
-    scalar_type tol;
+    scalar_type tol = 1.0e-8;
 
     /// Target absolute residual error.
-    scalar_type abstol;
+    scalar_type abstol = std::numeric_limits<scalar_type>::min();
 
-    /// Ignore the trivial solution x=0 when rhs is zero.
-    //** Useful for searching for the null-space vectors of the system */
-    bool ns_search;
+    /*!
+     * \brief Ignore the trivial solution x=0 when rhs is zero.
+     *
+     * Useful for searching for the null-space vectors of the system.
+     */
+    bool ns_search = false;
 
     /// Verbose output (show iterations and error)
-    bool verbose;
+    bool verbose = false;
 
-    params()
-    : maxiter(100)
-    , tol(1e-8)
-    , abstol(std::numeric_limits<scalar_type>::min())
-    , ns_search(false)
-    , verbose(false)
-    {}
+    params() = default;
 
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
@@ -107,10 +105,9 @@ class cg
   };
 
   /// Preallocates necessary data structures for the system of size \p n.
-  cg(size_t n,
-     const params& prm = params(),
-     const backend_params& backend_prm = backend_params(),
-     const InnerProduct& inner_product = InnerProduct())
+  ConjugateGradient(size_t n, const params& prm = params(),
+                    const backend_params& backend_prm = backend_params(),
+                    const InnerProduct& inner_product = InnerProduct())
   : prm(prm)
   , n(n)
   , r(Backend::create_vector(n, backend_prm))
@@ -187,7 +184,9 @@ class cg
     return std::make_tuple(iter, res_norm / norm_rhs);
   }
 
-  /*
+  /*!
+   * \brief Computes the solution for the given right-hand side.
+   *
    * Computes the solution for the given right-hand side \p rhs. The
    * system matrix is the same that was used for the setup of the
    * preconditioner \p P.  Returns the number of iterations made and the
@@ -210,7 +209,7 @@ class cg
     backend::bytes(*q);
   }
 
-  friend std::ostream& operator<<(std::ostream& os, const cg& s)
+  friend std::ostream& operator<<(std::ostream& os, const ConjugateGradient& s)
   {
     return os << "Type:             CG"
               << "\nUnknowns:         " << s.n

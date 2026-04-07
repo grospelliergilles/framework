@@ -133,7 +133,7 @@ int main() {
             Alina::coarsening::aggregation,
             Alina::relaxation::spai0
             >,
-        Alina::solver::cg<Backend>
+        Alina::solver::ConjugateGradient<Backend>
         > solve( A );
 
     std::cout << solve.precond() << std::endl;

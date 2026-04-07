@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
             Alina::coarsening::smoothed_aggregation,
             Alina::relaxation::spai0
             >,
-        Alina::solver::cg<SBackend>
+        Alina::solver::ConjugateGradient<SBackend>
         > Solver;
 
     // Solver parameters:

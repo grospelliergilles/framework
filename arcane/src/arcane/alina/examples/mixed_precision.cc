@@ -35,7 +35,7 @@ int main()
   fBackend,
   Alina::coarsening::smoothed_aggregation,
   Alina::relaxation::spai0>,
-  Alina::solver::cg<dBackend>>
+  Alina::solver::ConjugateGradient<dBackend>>
   Solver;
 
   std::vector<ptrdiff_t> ptr, col;

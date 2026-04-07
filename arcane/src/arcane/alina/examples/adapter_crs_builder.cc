@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
             Alina::coarsening::smoothed_aggregation,
             Alina::relaxation::gauss_seidel
             >,
-        Alina::solver::cg<
+        Alina::solver::ConjugateGradient<
             Alina::backend::builtin<double>
             >
         > Solver;
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
     //
     // Nesting iterative solvers in this way allows to shave last bits off the
     // error.
-    Alina::solver::cg< Alina::backend::builtin<double> > S(n);
+    Alina::solver::ConjugateGradient< Alina::backend::builtin<double> > S(n);
     std::fill(x.begin(), x.end(), 0);
 
     prof.tic("nested solver");

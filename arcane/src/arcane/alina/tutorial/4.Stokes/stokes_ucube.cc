@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
                 Alina::solver::preonly<PBackend>
                 >
             >,
-        Alina::solver::cg<SBackend>
+        Alina::solver::ConjugateGradient<SBackend>
         > Solver;
 
     // Solver parameters

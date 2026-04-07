@@ -53,6 +53,7 @@ namespace Arcane::Alina::runtime::solver
 enum type
 {
   cg, ///< Conjugate gradients method
+  ConjugateGradient = cg,
   bicgstab, ///< BiConjugate Gradient Stabilized
   bicgstabl, ///< BiCGStab(ell)
   gmres, ///< GMRES
@@ -146,10 +147,10 @@ struct wrapper
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case type: \
-    handle = static_cast<void*>(new Alina::solver::type<Backend, InnerProduct>(n, prm, bprm, inner_product)); \
+    handle = static_cast<void*>(new ::Arcane::Alina::solver::type<Backend, InnerProduct>(n, prm, bprm, inner_product)); \
     break
 
-      ARCANE_ALINA_RUNTIME_SOLVER(cg);
+      ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
       ARCANE_ALINA_RUNTIME_SOLVER(gmres);
@@ -175,7 +176,7 @@ struct wrapper
     delete static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle); \
     break
 
-      ARCANE_ALINA_RUNTIME_SOLVER(cg);
+      ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
       ARCANE_ALINA_RUNTIME_SOLVER(gmres);
@@ -199,7 +200,7 @@ struct wrapper
   case type: \
     return static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle)->operator()(A, P, rhs, x)
 
-      ARCANE_ALINA_RUNTIME_SOLVER(cg);
+      ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
       ARCANE_ALINA_RUNTIME_SOLVER(gmres);
@@ -231,7 +232,7 @@ struct wrapper
   case type: \
     return os << *static_cast<Alina::solver::type<Backend, InnerProduct>*>(w.handle)
 
-      ARCANE_ALINA_RUNTIME_SOLVER(cg);
+      ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
       ARCANE_ALINA_RUNTIME_SOLVER(gmres);
@@ -256,7 +257,7 @@ struct wrapper
   case type: \
     return backend::bytes(*static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle))
 
-      ARCANE_ALINA_RUNTIME_SOLVER(cg);
+      ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
       ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
       ARCANE_ALINA_RUNTIME_SOLVER(gmres);
