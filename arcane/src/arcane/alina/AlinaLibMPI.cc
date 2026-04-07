@@ -4,7 +4,7 @@
 
 #include <boost/range/iterator_range.hpp>
 
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 #include <arcane/alina/coarsening_runtime.h>
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/mpi/mp_solver_runtime.h>
@@ -22,7 +22,7 @@ typedef Alina::backend::builtin<double> Backend;
 typedef Alina::PropertyTree Params;
 
 typedef Alina::mpi::subdomain_deflation<
-Alina::amg<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
+Alina::AMG<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
 Alina::runtime::mpi::solver::wrapper<Backend>,
 Alina::runtime::mpi::direct::solver<double>>
 Solver;

@@ -8,7 +8,7 @@
 #include <arcane/alina/coarsening_runtime.h>
 #include <arcane/alina/solver_runtime.h>
 #include <arcane/alina/make_solver.h>
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/Adapters.h>
 
@@ -25,7 +25,7 @@ using namespace Arcane;
 
 //---------------------------------------------------------------------------
 typedef Alina::backend::builtin<double>           Backend;
-typedef Alina::amg<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper> AMG;
+typedef Alina::AMG<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper> AMG;
 typedef Alina::runtime::solver::wrapper<Backend>  ISolver;
 typedef Alina::make_solver<AMG, ISolver>          Solver;
 typedef Alina::PropertyTree               Params;

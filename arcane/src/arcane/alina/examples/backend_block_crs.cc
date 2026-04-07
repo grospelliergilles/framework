@@ -3,7 +3,7 @@
 #include <iterator>
 #include <algorithm>
 
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/backend_block_crs.h>
@@ -23,7 +23,7 @@ int main()
   using Alina::prof;
 
   typedef Alina::backend::block_crs<double> Backend;
-  typedef Alina::amg<
+  typedef Alina::AMG<
   Backend,
   Alina::coarsening::aggregation,
   Alina::relaxation::spai0>

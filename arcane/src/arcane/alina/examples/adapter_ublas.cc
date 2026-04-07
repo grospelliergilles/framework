@@ -5,7 +5,7 @@
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/adapter_ublas.h>
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
 
     prof.tic("build");
     Alina::make_solver<
-        Alina::amg<
+        Alina::AMG<
             Alina::backend::builtin<double>,
             Alina::coarsening::smoothed_aggregation,
             Alina::relaxation::spai0

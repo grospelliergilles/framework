@@ -27,7 +27,7 @@ typedef Arcane::Alina::backend::builtin<double> Backend;
 
 #include <arcane/alina/IO.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 #include <arcane/alina/coarsening_runtime.h>
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/mpi/mp_make_solver.h>
@@ -293,7 +293,7 @@ int main(int argc, char *argv[]) {
                     Alina::runtime::mpi::solver::wrapper<Backend>
                     >,
                 Alina::mpi::subdomain_deflation<
-                    Alina::amg<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
+                    Alina::AMG<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
                     Alina::runtime::mpi::solver::wrapper<Backend>,
                     Alina::runtime::mpi::direct::solver<double>
                     >

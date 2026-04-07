@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/preconditioner_schur_pressure_correction.h>
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/make_block_solver.h>
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 #include <arcane/alina/solver_bicgstab.h>
 #include <arcane/alina/solver_preonly.h>
 #include <arcane/alina/coarsening.h>
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
     typedef Alina::make_solver<
         Alina::preconditioner::schur_pressure_correction<
             Alina::make_block_solver<
-                Alina::amg<
+                Alina::AMG<
                     UBackend,
                     Alina::coarsening::aggregation,
                     Alina::relaxation::ilu0

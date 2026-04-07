@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/relaxation.h>
 #include <arcane/alina/preconditioner_dummy.h>
 #include <arcane/alina/make_solver.h>
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 
 namespace Arcane::Alina {
 namespace runtime {
@@ -115,7 +115,7 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            Alina::amg<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
+                            Alina::AMG<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
                             Precond;
 
                         handle = static_cast<void*>(new Precond(A, prm, bprm));
@@ -161,7 +161,7 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            Alina::amg<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
+                            Alina::AMG<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
                             Precond;
 
                         delete static_cast<Precond*>(handle);
@@ -212,7 +212,7 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            Alina::amg<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
+                            Alina::AMG<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
                             Precond;
 
                         static_cast<Precond*>(handle)->rebuild(A, bprm);
@@ -232,7 +232,7 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            Alina::amg<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
+                            Alina::AMG<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
                             Precond;
 
                         static_cast<Precond*>(handle)->apply(rhs, x);
@@ -278,7 +278,7 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            Alina::amg<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
+                            Alina::AMG<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
                             Precond;
 
                         return static_cast<Precond*>(handle)->system_matrix_ptr();
@@ -328,7 +328,7 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            Alina::amg<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
+                            Alina::AMG<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
                             Precond;
 
                         return backend::bytes(*static_cast<Precond*>(handle));
@@ -371,7 +371,7 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            Alina::amg<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
+                            Alina::AMG<Backend, runtime::coarsening::wrapper, runtime::relaxation::wrapper>
                             Precond;
 
                         return os << *static_cast<Precond*>(p.handle);

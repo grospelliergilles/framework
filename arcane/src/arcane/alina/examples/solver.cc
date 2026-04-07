@@ -28,7 +28,7 @@ typedef Arcane::Alina::backend::builtin<double> Backend;
 #include <arcane/alina/solver_runtime.h>
 #include <arcane/alina/preconditioner_runtime.h>
 #include <arcane/alina/make_solver.h>
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/IO.h>
 

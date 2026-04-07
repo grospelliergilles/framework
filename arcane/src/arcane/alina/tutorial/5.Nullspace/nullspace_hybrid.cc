@@ -36,7 +36,7 @@ THE SOFTWARE.
 #include <arcane/alina/value_type_static_matrix.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/make_solver.h>
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
 #include <arcane/alina/solver_cg.h>
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
     typedef Alina::backend::builtin_hybrid<FBlock> PBackend; // the preconditioner backend
 
     typedef Alina::make_solver<
-        Alina::amg<
+        Alina::AMG<
             PBackend,
             Alina::coarsening::smoothed_aggregation,
             Alina::relaxation::spai0

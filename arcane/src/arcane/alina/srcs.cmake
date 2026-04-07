@@ -7,7 +7,7 @@ set(ARCANE_SOURCES
   AlinaLibMPI.h
   AlinaLibMPI.cc
   adapter_ublas.h
-  amg.h
+        AMG.h
   backend_block_crs.h
   backend_builtin.h
   backend_builtin_hybrid.h

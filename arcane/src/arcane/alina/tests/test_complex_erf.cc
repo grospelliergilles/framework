@@ -4,7 +4,7 @@
 #include <complex>
 
 #include <arcane/alina/backend_builtin.h>
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 #include <arcane/alina/make_solver.h>
 
 #include <arcane/alina/coarsening.h>
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(complex_matrix_adapter)
     prm.put("precond.coarsening.aggr.block_size", 2);
 
     Alina::make_solver<
-        Alina::amg<
+        Alina::AMG<
             Backend,
             Alina::coarsening::smoothed_aggregation,
             Alina::relaxation::spai0

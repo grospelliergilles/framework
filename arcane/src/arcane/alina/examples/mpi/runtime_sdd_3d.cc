@@ -35,7 +35,7 @@ typedef Arcane::Alina::backend::builtin<double> Backend;
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
 #include <arcane/alina/mpi/mp_solver_runtime.h>
 #include <arcane/alina/mpi/mp_subdomain_deflation.h>
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 #include <arcane/alina/coarsening_runtime.h>
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/profiler.h>
@@ -353,7 +353,7 @@ int main(int argc, char *argv[]) {
         prof.tic("setup");
         typedef
             Alina::mpi::subdomain_deflation<
-                Alina::amg<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
+                Alina::AMG<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
                 Alina::runtime::mpi::solver::wrapper<Backend>,
                 Alina::runtime::mpi::direct::solver<double>
             > SDD;

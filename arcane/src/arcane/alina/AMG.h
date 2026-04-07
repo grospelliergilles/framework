@@ -23,37 +23,33 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+// Temporarily add this pragma because there is a lot of conversion warnings.
 #pragma GCC diagnostic ignored "-Wconversion"
 
-/**
- * \file   alina/amg.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  An AMG preconditioner.
- */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
+#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/solver_detail_default_inner_product.h>
+#include <arcane/alina/util.h>
 
 #include <iostream>
 #include <iomanip>
 #include <list>
 #include <memory>
 
-#include <arcane/alina/backend_builtin.h>
-#include <arcane/alina/solver_detail_default_inner_product.h>
-#include <arcane/alina/util.h>
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-/// Primary namespace.
 namespace Arcane::Alina
 {
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*!
  * \brief Algebraic multigrid method.
  *
- * AMG is one the most effective methods for solution of large sparse
+ * AMG is one of the most effective methods for solution of large sparse
  * unstructured systems of equations, arising, for example, from discretization
  * of PDEs on unstructured grids \cite Trottenberg2001. The method can be used
  * as a black-box solver for various computational problems, since it does not
@@ -71,7 +67,7 @@ namespace Arcane::Alina
 template <class Backend,
           template <class> class Coarsening,
           template <class> class Relax>
-class amg
+class AMG
 {
  public:
 
@@ -101,8 +97,8 @@ class amg
    */
   struct params
   {
-    typedef typename coarsening_type::params coarsening_params;
-    typedef typename relax_type::params relax_params;
+    typedef coarsening_type::params coarsening_params;
+    typedef relax_type::params relax_params;
 
     coarsening_params coarsening; ///< Coarsening parameters.
     relax_params relax; ///< Relaxation parameters.
@@ -167,8 +163,7 @@ class amg
       precondition(max_levels > 0, "max_levels should be positive");
     }
 
-    void get(PropertyTree& p,
-             const std::string& path = "") const
+    void get(PropertyTree& p, const std::string& path = "") const
     {
       ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, coarsening);
       ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, relax);
@@ -196,8 +191,7 @@ class amg
    * \sa amgcl/adapter/crs_tuple.hpp
    */
   template <class Matrix>
-  amg(const Matrix& M,
-      const params& p = params(),
+  AMG(const Matrix& M, const params& p = params(),
       const backend_params& bprm = backend_params())
   : prm(p)
   {
@@ -221,7 +215,7 @@ class amg
    *
    * \sa amgcl/adapter/crs_tuple.hpp
    */
-  amg(std::shared_ptr<build_matrix> A,
+  AMG(std::shared_ptr<build_matrix> A,
       const params& p = params(),
       const backend_params& bprm = backend_params())
   : prm(p)
@@ -253,12 +247,10 @@ class amg
   void rebuild(std::shared_ptr<build_matrix> A,
                const backend_params& bprm = backend_params())
   {
-    precondition(prm.allow_rebuild,
-                 "allow_rebuild is not set!");
-    precondition(
-    backend::rows(*A) == backend::rows(system_matrix()) &&
-    backend::cols(*A) == backend::rows(*A),
-    "Matrix dimensions differ from the original ones!");
+    precondition(prm.allow_rebuild, "allow_rebuild is not set!");
+    precondition(backend::rows(*A) == backend::rows(system_matrix()) &&
+                 backend::cols(*A) == backend::rows(*A),
+                 "Matrix dimensions differ from the original ones!");
 
     ARCANE_ALINA_TIC("rebuild");
     coarsening_type C(prm.coarsening);
@@ -324,7 +316,8 @@ class amg
 
   struct level
   {
-    size_t m_rows, m_nonzeros;
+    size_t m_rows = 0;
+    size_t m_nonzeros = 0;
 
     std::shared_ptr<vector> f;
     std::shared_ptr<vector> u;
@@ -367,13 +360,9 @@ class amg
       return b;
     }
 
-    level()
-    : m_rows(0)
-    , m_nonzeros(0)
-    {}
+    level() = default;
 
-    level(std::shared_ptr<build_matrix> A,
-          params& prm, const backend_params& bprm)
+    level(std::shared_ptr<build_matrix> A, params& prm, const backend_params& bprm)
     : m_rows(backend::rows(*A))
     , m_nonzeros(backend::nonzeros(*A))
     {
@@ -390,9 +379,8 @@ class amg
     }
 
     std::shared_ptr<build_matrix>
-    step_down(std::shared_ptr<build_matrix> A,
-              coarsening_type& C, const backend_params& bprm,
-              bool allow_rebuild)
+    step_down(std::shared_ptr<build_matrix> A, coarsening_type& C,
+              const backend_params& bprm, bool allow_rebuild)
     {
       ARCANE_ALINA_TIC("transfer operators");
       std::shared_ptr<build_matrix> P, R;
@@ -486,15 +474,14 @@ class amg
     }
   };
 
-  typedef typename std::list<level>::const_iterator level_iterator;
+  typedef std::list<level>::const_iterator level_iterator;
 
   std::list<level> levels;
 
   void do_init(std::shared_ptr<build_matrix> A,
                const backend_params& bprm = backend_params())
   {
-    precondition(
-    backend::rows(*A) == backend::cols(*A),
+    precondition(    backend::rows(*A) == backend::cols(*A),
     "Matrix should be square!");
 
     bool direct_coarse_solve = true;
@@ -583,7 +570,7 @@ class amg
   }
 
   template <class B, template <class> class C, template <class> class R>
-  friend std::ostream& operator<<(std::ostream& os, const amg<B, C, R>& a);
+  friend std::ostream& operator<<(std::ostream& os, const AMG<B, C, R>& a);
 };
 
 /*---------------------------------------------------------------------------*/
@@ -591,9 +578,9 @@ class amg
 
 /// Sends information about the AMG hierarchy to output stream.
 template <class B, template <class> class C, template <class> class R>
-std::ostream& operator<<(std::ostream& os, const amg<B, C, R>& a)
+std::ostream& operator<<(std::ostream& os, const AMG<B, C, R>& a)
 {
-  typedef typename amg<B, C, R>::level level;
+  typedef typename AMG<B, C, R>::level level;
   ios_saver ss(os);
 
   size_t sum_dof = 0;

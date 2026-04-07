@@ -2,7 +2,7 @@
 #include <vector>
 #include <algorithm>
 
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/Adapters.h>
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
     // system matrix on demand row by row.
     prof.tic("build");
     typedef Alina::make_solver<
-        Alina::amg<
+        Alina::AMG<
             Alina::backend::builtin<double>,
             Alina::coarsening::smoothed_aggregation,
             Alina::relaxation::gauss_seidel

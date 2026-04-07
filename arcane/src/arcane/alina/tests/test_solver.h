@@ -1,7 +1,7 @@
 #ifndef TESTS_TEST_SOLVER_HPP
 #define TESTS_TEST_SOLVER_HPP
 
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 #include <arcane/alina/solver_runtime.h>
 #include <arcane/alina/coarsening_runtime.h>
 #include <arcane/alina/RelaxationRuntime.h>
@@ -55,7 +55,7 @@ void test_solver(const Matrix& A,
   }
 
   Alina::make_solver<
-  Alina::amg<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
+  Alina::AMG<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
   Alina::runtime::solver::wrapper<Backend>>
   solve(A, prm, bprm);
 

@@ -4,7 +4,7 @@
 
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/make_solver.h>
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
 #include <arcane/alina/solver_cg.h>
@@ -128,7 +128,7 @@ int main() {
     // Create an AMGCL solver for the problem.
     typedef Alina::backend::builtin<double> Backend;
     Alina::make_solver<
-        Alina::amg<
+        Alina::AMG<
             Backend,
             Alina::coarsening::aggregation,
             Alina::relaxation::spai0
