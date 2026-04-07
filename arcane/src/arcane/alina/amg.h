@@ -150,8 +150,7 @@ class amg
 
     params() = default;
 
-#ifndef AMGCL_NO_BOOST
-    params(const Alina::PropertyTree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_CHILD(p, coarsening)
     , AMGCL_PARAMS_IMPORT_CHILD(p, relax)
     , AMGCL_PARAMS_IMPORT_VALUE(p, coarse_enough)
@@ -168,7 +167,7 @@ class amg
       precondition(max_levels > 0, "max_levels should be positive");
     }
 
-    void get(Alina::PropertyTree& p,
+    void get(PropertyTree& p,
              const std::string& path = "") const
     {
       AMGCL_PARAMS_EXPORT_CHILD(p, path, coarsening);
@@ -182,7 +181,7 @@ class amg
       AMGCL_PARAMS_EXPORT_VALUE(p, path, pre_cycles);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, allow_rebuild);
     }
-#endif
+
   } prm;
 
   /*!

@@ -446,8 +446,7 @@ class pointwise_aggregates
     : block_size(1)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const Alina::PropertyTree& p)
+    params(const PropertyTree& p)
     : plain_aggregates::params(p)
     , AMGCL_PARAMS_IMPORT_VALUE(p, block_size)
     {
@@ -459,7 +458,6 @@ class pointwise_aggregates
       plain_aggregates::params::get(p, path);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, block_size);
     }
-#endif
   };
 
   static const ptrdiff_t undefined = -1;
@@ -637,8 +635,7 @@ struct aggregation
     : over_interp(math::static_rows<typename Backend::value_type>::value == 1 ? 1.5f : 2.0f)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const Alina::PropertyTree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_CHILD(p, aggr)
     , AMGCL_PARAMS_IMPORT_CHILD(p, nullspace)
     , AMGCL_PARAMS_IMPORT_VALUE(p, over_interp)
@@ -646,13 +643,12 @@ struct aggregation
       check_params(p, { "aggr", "nullspace", "over_interp" });
     }
 
-    void get(Alina::PropertyTree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_CHILD(p, path, aggr);
       AMGCL_PARAMS_EXPORT_CHILD(p, path, nullspace);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, over_interp);
     }
-#endif
   } prm;
 
   aggregation(const params& prm = params())
@@ -918,8 +914,7 @@ struct ruge_stuben
     , eps_trunc(0.2f)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const Alina::PropertyTree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_VALUE(p, eps_strong)
     , AMGCL_PARAMS_IMPORT_VALUE(p, do_trunc)
     , AMGCL_PARAMS_IMPORT_VALUE(p, eps_trunc)
@@ -927,13 +922,12 @@ struct ruge_stuben
       check_params(p, { "eps_strong", "do_trunc", "eps_trunc" });
     }
 
-    void get(Alina::PropertyTree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_VALUE(p, path, eps_strong);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, do_trunc);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, eps_trunc);
     }
-#endif
   } prm;
 
   ruge_stuben(const params& prm = params())
@@ -1361,8 +1355,7 @@ struct smoothed_aggregation
     , power_iters(0)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const Alina::PropertyTree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_CHILD(p, aggr)
     , AMGCL_PARAMS_IMPORT_CHILD(p, nullspace)
     , AMGCL_PARAMS_IMPORT_VALUE(p, relax)
@@ -1372,7 +1365,7 @@ struct smoothed_aggregation
       check_params(p, { "aggr", "nullspace", "relax", "estimate_spectral_radius", "power_iters" });
     }
 
-    void get(Alina::PropertyTree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_CHILD(p, path, aggr);
       AMGCL_PARAMS_EXPORT_CHILD(p, path, nullspace);
@@ -1380,7 +1373,6 @@ struct smoothed_aggregation
       AMGCL_PARAMS_EXPORT_VALUE(p, path, estimate_spectral_radius);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, power_iters);
     }
-#endif
   } prm;
 
   smoothed_aggregation(const params& prm = params())

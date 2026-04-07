@@ -88,8 +88,7 @@ class cpr {
                 : block_size(math::static_rows<value_type>::value == 1 ? 2 : math::static_rows<value_type>::value),
                   active_rows(0) {}
 
-#ifndef AMGCL_NO_BOOST
-            params(const Alina::PropertyTree &p)
+            params(const PropertyTree &p)
                 : AMGCL_PARAMS_IMPORT_CHILD(p, pprecond),
                   AMGCL_PARAMS_IMPORT_CHILD(p, sprecond),
                   AMGCL_PARAMS_IMPORT_VALUE(p, block_size),
@@ -98,14 +97,13 @@ class cpr {
                 check_params(p, {"pprecond", "sprecond", "block_size", "active_rows"});
             }
 
-            void get(Alina::PropertyTree &p, const std::string &path = "") const
+            void get(PropertyTree &p, const std::string &path = "") const
             {
                 AMGCL_PARAMS_EXPORT_CHILD(p, path, pprecond);
                 AMGCL_PARAMS_EXPORT_CHILD(p, path, sprecond);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, block_size);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, active_rows);
             }
-#endif
         } prm;
 
         template <class Matrix>

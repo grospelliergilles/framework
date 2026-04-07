@@ -56,8 +56,7 @@ struct merge {
             enable(false), min_per_proc(10000), shrink_ratio(8)
         {}
 
-#ifndef AMGCL_NO_BOOST
-        params(const Alina::PropertyTree &p)
+        params(const PropertyTree &p)
             : AMGCL_PARAMS_IMPORT_VALUE(p, enable),
               AMGCL_PARAMS_IMPORT_VALUE(p, min_per_proc),
               AMGCL_PARAMS_IMPORT_VALUE(p, shrink_ratio)
@@ -65,16 +64,13 @@ struct merge {
             check_params(p, {"enable", "min_per_proc", "shrink_ratio"});
         }
 
-        void get(
-                Alina::PropertyTree &p,
-                const std::string &path = ""
-                ) const
+        void get(PropertyTree &p, const std::string &path = "") const
         {
-            AMGCL_PARAMS_EXPORT_VALUE(p, path, enable);
-            AMGCL_PARAMS_EXPORT_VALUE(p, path, min_per_proc);
-            AMGCL_PARAMS_EXPORT_VALUE(p, path, shrink_ratio);
+          AMGCL_PARAMS_EXPORT_VALUE(p, path, enable);
+          AMGCL_PARAMS_EXPORT_VALUE(p, path, min_per_proc);
+          AMGCL_PARAMS_EXPORT_VALUE(p, path, shrink_ratio);
         }
-#endif
+
     } prm;
 
     merge(const params &prm = params()) : prm(prm) {}

@@ -97,8 +97,7 @@ class bicgstab
     , verbose(false)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const Alina::PropertyTree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_VALUE(p, pside)
     , AMGCL_PARAMS_IMPORT_VALUE(p, maxiter)
     , AMGCL_PARAMS_IMPORT_VALUE(p, tol)
@@ -110,7 +109,7 @@ class bicgstab
       check_params(p, { "pside", "maxiter", "tol", "abstol", "check_after", "ns_search", "verbose" });
     }
 
-    void get(Alina::PropertyTree& p, const std::string& path) const
+    void get(PropertyTree& p, const std::string& path) const
     {
       AMGCL_PARAMS_EXPORT_VALUE(p, path, pside);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, maxiter);
@@ -120,7 +119,6 @@ class bicgstab
       AMGCL_PARAMS_EXPORT_VALUE(p, path, ns_search);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, verbose);
     }
-#endif
   };
 
   /// Preallocates necessary data structures for the system of size \p n.

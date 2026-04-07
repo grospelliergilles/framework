@@ -162,16 +162,14 @@ struct block_crs {
 
         params(size_t block_size = 4) : block_size(block_size) {}
 
-#ifndef AMGCL_NO_BOOST
-        params(const Alina::PropertyTree &p)
+        params(const PropertyTree &p)
             : AMGCL_PARAMS_IMPORT_VALUE(p, block_size)
         {
             check_params(p, {"block_size"});
         }
-        void get(Alina::PropertyTree &p, const std::string &path) const {
+        void get(PropertyTree &p, const std::string &path) const {
             AMGCL_PARAMS_EXPORT_VALUE(p, path, block_size);
         }
-#endif
     };
 
     static std::string name() { return "block_crs"; }

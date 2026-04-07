@@ -73,8 +73,7 @@ class deflated_solver : public Alina::detail::non_copyable {
 
             params() : nvec(0), vec(nullptr) {}
 
-#ifndef AMGCL_NO_BOOST
-            params(const Alina::PropertyTree &p)
+            params(const PropertyTree &p)
                 : AMGCL_PARAMS_IMPORT_VALUE(p, nvec),
                   AMGCL_PARAMS_IMPORT_VALUE(p, vec),
                   AMGCL_PARAMS_IMPORT_CHILD(p, precond),
@@ -83,16 +82,14 @@ class deflated_solver : public Alina::detail::non_copyable {
                 check_params(p, {"nvec", "vec", "precond", "solver"});
             }
 
-            void get( Alina::PropertyTree &p,
-                    const std::string &path = ""
-                    ) const
+            void get( PropertyTree &p, const std::string &path = "") const
             {
                 AMGCL_PARAMS_EXPORT_CHILD(p, path, nvec);
                 AMGCL_PARAMS_EXPORT_CHILD(p, path, vec);
                 AMGCL_PARAMS_EXPORT_CHILD(p, path, precond);
                 AMGCL_PARAMS_EXPORT_CHILD(p, path, solver);
             }
-#endif
+
         } prm;
 
         /** Sets up the preconditioner and creates the iterative solver. */

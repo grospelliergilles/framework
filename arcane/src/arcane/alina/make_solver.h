@@ -75,21 +75,18 @@ class make_solver
 
     params() {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const Alina::PropertyTree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_CHILD(p, precond)
     , AMGCL_PARAMS_IMPORT_CHILD(p, solver)
     {
       check_params(p, { "precond", "solver" });
     }
 
-    void get(Alina::PropertyTree& p,
-             const std::string& path = "") const
+    void get(PropertyTree& p, const std::string& path = "") const
     {
       AMGCL_PARAMS_EXPORT_CHILD(p, path, precond);
       AMGCL_PARAMS_EXPORT_CHILD(p, path, solver);
     }
-#endif
   } prm;
 
   /** Sets up the preconditioner and creates the iterative solver. */
@@ -212,13 +209,11 @@ class make_solver
     return P.system_matrix();
   }
 
-#ifndef AMGCL_NO_BOOST
   /// Stores the parameters used during construction into the property tree \p p.
   void get_params(Alina::PropertyTree& p) const
   {
     prm.get(p);
   }
-#endif
 
   /// Returns the size of the system matrix.
   size_t size() const

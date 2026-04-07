@@ -35,10 +35,6 @@ THE SOFTWARE.
 #include <stdexcept>
 #include <type_traits>
 
-#ifdef AMGCL_NO_BOOST
-#error Runtime interface relies on Boost.PropertyTree!
-#endif
-
 #include <arcane/alina/util.h>
 #include <arcane/alina/solver_cg.h>
 #include <arcane/alina/solver_bicgstab.h>

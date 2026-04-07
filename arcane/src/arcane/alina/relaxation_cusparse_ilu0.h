@@ -61,8 +61,7 @@ struct ilu0<backend::cuda<real>>
     : damping(1)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const Alina::PropertyTree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_VALUE(p, damping)
     {
       check_params(p, { "damping" });
@@ -72,7 +71,6 @@ struct ilu0<backend::cuda<real>>
     {
       AMGCL_PARAMS_EXPORT_VALUE(p, path, damping);
     }
-#endif
   } prm;
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi

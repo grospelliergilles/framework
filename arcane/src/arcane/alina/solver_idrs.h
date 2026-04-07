@@ -131,8 +131,7 @@ class idrs {
                   ns_search(false), verbose(false)
             { }
 
-#ifndef AMGCL_NO_BOOST
-            params(const Alina::PropertyTree &p)
+            params(const PropertyTree &p)
                 : AMGCL_PARAMS_IMPORT_VALUE(p, s),
                   AMGCL_PARAMS_IMPORT_VALUE(p, omega),
                   AMGCL_PARAMS_IMPORT_VALUE(p, smoothing),
@@ -147,7 +146,7 @@ class idrs {
                         "maxiter", "tol", "abstol", "ns_search", "verbose"});
             }
 
-            void get(Alina::PropertyTree &p, const std::string &path) const {
+            void get(PropertyTree &p, const std::string &path) const {
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, s);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, omega);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, smoothing);
@@ -158,7 +157,7 @@ class idrs {
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, ns_search);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, verbose);
             }
-#endif
+
         } prm;
 
         /// Preallocates necessary data structures for the system of size \p n.

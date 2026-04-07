@@ -98,8 +98,7 @@ class gmres {
                   verbose(false)
             { }
 
-#ifndef AMGCL_NO_BOOST
-            params(const Alina::PropertyTree &p)
+            params(const PropertyTree &p)
                 : AMGCL_PARAMS_IMPORT_VALUE(p, M),
                   AMGCL_PARAMS_IMPORT_VALUE(p, pside),
                   AMGCL_PARAMS_IMPORT_VALUE(p, maxiter),
@@ -112,7 +111,8 @@ class gmres {
                         "ns_search", "verbose"});
             }
 
-            void get(Alina::PropertyTree &p, const std::string &path) const {
+            void get(PropertyTree& p, const std::string& path) const
+          {
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, M);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, pside);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, maxiter);
@@ -121,7 +121,6 @@ class gmres {
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, ns_search);
                 AMGCL_PARAMS_EXPORT_VALUE(p, path, verbose);
             }
-#endif
         };
 
         /// Preallocates necessary data structures for the system of size \p n.

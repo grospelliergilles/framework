@@ -61,8 +61,7 @@ struct parmetis
     , shrink_ratio(8)
     {}
 
-#ifndef AMGCL_NO_BOOST
-    params(const Alina::PropertyTree& p)
+    params(const PropertyTree& p)
     : AMGCL_PARAMS_IMPORT_VALUE(p, shrink)
     , AMGCL_PARAMS_IMPORT_VALUE(p, min_per_proc)
     , AMGCL_PARAMS_IMPORT_VALUE(p, shrink_ratio)
@@ -70,14 +69,13 @@ struct parmetis
       check_params(p, { "shrink", "min_per_proc", "shrink_ratio" });
     }
 
-    void get(Alina::PropertyTree& p,
-             const std::string& path = "") const
+    void get(PropertyTree& p, const std::string& path = "") const
     {
       AMGCL_PARAMS_EXPORT_VALUE(p, path, shrink);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, min_per_proc);
       AMGCL_PARAMS_EXPORT_VALUE(p, path, shrink_ratio);
     }
-#endif
+
   } prm;
 
   parmetis(const params& prm = params())
