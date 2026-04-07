@@ -81,15 +81,6 @@ ARCANE_ALINA_precond_create(int n,
                      const double* val,
                      amgclHandle parameters);
 
-// Create AMG preconditioner.
-// ptr and col arrays are 1-based (as in Fortran).
-amgclHandle ARCANE_ALINA_EXPORT STDCALL
-ARCANE_ALINA_precond_create_f(int n,
-                       const int* ptr,
-                       const int* col,
-                       const double* val,
-                       amgclHandle parameters);
-
 // Apply AMG preconditioner (x = M^(-1) * rhs).
 void ARCANE_ALINA_EXPORT STDCALL
 ARCANE_ALINA_precond_apply(amgclHandle amg, const double* rhs, double* x);
@@ -110,15 +101,6 @@ ARCANE_ALINA_solver_create(int n,
                     const double* val,
                     amgclHandle parameters);
 
-// Create iterative solver preconditioned by AMG.
-// ptr and col arrays are 1-based (as in Fortran).
-amgclHandle ARCANE_ALINA_EXPORT STDCALL
-ARCANE_ALINA_solver_create_f(int n,
-                      const int* ptr,
-                      const int* col,
-                      const double* val,
-                      amgclHandle parameters);
-
 // Convergence info
 struct ARCANE_ALINA_LIB_EXPORT conv_info
 {
@@ -132,13 +114,6 @@ ARCANE_ALINA_solver_solve(amgclHandle solver,
                    double const* rhs,
                    double* x);
 
-// Solve the problem for the given right-hand side.
-void ARCANE_ALINA_EXPORT STDCALL
-ARCANE_ALINA_solver_solve_f(amgclHandle solver,
-                     double const* rhs,
-                     double* x,
-                     conv_info* cnv);
-
 // Solve the problem for the given matrix and the right-hand side.
 conv_info ARCANE_ALINA_EXPORT STDCALL
 ARCANE_ALINA_solver_solve_mtx(amgclHandle solver,
@@ -147,16 +122,6 @@ ARCANE_ALINA_solver_solve_mtx(amgclHandle solver,
                        double const* A_val,
                        double const* rhs,
                        double* x);
-
-// Solve the problem for the given matrix and the right-hand side.
-void ARCANE_ALINA_EXPORT STDCALL
-ARCANE_ALINA_solver_solve_mtx_f(amgclHandle solver,
-                         int const* A_ptr,
-                         int const* A_col,
-                         double const* A_val,
-                         double const* rhs,
-                         double* x,
-                         conv_info* cnv);
 
 // Printout solver structure
 void ARCANE_ALINA_EXPORT STDCALL

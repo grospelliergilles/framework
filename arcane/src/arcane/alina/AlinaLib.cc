@@ -17,20 +17,22 @@
 #ifdef ARCANE_ALINA_PROFILING
 #include <arcane/alina/profiler.h>
 namespace amgcl {
-    profiler<> prof;
+profiler<> prof;
 }
 #endif
 
 using namespace Arcane;
 
 //---------------------------------------------------------------------------
-typedef Alina::backend::builtin<double>           Backend;
+
+typedef Alina::backend::builtin<double> Backend;
 typedef Alina::AMG<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper> AMG;
 typedef Alina::runtime::solver::wrapper<Backend>  ISolver;
-typedef Alina::make_solver<AMG, ISolver>          Solver;
-typedef Alina::PropertyTree               Params;
+typedef Alina::make_solver<AMG, ISolver> Solver;
+typedef Alina::PropertyTree Params;
 
 //---------------------------------------------------------------------------
+
 amgclHandle STDCALL ARCANE_ALINA_params_create()
 {
   return static_cast<amgclHandle>(new Params());
@@ -87,28 +89,6 @@ ARCANE_ALINA_precond_create(int n,
 }
 
 //---------------------------------------------------------------------------
-amgclHandle STDCALL
-ARCANE_ALINA_precond_create_f(int n,
-                       const int* ptr,
-                       const int* col,
-                       const double* val,
-                       amgclHandle prm)
-{
-  auto ptr_c = boost::make_transform_iterator(ptr, [](int i) { return i - 1; });
-  auto col_c = boost::make_transform_iterator(col, [](int i) { return i - 1; });
-
-  auto A = std::make_tuple(n,
-                           boost::make_iterator_range(ptr_c, ptr_c + n + 1),
-                           boost::make_iterator_range(col_c, col_c + ptr[n]),
-                           boost::make_iterator_range(val, val + ptr[n]));
-
-  if (prm)
-    return static_cast<amgclHandle>(new AMG(A, *static_cast<Params*>(prm)));
-  else
-    return static_cast<amgclHandle>(new AMG(A));
-}
-
-//---------------------------------------------------------------------------
 void STDCALL
 ARCANE_ALINA_precond_apply(amgclHandle handle, const double* rhs, double* x)
 {
@@ -138,37 +118,14 @@ ARCANE_ALINA_precond_destroy(amgclHandle handle)
 
 //---------------------------------------------------------------------------
 amgclHandle STDCALL
-ARCANE_ALINA_solver_create(int n,
-                    const int* ptr,
-                    const int* col,
-                    const double* val,
-                    amgclHandle prm)
+ARCANE_ALINA_solver_create(int n, const int* ptr,
+                           const int* col,
+                           const double* val,
+                           amgclHandle prm)
 {
   auto A = std::make_tuple(n,
                            boost::make_iterator_range(ptr, ptr + n + 1),
                            boost::make_iterator_range(col, col + ptr[n]),
-                           boost::make_iterator_range(val, val + ptr[n]));
-
-  if (prm)
-    return static_cast<amgclHandle>(new Solver(A, *static_cast<Params*>(prm)));
-  else
-    return static_cast<amgclHandle>(new Solver(A));
-}
-
-//---------------------------------------------------------------------------
-amgclHandle STDCALL
-ARCANE_ALINA_solver_create_f(int n,
-                      const int* ptr,
-                      const int* col,
-                      const double* val,
-                      amgclHandle prm)
-{
-  auto ptr_c = boost::make_transform_iterator(ptr, [](int i) { return i - 1; });
-  auto col_c = boost::make_transform_iterator(col, [](int i) { return i - 1; });
-
-  auto A = std::make_tuple(n,
-                           boost::make_iterator_range(ptr_c, ptr_c + n + 1),
-                           boost::make_iterator_range(col_c, col_c + ptr[n]),
                            boost::make_iterator_range(val, val + ptr[n]));
 
   if (prm)
@@ -212,23 +169,13 @@ ARCANE_ALINA_solver_solve(amgclHandle handle,
 }
 
 //---------------------------------------------------------------------------
-void STDCALL
-ARCANE_ALINA_solver_solve_f(amgclHandle handle,
-                     const double* rhs,
-                     double* x,
-                     conv_info* cnv)
-{
-  *cnv = ARCANE_ALINA_solver_solve(handle, rhs, x);
-}
-
-//---------------------------------------------------------------------------
 conv_info STDCALL
 ARCANE_ALINA_solver_solve_mtx(amgclHandle handle,
-                       int const* A_ptr,
-                       int const* A_col,
-                       double const* A_val,
-                       const double* rhs,
-                       double* x)
+                              int const* A_ptr,
+                              int const* A_col,
+                              double const* A_val,
+                              const double* rhs,
+                              double* x)
 {
   Solver* slv = static_cast<Solver*>(handle);
 
@@ -239,40 +186,14 @@ ARCANE_ALINA_solver_solve_mtx(amgclHandle handle,
   boost::iterator_range<double*> x_range = boost::make_iterator_range(x, x + n);
 
   std::tie(cnv.iterations, cnv.residual) = (*slv)(
-  std::make_tuple(
-  n,
-  boost::make_iterator_range(A_ptr, A_ptr + n + 1),
-  boost::make_iterator_range(A_col, A_col + A_ptr[n]),
-  boost::make_iterator_range(A_val, A_val + A_ptr[n])),
+  std::make_tuple(n,
+                  boost::make_iterator_range(A_ptr, A_ptr + n + 1),
+                  boost::make_iterator_range(A_col, A_col + A_ptr[n]),
+                  boost::make_iterator_range(A_val, A_val + A_ptr[n])),
   boost::make_iterator_range(rhs, rhs + n), x_range);
 
   return cnv;
 }
 
-//---------------------------------------------------------------------------
-void STDCALL
-ARCANE_ALINA_solver_solve_mtx_f(amgclHandle handle,
-                         int const* A_ptr,
-                         int const* A_col,
-                         double const* A_val,
-                         const double* rhs,
-                         double* x,
-                         conv_info* cnv)
-{
-  Solver* slv = static_cast<Solver*>(handle);
-
-  size_t n = slv->size();
-
-  boost::iterator_range<double*> x_range = boost::make_iterator_range(x, x + n);
-
-  auto ptr_c = boost::make_transform_iterator(A_ptr, [](int i) { return i - 1; });
-  auto col_c = boost::make_transform_iterator(A_col, [](int i) { return i - 1; });
-
-  std::tie(cnv->iterations, cnv->residual) = (*slv)(
-  std::make_tuple(
-  n,
-  boost::make_iterator_range(ptr_c, ptr_c + n + 1),
-  boost::make_iterator_range(col_c, col_c + A_ptr[n]),
-  boost::make_iterator_range(A_val, A_val + A_ptr[n])),
-  boost::make_iterator_range(rhs, rhs + n), x_range);
-}
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
