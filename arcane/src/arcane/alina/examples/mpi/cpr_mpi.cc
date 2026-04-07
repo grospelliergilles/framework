@@ -7,7 +7,7 @@
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/mpi/mp_make_solver.h>
 #include <arcane/alina/mpi/mp_cpr.h>
-#include <arcane/alina/mpi/mp_amg.h>
+#include <arcane/alina/mpi/mp_AMG.h>
 #include <arcane/alina/mpi/mp_coarsening_runtime.h>
 #include <arcane/alina/mpi/mp_relaxation_runtime.h>
 #include <arcane/alina/mpi/mp_solver_runtime.h>
@@ -255,7 +255,7 @@ int main(int argc, char *argv[]) {
     typedef
         Alina::mpi::make_solver<
             Alina::mpi::cpr<
-                Alina::mpi::amg<
+                Alina::mpi::AMG<
                     Backend,
                     Alina::runtime::mpi::coarsening::wrapper<Backend>,
                     Alina::runtime::mpi::relaxation::wrapper<Backend>,

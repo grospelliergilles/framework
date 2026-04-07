@@ -69,7 +69,7 @@ set(ARCANE_SOURCES
   value_type_eigen.h
   value_type_static_matrix.h
 
-  mpi/mp_amg.h
+  mpi/mp_AMG.h
   mpi/mp_block_preconditioner.h
   mpi/mp_coarsening_aggregation.h
   mpi/mp_coarsening_pmis.h

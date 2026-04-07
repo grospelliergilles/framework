@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #include <iostream>
 
-#include <arcane/alina/mpi/mp_amg.h>
+#include <arcane/alina/mpi/mp_AMG.h>
 #include <arcane/alina/mpi/mp_coarsening_runtime.h>
 #include <arcane/alina/mpi/mp_relaxation_runtime.h>
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
@@ -116,7 +116,7 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            Alina::mpi::amg<
+                            Alina::mpi::AMG<
                                 Backend,
                                 Alina::runtime::mpi::coarsening::wrapper<Backend>,
                                 Alina::runtime::mpi::relaxation::wrapper<Backend>,
@@ -154,7 +154,7 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            Alina::mpi::amg<
+                            Alina::mpi::AMG<
                                 Backend,
                                 Alina::runtime::mpi::coarsening::wrapper<Backend>,
                                 Alina::runtime::mpi::relaxation::wrapper<Backend>,
@@ -178,7 +178,7 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            Alina::mpi::amg<
+                            Alina::mpi::AMG<
                                 Backend,
                                 Alina::runtime::mpi::coarsening::wrapper<Backend>,
                                 Alina::runtime::mpi::relaxation::wrapper<Backend>,
@@ -212,7 +212,7 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            Alina::mpi::amg<
+                            Alina::mpi::AMG<
                                 Backend,
                                 Alina::runtime::mpi::coarsening::wrapper<Backend>,
                                 Alina::runtime::mpi::relaxation::wrapper<Backend>,
@@ -247,7 +247,7 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            Alina::mpi::amg<
+                            Alina::mpi::AMG<
                                 Backend,
                                 Alina::runtime::mpi::coarsening::wrapper<Backend>,
                                 Alina::runtime::mpi::relaxation::wrapper<Backend>,
@@ -284,7 +284,7 @@ class preconditioner {
                 case precond_class::amg:
                     {
                         typedef
-                            Alina::mpi::amg<
+                            Alina::mpi::AMG<
                                 Backend,
                                 Alina::runtime::mpi::coarsening::wrapper<Backend>,
                                 Alina::runtime::mpi::relaxation::wrapper<Backend>,

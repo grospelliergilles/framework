@@ -37,7 +37,7 @@ THE SOFTWARE.
 
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 #include <arcane/alina/mpi/mp_make_solver.h>
-#include <arcane/alina/mpi/mp_amg.h>
+#include <arcane/alina/mpi/mp_AMG.h>
 #include <arcane/alina/mpi/mp_coarsening_smoothed_aggregation.h>
 #include <arcane/alina/mpi/mp_relaxation.h>
 #include <arcane/alina/mpi/mp_solver.h>
@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
   typedef Alina::backend::builtin<double> DBackend;
   typedef Alina::backend::builtin<float> FBackend;
   typedef Alina::mpi::make_solver<
-    Alina::mpi::amg<
+    Alina::mpi::AMG<
       FBackend,
       Alina::mpi::coarsening::smoothed_aggregation<FBackend>,
       Alina::mpi::relaxation::spai0<FBackend>>,
