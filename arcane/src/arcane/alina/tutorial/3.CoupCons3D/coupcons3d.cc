@@ -123,8 +123,6 @@ int main(int argc, char *argv[]) {
     std::cout << solve << std::endl;
 
     // Solve the system with the zero initial approximation:
-    int iters;
-    double error;
     std::vector<double> x(rows, 0.0);
 
     // Reinterpret both the RHS and the solution vectors as block-valued:

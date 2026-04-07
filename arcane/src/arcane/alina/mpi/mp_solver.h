@@ -116,9 +116,9 @@ class gmres
 
 template <class Backend, class InnerProduct = mpi::inner_product>
 class idrs
-: public Alina::solver::idrs<Backend, InnerProduct>
+: public Alina::solver::IDRSSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::idrs<Backend, InnerProduct> Base;
+  typedef Alina::solver::IDRSSolver<Backend, InnerProduct> Base;
 
  public:
 

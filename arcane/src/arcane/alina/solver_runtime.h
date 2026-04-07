@@ -69,6 +69,7 @@ enum type
   lgmres, ///< LGMRES
   fgmres, ///< FGMRES
   idrs, ///< IDR(s)
+  IDRSSolver = idrs, ///< IDR(s)
   richardson, ///< Richardson iteration
   RichardsonSolver = richardson, ///< Richardson iteration
   preonly ///< Only apply preconditioner once
@@ -137,7 +138,7 @@ inline std::istream& operator>>(std::istream& in, type& s)
   ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(lgmres); \
   ARCANE_ALINA_RUNTIME_SOLVER(fgmres); \
-  ARCANE_ALINA_RUNTIME_SOLVER(idrs); \
+  ARCANE_ALINA_RUNTIME_SOLVER(IDRSSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(RichardsonSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(preonly)
 
@@ -255,8 +256,8 @@ struct wrapper
   }
 };
 
-} // namespace Arcane::Alina::runtime::solver
-
 #undef ARCANE_ALINA_ALL_RUNTIME_SOLVER
+
+} // namespace Arcane::Alina::runtime::solver
 
 #endif

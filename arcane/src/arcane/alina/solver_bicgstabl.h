@@ -73,6 +73,78 @@
 
 namespace Arcane::Alina::solver
 {
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Parameters for BiCGStab(L) solver.
+ */
+struct BiCGStabLSolverParams
+{
+  using params = BiCGStabLSolverParams;
+
+  // Order of the method.
+  int L = 2;
+
+  // Threshold used to decide when to refresh computed residuals.
+  double delta = 0.0;
+
+  // Use a convex function of the MinRes and OR polynomials
+  // after the BiCG step instead of default MinRes
+  bool convex = true;
+
+  // Preconditioning kind (left/right).
+  preconditioner::side::type pside = preconditioner::side::right;
+
+  // Maximum number of iterations.
+  size_t maxiter = 100;
+
+  // Target relative residual error.
+  double tol = 1e-8;
+
+  // Target absolute residual error.
+  double abstol = std::numeric_limits<double>::min();
+
+  /*!
+   * \brief Ignore the trivial solution x=0 when rhs is zero.
+   *
+   * Useful for searching for the null-space vectors of the system.
+   */
+  bool ns_search = false;
+
+  /// Verbose output (show iterations and error)
+  bool verbose = false;
+
+  BiCGStabLSolverParams() = default;
+
+  BiCGStabLSolverParams(const PropertyTree& p)
+  : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, L)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, delta)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, convex)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, pside)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
+  {
+    check_params(p, { "L", "delta", "convex", "pside", "maxiter", "tol", "abstol", "ns_search", "verbose" });
+  }
+
+  void get(PropertyTree& p, const std::string& path) const
+  {
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, L);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, delta);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, convex);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, pside);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
+  }
+};
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*!
@@ -94,84 +166,13 @@ class BiCGStabLSolver
   typedef typename math::inner_product_impl<
   typename math::rhs_of<value_type>::type>::return_type coef_type;
 
-  /// Solver parameters.
-  struct params
-  {
-    // Order of the method.
-    int L;
-
-    // Threshold used to decide when to refresh computed residuals.
-    scalar_type delta;
-
-    // Use a convex function of the MinRes and OR polynomials
-    // after the BiCG step instead of default MinRes
-    bool convex;
-
-    // Preconditioning kind (left/right).
-    preconditioner::side::type pside;
-
-    // Maximum number of iterations.
-    size_t maxiter;
-
-    // Target relative residual error.
-    scalar_type tol;
-
-    // Target absolute residual error.
-    scalar_type abstol;
-
-    /// Ignore the trivial solution x=0 when rhs is zero.
-    //** Useful for searching for the null-space vectors of the system */
-    bool ns_search;
-
-    /// Verbose output (show iterations and error)
-    bool verbose;
-
-    params()
-    : L(2)
-    , delta(0)
-    , convex(true)
-    , pside(preconditioner::side::right)
-    , maxiter(100)
-    , tol(1e-8)
-    , abstol(std::numeric_limits<scalar_type>::min())
-    , ns_search(false)
-    , verbose(false)
-    {
-    }
-
-    params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, L)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, delta)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, convex)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, pside)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
-    {
-      check_params(p, { "L", "delta", "convex", "pside", "maxiter", "tol", "abstol", "ns_search", "verbose" });
-    }
-
-    void get(PropertyTree& p, const std::string& path) const
-    {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, L);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, delta);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, convex);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, pside);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
-    }
-  };
+  using params = BiCGStabLSolverParams;
 
   /// Preallocates necessary data structures for the system of size \p n.
   BiCGStabLSolver(size_t n,
-            const params& prm = params(),
-            const backend_params& backend_prm = backend_params(),
-            const InnerProduct& inner_product = InnerProduct())
+                  const params& prm = params(),
+                  const backend_params& backend_prm = backend_params(),
+                  const InnerProduct& inner_product = InnerProduct())
   : prm(prm)
   , n(n)
   , Rt(Backend::create_vector(n, backend_prm))
@@ -194,7 +195,10 @@ class BiCGStabLSolver
     }
   }
 
-  /* Computes the solution for the given system matrix \p A and the
+  /*
+   * \brief Computes the solution for the given system matrix.
+   *
+   * Computes the solution for the given system matrix \p A and the
    * right-hand side \p rhs.  Returns the number of iterations made and
    * the achieved residual as a ``std::tuple``. The solution vector
    * \p x provides initial approximation in input and holds the computed
@@ -207,8 +211,7 @@ class BiCGStabLSolver
    * good preconditioner for several subsequent time steps [DeSh12]_.
    */
   template <class Matrix, class Precond, class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type>
-  operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
+  SolverResult operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
     namespace side = preconditioner::side;
 
@@ -228,7 +231,7 @@ class BiCGStabLSolver
       }
       else {
         backend::clear(x);
-        return std::make_tuple(0, norm_rhs);
+        return SolverResult(0, norm_rhs);
       }
     }
 
@@ -264,8 +267,7 @@ class BiCGStabLSolver
 
       for (int j = 0; j < L; ++j) {
         coef_type rho1 = inner_product(*R[j], *Rt);
-        precondition(!math::is_zero(rho1),
-                     "BiCGStab(L) breakdown: diverged (zero rho)");
+        precondition(!math::is_zero(rho1), "BiCGStab(L) breakdown: diverged (zero rho)");
 
         coef_type beta = alpha * (rho1 / rho0);
         rho0 = rho1;
@@ -276,8 +278,7 @@ class BiCGStabLSolver
         preconditioner::spmv(prm.pside, P, A, *U[j], *U[j + 1], *T);
 
         coef_type sigma = inner_product(*U[j + 1], *Rt);
-        precondition(!math::is_zero(sigma),
-                     "BiCGStab(L) breakdown: diverged (zero sigma)");
+        precondition(!math::is_zero(sigma), "BiCGStab(L) breakdown: diverged (zero sigma)");
         alpha = rho1 / sigma;
 
         backend::axpby(alpha, *U[0], one, *X);
@@ -371,8 +372,7 @@ class BiCGStabLSolver
       omega = Y0[L];
       for (int h = L; h > 0 && math::is_zero(omega); --h)
         omega = Y0[h];
-      precondition(!math::is_zero(omega),
-                   "BiCGStab(L) breakdown: diverged (zero omega)");
+      precondition(!math::is_zero(omega), "BiCGStab(L) breakdown: diverged (zero omega)");
 
       backend::lin_comb(L, &Y0[1], &R[0], one, *X);
 
@@ -426,10 +426,13 @@ class BiCGStabLSolver
       backend::axpby(one, *T, one, x);
     }
 
-    return std::make_tuple(iter, zeta / norm_rhs);
+    return SolverResult(iter, zeta / norm_rhs);
   }
 
-  /* Computes the solution for the given right-hand side \p rhs. The
+  /*!
+   * \brief Computes the solution for the given right-hand side.
+   *
+   * Computes the solution for the given right-hand side \p rhs. The
    * system matrix is the same that was used for the setup of the
    * preconditioner \p P.  Returns the number of iterations made and the
    * achieved residual as a ``std::tuple``. The solution vector \p x
@@ -437,8 +440,7 @@ class BiCGStabLSolver
    * solution on output.
    */
   template <class Precond, class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type>
-  operator()(const Precond& P, const Vec1& rhs, Vec2&& x) const
+  SolverResult operator()(const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
     return (*this)(P.system_matrix(), P, rhs, x);
   }
