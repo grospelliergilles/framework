@@ -158,9 +158,9 @@ class preonly
 
 template <class Backend, class InnerProduct = mpi::inner_product>
 class richardson
-: public Alina::solver::richardson<Backend, InnerProduct>
+: public Alina::solver::RichardsonSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::richardson<Backend, InnerProduct> Base;
+  typedef Alina::solver::RichardsonSolver<Backend, InnerProduct> Base;
 
  public:
 

@@ -1,35 +1,27 @@
-#ifndef ARCANE_ALINA_SOLVER_RICHARDSON_HPP
-#define ARCANE_ALINA_SOLVER_RICHARDSON_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* solver_gmres.h                                              (C) 2026-2026 */
+/*                                                                           */
+/* Richardson iteration.                                      .              */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_RICHARDSONSOLVER_H
+#define ARCANE_ALINA_RICHARDSONSOLVER_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   alina/solver/richardson.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Richardson iteration
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <tuple>
 #include <iostream>
@@ -38,191 +30,220 @@ THE SOFTWARE.
 #include <arcane/alina/solver_detail_default_inner_product.h>
 #include <arcane/alina/util.h>
 
-namespace Arcane::Alina {
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
-/// Iterative solvers
-namespace solver {
+namespace Arcane::Alina::solver
+{
 
 /**
  * \defgroup solvers
  * \brief Iterative solvers
  */
 
-/** Richardson iteration */
-template <
-    class Backend,
-    class InnerProduct = detail::default_inner_product
-    >
-class richardson {
-    public:
-        typedef Backend backend_type;
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Parameters for Richardson solver.
+ */
+struct RichardsonSolverParams
+{
+  using params = RichardsonSolverParams;
 
-        typedef typename Backend::vector     vector;
-        typedef typename Backend::value_type value_type;
-        typedef typename Backend::params     backend_params;
+  /// Damping factor
+  double damping = 1.0;
 
-        typedef typename math::scalar_of<value_type>::type scalar_type;
+  /// Maximum number of iterations.
+  size_t maxiter = 100;
 
-        typedef typename math::inner_product_impl<
-            typename math::rhs_of<value_type>::type
-            >::return_type coef_type;
+  /// Target relative residual error.
+  double tol = 1.0e-8;
 
-        /// Solver parameters.
-        struct params {
-            /// Damping factor
-            scalar_type damping;
+  /// Target absolute residual error.
+  double abstol = std::numeric_limits<double>::min();
 
-            /// Maximum number of iterations.
-            size_t maxiter;
+  /// Ignore the trivial solution x=0 when rhs is zero.
+  //** Useful for searching for the null-space vectors of the system */
+  bool ns_search = false;
 
-            /// Target relative residual error.
-            scalar_type tol;
+  /// Verbose output (show iterations and error)
+  bool verbose = false;
 
-            /// Target absolute residual error.
-            scalar_type abstol;
+  RichardsonSolverParams() = default;
 
-            /// Ignore the trivial solution x=0 when rhs is zero.
-            //** Useful for searching for the null-space vectors of the system */
-            bool ns_search;
+  RichardsonSolverParams(const PropertyTree& p)
+  : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
+  {
+    check_params(p, { "damping", "maxiter", "tol", "abstol", "ns_search", "verbose" });
+  }
 
-            /// Verbose output (show iterations and error)
-            bool verbose;
-
-            params()
-                : damping(1.0), maxiter(100), tol(1e-8),
-                  abstol(std::numeric_limits<scalar_type>::min()),
-                  ns_search(false), verbose(false)
-            {}
-
-            params(const PropertyTree &p)
-                : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping),
-                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter),
-                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol),
-                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol),
-                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search),
-                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
-            {
-                check_params(p, {"damping", "maxiter", "tol", "abstol",
-                        "ns_search", "verbose"});
-            }
-
-            void get(PropertyTree &p, const std::string &path) const {
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
-            }
-        };
-
-        /// Preallocates necessary data structures for the system of size \p n.
-        richardson(
-                size_t n,
-                const params &prm = params(),
-                const backend_params &backend_prm = backend_params(),
-                const InnerProduct &inner_product = InnerProduct()
-          ) : prm(prm), n(n),
-              r(Backend::create_vector(n, backend_prm)),
-              s(Backend::create_vector(n, backend_prm)),
-              inner_product(inner_product)
-        { }
-
-        /* Computes the solution for the given system matrix \p A and the
-         * right-hand side \p rhs.  Returns the number of iterations made and
-         * the achieved residual as a ``std::tuple``. The solution vector
-         * \p x provides initial approximation in input and holds the computed
-         * solution on output.
-         *
-         * The system matrix may differ from the matrix used during
-         * initialization. This may be used for the solution of non-stationary
-         * problems with slowly changing coefficients. There is a strong chance
-         * that a preconditioner built for a time step will act as a reasonably
-         * good preconditioner for several subsequent time steps [DeSh12]_.
-         */
-        template <class Matrix, class Precond, class Vec1, class Vec2>
-        std::tuple<size_t, scalar_type> operator()(
-                const Matrix &A, const Precond &P, const Vec1 &rhs, Vec2 &&x) const
-        {
-            static const coef_type one = math::identity<coef_type>();
-
-            ios_saver ss(std::cout);
-
-            scalar_type norm_rhs = norm(rhs);
-            if (norm_rhs < Alina::detail::eps<scalar_type>(1)) {
-                if (prm.ns_search) {
-                    norm_rhs = math::identity<scalar_type>();
-                } else {
-                    backend::clear(x);
-                    return std::make_tuple(0, norm_rhs);
-                }
-            }
-
-            scalar_type eps = std::max(prm.tol * norm_rhs, prm.abstol);
-
-            backend::residual(rhs, A, x, *r);
-            scalar_type res_norm = norm(*r);
-
-            size_t iter = 0;
-            for(; iter < prm.maxiter && math::norm(res_norm) > eps; ++iter) {
-                P.apply(*r, *s);
-                backend::axpby( prm.damping, *s, one,  x);
-                backend::residual(rhs, A, x, *r);
-                res_norm = norm(*r);
-
-                if (prm.verbose && iter % 5 == 0)
-                    std::cout << iter << "\t" << std::scientific << res_norm / norm_rhs << std::endl;
-            }
-
-            return std::make_tuple(iter, res_norm / norm_rhs);
-        }
-
-        /* Computes the solution for the given right-hand side \p rhs. The
-         * system matrix is the same that was used for the setup of the
-         * preconditioner \p P.  Returns the number of iterations made and the
-         * achieved residual as a ``std::tuple``. The solution vector \p x
-         * provides initial approximation in input and holds the computed
-         * solution on output.
-         */
-        template <class Precond, class Vec1, class Vec2>
-        std::tuple<size_t, scalar_type> operator()(
-                const Precond &P, const Vec1 &rhs, Vec2 &&x) const
-        {
-            return (*this)(P.system_matrix(), P, rhs, x);
-        }
-
-        size_t bytes() const {
-            return
-                backend::bytes(*r) +
-                backend::bytes(*s);
-        }
-
-        friend std::ostream& operator<<(std::ostream &os, const richardson &s) {
-            return os
-                << "Type:             Richardson"
-                << "\nUnknowns:         " << s.n
-                << "\nMemory footprint: " << human_readable_memory(s.bytes())
-                << std::endl;
-        }
-    public:
-        params prm;
-
-    private:
-        size_t n;
-
-        std::shared_ptr<vector> r;
-        std::shared_ptr<vector> s;
-
-        InnerProduct inner_product;
-
-        template <class Vec>
-        scalar_type norm(const Vec &x) const {
-            return sqrt(math::norm(inner_product(x, x)));
-        }
+  void get(PropertyTree& p, const std::string& path) const
+  {
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
+  }
 };
 
-} // namespace solver
-} // namespace amgcl
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Richardson iteration.
+ */
+template <class Backend,
+          class InnerProduct = detail::default_inner_product>
+class RichardsonSolver
+{
+ public:
 
+  typedef Backend backend_type;
+
+  typedef typename Backend::vector vector;
+  typedef typename Backend::value_type value_type;
+  typedef typename Backend::params backend_params;
+
+  typedef typename math::scalar_of<value_type>::type scalar_type;
+
+  typedef typename math::inner_product_impl<
+  typename math::rhs_of<value_type>::type>::return_type coef_type;
+
+  using params = RichardsonSolverParams;
+
+ public:
+
+  /// Preallocates necessary data structures for the system of size \p n.
+  RichardsonSolver(size_t n,
+                   const params& prm = params(),
+                   const backend_params& backend_prm = backend_params(),
+                   const InnerProduct& inner_product = InnerProduct())
+  : prm(prm)
+  , n(n)
+  , r(Backend::create_vector(n, backend_prm))
+  , s(Backend::create_vector(n, backend_prm))
+  , inner_product(inner_product)
+  {}
+
+  /*!
+   * \brief Computes the solution for the given system matrix.
+   *
+   * Computes the solution for the given system matrix \p A and the
+   * right-hand side \p rhs.  Returns the number of iterations made and
+   * the achieved residual as a ``std::tuple``. The solution vector
+   * \p x provides initial approximation in input and holds the computed
+   * solution on output.
+   *
+   * The system matrix may differ from the matrix used during
+   * initialization. This may be used for the solution of non-stationary
+   * problems with slowly changing coefficients. There is a strong chance
+   * that a preconditioner built for a time step will act as a reasonably
+   * good preconditioner for several subsequent time steps [DeSh12]_.
+   */
+  template <class Matrix, class Precond, class Vec1, class Vec2>
+  std::tuple<size_t, scalar_type>
+  operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
+  {
+    static const coef_type one = math::identity<coef_type>();
+
+    ios_saver ss(std::cout);
+
+    scalar_type norm_rhs = norm(rhs);
+    if (norm_rhs < Alina::detail::eps<scalar_type>(1)) {
+      if (prm.ns_search) {
+        norm_rhs = math::identity<scalar_type>();
+      }
+      else {
+        backend::clear(x);
+        return std::make_tuple(0, norm_rhs);
+      }
+    }
+
+    scalar_type eps = std::max(prm.tol * norm_rhs, prm.abstol);
+
+    backend::residual(rhs, A, x, *r);
+    scalar_type res_norm = norm(*r);
+
+    size_t iter = 0;
+    for (; iter < prm.maxiter && math::norm(res_norm) > eps; ++iter) {
+      P.apply(*r, *s);
+      backend::axpby(prm.damping, *s, one, x);
+      backend::residual(rhs, A, x, *r);
+      res_norm = norm(*r);
+
+      if (prm.verbose && iter % 5 == 0)
+        std::cout << iter << "\t" << std::scientific << res_norm / norm_rhs << std::endl;
+    }
+
+    return std::make_tuple(iter, res_norm / norm_rhs);
+  }
+
+  /*!
+   * \brief Computes the solution for the given right-hand side.
+   *
+   * Computes the solution for the given right-hand side \p rhs. The
+   * system matrix is the same that was used for the setup of the
+   * preconditioner \p P.  Returns the number of iterations made and the
+   * achieved residual as a ``std::tuple``. The solution vector \p x
+   * provides initial approximation in input and holds the computed
+   * solution on output.
+   */
+  template <class Precond, class Vec1, class Vec2>
+  std::tuple<size_t, scalar_type>
+  operator()(const Precond& P, const Vec1& rhs, Vec2&& x) const
+  {
+    return (*this)(P.system_matrix(), P, rhs, x);
+  }
+
+  size_t bytes() const
+  {
+    return backend::bytes(*r) +
+    backend::bytes(*s);
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const RichardsonSolver& s)
+  {
+    return os << "Type:             Richardson"
+              << "\nUnknowns:         " << s.n
+              << "\nMemory footprint: " << human_readable_memory(s.bytes())
+              << std::endl;
+  }
+
+ public:
+
+  params prm;
+
+ private:
+
+  size_t n;
+
+  std::shared_ptr<vector> r;
+  std::shared_ptr<vector> s;
+
+  InnerProduct inner_product;
+
+  template <class Vec>
+  scalar_type norm(const Vec& x) const
+  {
+    return sqrt(math::norm(inner_product(x, x)));
+  }
+};
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::solver
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/

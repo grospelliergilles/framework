@@ -47,21 +47,28 @@ THE SOFTWARE.
 #include <arcane/alina/solver_preonly.h>
 #include <arcane/alina/solver_detail_default_inner_product.h>
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 namespace Arcane::Alina::runtime::solver
 {
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 enum type
 {
   cg, ///< Conjugate gradients method
-  ConjugateGradient = cg,
+  ConjugateGradient = cg, ///< Conjugate gradients method
   bicgstab, ///< BiConjugate Gradient Stabilized
   bicgstabl, ///< BiCGStab(ell)
   gmres, ///< GMRES
-  GMRESSolver = gmres,
+  GMRESSolver = gmres, ///< GMRES
   lgmres, ///< LGMRES
   fgmres, ///< FGMRES
   idrs, ///< IDR(s)
   richardson, ///< Richardson iteration
+  RichardsonSolver = richardson, ///< Richardson iteration
   preonly ///< Only apply preconditioner once
 };
 
@@ -121,9 +128,22 @@ inline std::istream& operator>>(std::istream& in, type& s)
   return in;
 }
 
-template <
-class Backend,
-class InnerProduct = Alina::solver::detail::default_inner_product>
+#define ARCANE_ALINA_ALL_RUNTIME_SOLVER() \
+  ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient); \
+  ARCANE_ALINA_RUNTIME_SOLVER(bicgstab); \
+  ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl); \
+  ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver); \
+  ARCANE_ALINA_RUNTIME_SOLVER(lgmres); \
+  ARCANE_ALINA_RUNTIME_SOLVER(fgmres); \
+  ARCANE_ALINA_RUNTIME_SOLVER(idrs); \
+  ARCANE_ALINA_RUNTIME_SOLVER(RichardsonSolver); \
+  ARCANE_ALINA_RUNTIME_SOLVER(preonly)
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+template <class Backend,
+          class InnerProduct = Alina::solver::detail::default_inner_product>
 struct wrapper
 {
   typedef PropertyTree params;
@@ -133,7 +153,7 @@ struct wrapper
   typedef Backend backend_type;
 
   type s;
-  void* handle;
+  void* handle = nullptr;
 
   wrapper(size_t n, params prm = params(),
           const backend_params& bprm = backend_params(),
@@ -143,7 +163,7 @@ struct wrapper
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");
-    std::cout << "Solver=" << s << "\n";
+
     switch (s) {
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
@@ -151,15 +171,7 @@ struct wrapper
     handle = static_cast<void*>(new ::Arcane::Alina::solver::type<Backend, InnerProduct>(n, prm, bprm, inner_product)); \
     break
 
-      ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
-      ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
-      ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
-      ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver);
-      ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
-      ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
-      ARCANE_ALINA_RUNTIME_SOLVER(idrs);
-      ARCANE_ALINA_RUNTIME_SOLVER(richardson);
-      ARCANE_ALINA_RUNTIME_SOLVER(preonly);
+      ARCANE_ALINA_ALL_RUNTIME_SOLVER();
 
 #undef ARCANE_ALINA_RUNTIME_SOLVER
 
@@ -177,23 +189,15 @@ struct wrapper
     delete static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle); \
     break
 
-      ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
-      ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
-      ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
-      ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver);
-      ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
-      ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
-      ARCANE_ALINA_RUNTIME_SOLVER(idrs);
-      ARCANE_ALINA_RUNTIME_SOLVER(richardson);
-      ARCANE_ALINA_RUNTIME_SOLVER(preonly);
+      ARCANE_ALINA_ALL_RUNTIME_SOLVER();
 
 #undef ARCANE_ALINA_RUNTIME_SOLVER
     }
   }
 
   template <class Matrix, class Precond, class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type> operator()(
-  const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
+  std::tuple<size_t, scalar_type>
+  operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
     switch (s) {
 
@@ -201,15 +205,7 @@ struct wrapper
   case type: \
     return static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle)->operator()(A, P, rhs, x)
 
-      ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
-      ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
-      ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
-      ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver);
-      ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
-      ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
-      ARCANE_ALINA_RUNTIME_SOLVER(idrs);
-      ARCANE_ALINA_RUNTIME_SOLVER(richardson);
-      ARCANE_ALINA_RUNTIME_SOLVER(preonly);
+      ARCANE_ALINA_ALL_RUNTIME_SOLVER();
 
 #undef ARCANE_ALINA_RUNTIME_SOLVER
 
@@ -219,8 +215,7 @@ struct wrapper
   }
 
   template <class Precond, class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type> operator()(
-  const Precond& P, const Vec1& rhs, Vec2&& x) const
+  std::tuple<size_t, scalar_type> operator()(const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
     return (*this)(P.system_matrix(), P, rhs, x);
   }
@@ -233,15 +228,7 @@ struct wrapper
   case type: \
     return os << *static_cast<Alina::solver::type<Backend, InnerProduct>*>(w.handle)
 
-      ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
-      ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
-      ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
-      ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver);
-      ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
-      ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
-      ARCANE_ALINA_RUNTIME_SOLVER(idrs);
-      ARCANE_ALINA_RUNTIME_SOLVER(richardson);
-      ARCANE_ALINA_RUNTIME_SOLVER(preonly);
+      ARCANE_ALINA_ALL_RUNTIME_SOLVER();
 
 #undef ARCANE_ALINA_RUNTIME_SOLVER
 
@@ -258,15 +245,7 @@ struct wrapper
   case type: \
     return backend::bytes(*static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle))
 
-      ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient);
-      ARCANE_ALINA_RUNTIME_SOLVER(bicgstab);
-      ARCANE_ALINA_RUNTIME_SOLVER(bicgstabl);
-      ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver);
-      ARCANE_ALINA_RUNTIME_SOLVER(lgmres);
-      ARCANE_ALINA_RUNTIME_SOLVER(fgmres);
-      ARCANE_ALINA_RUNTIME_SOLVER(idrs);
-      ARCANE_ALINA_RUNTIME_SOLVER(richardson);
-      ARCANE_ALINA_RUNTIME_SOLVER(preonly);
+      ARCANE_ALINA_ALL_RUNTIME_SOLVER();
 
 #undef ARCANE_ALINA_RUNTIME_SOLVER
 
@@ -277,5 +256,7 @@ struct wrapper
 };
 
 } // namespace Arcane::Alina::runtime::solver
+
+#undef ARCANE_ALINA_ALL_RUNTIME_SOLVER
 
 #endif
