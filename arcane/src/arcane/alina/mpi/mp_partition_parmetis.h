@@ -26,7 +26,7 @@
 
 #include <memory>
 
-#include <arcane/alina/backend_interface.h>
+#include <arcane/alina/BackendInterface.h>
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>

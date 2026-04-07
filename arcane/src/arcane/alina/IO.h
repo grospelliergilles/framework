@@ -36,7 +36,7 @@
 #include <tuple>
 
 #include <arcane/alina/util.h>
-#include <arcane/alina/backend_interface.h>
+#include <arcane/alina/BackendInterface.h>
 #include <arcane/alina/detail_sort_row.h>
 
 /*---------------------------------------------------------------------------*/

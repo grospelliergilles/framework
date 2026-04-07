@@ -15,7 +15,7 @@ set(ARCANE_SOURCES
   backend_detail_default_direct_solver.h
   backend_detail_matrix_ops.h
   backend_detail_mixing.h
-  backend_interface.h
+  BackendInterface.h
   BlockCSRMatrix.h
   CSRMatrix.h
   coarsening.h

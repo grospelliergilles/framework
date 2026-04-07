@@ -36,7 +36,7 @@ THE SOFTWARE.
 #include <list>
 #include <memory>
 
-#include <arcane/alina/backend_interface.h>
+#include <arcane/alina/BackendInterface.h>
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 #include <arcane/alina/mpi/mp_direct_solver_skyline_lu.h>

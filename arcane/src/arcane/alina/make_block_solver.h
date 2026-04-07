@@ -1,7 +1,7 @@
 #ifndef ARCANE_ALINA_MAKE_BLOCK_SOLVER_HPP
 #define ARCANE_ALINA_MAKE_BLOCK_SOLVER_HPP
 
-#include <arcane/alina/backend_interface.h>
+#include <arcane/alina/BackendInterface.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/value_type_static_matrix.h>
 #include <arcane/alina/make_solver.h>

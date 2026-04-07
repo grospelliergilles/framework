@@ -34,7 +34,7 @@ THE SOFTWARE.
 #include <memory>
 
 #include <arcane/alina/util.h>
-#include <arcane/alina/backend_interface.h>
+#include <arcane/alina/BackendInterface.h>
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/mpi/mp_relaxation.h>
 #include <arcane/alina/mpi/mp_util.h>

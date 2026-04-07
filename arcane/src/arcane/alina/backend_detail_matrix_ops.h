@@ -32,7 +32,7 @@ THE SOFTWARE.
  */
 
 #include <type_traits>
-#include <arcane/alina/backend_interface.h>
+#include <arcane/alina/BackendInterface.h>
 
 namespace Arcane::Alina {
 namespace backend {
