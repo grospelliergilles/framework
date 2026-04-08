@@ -21,7 +21,7 @@
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #ifdef BLOCK_TYPE_EIGEN
 #include <arcane/alina/value_type_eigen.h>
 template <class T, int N, int M>

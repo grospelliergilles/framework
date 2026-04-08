@@ -36,7 +36,7 @@
 #include <omp.h>
 #endif
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/coarsening_detail_scaled_galerkin.h>
 #include <arcane/alina/util.h>
 #include <arcane/alina/detail_qr.h>

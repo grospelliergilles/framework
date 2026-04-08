@@ -31,7 +31,7 @@ THE SOFTWARE.
  * \brief  Builtin backend that uses scalar matrices to build the hierarchy, but stores the computed matrix in block format.
  */
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/Adapters.h>
 

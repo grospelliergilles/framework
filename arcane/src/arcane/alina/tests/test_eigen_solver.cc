@@ -2,7 +2,7 @@
 
 #include <Eigen/SparseLU>
 #include <arcane/alina/solver_eigen.h>
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/profiler.h>
 #include "sample_problem.h"

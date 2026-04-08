@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <arcane/alina/backend_block_crs.h>
+#include <arcane/alina/BlockCSRBackend.h>
 
 #include "test_solver.h"
 

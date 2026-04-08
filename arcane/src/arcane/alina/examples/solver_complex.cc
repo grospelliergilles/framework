@@ -5,7 +5,7 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/value_type_complex.h>
 #include <arcane/alina/value_type_static_matrix.h>
 #include <arcane/alina/Adapters.h>

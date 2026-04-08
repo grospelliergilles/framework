@@ -33,7 +33,7 @@
 
 #include <mpi.h>
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/util.h>
 #include <arcane/alina/mpi/mp_util.h>
 

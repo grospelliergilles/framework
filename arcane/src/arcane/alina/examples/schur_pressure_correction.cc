@@ -12,7 +12,7 @@
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 template <class T> using Backend = Arcane::Alina::backend::BuiltinBackend<T>;
 #endif
 

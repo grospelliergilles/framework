@@ -31,7 +31,7 @@ THE SOFTWARE.
  * \brief  Iterative preconditioned solver with deflation.
  */
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/util.h>
 #include <arcane/alina/detail_inverse.h>
 

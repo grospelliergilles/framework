@@ -37,7 +37,7 @@ THE SOFTWARE.
 
 #include <mpi.h>
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_inner_product.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>

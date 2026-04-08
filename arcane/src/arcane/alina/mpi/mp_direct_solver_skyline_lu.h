@@ -38,7 +38,7 @@ distributed direct solver interface but always works sequentially.
 
 #include <memory>
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/solver_skyline_lu.h>
 #include <arcane/alina/mpi/mp_util.h>

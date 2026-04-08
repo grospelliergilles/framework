@@ -28,7 +28,7 @@
 #include <arcane/alina/relaxation.h>
 
 #include <arcane/alina/BackendInterface.h>
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 #include <arcane/alina/mpi/mp_util.h>

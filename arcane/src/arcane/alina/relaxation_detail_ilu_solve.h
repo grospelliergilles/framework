@@ -33,7 +33,7 @@ THE SOFTWARE.
  */
 
 #include <arcane/alina/value_type_backend_interface.h>
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/backend_builtin_hybrid.h>
 #include <arcane/alina/util.h>
 

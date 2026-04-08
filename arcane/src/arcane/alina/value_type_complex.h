@@ -31,7 +31,7 @@ THE SOFTWARE.
  * \brief  Enable std::complex<T> as value type.
  */
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/value_type_backend_interface.h>
 
 namespace Arcane::Alina {

@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include <type_traits>
 #include <Eigen/SparseCore>
 #include <arcane/alina/util.h>
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 
 namespace Arcane::Alina {
 namespace backend {

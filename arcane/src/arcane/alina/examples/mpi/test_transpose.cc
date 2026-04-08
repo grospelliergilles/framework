@@ -3,7 +3,7 @@
 
 #include <boost/scope_exit.hpp>
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/mpi/mp_distributed_matrix.h>
 #include <arcane/alina/IO.h>

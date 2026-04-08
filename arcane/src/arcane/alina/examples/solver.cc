@@ -17,7 +17,7 @@ typedef Arcane::Alina::backend::EigenBackend<double> Backend;
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/value_type_static_matrix.h>
 #include <arcane/alina/Adapters.h>
 typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;

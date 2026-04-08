@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #include <mpi.h>
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/util.h>

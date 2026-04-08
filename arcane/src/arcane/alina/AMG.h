@@ -29,7 +29,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/solver_detail_default_inner_product.h>
 #include <arcane/alina/util.h>
 

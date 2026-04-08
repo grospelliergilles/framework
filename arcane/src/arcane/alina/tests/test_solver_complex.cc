@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <arcane/alina/value_type_complex.h>
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 
 #include "test_solver.h"
 

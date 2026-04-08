@@ -30,7 +30,7 @@
  */
 
 #include <type_traits>
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/util.h>
 
 /*---------------------------------------------------------------------------*/

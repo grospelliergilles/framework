@@ -8,7 +8,7 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/scope_exit.hpp>
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/preconditioner_runtime.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/mpi/mp_make_solver.h>

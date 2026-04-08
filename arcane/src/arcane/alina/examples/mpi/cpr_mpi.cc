@@ -4,7 +4,7 @@
 
 #include <arcane/alina/IO.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/mpi/mp_make_solver.h>
 #include <arcane/alina/mpi/mp_cpr.h>
 #include <arcane/alina/mpi/mp_AMG.h>

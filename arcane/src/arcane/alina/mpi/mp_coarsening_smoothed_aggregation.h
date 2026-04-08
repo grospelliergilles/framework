@@ -34,7 +34,7 @@ THE SOFTWARE.
 #include <tuple>
 #include <memory>
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/util.h>
 #include <arcane/alina/coarsening_detail_galerkin.h>
 #include <arcane/alina/mpi/mp_util.h>

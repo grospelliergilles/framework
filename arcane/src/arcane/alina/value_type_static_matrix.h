@@ -34,7 +34,7 @@ THE SOFTWARE.
 #include <array>
 #include <type_traits>
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/value_type_backend_interface.h>
 
 namespace Arcane::Alina {

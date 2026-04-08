@@ -2,7 +2,7 @@
 #include <vector>
 #include <map>
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/coarsening.h>

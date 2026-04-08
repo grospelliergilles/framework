@@ -6,7 +6,7 @@
 #include <arcane/alina/AMG.h>
 
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/backend_block_crs.h>
+#include <arcane/alina/BlockCSRBackend.h>
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
 #include <arcane/alina/BiCGStabSolver.h>

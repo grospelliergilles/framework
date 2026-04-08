@@ -32,7 +32,7 @@ THE SOFTWARE.
  */
 
 #include <memory>
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 
 namespace Arcane::Alina {
 namespace coarsening {

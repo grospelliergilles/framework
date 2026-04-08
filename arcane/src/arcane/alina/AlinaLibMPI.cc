@@ -10,7 +10,7 @@
 #include <arcane/alina/mpi/mp_solver_runtime.h>
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
 #include <arcane/alina/mpi/mp_subdomain_deflation.h>
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
 
 #include "AlinaLibMPI.h"

@@ -8,8 +8,8 @@ set(ARCANE_SOURCES
   AlinaLibMPI.cc
   adapter_ublas.h
   AMG.h
-  backend_block_crs.h
-  backend_builtin.h
+        BlockCSRBackend.h
+        BuiltinBackend.h
   backend_builtin_hybrid.h
   backend_cuda.h
   backend_detail_default_direct_solver.h

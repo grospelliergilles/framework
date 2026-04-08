@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #include <Eigen/Dense>
 
-#include <arcane/alina/backend_builtin.h>
+#include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/value_type_backend_interface.h>
 
 namespace Arcane::Alina {
