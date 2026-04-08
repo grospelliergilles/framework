@@ -35,11 +35,11 @@ set(ARCANE_SOURCES
   make_block_solver.h
   make_solver.h
   perf_counter_clock.h
-  preconditioner_cpr_drs.h
-  preconditioner_cpr.h
-  preconditioner_dummy.h
+        CPRDynamicRowSumPreconditioner.h
+        CPRPreconditioner.h
+        DummyPreconditioner.h
   preconditioner_runtime.h
-  preconditioner_schur_pressure_correction.h
+        SchurPressureCorrectionPreconditioner.h
   perf_counter_mpi_aggregator.h
   profiler.h
   relaxation_cusparse_ilu0.h

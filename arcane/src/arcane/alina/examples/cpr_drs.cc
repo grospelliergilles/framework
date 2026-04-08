@@ -27,7 +27,7 @@ typedef Arcane::Alina::backend::builtin<double> Backend;
 #include <arcane/alina/coarsening_runtime.h>
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/relaxation.h>
-#include <arcane/alina/preconditioner_cpr_drs.h>
+#include <arcane/alina/CPRDynamicRowSumPreconditioner.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
