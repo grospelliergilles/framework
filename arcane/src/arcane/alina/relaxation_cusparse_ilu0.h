@@ -28,7 +28,7 @@
 #include <thrust/device_vector.h>
 #include <cusparse_v2.h>
 
-#include <arcane/alina/backend_cuda.h>
+#include <arcane/alina/CudaBackend.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

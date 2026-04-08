@@ -10,7 +10,7 @@
 #include <arcane/alina/Adapters.h>
 
 #if defined(SOLVER_BACKEND_CUDA)
-#  include <arcane/alina/backend_cuda.h>
+#  include <arcane/alina/CudaBackend.h>
 #  include <arcane/alina/relaxation_cusparse_ilu0.h>
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN

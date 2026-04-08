@@ -32,96 +32,94 @@ THE SOFTWARE.
 #include <vector>
 #include <iostream>
 
-#include <arcane/alina/backend_cuda.h>
+#include <arcane/alina/CudaBackend.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/make_solver.h>
-#include <arcane/alina/amg.h>
+#include <arcane/alina/AMG.h>
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
-#include <arcane/alina/solver_bicgstab.h>
+#include <arcane/alina/BiCGStabSolver.h>
 
 #include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
+using namespace Arcane;
+
 int main(int argc, char* argv[])
 {
-    // The matrix and the RHS file names should be in the command line options:
-    if (argc < 3) {
-        std::cerr << "Usage: " << argv[0] << " <matrix.mtx> <rhs.mtx>" << std::endl;
-        return 1;
-    }
+  // The matrix and the RHS file names should be in the command line options:
+  if (argc < 3) {
+    std::cerr << "Usage: " << argv[0] << " <matrix.mtx> <rhs.mtx>" << std::endl;
+    return 1;
+  }
 
-    // Show the name of the GPU we are using:
-    int device;
-    cudaDeviceProp prop;
-    cudaGetDevice(&device);
-    cudaGetDeviceProperties(&prop, device);
-    std::cout << prop.name << std::endl;
+  // Show the name of the GPU we are using:
+  int device;
+  cudaDeviceProp prop;
+  cudaGetDevice(&device);
+  cudaGetDeviceProperties(&prop, device);
+  std::cout << prop.name << std::endl;
 
-    // The profiler:
-    Arcane::Alina::profiler<> prof("poisson3Db");
+  // The profiler:
+  Alina::profiler<> prof("poisson3Db");
 
-    // Read the system matrix and the RHS:
-    ptrdiff_t rows, cols;
-    std::vector<ptrdiff_t> ptr, col;
-    std::vector<double> val, rhs;
+  // Read the system matrix and the RHS:
+  ptrdiff_t rows, cols;
+  std::vector<ptrdiff_t> ptr, col;
+  std::vector<double> val, rhs;
 
-    prof.tic("read");
-    std::tie(rows, cols) = Arcane::Alina::IO::mm_reader(argv[1])(ptr, col, val);
-    std::cout << "Matrix " << argv[1] << ": " << rows << "x" << cols << std::endl;
+  prof.tic("read");
+  std::tie(rows, cols) = Alina::IO::mm_reader(argv[1])(ptr, col, val);
+  std::cout << "Matrix " << argv[1] << ": " << rows << "x" << cols << std::endl;
 
-    std::tie(rows, cols) = Arcane::Alina::IO::mm_reader(argv[2])(rhs);
-    std::cout << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
-    prof.toc("read");
+  std::tie(rows, cols) = Alina::IO::mm_reader(argv[2])(rhs);
+  std::cout << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
+  prof.toc("read");
 
-    // We use the tuple of CRS arrays to represent the system matrix.
-    // Note that std::tie creates a tuple of references, so no data is actually
-    // copied here:
-    auto A = std::tie(rows, ptr, col, val);
+  // We use the tuple of CRS arrays to represent the system matrix.
+  // Note that std::tie creates a tuple of references, so no data is actually
+  // copied here:
+  auto A = std::tie(rows, ptr, col, val);
 
-    // Compose the solver type
-    typedef Arcane::Alina::backend::cuda<double> Backend;
-    typedef Arcane::Alina::make_solver<
-        Arcane::Alina::amg<
-            Backend,
-            Arcane::Alina::coarsening::smoothed_aggregation,
-            Arcane::Alina::relaxation::spai0
-            >,
-        Arcane::Alina::solver::bicgstab<Backend>
-        > Solver;
+  // Compose the solver type
+  using Backend = Alina::backend::cuda<double>;
+  typedef Alina::make_solver<Alina::AMG<
+                             Backend,
+                             Alina::coarsening::smoothed_aggregation,
+                             Alina::relaxation::spai0>,
+                             Alina::solver::BiCGStabSolver<Backend>>
+  Solver;
 
-    // We need to initialize the CUSPARSE library and pass the handle to AMGCL
-    // in backend parameters:
-    Backend::params bprm;
-    cusparseCreate(&bprm.cusparse_handle);
+  // We need to initialize the CUSPARSE library and pass the handle to AMGCL
+  // in backend parameters:
+  Backend::params bprm;
+  cusparseCreate(&bprm.cusparse_handle);
 
-    // There is no way to pass the backend parameters without passing the
-    // solver parameters, so we also need to create those. But we can leave
-    // them with the default values:
-    Solver::params prm;
+  // There is no way to pass the backend parameters without passing the
+  // solver parameters, so we also need to create those. But we can leave
+  // them with the default values:
+  Solver::params prm;
 
-    // Initialize the solver with the system matrix:
-    prof.tic("setup");
-    Solver solve(A, prm, bprm);
-    prof.toc("setup");
+  // Initialize the solver with the system matrix:
+  prof.tic("setup");
+  Solver solve(A, prm, bprm);
+  prof.toc("setup");
 
-    // Show the mini-report on the constructed solver:
-    std::cout << solve << std::endl;
+  // Show the mini-report on the constructed solver:
+  std::cout << solve << std::endl;
 
-    // Solve the system with the zero initial approximation.
-    // The RHS and the solution vectors should reside in the GPU memory:
-    int iters;
-    double error;
-    thrust::device_vector<double> f(rhs);
-    thrust::device_vector<double> x(rows, 0.0);
+  // Solve the system with the zero initial approximation.
+  // The RHS and the solution vectors should reside in the GPU memory:
+  thrust::device_vector<double> f(rhs);
+  thrust::device_vector<double> x(rows, 0.0);
 
-    prof.tic("solve");
-    std::tie(iters, error) = solve(f, x);
-    prof.toc("solve");
+  prof.tic("solve");
+  Alina::SolverResult r = solve(f, x);
+  prof.toc("solve");
 
-    // Output the number of iterations, the relative error,
-    // and the profiling data:
-    std::cout << "Iters: " << iters << std::endl
-              << "Error: " << error << std::endl
-              << prof << std::endl;
+  // Output the number of iterations, the relative error,
+  // and the profiling data:
+  std::cout << "Iterations: " << r.nbIteration() << std::endl
+            << "Error:      " << r.residual() << std::endl
+            << prof << std::endl;
 }

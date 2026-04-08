@@ -27,7 +27,7 @@ class rounding_error{};
 
 #include <boost/multi_array.hpp>
 #if defined(SOLVER_BACKEND_CUDA)
-#include <arcane/alina/backend_cuda.h>
+#include <arcane/alina/CudaBackend.h>
 #include <arcane/alina/relaxation_cusparse_ilu0.h>
 typedef Arcane::Alina::backend::cuda<double> Backend;
 #else
@@ -61,10 +61,9 @@ struct partitioned_deflation
   unsigned nparts;
   std::vector<unsigned> domain;
 
-  partitioned_deflation(
-  boost::array<ptrdiff_t, 2> LO,
-  boost::array<ptrdiff_t, 2> HI,
-  unsigned nparts)
+  partitioned_deflation(boost::array<ptrdiff_t, 2> LO,
+                        boost::array<ptrdiff_t, 2> HI,
+                        unsigned nparts)
   : nparts(nparts)
   {
     domain_partition<2> part(LO, HI, nparts);
@@ -98,10 +97,9 @@ struct linear_deflation
   std::vector<double> x;
   std::vector<double> y;
 
-  linear_deflation(
-  ptrdiff_t chunk,
-  boost::array<ptrdiff_t, 2> lo,
-  boost::array<ptrdiff_t, 2> hi)
+  linear_deflation(ptrdiff_t chunk,
+                   boost::array<ptrdiff_t, 2> lo,
+                   boost::array<ptrdiff_t, 2> hi)
   {
     double hx = 1.0 / (hi[0] - lo[0]);
     double hy = 1.0 / (hi[1] - lo[1]);
@@ -141,11 +139,10 @@ struct bilinear_deflation
   size_t nv, chunk;
   std::vector<double> v;
 
-  bilinear_deflation(
-  ptrdiff_t n,
-  ptrdiff_t chunk,
-  boost::array<ptrdiff_t, 2> lo,
-  boost::array<ptrdiff_t, 2> hi)
+  bilinear_deflation(ptrdiff_t n,
+                     ptrdiff_t chunk,
+                     boost::array<ptrdiff_t, 2> lo,
+                     boost::array<ptrdiff_t, 2> hi)
   : nv(0)
   , chunk(chunk)
   {
@@ -214,11 +211,10 @@ struct mba_deflation
   size_t chunk, nv;
   std::vector<double> v;
 
-  mba_deflation(
-  ptrdiff_t n,
-  ptrdiff_t chunk,
-  boost::array<ptrdiff_t, 2> lo,
-  boost::array<ptrdiff_t, 2> hi)
+  mba_deflation(ptrdiff_t n,
+                ptrdiff_t chunk,
+                boost::array<ptrdiff_t, 2> lo,
+                boost::array<ptrdiff_t, 2> hi)
   : chunk(chunk)
   , nv(1)
   {
@@ -301,11 +297,10 @@ struct harmonic_deflation
   size_t nv, chunk;
   std::vector<double> v;
 
-  harmonic_deflation(
-  ptrdiff_t n,
-  ptrdiff_t chunk,
-  boost::array<ptrdiff_t, 2> lo,
-  boost::array<ptrdiff_t, 2> hi)
+  harmonic_deflation(ptrdiff_t n,
+                     ptrdiff_t chunk,
+                     boost::array<ptrdiff_t, 2> lo,
+                     boost::array<ptrdiff_t, 2> hi)
   : nv(0)
   , chunk(chunk)
   {
@@ -395,13 +390,11 @@ struct harmonic_deflation
       }
     }
 
-    Alina::make_solver<
-    Alina::AMG<
-    Alina::backend::BuiltinBackend<double>,
-    Alina::coarsening::smoothed_aggregation,
-    Alina::relaxation::gauss_seidel>,
-    Alina::solver::GMRESSolver<
-    Alina::backend::BuiltinBackend<double>>>
+    Alina::make_solver<Alina::AMG<Alina::backend::BuiltinBackend<double>,
+                                  Alina::coarsening::smoothed_aggregation,
+                                  Alina::relaxation::gauss_seidel>,
+                       Alina::solver::GMRESSolver<
+                       Alina::backend::BuiltinBackend<double>>>
     solve(Alina::adapter::zero_copy(chunk, ptr.data(), col.data(), val.data()));
 
     for (int j = 0; j < 2; ++j) {
@@ -435,9 +428,8 @@ struct renumbering
   const domain_partition<2>& part;
   const std::vector<ptrdiff_t>& dom;
 
-  renumbering(
-  const domain_partition<2>& p,
-  const std::vector<ptrdiff_t>& d)
+  renumbering(const domain_partition<2>& p,
+              const std::vector<ptrdiff_t>& d)
   : part(p)
   , dom(d)
   {}

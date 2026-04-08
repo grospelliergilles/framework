@@ -213,19 +213,16 @@ int main(int argc, char* argv[])
 
   x.resize(rows, vm["initial"].as<double>());
 
-  size_t iters;
-  double error;
-
   if (vm["single-level"].as<bool>())
     prm.put("precond.class", "relaxation");
 
   int block_size = vm["block-size"].as<int>();
-
+  Alina::SolverResult r;
 #define CALL_BLOCK_SOLVER(z, data, B) \
   case B: { \
     typedef ::Arcane::Alina::static_matrix<std::complex<double>, B, B> value_type; \
     typedef ::Arcane::Alina::backend::BuiltinBackend<value_type> Backend; \
-    std::tie(iters, error) = solve<::Arcane::Alina::runtime::preconditioner<Backend>>( \
+    r = solve<::Arcane::Alina::runtime::preconditioner<Backend>>( \
     ::Arcane::Alina::adapter::block_matrix<value_type>( \
     std::tie(rows, ptr, col, val)), \
     prm, rhs, x); \
@@ -234,7 +231,7 @@ int main(int argc, char* argv[])
   switch (block_size) {
   case 1: {
     typedef Alina::backend::BuiltinBackend<std::complex<double>> Backend;
-    std::tie(iters, error) = solve<Alina::runtime::preconditioner<Backend>>(
+    r = solve<Alina::runtime::preconditioner<Backend>>(
     std::tie(rows, ptr, col, val), prm, rhs, x);
   } break;
     BOOST_PP_SEQ_FOR_EACH(CALL_BLOCK_SOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
@@ -247,7 +244,7 @@ int main(int argc, char* argv[])
     Alina::IO::mm_write(vm["output"].as<string>(), &x[0], x.size());
   }
 
-  std::cout << "Iterations: " << iters << std::endl
-            << "Error:      " << error << std::endl
+  std::cout << "Iterations: " << r.nbIteration() << std::endl
+            << "Error:      " << r.residual() << std::endl
             << prof << std::endl;
 }
