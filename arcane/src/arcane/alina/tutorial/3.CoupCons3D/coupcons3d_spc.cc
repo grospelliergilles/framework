@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
         Alina::static_matrix<float,4,4>> UBackend;    // the USolver backend
 
     typedef Alina::make_solver<
-        Alina::preconditioner::schur_pressure_correction<
+        Alina::preconditioner::SchurPressureCorrectionPreconditioner<
             Alina::make_block_solver<
                 Alina::AMG<
                     UBackend,

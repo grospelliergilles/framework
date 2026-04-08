@@ -133,7 +133,7 @@ class preconditioner {
                 case precond_class::dummy:
                     {
                         typedef
-                            Alina::preconditioner::dummy<Backend>
+                            Alina::preconditioner::DummyPreconditioner<Backend>
                             Precond;
 
                         handle = static_cast<void*>(new Precond(A, prm, bprm));
@@ -179,7 +179,7 @@ class preconditioner {
                 case precond_class::dummy:
                     {
                         typedef
-                            Alina::preconditioner::dummy<Backend>
+                            Alina::preconditioner::DummyPreconditioner<Backend>
                             Precond;
 
                         delete static_cast<Precond*>(handle);
@@ -250,7 +250,7 @@ class preconditioner {
                 case precond_class::dummy:
                     {
                         typedef
-                            Alina::preconditioner::dummy<Backend>
+                            Alina::preconditioner::DummyPreconditioner<Backend>
                             Precond;
 
                         static_cast<Precond*>(handle)->apply(rhs, x);
@@ -294,7 +294,7 @@ class preconditioner {
                 case precond_class::dummy:
                     {
                         typedef
-                            Alina::preconditioner::dummy<Backend>
+                            Alina::preconditioner::DummyPreconditioner<Backend>
                             Precond;
 
                         return static_cast<Precond*>(handle)->system_matrix_ptr();
@@ -344,7 +344,7 @@ class preconditioner {
                 case precond_class::dummy:
                     {
                         typedef
-                            Alina::preconditioner::dummy<Backend>
+                            Alina::preconditioner::DummyPreconditioner<Backend>
                             Precond;
 
                         return backend::bytes(*static_cast<Precond*>(handle));
@@ -387,7 +387,7 @@ class preconditioner {
                 case precond_class::dummy:
                     {
                         typedef
-                            Alina::preconditioner::dummy<Backend>
+                            Alina::preconditioner::DummyPreconditioner<Backend>
                             Precond;
 
                         return os << *static_cast<Precond*>(p.handle);

@@ -64,7 +64,7 @@ void solve_schur(const Matrix &K, const std::vector<double> &rhs, Alina::Propert
 
     prof.tic("setup");
     Alina::make_solver<
-        Alina::preconditioner::schur_pressure_correction<USolver, PSolver>,
+        Alina::preconditioner::SchurPressureCorrectionPreconditioner<USolver, PSolver>,
         Alina::runtime::solver::wrapper<Backend<double>>
         > solve(K, prm, bprm);
     prof.toc("setup");

@@ -39,7 +39,7 @@ namespace Arcane::Alina {
 namespace preconditioner {
 
 template <class Backend>
-class dummy {
+class DummyPreconditioner {
     public:
         typedef Backend backend_type;
 
@@ -54,7 +54,7 @@ class dummy {
         typedef typename Backend::params backend_params;
 
         template <class Matrix>
-        dummy(
+        DummyPreconditioner(
                 const Matrix &M,
                 const params& = params(),
                 const backend_params &bprm = backend_params()
@@ -63,7 +63,7 @@ class dummy {
         {
         }
 
-        dummy(
+        DummyPreconditioner(
                 std::shared_ptr<build_matrix> M,
                 const params& = params(),
                 const backend_params &bprm = backend_params()
@@ -91,7 +91,7 @@ class dummy {
     private:
         std::shared_ptr<matrix>   A;
 
-        friend std::ostream& operator<<(std::ostream &os, const dummy &p) {
+        friend std::ostream& operator<<(std::ostream &os, const DummyPreconditioner &p) {
             os << "identity matrix as preconditioner" << std::endl;
             os << "  unknowns: " << backend::rows(p.system_matrix()) << std::endl;
             os << "  nonzeros: " << backend::nonzeros(p.system_matrix()) << std::endl;

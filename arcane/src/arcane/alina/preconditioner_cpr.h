@@ -42,7 +42,7 @@ namespace Arcane::Alina {
 namespace preconditioner {
 
 template <class PPrecond, class SPrecond>
-class cpr {
+class CPRPreconditioner {
     static_assert(
             math::static_rows<typename PPrecond::backend_type::value_type>::value == 1,
             "Pressure backend should have scalar value type!"
@@ -107,7 +107,7 @@ class cpr {
         } prm;
 
         template <class Matrix>
-        cpr(
+        CPRPreconditioner(
                 const Matrix &K,
                 const params &prm = params(),
                 const backend_params &bprm = backend_params()
@@ -117,7 +117,7 @@ class cpr {
                     std::integral_constant<bool, math::static_rows<value_type>::value == 1>());
         }
 
-        cpr(
+        CPRPreconditioner(
                 std::shared_ptr<build_matrix> K,
                 const params &prm = params(),
                 const backend_params &bprm = backend_params()
@@ -542,7 +542,7 @@ class cpr {
             }
         }
 
-        friend std::ostream& operator<<(std::ostream &os, const cpr &p) {
+        friend std::ostream& operator<<(std::ostream &os, const CPRPreconditioner &p) {
             os << "CPR (two-stage preconditioner)\n"
                   "### Pressure preconditioner:\n"
                << *p.P << "\n"

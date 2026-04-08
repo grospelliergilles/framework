@@ -58,7 +58,7 @@ namespace Arcane::Alina::preconditioner
 
 /// Schur-complement pressure correction preconditioner
 template <class USolver, class PSolver>
-class schur_pressure_correction
+class SchurPressureCorrectionPreconditioner
 {
   static_assert(
   backend::backends_compatible<typename USolver::backend_type,
@@ -195,7 +195,7 @@ class schur_pressure_correction
   } prm;
 
   template <class Matrix>
-  schur_pressure_correction(const Matrix& K,
+  SchurPressureCorrectionPreconditioner(const Matrix& K,
                             const params& prm = params(),
                             const backend_params& bprm = backend_params())
   : prm(prm)
@@ -206,7 +206,7 @@ class schur_pressure_correction
     init(std::make_shared<build_matrix>(K), bprm);
   }
 
-  schur_pressure_correction(std::shared_ptr<build_matrix> K,
+  SchurPressureCorrectionPreconditioner(std::shared_ptr<build_matrix> K,
                             const params& prm = params(),
                             const backend_params& bprm = backend_params())
   : prm(prm)
@@ -613,7 +613,7 @@ class schur_pressure_correction
     this->p2x = backend_type::copy_matrix(p2x, bprm);
   }
 
-  friend std::ostream& operator<<(std::ostream& os, const schur_pressure_correction& p)
+  friend std::ostream& operator<<(std::ostream& os, const SchurPressureCorrectionPreconditioner& p)
   {
     os << "Schur complement (two-stage preconditioner)" << std::endl;
     os << "  Unknowns: " << p.n << "(" << p.np << ")" << std::endl;
@@ -651,18 +651,18 @@ namespace Arcane::Alina::backend
 /*---------------------------------------------------------------------------*/
 
 template <class US, class PS, class Alpha, class Beta, class Vec1, class Vec2>
-struct spmv_impl<Alpha, preconditioner::schur_pressure_correction<US, PS>, Vec1, Beta, Vec2>
+struct spmv_impl<Alpha, preconditioner::SchurPressureCorrectionPreconditioner<US, PS>, Vec1, Beta, Vec2>
 {
-  static void apply(Alpha alpha, const preconditioner::schur_pressure_correction<US, PS>& A, const Vec1& x, Beta beta, Vec2& y)
+  static void apply(Alpha alpha, const preconditioner::SchurPressureCorrectionPreconditioner<US, PS>& A, const Vec1& x, Beta beta, Vec2& y)
   {
     A.spmv(alpha, x, beta, y);
   }
 };
 
 template <class US, class PS, class Vec1, class Vec2, class Vec3>
-struct residual_impl<preconditioner::schur_pressure_correction<US, PS>, Vec1, Vec2, Vec3>
+struct residual_impl<preconditioner::SchurPressureCorrectionPreconditioner<US, PS>, Vec1, Vec2, Vec3>
 {
-  static void apply(const Vec1& rhs, const preconditioner::schur_pressure_correction<US, PS>& A, const Vec2& x, Vec3& r)
+  static void apply(const Vec1& rhs, const preconditioner::SchurPressureCorrectionPreconditioner<US, PS>& A, const Vec2& x, Vec3& r)
   {
     backend::copy(rhs, r);
     A.spmv(-1, x, 1, r);
