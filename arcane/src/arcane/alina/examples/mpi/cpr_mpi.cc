@@ -244,7 +244,7 @@ int main(int argc, char *argv[]) {
     }
     prof.toc("read");
 
-    typedef Alina::backend::builtin<double> Backend;
+    typedef Alina::backend::BuiltinBackend<double> Backend;
 
     auto A = partition<Backend>(comm,
             std::tie(n, ptr, col, val), rhs, Backend::params(),

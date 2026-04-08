@@ -30,7 +30,7 @@ using BlockMatrix = Eigen::Matrix<T, N, M>;
      template <class T, int N, int M>
      using BlockMatrix = Arcane::Alina::static_matrix<T, N, M>;
 #endif
-template <class T> using Backend = Arcane::Alina::backend::builtin<T>;
+template <class T> using Backend = Arcane::Alina::backend::BuiltinBackend<T>;
 #endif
 
 #include <arcane/alina/IO.h>

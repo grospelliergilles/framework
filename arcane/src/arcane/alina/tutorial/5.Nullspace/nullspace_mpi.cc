@@ -101,8 +101,8 @@ int main(int argc, char* argv[])
     }
 
     // Declare the backends and the solver type
-    typedef Alina::backend::builtin<double> SBackend; // the solver backend
-    typedef Alina::backend::builtin<float>  PBackend; // the preconditioner backend
+    typedef Alina::backend::BuiltinBackend<double> SBackend; // the solver backend
+    typedef Alina::backend::BuiltinBackend<float>  PBackend; // the preconditioner backend
 
     typedef Alina::mpi::make_solver<
         Alina::mpi::AMG<

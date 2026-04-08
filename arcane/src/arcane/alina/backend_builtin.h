@@ -716,7 +716,7 @@ spectral_radius(const Matrix& A, int power_iters = 0)
  * is used internally during setup.
  */
 template <typename ValueType, typename ColumnType = ptrdiff_t, typename PointerType = ColumnType>
-struct builtin
+struct BuiltinBackend
 {
   typedef ValueType value_type;
   typedef ColumnType index_type;
@@ -827,7 +827,7 @@ struct is_builtin_vector<numa_vector<V>> : std::true_type
 // Specialization of backend interface
 //---------------------------------------------------------------------------
 template <typename T1, typename T2>
-struct backends_compatible<builtin<T1>, builtin<T2>> : std::true_type
+struct backends_compatible<BuiltinBackend<T1>, BuiltinBackend<T2>> : std::true_type
 {};
 
 template <typename V, typename C, typename P>

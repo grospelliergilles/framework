@@ -20,7 +20,7 @@ typedef Arcane::Alina::backend::EigenBackend<double> Backend;
 #include <arcane/alina/backend_builtin.h>
 #include <arcane/alina/value_type_static_matrix.h>
 #include <arcane/alina/Adapters.h>
-typedef Arcane::Alina::backend::builtin<double> Backend;
+typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #endif
 
 #include <arcane/alina/RelaxationRuntime.h>
@@ -62,7 +62,7 @@ std::tuple<size_t, double> block_solve(
 {
     typedef Alina::static_matrix<double, B, B> value_type;
     typedef Alina::static_matrix<double, B, 1> rhs_type;
-    typedef Alina::backend::builtin<value_type> BBackend;
+    typedef Alina::backend::BuiltinBackend<value_type> BBackend;
 
     typedef Alina::make_solver<
         Alina::runtime::preconditioner<BBackend>,

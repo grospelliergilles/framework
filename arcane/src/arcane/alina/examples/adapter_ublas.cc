@@ -52,12 +52,12 @@ int main(int argc, char *argv[]) {
     prof.tic("build");
     Alina::make_solver<
         Alina::AMG<
-            Alina::backend::builtin<double>,
+            Alina::backend::BuiltinBackend<double>,
             Alina::coarsening::smoothed_aggregation,
             Alina::relaxation::spai0
             >,
         Alina::solver::BiCGStabLSolver<
-            Alina::backend::builtin<double>
+            Alina::backend::BuiltinBackend<double>
             >
         > solve( Alina::backend::map(A) );
     prof.toc("build");

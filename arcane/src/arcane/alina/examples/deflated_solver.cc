@@ -204,7 +204,7 @@ int main(int argc, char *argv[]) {
     if (vm["single-level"].as<bool>())
         prm.put("precond.class", "relaxation");
 
-    typedef Alina::backend::builtin<double> Backend;
+    typedef Alina::backend::BuiltinBackend<double> Backend;
     typedef Alina::deflated_solver<
         Alina::runtime::preconditioner<Backend>,
         Alina::runtime::solver::wrapper<Backend>

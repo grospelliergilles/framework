@@ -60,7 +60,7 @@ class make_solver : public Alina::detail::non_copyable {
         typedef Alina::mpi::distributed_matrix<typename Precond::backend_type> matrix;
         typedef typename backend_type::value_type value_type;
         typedef typename backend_type::params backend_params;
-        typedef typename backend::builtin<value_type>::matrix build_matrix;
+        typedef typename backend::BuiltinBackend<value_type>::matrix build_matrix;
         typedef typename math::scalar_of<value_type>::type scalar_type;
 
         struct params {

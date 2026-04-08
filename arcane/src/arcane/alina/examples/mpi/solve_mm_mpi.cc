@@ -312,11 +312,11 @@ int main(int argc, char *argv[]) {
     typedef
         Alina::mpi::subdomain_deflation<
             Alina::AMG<
-                Alina::backend::builtin<double>,
+                Alina::backend::BuiltinBackend<double>,
                 Alina::runtime::coarsening::wrapper,
                 Alina::runtime::relaxation::wrapper
                 >,
-            Alina::runtime::mpi::solver::wrapper<Alina::backend::builtin<double>>,
+            Alina::runtime::mpi::solver::wrapper<Alina::backend::BuiltinBackend<double>>,
             Alina::runtime::mpi::direct::solver<double>
         > SDD;
 

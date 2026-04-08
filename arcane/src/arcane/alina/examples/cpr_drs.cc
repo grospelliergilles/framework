@@ -13,7 +13,7 @@
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
 #include <arcane/alina/backend_builtin.h>
-typedef Arcane::Alina::backend::builtin<double> Backend;
+typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #endif
 
 #if defined(SOLVER_BACKEND_BUILTIN)
@@ -107,8 +107,8 @@ void solve_block_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::Pro
   typedef Alina::static_matrix<double, B, B> val_type;
   typedef Alina::static_matrix<double, B, 1> rhs_type;
 
-  typedef Alina::backend::builtin<val_type> SBackend;
-  typedef Alina::backend::builtin<double> PBackend;
+  typedef Alina::backend::BuiltinBackend<val_type> SBackend;
+  typedef Alina::backend::BuiltinBackend<double> PBackend;
 
   typedef Alina::AMG<
   PBackend,

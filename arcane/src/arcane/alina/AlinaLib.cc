@@ -25,7 +25,7 @@ using namespace Arcane;
 
 //---------------------------------------------------------------------------
 
-typedef Alina::backend::builtin<double> Backend;
+typedef Alina::backend::BuiltinBackend<double> Backend;
 typedef Alina::AMG<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper> AMG;
 typedef Alina::runtime::solver::wrapper<Backend>  ISolver;
 typedef Alina::make_solver<AMG, ISolver> Solver;

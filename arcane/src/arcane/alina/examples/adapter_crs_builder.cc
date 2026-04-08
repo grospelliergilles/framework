@@ -90,11 +90,11 @@ int main(int argc, char* argv[])
   prof.tic("build");
   typedef Alina::make_solver<
   Alina::AMG<
-  Alina::backend::builtin<double>,
+  Alina::backend::BuiltinBackend<double>,
   Alina::coarsening::smoothed_aggregation,
   Alina::relaxation::gauss_seidel>,
   Alina::solver::ConjugateGradientSolver<
-  Alina::backend::builtin<double>>>
+  Alina::backend::BuiltinBackend<double>>>
   Solver;
   Solver solve(Alina::adapter::make_matrix(poisson_2d(m)));
   prof.toc("build");
@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
   //
   // Nesting iterative solvers in this way allows to shave last bits off the
   // error.
-  Alina::solver::ConjugateGradientSolver<Alina::backend::builtin<double>> S(n);
+  Alina::solver::ConjugateGradientSolver<Alina::backend::BuiltinBackend<double>> S(n);
   std::fill(x.begin(), x.end(), 0);
 
   prof.tic("nested solver");

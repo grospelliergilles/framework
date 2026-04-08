@@ -7,5 +7,5 @@
 
 TEST(alina_test_solvers, test_nonscalar_backend)
 {
-  test_backend< Alina::backend::builtin< Alina::static_matrix<double, 2, 2> > >();
+  test_backend< Alina::backend::BuiltinBackend< Alina::static_matrix<double, 2, 2> > >();
 }

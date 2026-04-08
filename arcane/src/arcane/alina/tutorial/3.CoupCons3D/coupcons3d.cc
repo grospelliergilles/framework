@@ -99,8 +99,8 @@ int main(int argc, char *argv[]) {
     typedef Alina::static_matrix<double, 4, 1> dvec_type; // the corresponding vector value type
     typedef Alina::static_matrix<float,  4, 4> smat_type; // matrix value type in single precision
 
-    typedef Alina::backend::builtin<dmat_type> SBackend; // the solver backend
-    typedef Alina::backend::builtin<smat_type> PBackend; // the preconditioner backend
+    typedef Alina::backend::BuiltinBackend<dmat_type> SBackend; // the solver backend
+    typedef Alina::backend::BuiltinBackend<smat_type> PBackend; // the preconditioner backend
 
     typedef Alina::make_solver<
         Alina::AMG<

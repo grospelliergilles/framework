@@ -39,7 +39,7 @@ TEST(alina_test_complex, complex_matrix_adapter)
 
   std::vector<complex> x(n, complex(0.0, 0.0));
 
-  typedef Alina::backend::builtin<double> Backend;
+  typedef Alina::backend::BuiltinBackend<double> Backend;
 
   Alina::PropertyTree prm;
   prm.put("precond.coarsening.aggr.block_size", 2);

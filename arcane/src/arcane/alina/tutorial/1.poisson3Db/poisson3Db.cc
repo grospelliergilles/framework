@@ -75,12 +75,12 @@ int main(int argc, char *argv[]) {
 
     // Compose the solver type
     //   the solver backend:
-    typedef Alina::backend::builtin<double> SBackend;
+    typedef Alina::backend::BuiltinBackend<double> SBackend;
     //   the preconditioner backend:
 #ifdef MIXED_PRECISION
-    typedef Alina::backend::builtin<float> PBackend;
+    typedef Alina::backend::BuiltinBackend<float> PBackend;
 #else
-    typedef Alina::backend::builtin<double> PBackend;
+    typedef Alina::backend::BuiltinBackend<double> PBackend;
 #endif
     
     typedef Alina::make_solver<

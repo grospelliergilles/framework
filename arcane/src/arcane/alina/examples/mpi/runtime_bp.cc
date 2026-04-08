@@ -58,7 +58,7 @@ std::tuple<size_t, double> solve(
         const Matrix &A
         )
 {
-    typedef Alina::backend::builtin<double> Backend;
+    typedef Alina::backend::BuiltinBackend<double> Backend;
 
     typedef Alina::mpi::make_solver<
         Alina::mpi::block_preconditioner< Precond<Backend> >,

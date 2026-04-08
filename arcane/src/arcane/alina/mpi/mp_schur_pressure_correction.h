@@ -69,7 +69,7 @@ class schur_pressure_correction
 
   typedef distributed_matrix<backend_type> matrix;
 
-  typedef typename backend::builtin<value_type>::matrix build_matrix;
+  typedef typename backend::BuiltinBackend<value_type>::matrix build_matrix;
 
   struct params
   {

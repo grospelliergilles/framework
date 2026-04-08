@@ -96,8 +96,8 @@ int main(int argc, char *argv[]) {
     typedef Alina::static_matrix<double, B, B> dmat_type;
     typedef Alina::static_matrix<double, B, 1> dvec_type;
     typedef Alina::static_matrix<float,  B, B> fmat_type;
-    typedef Alina::backend::builtin<dmat_type> DBackend;
-    typedef Alina::backend::builtin<fmat_type> FBackend;
+    typedef Alina::backend::BuiltinBackend<dmat_type> DBackend;
+    typedef Alina::backend::BuiltinBackend<fmat_type> FBackend;
 
     typedef Alina::mpi::make_solver<
         Alina::mpi::AMG<

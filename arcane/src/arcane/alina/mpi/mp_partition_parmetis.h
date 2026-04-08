@@ -137,7 +137,7 @@ struct parmetis
       }
       else {
         typedef typename math::scalar_of<value_type>::type scalar;
-        typedef backend::builtin<scalar> sbackend;
+        typedef backend::BuiltinBackend<scalar> sbackend;
         ptrdiff_t np = n / block_size;
 
         distributed_matrix<sbackend> A_pw(A.comm(),

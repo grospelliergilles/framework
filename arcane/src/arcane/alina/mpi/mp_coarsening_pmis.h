@@ -53,7 +53,7 @@ struct pmis
   typedef distributed_matrix<Backend> matrix;
   typedef comm_pattern<Backend> CommPattern;
   typedef backend::CSRMatrix<value_type> build_matrix;
-  typedef backend::builtin<char> bool_backend;
+  typedef backend::BuiltinBackend<char> bool_backend;
   typedef backend::CSRMatrix<char> bool_matrix;
 
   struct params
@@ -107,7 +107,7 @@ struct pmis
     }
     else {
       typedef typename math::scalar_of<value_type>::type scalar;
-      typedef backend::builtin<scalar> sbackend;
+      typedef backend::BuiltinBackend<scalar> sbackend;
 
       ptrdiff_t np = n / prm.block_size;
 

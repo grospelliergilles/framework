@@ -77,8 +77,8 @@ int main(int argc, char *argv[]) {
     // Declare the solver type
     typedef Alina::static_matrix<double, 3, 3> DBlock;
     typedef Alina::static_matrix<float, 3, 3> FBlock;
-    typedef Alina::backend::builtin<DBlock> SBackend; // the solver backend
-    typedef Alina::backend::builtin<FBlock> PBackend; // the preconditioner backend
+    typedef Alina::backend::BuiltinBackend<DBlock> SBackend; // the solver backend
+    typedef Alina::backend::BuiltinBackend<FBlock> PBackend; // the preconditioner backend
 
     typedef Alina::make_solver<
         Alina::AMG<

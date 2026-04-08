@@ -35,7 +35,7 @@ typedef Arcane::Alina::backend::cuda<double> Backend;
 #define SOLVER_BACKEND_BUILTIN
 #endif
 #include <arcane/alina/backend_builtin.h>
-typedef Arcane::Alina::backend::builtin<double> Backend;
+typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #endif
 
 #include <arcane/alina/make_solver.h>
@@ -397,11 +397,11 @@ struct harmonic_deflation
 
     Alina::make_solver<
     Alina::AMG<
-    Alina::backend::builtin<double>,
+    Alina::backend::BuiltinBackend<double>,
     Alina::coarsening::smoothed_aggregation,
     Alina::relaxation::gauss_seidel>,
     Alina::solver::GMRESSolver<
-    Alina::backend::builtin<double>>>
+    Alina::backend::BuiltinBackend<double>>>
     solve(Alina::adapter::zero_copy(chunk, ptr.data(), col.data(), val.data()));
 
     for (int j = 0; j < 2; ++j) {

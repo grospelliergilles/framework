@@ -50,7 +50,7 @@ class DummyPreconditioner
   typedef typename Backend::value_type value_type;
   typedef typename Backend::col_type col_type;
   typedef typename Backend::ptr_type ptr_type;
-  typedef typename backend::builtin<value_type, col_type, ptr_type>::matrix build_matrix;
+  typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
 
   typedef Alina::detail::empty_params params;
   typedef typename Backend::params backend_params;

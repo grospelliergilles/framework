@@ -51,7 +51,7 @@ class ilu_solve {
         typedef typename Backend::matrix matrix;
         typedef typename Backend::vector vector;
         typedef typename Backend::matrix_diagonal matrix_diagonal;
-        typedef typename backend::builtin<value_type, col_type, ptr_type>::matrix build_matrix;
+        typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
         typedef typename math::scalar_of<value_type>::type scalar_type;
 
         struct params {
@@ -128,14 +128,14 @@ class ilu_solve {
 };
 
 template <class value_type, class col_type, class ptr_type>
-class ilu_solve< backend::builtin<value_type, col_type, ptr_type> > {
+class ilu_solve< backend::BuiltinBackend<value_type, col_type, ptr_type> > {
     public:
-        typedef backend::builtin<value_type, col_type, ptr_type> Backend;
+        typedef backend::BuiltinBackend<value_type, col_type, ptr_type> Backend;
         typedef typename Backend::params backend_params;
         typedef typename Backend::matrix matrix;
         typedef typename Backend::vector vector;
         typedef typename Backend::matrix_diagonal matrix_diagonal;
-        typedef typename backend::builtin<value_type, col_type, ptr_type>::matrix build_matrix;
+        typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
         typedef typename Backend::rhs_type rhs_type;
         typedef typename math::scalar_of<value_type>::type scalar_type;
 
@@ -453,9 +453,9 @@ class ilu_solve< backend::builtin<value_type, col_type, ptr_type> > {
 
 template <class Block, class Col, class Ptr>
 class ilu_solve< backend::builtin_hybrid<Block, Col, Ptr> >
-    : public ilu_solve< backend::builtin<typename math::scalar_of<Block>::type, Col, Ptr> >
+    : public ilu_solve< backend::BuiltinBackend<typename math::scalar_of<Block>::type, Col, Ptr> >
 {
-    typedef ilu_solve< backend::builtin<typename math::scalar_of<Block>::type, Col, Ptr> > Base;
+    typedef ilu_solve< backend::BuiltinBackend<typename math::scalar_of<Block>::type, Col, Ptr> > Base;
 
     public:
         using Base::Base;

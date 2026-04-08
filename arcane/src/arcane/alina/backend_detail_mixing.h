@@ -55,7 +55,7 @@ struct common_scalar_backend<B, B,
 };
 
 template <class V1, class V2>
-struct common_scalar_backend< backend::builtin<V1>, backend::builtin<V2>,
+struct common_scalar_backend< backend::BuiltinBackend<V1>, backend::BuiltinBackend<V2>,
     typename std::enable_if<
         math::static_rows<V1>::value != 1 ||
         math::static_rows<V2>::value != 1
@@ -66,7 +66,7 @@ struct common_scalar_backend< backend::builtin<V1>, backend::builtin<V2>,
 
     typedef
         typename std::conditional<
-            (sizeof(S1) > sizeof(S2)), backend::builtin<S1>, backend::builtin<S2>
+            (sizeof(S1) > sizeof(S2)), backend::BuiltinBackend<S1>, backend::BuiltinBackend<S2>
             >::type
         type;
 };

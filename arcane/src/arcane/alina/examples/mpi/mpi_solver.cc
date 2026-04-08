@@ -238,7 +238,7 @@ void solve_block(
     typedef Alina::static_matrix<double, B, B> val_type;
     typedef Alina::static_matrix<double, B, 1> rhs_type;
 
-    typedef Alina::backend::builtin<val_type> Backend;
+    typedef Alina::backend::BuiltinBackend<val_type> Backend;
 
     typedef Alina::mpi::distributed_matrix<Backend> DMatrix;
 
@@ -338,7 +338,7 @@ void solve_scalar(
         )
 {
 #if defined(SOLVER_BACKEND_BUILTIN)
-    typedef Alina::backend::builtin<double> Backend;
+    typedef Alina::backend::BuiltinBackend<double> Backend;
 #elif defined(SOLVER_BACKEND_CUDA)
     typedef Alina::backend::cuda<double> Backend;
 #endif

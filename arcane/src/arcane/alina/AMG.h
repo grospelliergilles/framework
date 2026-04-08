@@ -82,7 +82,7 @@ class AMG
   typedef Coarsening<Backend> coarsening_type;
   typedef Relax<Backend> relax_type;
 
-  typedef typename backend::builtin<value_type, col_type, ptr_type>::matrix build_matrix;
+  typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
 
   typedef typename math::scalar_of<value_type>::type scalar_type;
 

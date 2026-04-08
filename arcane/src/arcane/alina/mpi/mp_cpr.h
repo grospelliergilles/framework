@@ -60,7 +60,7 @@ class cpr
   typedef typename backend_type::params backend_params;
 
   typedef distributed_matrix<backend_type> matrix;
-  typedef typename backend::builtin<value_type>::matrix build_matrix;
+  typedef typename backend::BuiltinBackend<value_type>::matrix build_matrix;
 
   struct params
   {

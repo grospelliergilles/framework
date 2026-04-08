@@ -7,5 +7,5 @@
 
 TEST(alina_test_solvers, test_nonscalar_backend_eigen)
 {
-  test_backend< Alina::backend::builtin< Eigen::Matrix<double, 2, 2> > >();
+  test_backend< Alina::backend::BuiltinBackend< Eigen::Matrix<double, 2, 2> > >();
 }

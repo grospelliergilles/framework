@@ -7,5 +7,5 @@
 
 TEST(alina_test_solvers, test_builtin_complex_backend)
 {
-  test_backend< Alina::backend::builtin< std::complex<double> > >();
+  test_backend< Alina::backend::BuiltinBackend< std::complex<double> > >();
 }

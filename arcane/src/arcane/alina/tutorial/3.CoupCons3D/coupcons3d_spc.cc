@@ -82,9 +82,9 @@ int main(int argc, char *argv[]) {
     auto A = std::tie(rows, ptr, col, val);
 
     // Compose the solver type
-    typedef Alina::backend::builtin<double> SBackend; // the outer iterative solver backend
-    typedef Alina::backend::builtin<float> PBackend;  // the PSolver backend
-    typedef Alina::backend::builtin<
+    typedef Alina::backend::BuiltinBackend<double> SBackend; // the outer iterative solver backend
+    typedef Alina::backend::BuiltinBackend<float> PBackend;  // the PSolver backend
+    typedef Alina::backend::BuiltinBackend<
         Alina::static_matrix<float,4,4>> UBackend;    // the USolver backend
 
     typedef Alina::make_solver<

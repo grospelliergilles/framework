@@ -709,7 +709,7 @@ struct as_scalar
   struct type
   {
     typedef typename math::element_of<typename Backend::value_type>::type Scalar;
-    typedef backend::builtin<Scalar, typename Backend::col_type, typename Backend::ptr_type> BaseBackend;
+    typedef backend::BuiltinBackend<Scalar, typename Backend::col_type, typename Backend::ptr_type> BaseBackend;
     typedef Coarsening<BaseBackend> Base;
 
     typedef typename Base::params params;

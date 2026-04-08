@@ -92,8 +92,8 @@ int main(int argc, char* argv[])
     << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
 
   // Compose the solver type
-  typedef Alina::backend::builtin<double> DBackend;
-  typedef Alina::backend::builtin<float> FBackend;
+  typedef Alina::backend::BuiltinBackend<double> DBackend;
+  typedef Alina::backend::BuiltinBackend<float> FBackend;
   typedef Alina::mpi::make_solver<
     Alina::mpi::AMG<
       FBackend,

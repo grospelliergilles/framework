@@ -18,7 +18,7 @@
 using namespace Arcane;
 
 //---------------------------------------------------------------------------
-typedef Alina::backend::builtin<double> Backend;
+typedef Alina::backend::BuiltinBackend<double> Backend;
 typedef Alina::PropertyTree Params;
 
 typedef Alina::mpi::subdomain_deflation<

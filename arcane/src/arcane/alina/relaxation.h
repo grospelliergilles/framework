@@ -80,7 +80,7 @@ struct as_block
     typedef typename Backend::value_type value_type;
     typedef typename Backend::col_type col_type;
     typedef typename Backend::ptr_type ptr_type;
-    typedef typename backend::builtin<value_type, col_type, ptr_type>::matrix build_matrix;
+    typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
 
     template <class Matrix>
     type(const Matrix& A,
@@ -165,7 +165,7 @@ class as_preconditioner
   typedef typename Backend::value_type value_type;
   typedef typename Backend::col_type col_type;
   typedef typename Backend::ptr_type ptr_type;
-  typedef typename backend::builtin<value_type, col_type, ptr_type>::matrix build_matrix;
+  typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
 
   template <class Matrix>
   as_preconditioner(const Matrix& M,
@@ -906,7 +906,7 @@ struct ilu0
   ilu0(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
   {
-    typedef typename backend::builtin<value_type, col_type, ptr_type>::matrix build_matrix;
+    typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
     const size_t n = backend::rows(A);
 
     size_t Lnz = 0, Unz = 0;
@@ -1121,7 +1121,7 @@ struct iluk
   iluk(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
   {
-    typedef typename backend::builtin<value_type, col_type, ptr_type>::matrix build_matrix;
+    typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
 
     const size_t n = backend::rows(A);
 
@@ -1697,7 +1697,7 @@ struct ilut
 
  private:
 
-  typedef typename backend::builtin<value_type, col_type, ptr_type>::matrix build_matrix;
+  typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
   std::shared_ptr<ilu_solve> ilu;
 
   struct sparse_vector

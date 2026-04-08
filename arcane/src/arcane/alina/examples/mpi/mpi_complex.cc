@@ -111,7 +111,7 @@ void solve_scalar(Alina::mpi::communicator comm,
                   const Alina::PropertyTree& prm,
                   const std::vector<std::complex<double>>& rhs)
 {
-  typedef Alina::backend::builtin<std::complex<double>> Backend;
+  typedef Alina::backend::BuiltinBackend<std::complex<double>> Backend;
 
   typedef Alina::mpi::make_solver<
   Alina::runtime::mpi::preconditioner<Backend>,

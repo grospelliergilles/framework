@@ -72,9 +72,9 @@ struct EigenBackend
 
   /// Copy matrix from builtin backend.
   static std::shared_ptr<matrix>
-  copy_matrix(std::shared_ptr<typename builtin<real>::matrix> A, const params&)
+  copy_matrix(std::shared_ptr<typename BuiltinBackend<real>::matrix> A, const params&)
   {
-    const typename builtin<real>::matrix& a = *A;
+    const typename BuiltinBackend<real>::matrix& a = *A;
 
     return std::shared_ptr<matrix>(
     new matrix(
@@ -87,7 +87,7 @@ struct EigenBackend
 
   /// Copy vector from builtin backend.
   static std::shared_ptr<vector>
-  copy_vector(typename builtin<real>::vector const& x, const params&)
+  copy_vector(typename BuiltinBackend<real>::vector const& x, const params&)
   {
     return std::make_shared<vector>(
     Eigen::Map<const vector>(x.data(), x.size()));
@@ -95,7 +95,7 @@ struct EigenBackend
 
   /// Copy vector from builtin backend.
   static std::shared_ptr<vector>
-  copy_vector(std::shared_ptr<typename builtin<real>::vector> x, const params& prm)
+  copy_vector(std::shared_ptr<typename BuiltinBackend<real>::vector> x, const params& prm)
   {
     return copy_vector(*x, prm);
   }
@@ -109,7 +109,7 @@ struct EigenBackend
 
   /// Create direct solver for coarse level
   static std::shared_ptr<direct_solver>
-  create_solver(std::shared_ptr<typename builtin<real>::matrix> A, const params&)
+  create_solver(std::shared_ptr<typename BuiltinBackend<real>::matrix> A, const params&)
   {
     return std::make_shared<direct_solver>(*A);
   }

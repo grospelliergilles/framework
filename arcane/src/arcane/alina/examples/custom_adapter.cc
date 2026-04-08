@@ -126,7 +126,7 @@ int main() {
     }
 
     // Create an AMGCL solver for the problem.
-    typedef Alina::backend::builtin<double> Backend;
+    typedef Alina::backend::BuiltinBackend<double> Backend;
     Alina::make_solver<
         Alina::AMG<
             Backend,

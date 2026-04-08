@@ -55,8 +55,8 @@ struct block_crs
   typedef ptrdiff_t ptr_type;
 
   typedef BlockCSRMatrix<real, index_type, index_type> matrix;
-  typedef typename builtin<real>::vector vector;
-  typedef typename builtin<real>::vector matrix_diagonal;
+  typedef typename BuiltinBackend<real>::vector vector;
+  typedef typename BuiltinBackend<real>::vector matrix_diagonal;
   typedef solver::skyline_lu<value_type> direct_solver;
 
   struct provides_row_iterator : std::false_type
@@ -87,7 +87,7 @@ struct block_crs
 
   /// Copy matrix from builtin backend.
   static std::shared_ptr<matrix>
-  copy_matrix(std::shared_ptr<typename backend::builtin<real>::matrix> A,
+  copy_matrix(std::shared_ptr<typename backend::BuiltinBackend<real>::matrix> A,
               const params& prm)
   {
     return std::make_shared<matrix>(*A, prm.block_size);
@@ -121,7 +121,7 @@ struct block_crs
   }
 
   static std::shared_ptr<direct_solver>
-  create_solver(std::shared_ptr<typename backend::builtin<real>::matrix> A,
+  create_solver(std::shared_ptr<typename backend::BuiltinBackend<real>::matrix> A,
                 const params&)
   {
     return std::make_shared<direct_solver>(*A);

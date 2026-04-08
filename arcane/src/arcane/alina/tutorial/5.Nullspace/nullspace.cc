@@ -74,8 +74,8 @@ int main(int argc, char *argv[]) {
     std::cout << "Coords " << argv[3] << ": " << ncoo << "x" << ndim << std::endl;
 
     // Declare the solver type
-    typedef Alina::backend::builtin<double> SBackend; // the solver backend
-    typedef Alina::backend::builtin<float>  PBackend; // the preconditioner backend
+    typedef Alina::backend::BuiltinBackend<double> SBackend; // the solver backend
+    typedef Alina::backend::BuiltinBackend<float>  PBackend; // the preconditioner backend
 
     typedef Alina::make_solver<
         Alina::AMG<

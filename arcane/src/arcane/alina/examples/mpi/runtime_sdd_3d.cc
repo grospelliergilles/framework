@@ -29,7 +29,7 @@ class rounding_error{};
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
 #include <arcane/alina/backend_builtin.h>
-typedef Arcane::Alina::backend::builtin<double> Backend;
+typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #endif
 
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>

@@ -194,7 +194,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    typedef Alina::backend::builtin<double> Backend;
+    typedef Alina::backend::BuiltinBackend<double> Backend;
     typedef Alina::make_solver<
         Alina::AMG<
             Backend,
