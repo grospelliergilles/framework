@@ -46,9 +46,9 @@ namespace Arcane::Alina::mpi::solver
 
 template <class Backend, class InnerProduct = mpi::inner_product>
 class cg
-: public Alina::solver::ConjugateGradient<Backend, InnerProduct>
+: public Alina::solver::ConjugateGradientSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::ConjugateGradient<Backend, InnerProduct> Base;
+  typedef Alina::solver::ConjugateGradientSolver<Backend, InnerProduct> Base;
 
  public:
 

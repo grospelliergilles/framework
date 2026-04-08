@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
                 >::type,
             Alina::relaxation::ilu0
             >,
-        Alina::solver::ConjugateGradient<SBackend>
+        Alina::solver::ConjugateGradientSolver<SBackend>
         > Solver;
 
     // Solver parameters:

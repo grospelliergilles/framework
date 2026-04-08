@@ -94,7 +94,7 @@ struct ConjugateGradientSolverParams
  * An effective method for symmetric positive definite systems [Barr94]_.
  */
 template <class Backend_, class InnerProduct = detail::default_inner_product>
-class ConjugateGradient
+class ConjugateGradientSolver
 {
  public:
 
@@ -113,7 +113,7 @@ class ConjugateGradient
   using params = ConjugateGradientSolverParams;
 
   /// Preallocates necessary data structures for the system of size \p n.
-  ConjugateGradient(size_t n, const params& prm = params(),
+  ConjugateGradientSolver(size_t n, const params& prm = params(),
                     const backend_params& backend_prm = backend_params(),
                     const InnerProduct& inner_product = InnerProduct())
   : prm(prm)
@@ -217,7 +217,7 @@ class ConjugateGradient
     backend::bytes(*q);
   }
 
-  friend std::ostream& operator<<(std::ostream& os, const ConjugateGradient& s)
+  friend std::ostream& operator<<(std::ostream& os, const ConjugateGradientSolver& s)
   {
     return os << "Type:             CG"
               << "\nUnknowns:         " << s.n

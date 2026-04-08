@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
                 Alina::solver::PreconditionerOnlySolver<PBackend>
                 >
             >,
-        Alina::solver::ConjugateGradient<SBackend>
+        Alina::solver::ConjugateGradientSolver<SBackend>
         > Solver;
 
     // Solver parameters

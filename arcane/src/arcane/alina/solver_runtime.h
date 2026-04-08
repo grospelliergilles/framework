@@ -59,7 +59,7 @@ namespace Arcane::Alina::runtime::solver
 enum type
 {
   cg, ///< Conjugate gradients method
-  ConjugateGradient = cg, ///< Conjugate gradients method
+  ConjugateGradientSolver = cg, ///< Conjugate gradients method
   bicgstab, ///< BiConjugate Gradient Stabilized
   BiCGStabSolver = bicgstab, ///< BiConjugate Gradient Stabilized
   bicgstabl, ///< BiCGStab(ell)
@@ -135,7 +135,7 @@ inline std::istream& operator>>(std::istream& in, type& s)
 }
 
 #define ARCANE_ALINA_ALL_RUNTIME_SOLVER() \
-  ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradient); \
+  ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradientSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(BiCGStabSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(BiCGStabLSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver); \
