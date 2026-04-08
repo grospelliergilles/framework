@@ -48,19 +48,19 @@ set(ARCANE_SOURCES
   RelaxationRuntime.cc
   relaxation.h
   reorder_cuthill_mckee.h
-  solver_bicgstab.h
-  solver_bicgstabl.h
-  solver_cg.h
+        BiCGStabSolver.h
+        FlexibleGMRESSolver.h
+        ConjugateGradientSolver.h
   solver_detail_default_inner_product.h
   solver_detail_givens_rotations.h
   solver_eigen.h
-  solver_fgmres.h
-  solver_gmres.h
-  solver_idrs.h
-  solver_lgmres.h
+        FlexibleGMRESSolver.h
+        GMRESSolver.h
+        IDRSSolver.h
+        LooseGMRESSolver.h
   solver_precond_side.h
-  solver_preonly.h
-  solver_richardson.h
+        PreconditionerOnlySolver.h
+        RichardsonSolver.h
   solver_runtime.h
   solver_skyline_lu.h
   util.h

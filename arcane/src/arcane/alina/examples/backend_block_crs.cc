@@ -9,7 +9,7 @@
 #include <arcane/alina/backend_block_crs.h>
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
-#include <arcane/alina/solver_bicgstab.h>
+#include <arcane/alina/BiCGStabSolver.h>
 #include <arcane/alina/profiler.h>
 
 namespace Arcane::Alina

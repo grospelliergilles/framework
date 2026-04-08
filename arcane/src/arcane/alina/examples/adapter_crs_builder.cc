@@ -8,7 +8,7 @@
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
-#include <arcane/alina/solver_cg.h>
+#include <arcane/alina/ConjugateGradientSolver.h>
 #include <arcane/alina/profiler.h>
 
 #include "sample_problem.h"

@@ -36,15 +36,15 @@ THE SOFTWARE.
 #include <type_traits>
 
 #include <arcane/alina/util.h>
-#include <arcane/alina/solver_cg.h>
-#include <arcane/alina/solver_bicgstab.h>
-#include <arcane/alina/solver_bicgstabl.h>
-#include <arcane/alina/solver_gmres.h>
-#include <arcane/alina/solver_lgmres.h>
-#include <arcane/alina/solver_fgmres.h>
-#include <arcane/alina/solver_idrs.h>
-#include <arcane/alina/solver_richardson.h>
-#include <arcane/alina/solver_preonly.h>
+#include <arcane/alina/ConjugateGradientSolver.h>
+#include <arcane/alina/BiCGStabSolver.h>
+#include <arcane/alina/BiCGStabLSolver.h>
+#include <arcane/alina/GMRESSolver.h>
+#include <arcane/alina/LooseGMRESSolver.h>
+#include <arcane/alina/FlexibleGMRESSolver.h>
+#include <arcane/alina/IDRSSolver.h>
+#include <arcane/alina/RichardsonSolver.h>
+#include <arcane/alina/PreconditionerOnlySolver.h>
 #include <arcane/alina/solver_detail_default_inner_product.h>
 
 /*---------------------------------------------------------------------------*/

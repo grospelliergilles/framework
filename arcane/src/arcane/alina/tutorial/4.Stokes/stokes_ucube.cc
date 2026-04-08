@@ -39,8 +39,8 @@ THE SOFTWARE.
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/make_block_solver.h>
 #include <arcane/alina/AMG.h>
-#include <arcane/alina/solver_cg.h>
-#include <arcane/alina/solver_preonly.h>
+#include <arcane/alina/ConjugateGradientSolver.h>
+#include <arcane/alina/PreconditionerOnlySolver.h>
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
 

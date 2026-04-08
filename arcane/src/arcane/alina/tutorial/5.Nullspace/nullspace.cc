@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
-#include <arcane/alina/solver_cg.h>
+#include <arcane/alina/ConjugateGradientSolver.h>
 
 #include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>

@@ -9,9 +9,9 @@
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
 
-#include <arcane/alina/solver_cg.h>
-#include <arcane/alina/solver_bicgstab.h>
-#include <arcane/alina/solver_gmres.h>
+#include <arcane/alina/ConjugateGradientSolver.h>
+#include <arcane/alina/BiCGStabSolver.h>
+#include <arcane/alina/GMRESSolver.h>
 
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/profiler.h>

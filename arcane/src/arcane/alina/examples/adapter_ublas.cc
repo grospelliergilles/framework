@@ -11,7 +11,7 @@
 #include <arcane/alina/adapter_ublas.h>
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/relaxation.h>
-#include <arcane/alina/solver_bicgstabl.h>
+#include <arcane/alina/BiCGStabLSolver.h>
 #include <arcane/alina/profiler.h>
 
 #include "sample_problem.h"
