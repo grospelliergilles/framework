@@ -5,7 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* preconditioner_schur_pressure_correction.h                  (C) 2026-2026 */
+/* SchurPressureCorrectionPreconditioner.h                     (C) 2026-2026 */
 /*                                                                           */
 /* Schur-complement pressure correction preconditioning scheme.              */
 /*---------------------------------------------------------------------------*/
@@ -60,10 +60,9 @@ namespace Arcane::Alina::preconditioner
 template <class USolver, class PSolver>
 class SchurPressureCorrectionPreconditioner
 {
-  static_assert(
-  backend::backends_compatible<typename USolver::backend_type,
-                               typename PSolver::backend_type>::value,
-  "Backends for pressure and flow preconditioners should coincide!");
+  static_assert(backend::backends_compatible<typename USolver::backend_type,
+                                             typename PSolver::backend_type>::value,
+                "Backends for pressure and flow preconditioners should coincide!");
 
  public:
 
@@ -192,12 +191,12 @@ class SchurPressureCorrectionPreconditioner
       ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, simplec_dia);
       ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
     }
-  } prm;
+  };
 
   template <class Matrix>
   SchurPressureCorrectionPreconditioner(const Matrix& K,
-                            const params& prm = params(),
-                            const backend_params& bprm = backend_params())
+                                        const params& prm = params(),
+                                        const backend_params& bprm = backend_params())
   : prm(prm)
   , n(backend::rows(K))
   , np(0)
@@ -207,8 +206,8 @@ class SchurPressureCorrectionPreconditioner
   }
 
   SchurPressureCorrectionPreconditioner(std::shared_ptr<build_matrix> K,
-                            const params& prm = params(),
-                            const backend_params& bprm = backend_params())
+                                        const params& prm = params(),
+                                        const backend_params& bprm = backend_params())
   : prm(prm)
   , n(backend::rows(*K))
   , np(0)
@@ -329,6 +328,8 @@ class SchurPressureCorrectionPreconditioner
 
     return b;
   }
+
+  params prm;
 
  private:
 
