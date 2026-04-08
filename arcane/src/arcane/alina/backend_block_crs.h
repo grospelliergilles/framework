@@ -5,12 +5,12 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* BackendBlockCSR.h                                           (C) 2026-2026 */
+/* BlockCSRBackend.h                                           (C) 2026-2026 */
 /*                                                                           */
 /* Sparse matrix in block-CSR format.                         .              */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_BACKENDBLOCKCSR_H
-#define ARCANE_ALINA_BACKENDBLOCKCSR_H
+#ifndef ARCANE_ALINA_BLOCKCSRBACKEND_H
+#define ARCANE_ALINA_BLOCKCSRBACKEND_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -47,7 +47,7 @@ namespace Arcane::Alina::backend
  * \ingroup backends
  */
 template <typename real>
-struct block_crs
+struct BlockCSRBackend
 {
   typedef real value_type;
   typedef ptrdiff_t index_type;

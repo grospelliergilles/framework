@@ -6,5 +6,5 @@
 
 TEST(alina_test_solvers, test_block_crs_backend)
 {
-  test_backend< Alina::backend::block_crs<double> >();
+  test_backend< Alina::backend::BlockCSRBackend<double> >();
 }

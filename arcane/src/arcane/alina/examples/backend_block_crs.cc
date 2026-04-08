@@ -22,7 +22,7 @@ int main()
 {
   using Alina::prof;
 
-  typedef Alina::backend::block_crs<double> Backend;
+  typedef Alina::backend::BlockCSRBackend<double> Backend;
   typedef Alina::AMG<
   Backend,
   Alina::coarsening::aggregation,
