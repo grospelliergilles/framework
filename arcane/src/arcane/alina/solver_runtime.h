@@ -74,7 +74,8 @@ enum type
   IDRSSolver = idrs, ///< IDR(s)
   richardson, ///< Richardson iteration
   RichardsonSolver = richardson, ///< Richardson iteration
-  preonly ///< Only apply preconditioner once
+  preonly, ///< Only apply preconditioner once
+  PreconditionerOnlySolver = preonly
 };
 
 inline std::ostream& operator<<(std::ostream& os, type s)
@@ -142,7 +143,7 @@ inline std::istream& operator>>(std::istream& in, type& s)
   ARCANE_ALINA_RUNTIME_SOLVER(FlexibleGMRESSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(IDRSSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(RichardsonSolver); \
-  ARCANE_ALINA_RUNTIME_SOLVER(preonly)
+  ARCANE_ALINA_RUNTIME_SOLVER(PreconditionerOnlySolver)
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

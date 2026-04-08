@@ -144,9 +144,9 @@ class lgmres
 
 template <class Backend, class InnerProduct = mpi::inner_product>
 class preonly
-: public Alina::solver::preonly<Backend, InnerProduct>
+: public Alina::solver::PreconditionerOnlySolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::preonly<Backend, InnerProduct> Base;
+  typedef Alina::solver::PreconditionerOnlySolver<Backend, InnerProduct> Base;
 
  public:
 

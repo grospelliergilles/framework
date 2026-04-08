@@ -95,14 +95,14 @@ int main(int argc, char *argv[]) {
                     Alina::coarsening::aggregation,
                     Alina::relaxation::ilu0
                     >,
-                Alina::solver::preonly<UBackend>
+                Alina::solver::PreconditionerOnlySolver<UBackend>
                 >,
             Alina::make_solver<
                 Alina::relaxation::as_preconditioner<
                     PBackend,
                     Alina::relaxation::spai0
                     >,
-                Alina::solver::preonly<PBackend>
+                Alina::solver::PreconditionerOnlySolver<PBackend>
                 >
             >,
         Alina::solver::ConjugateGradient<SBackend>
