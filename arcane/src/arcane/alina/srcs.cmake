@@ -11,7 +11,7 @@ set(ARCANE_SOURCES
   BlockCSRBackend.h
   BuiltinBackend.h
   HybridBuiltinBackend.h
-  backend_cuda.h
+  CudaBackend.h
   backend_detail_default_direct_solver.h
   backend_detail_matrix_ops.h
   backend_detail_mixing.h
@@ -21,8 +21,8 @@ set(ARCANE_SOURCES
   coarsening.h
   coarsening_detail_galerkin.h
   coarsening_detail_scaled_galerkin.h
-        RuntimeCoarsening.h
-        DeflatedSolver.h
+  RuntimeCoarsening.h
+  DeflatedSolver.h
   detail_inverse.h
   detail_qr.h
   detail_sort_row.h
