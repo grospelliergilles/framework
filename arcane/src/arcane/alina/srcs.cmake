@@ -10,7 +10,7 @@ set(ARCANE_SOURCES
   AMG.h
   BlockCSRBackend.h
   BuiltinBackend.h
-  backend_builtin_hybrid.h
+  HybridBuiltinBackend.h
   backend_cuda.h
   backend_detail_default_direct_solver.h
   backend_detail_matrix_ops.h

@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include <vector>
 #include <iostream>
 
-#include <arcane/alina/backend_builtin_hybrid.h>
+#include <arcane/alina/HybridBuiltinBackend.h>
 #include <arcane/alina/value_type_static_matrix.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/make_solver.h>
