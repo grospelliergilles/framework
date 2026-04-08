@@ -67,7 +67,9 @@ enum type
   gmres, ///< GMRES
   GMRESSolver = gmres, ///< GMRES
   lgmres, ///< LGMRES
+  LooseGMRESSolver = lgmres, ///< LGMRES
   fgmres, ///< FGMRES
+  FlexibleGMRESSolver = fgmres,
   idrs, ///< IDR(s)
   IDRSSolver = idrs, ///< IDR(s)
   richardson, ///< Richardson iteration
@@ -136,8 +138,8 @@ inline std::istream& operator>>(std::istream& in, type& s)
   ARCANE_ALINA_RUNTIME_SOLVER(BiCGStabSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(BiCGStabLSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver); \
-  ARCANE_ALINA_RUNTIME_SOLVER(lgmres); \
-  ARCANE_ALINA_RUNTIME_SOLVER(fgmres); \
+  ARCANE_ALINA_RUNTIME_SOLVER(LooseGMRESSolver); \
+  ARCANE_ALINA_RUNTIME_SOLVER(FlexibleGMRESSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(IDRSSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(RichardsonSolver); \
   ARCANE_ALINA_RUNTIME_SOLVER(preonly)

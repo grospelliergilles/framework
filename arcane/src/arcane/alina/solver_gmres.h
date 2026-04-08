@@ -43,8 +43,9 @@ namespace Arcane::Alina::solver
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-/// Solver parameters.
+/*!
+ * \brief Parameters for GMRES solver.
+ */
 struct GMRESSolverParams
 {
   using params = GMRESSolverParams;

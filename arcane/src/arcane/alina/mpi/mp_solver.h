@@ -88,9 +88,9 @@ class bicgstabl
 
 template <class Backend, class InnerProduct = mpi::inner_product>
 class fgmres
-: public Alina::solver::fgmres<Backend, InnerProduct>
+: public Alina::solver::FlexibleGMRESSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::fgmres<Backend, InnerProduct> Base;
+  typedef Alina::solver::FlexibleGMRESSolver<Backend, InnerProduct> Base;
 
  public:
 
@@ -130,9 +130,9 @@ class idrs
 
 template <class Backend, class InnerProduct = mpi::inner_product>
 class lgmres
-: public Alina::solver::lgmres<Backend, InnerProduct>
+: public Alina::solver::LooseGMRESSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::lgmres<Backend, InnerProduct> Base;
+  typedef Alina::solver::LooseGMRESSolver<Backend, InnerProduct> Base;
 
  public:
 

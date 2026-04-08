@@ -1,35 +1,27 @@
-#ifndef ARCANE_ALINA_SOLVER_FGMRES_HPP
-#define ARCANE_ALINA_SOLVER_FGMRES_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* solver_fgmres.h                                             (C) 2026-2026 */
+/*                                                                           */
+/* Flexible GMRES method solver.                                             */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_FGMRESSOLVER_H
+#define ARCANE_ALINA_FGMRESSOLVER_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   fgmres.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Flexible GMRES method.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <vector>
 #include <algorithm>
@@ -42,260 +34,288 @@ THE SOFTWARE.
 #include <arcane/alina/solver_detail_givens_rotations.h>
 #include <arcane/alina/util.h>
 
-namespace Arcane::Alina {
-namespace solver {
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
-/** Flexible GMRES method.
+namespace Arcane::Alina::solver
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Parameters for FlexibleGMRES solver.
+ */
+struct FlexibleGMRESSolverParams
+{
+  using params = FlexibleGMRESSolverParams;
+
+  /// Number of inner GMRES iterations per each outer iteration.
+  unsigned M = 30;
+
+  /// Maximum number of iterations.
+  unsigned maxiter = 100;
+
+  /// Target relative residual error.
+  double tol = 1.0e-8;
+
+  /// Target absolute residual error.
+  double abstol = std::numeric_limits<double>::min();
+
+  /*!
+   * \brief Ignore the trivial solution x=0 when rhs is zero.
+   *
+   * Useful for searching for the null-space vectors of the system.
+   */
+  bool ns_search = false;
+
+  /// Verbose output (show iterations and error)
+  bool verbose = false;
+
+  FlexibleGMRESSolverParams() = default;
+
+  FlexibleGMRESSolverParams(const PropertyTree& p)
+  : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, M)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
+  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
+  {
+    check_params(p, { "M", "maxiter", "tol", "abstol", "ns_search", "verbose" });
+  }
+
+  void get(PropertyTree& p, const std::string& path) const
+  {
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, M);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
+    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
+  }
+};
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Flexible GMRES method.
  * \rst
  * Flexible version of the GMRES method [Saad03]_.
  * \endrst
  */
-template <
-    class Backend,
-    class InnerProduct = detail::default_inner_product
-    >
-class fgmres {
-    public:
-        typedef Backend backend_type;
+template <class Backend,
+          class InnerProduct = detail::default_inner_product>
+class FlexibleGMRESSolver
+{
+ public:
 
-        typedef typename Backend::vector     vector;
-        typedef typename Backend::value_type value_type;
-        typedef typename Backend::params     backend_params;
+  typedef Backend backend_type;
 
-        typedef typename math::scalar_of<value_type>::type scalar_type;
-        typedef typename math::rhs_of<value_type>::type rhs_type;
-        typedef typename math::inner_product_impl<rhs_type>::return_type coef_type;
+  typedef typename Backend::vector vector;
+  typedef typename Backend::value_type value_type;
+  typedef typename Backend::params backend_params;
 
-        /// Solver parameters.
-        struct params {
-            /// Number of inner GMRES iterations per each outer iteration.
-            unsigned M;
+  typedef typename math::scalar_of<value_type>::type scalar_type;
+  typedef typename math::rhs_of<value_type>::type rhs_type;
+  typedef typename math::inner_product_impl<rhs_type>::return_type coef_type;
 
-            /// Maximum number of iterations.
-            unsigned maxiter;
+  using params = FlexibleGMRESSolverParams;
 
-            /// Target relative residual error.
-            scalar_type tol;
+  /// Preallocates necessary data structures for the system of size \p n.
+  FlexibleGMRESSolver(size_t n,
+         const params& prm = params(),
+         const backend_params& bprm = backend_params(),
+         const InnerProduct& inner_product = InnerProduct())
+  : prm(prm)
+  , n(n)
+  , H(prm.M + 1, prm.M)
+  , s(prm.M + 1)
+  , cs(prm.M + 1)
+  , sn(prm.M + 1)
+  , r(Backend::create_vector(n, bprm))
+  , inner_product(inner_product)
+  {
+    v.reserve(prm.M + 1);
+    for (unsigned i = 0; i <= prm.M; ++i)
+      v.push_back(Backend::create_vector(n, bprm));
 
-            /// Target absolute residual error.
-            scalar_type abstol;
+    z.reserve(prm.M);
+    for (unsigned i = 0; i < prm.M; ++i)
+      z.push_back(Backend::create_vector(n, bprm));
+  }
 
-            /// Ignore the trivial solution x=0 when rhs is zero.
-            //** Useful for searching for the null-space vectors of the system */
-            bool ns_search;
+  /*!
+   * \brief Computes the solution for the given system matrix.
+   *
+   * Computes the solution for the given system matrix \p A and the
+   * right-hand side \p rhs.  Returns the number of iterations made and
+   * the achieved residual as a ``std::tuple``. The solution vector
+   * \p x provides initial approximation in input and holds the computed
+   * solution on output.
+   *
+   * The system matrix may differ from the matrix used during
+   * initialization. This may be used for the solution of non-stationary
+   * problems with slowly changing coefficients. There is a strong chance
+   * that a preconditioner built for a time step will act as a reasonably
+   * good preconditioner for several subsequent time steps [DeSh12]_.
+   */
+  template <class Matrix, class Precond, class Vec1, class Vec2>
+  SolverResult operator()(Matrix const& A, Precond const& P, Vec1 const& rhs, Vec2& x) const
+  {
+    ios_saver ss(std::cout);
 
-            /// Verbose output (show iterations and error)
-            bool verbose;
+    scalar_type norm_rhs = norm(rhs);
+    if (norm_rhs < Alina::detail::eps<scalar_type>(1)) {
+      if (prm.ns_search) {
+        norm_rhs = math::identity<scalar_type>();
+      }
+      else {
+        backend::clear(x);
+        return SolverResult(0, norm_rhs);
+      }
+    }
 
-            params()
-                : M(30), maxiter(100), tol(1e-8),
-                  abstol(std::numeric_limits<scalar_type>::min()),
-                  ns_search(false), verbose(false)
-            { }
+    scalar_type eps = std::max(prm.tol * norm_rhs, prm.abstol);
+    scalar_type norm_r = math::zero<scalar_type>();
 
-            params(const PropertyTree &p)
-                : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, M),
-                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter),
-                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol),
-                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol),
-                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search),
-                  ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
-            {
-                check_params(p, {"M", "maxiter", "tol", "abstol", "ns_search", "verbose"});
-            }
+    unsigned iter = 0;
+    while (true) {
+      backend::residual(rhs, A, x, *v[0]);
 
-            void get(PropertyTree &p, const std::string &path) const {
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, M);
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
-            }
+      // -- Check stopping condition
+      if ((norm_r = norm(*v[0])) < eps || iter >= prm.maxiter)
+        break;
 
-        } prm;
+      // -- Inner GMRES iteration
+      std::fill(s.begin(), s.end(), 0);
+      s[0] = norm_r;
 
-        /// Preallocates necessary data structures for the system of size \p n.
-        fgmres(
-                size_t n,
-                const params &prm = params(),
-                const backend_params &bprm = backend_params(),
-                const InnerProduct &inner_product = InnerProduct()
-             )
-            : prm(prm), n(n),
-              H(prm.M + 1, prm.M),
-              s(prm.M + 1), cs(prm.M + 1), sn(prm.M + 1),
-              r( Backend::create_vector(n, bprm) ),
-              inner_product(inner_product)
-        {
-            v.reserve(prm.M + 1);
-            for(unsigned i = 0; i <= prm.M; ++i)
-                v.push_back(Backend::create_vector(n, bprm));
+      backend::axpby(math::inverse(norm_r), *v[0], math::zero<scalar_type>(), *v[0]);
 
-            z.reserve(prm.M);
-            for(unsigned i = 0; i < prm.M; ++i)
-                z.push_back(Backend::create_vector(n, bprm));
+      unsigned j = 0;
+      while (true) {
+        // -- Arnoldi process
+        //
+        // Build an orthonormal basis V and matrix H such that
+        //     A V_{i-1} = V_{i} H
+
+        vector& v_new = *v[j + 1];
+
+        P.apply(*v[j], *z[j]);
+        backend::spmv(math::identity<scalar_type>(), A, *z[j],
+                      math::zero<scalar_type>(), v_new);
+
+        for (unsigned k = 0; k <= j; ++k) {
+          H(k, j) = inner_product(v_new, *v[k]);
+          backend::axpby(-H(k, j), *v[k], math::identity<scalar_type>(), v_new);
         }
+        H(j + 1, j) = norm(v_new);
 
-        /* Computes the solution for the given system matrix \p A and the
-         * right-hand side \p rhs.  Returns the number of iterations made and
-         * the achieved residual as a ``std::tuple``. The solution vector
-         * \p x provides initial approximation in input and holds the computed
-         * solution on output.
-         *
-         * The system matrix may differ from the matrix used during
-         * initialization. This may be used for the solution of non-stationary
-         * problems with slowly changing coefficients. There is a strong chance
-         * that a preconditioner built for a time step will act as a reasonably
-         * good preconditioner for several subsequent time steps [DeSh12]_.
-         */
-        template <class Matrix, class Precond, class Vec1, class Vec2>
-        std::tuple<size_t, scalar_type> operator()(
-                Matrix  const &A,
-                Precond const &P,
-                Vec1    const &rhs,
-                Vec2          &x
-                ) const
-        {
-            ios_saver ss(std::cout);
+        backend::axpby(math::inverse(H(j + 1, j)), v_new, math::zero<scalar_type>(), v_new);
 
-            scalar_type norm_rhs = norm(rhs);
-            if (norm_rhs < Alina::detail::eps<scalar_type>(1)) {
-                if (prm.ns_search) {
-                    norm_rhs = math::identity<scalar_type>();
-                } else {
-                    backend::clear(x);
-                    return std::make_tuple(0, norm_rhs);
-                }
-            }
+        for (unsigned k = 0; k < j; ++k)
+          detail::apply_plane_rotation(H(k, j), H(k + 1, j), cs[k], sn[k]);
 
-            scalar_type eps = std::max(prm.tol * norm_rhs, prm.abstol);
-            scalar_type norm_r = math::zero<scalar_type>();
+        detail::generate_plane_rotation(H(j, j), H(j + 1, j), cs[j], sn[j]);
+        detail::apply_plane_rotation(H(j, j), H(j + 1, j), cs[j], sn[j]);
+        detail::apply_plane_rotation(s[j], s[j + 1], cs[j], sn[j]);
 
-            unsigned iter = 0;
-            while(true) {
-                backend::residual(rhs, A, x, *v[0]);
+        scalar_type inner_res = std::abs(s[j + 1]);
 
-                // -- Check stopping condition
-                if ((norm_r = norm(*v[0])) < eps || iter >= prm.maxiter)
-                    break;
+        if (prm.verbose && iter % 5 == 0)
+          std::cout << iter << "\t" << std::scientific << inner_res / norm_rhs << std::endl;
 
-                // -- Inner GMRES iteration
-                std::fill(s.begin(), s.end(), 0);
-                s[0] = norm_r;
+        // Check for termination
+        ++j, ++iter;
+        if (iter >= prm.maxiter || j >= prm.M || inner_res <= eps)
+          break;
+      }
 
-                backend::axpby(math::inverse(norm_r), *v[0],
-                        math::zero<scalar_type>(), *v[0]);
+      // -- GMRES terminated: eval solution
+      for (unsigned i = j; i-- > 0;) {
+        s[i] /= H(i, i);
+        for (unsigned k = 0; k < i; ++k)
+          s[k] -= H(k, i) * s[i];
+      }
 
-                unsigned j = 0;
-                while(true) {
-                    // -- Arnoldi process
-                    //
-                    // Build an orthonormal basis V and matrix H such that
-                    //     A V_{i-1} = V_{i} H
+      backend::lin_comb(j, s, z, math::identity<scalar_type>(), x);
+    }
 
-                    vector &v_new = *v[j+1];
+    return SolverResult(iter, norm_r / norm_rhs);
+  }
 
-                    P.apply(*v[j], *z[j]);
-                    backend::spmv(math::identity<scalar_type>(), A, *z[j],
-                            math::zero<scalar_type>(), v_new);
+  /*!
+   * \brief Computes the solution for the given right-hand side.
+   *
+   * Computes the solution for the given right-hand side \p rhs. The
+   * system matrix is the same that was used for the setup of the
+   * preconditioner \p P.  Returns the number of iterations made and the
+   * achieved residual as a ``std::tuple``. The solution vector \p x
+   * provides initial approximation in input and holds the computed
+   * solution on output.
+   */
+  template <class Precond, class Vec1, class Vec2>
+  SolverResult operator()(Precond const& P, Vec1 const& rhs, Vec2& x) const
+  {
+    return (*this)(P.system_matrix(), P, rhs, x);
+  }
 
-                    for(unsigned k = 0; k <= j; ++k) {
-                        H(k, j) = inner_product(v_new, *v[k]);
-                        backend::axpby(-H(k, j), *v[k], math::identity<scalar_type>(), v_new);
-                    }
-                    H(j+1, j) = norm(v_new);
+  size_t bytes() const
+  {
+    size_t b = 0;
 
-                    backend::axpby(math::inverse(H(j+1, j)), v_new, math::zero<scalar_type>(), v_new);
+    b += H.size() * sizeof(coef_type);
+    b += backend::bytes(s);
+    b += backend::bytes(cs);
+    b += backend::bytes(sn);
+    b += backend::bytes(*r);
 
-                    for(unsigned k = 0; k < j; ++k)
-                        detail::apply_plane_rotation(H(k, j), H(k+1, j), cs[k], sn[k]);
+    for (const auto& x : v)
+      b += backend::bytes(*x);
+    for (const auto& x : z)
+      b += backend::bytes(*x);
 
-                    detail::generate_plane_rotation(H(j, j), H(j+1, j), cs[j], sn[j]);
-                    detail::apply_plane_rotation(H(j, j), H(j+1, j), cs[j], sn[j]);
-                    detail::apply_plane_rotation(s[j], s[j+1], cs[j], sn[j]);
+    return b;
+  }
 
-                    scalar_type inner_res = std::abs(s[j+1]);
+  friend std::ostream& operator<<(std::ostream& os, const FlexibleGMRESSolver& s)
+  {
+    return os
+    << "Type:             FGMRES(" << s.prm.M << ")"
+    << "\nUnknowns:         " << s.n
+    << "\nMemory footprint: " << human_readable_memory(s.bytes())
+    << std::endl;
+  }
 
-                    if (prm.verbose && iter % 5 == 0)
-                        std::cout << iter << "\t" << std::scientific << inner_res / norm_rhs << std::endl;
+ public:
 
-                    // Check for termination
-                    ++j, ++iter;
-                    if (iter >= prm.maxiter || j >= prm.M || inner_res <= eps)
-                        break;
-                }
+  params prm;
 
-                // -- GMRES terminated: eval solution
-                for (unsigned i = j; i --> 0; ) {
-                    s[i] /= H(i, i);
-                    for (unsigned k = 0; k < i; ++k)
-                        s[k] -= H(k, i) * s[i];
-                }
+ private:
 
-                backend::lin_comb(j, s, z, math::identity<scalar_type>(), x);
-            }
+  size_t n;
 
-            return std::make_tuple(iter, norm_r / norm_rhs);
-        }
+  mutable multi_array<coef_type, 2> H;
+  mutable std::vector<coef_type> s, cs, sn;
+  std::shared_ptr<vector> r;
+  std::vector<std::shared_ptr<vector>> v;
+  std::vector<std::shared_ptr<vector>> z;
 
-        /* Computes the solution for the given right-hand side \p rhs. The
-         * system matrix is the same that was used for the setup of the
-         * preconditioner \p P.  Returns the number of iterations made and the
-         * achieved residual as a ``std::tuple``. The solution vector \p x
-         * provides initial approximation in input and holds the computed
-         * solution on output.
-         */
-        template <class Precond, class Vec1, class Vec2>
-        std::tuple<size_t, scalar_type> operator()(
-                Precond const &P,
-                Vec1    const &rhs,
-                Vec2          &x
-                ) const
-        {
-            return (*this)(P.system_matrix(), P, rhs, x);
-        }
+  InnerProduct inner_product;
 
-        size_t bytes() const {
-            size_t b = 0;
-
-            b += H.size() * sizeof(coef_type);
-            b += backend::bytes(s);
-            b += backend::bytes(cs);
-            b += backend::bytes(sn);
-            b += backend::bytes(*r);
-
-            for(const auto &x : v) b += backend::bytes(*x);
-            for(const auto &x : z) b += backend::bytes(*x);
-
-            return b;
-        }
-
-        friend std::ostream& operator<<(std::ostream &os, const fgmres &s) {
-            return os
-                << "Type:             FGMRES(" << s.prm.M << ")"
-                << "\nUnknowns:         " << s.n
-                << "\nMemory footprint: " << human_readable_memory(s.bytes())
-                << std::endl;
-        }
-    private:
-        size_t n;
-
-        mutable multi_array<coef_type, 2> H;
-        mutable std::vector<coef_type> s, cs, sn;
-        std::shared_ptr<vector> r;
-        std::vector< std::shared_ptr<vector> > v;
-        std::vector< std::shared_ptr<vector> > z;
-
-        InnerProduct inner_product;
-
-        template <class Vec>
-        scalar_type norm(const Vec &x) const {
-            return std::abs(sqrt(inner_product(x, x)));
-        }
+  template <class Vec>
+  scalar_type norm(const Vec& x) const
+  {
+    return std::abs(sqrt(inner_product(x, x)));
+  }
 };
 
-} // namespace solver
-} // namespace amgcl
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::solver
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif
