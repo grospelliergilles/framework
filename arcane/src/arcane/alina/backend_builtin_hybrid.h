@@ -1,69 +1,79 @@
-#ifndef ARCANE_ALINA_BACKEND_BUILTIN_HYBRID_HPP
-#define ARCANE_ALINA_BACKEND_BUILTIN_HYBRID_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* HybridBuiltinBackend.h                                      (C) 2026-2026 */
+/*                                                                           */
+/* Builtin backend that uses scalar and block format matrix.                 */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_HYBRIDBUILTINBACKEND_H
+#define ARCANE_ALINA_HYBRIDBUILTINBACKEND_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   alina/backend/builtin_hybrid.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Builtin backend that uses scalar matrices to build the hierarchy, but stores the computed matrix in block format.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/Adapters.h>
 
-namespace Arcane::Alina {
-namespace backend {
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
-// Hybrid backend uses scalar matrices to build the hierarchy,
-// but stores the computed matrices in the block format.
-template <typename BlockType, typename ColumnType = ptrdiff_t, typename PointerType = ColumnType>
-struct builtin_hybrid : public BuiltinBackend<typename math::scalar_of<BlockType>::type, ColumnType, PointerType>
+namespace Arcane::Alina::backend
 {
-    typedef typename math::scalar_of<BlockType>::type ScalarType;
-    typedef BuiltinBackend<ScalarType, ColumnType, PointerType> Base;
-    typedef CSRMatrix<BlockType, ColumnType, PointerType> matrix;
-    struct provides_row_iterator : std::false_type {};
 
-    static std::shared_ptr<matrix>
-    copy_matrix(std::shared_ptr<typename Base::matrix> As, const typename Base::params&)
-    {
-        return std::make_shared<matrix>(Alina::adapter::block_matrix<BlockType>(*As));
-    }
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+/*!
+ * \brief Hybrid backend uses scalar matrices to build the hierarchy,
+ * but stores the computed matrices in the block format.
+ */
+template <typename BlockType, typename ColumnType = ptrdiff_t, typename PointerType = ColumnType>
+struct HybridBuiltinBackend : public BuiltinBackend<typename math::scalar_of<BlockType>::type, ColumnType, PointerType>
+{
+  typedef typename math::scalar_of<BlockType>::type ScalarType;
+  typedef BuiltinBackend<ScalarType, ColumnType, PointerType> Base;
+  typedef CSRMatrix<BlockType, ColumnType, PointerType> matrix;
+  struct provides_row_iterator : std::false_type
+  {};
+
+  static std::shared_ptr<matrix>
+  copy_matrix(std::shared_ptr<typename Base::matrix> As, const typename Base::params&)
+  {
+    return std::make_shared<matrix>(Alina::adapter::block_matrix<BlockType>(*As));
+  }
 };
 
 template <typename B1, typename B2, typename C, typename P>
-struct backends_compatible< builtin_hybrid<B1, C, P>, builtin_hybrid<B2, C, P> > : std::true_type {};
+struct backends_compatible<HybridBuiltinBackend<B1, C, P>, HybridBuiltinBackend<B2, C, P>> : std::true_type
+{};
 
 template <typename T1, typename B2, typename C, typename P>
-struct backends_compatible< BuiltinBackend<T1, C, P>, builtin_hybrid<B2, C, P> > : std::true_type {};
+struct backends_compatible<BuiltinBackend<T1, C, P>, HybridBuiltinBackend<B2, C, P>> : std::true_type
+{};
 
 template <typename B1, typename T2, typename C, typename P>
-struct backends_compatible< builtin_hybrid<B1, C, P>, BuiltinBackend<T2, C, P> > : std::true_type {};
+struct backends_compatible<HybridBuiltinBackend<B1, C, P>, BuiltinBackend<T2, C, P>> : std::true_type
+{};
 
-} // namespace backend
-} // namespace amgcl
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::backend
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 #endif

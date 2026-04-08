@@ -452,7 +452,7 @@ class ilu_solve< backend::BuiltinBackend<value_type, col_type, ptr_type> > {
 };
 
 template <class Block, class Col, class Ptr>
-class ilu_solve< backend::builtin_hybrid<Block, Col, Ptr> >
+class ilu_solve< backend::HybridBuiltinBackend<Block, Col, Ptr> >
     : public ilu_solve< backend::BuiltinBackend<typename math::scalar_of<Block>::type, Col, Ptr> >
 {
     typedef ilu_solve< backend::BuiltinBackend<typename math::scalar_of<Block>::type, Col, Ptr> > Base;
