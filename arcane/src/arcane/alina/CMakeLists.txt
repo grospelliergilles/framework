@@ -39,8 +39,6 @@ endif ()
 find_package(Boost REQUIRED COMPONENTS
   headers
   program_options
-  serialization
-  unit_test_framework
 )
 
 #----------------------------------------------------------------------------
