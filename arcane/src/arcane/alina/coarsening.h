@@ -35,14 +35,47 @@
 #include <omp.h>
 #endif
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/coarsening_detail_scaled_galerkin.h>
-#include <arcane/alina/util.h>
-#include <arcane/alina/QRFactorizationImpl.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/value_type_backend_interface.h>
-#include <arcane/alina/coarsening_detail_galerkin.h>
-#include <arcane/alina/detail_sort_row.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/util.h"
+#include "arcane/alina/QRFactorizationImpl.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/value_type_backend_interface.h"
+#include "arcane/alina/detail_sort_row.h"
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+namespace Arcane::Alina::coarsening::detail
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief  Galerkin operator.
+ */
+template <class Matrix>
+std::shared_ptr<Matrix> galerkin(const Matrix& A, const Matrix& P, const Matrix& R)
+{
+  return product(R, *product(A, P));
+}
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Scaled Galerkin operator.
+ */
+template <class Matrix>
+std::shared_ptr<Matrix> scaled_galerkin(const Matrix& A, const Matrix& P, const Matrix& R, float s)
+{
+  auto a = galerkin(A, P, R);
+  scale(*a, s);
+  return a;
+}
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::coarsening::detail
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
