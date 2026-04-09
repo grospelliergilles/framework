@@ -6,6 +6,10 @@
 #include <numeric>
 #include <cmath>
 
+// To remove warnings about deprecated Eigen usage.
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#pragma GCC diagnostic ignored "-Wint-in-bool-context"
+
 #include <boost/scope_exit.hpp>
 #include <boost/program_options.hpp>
 

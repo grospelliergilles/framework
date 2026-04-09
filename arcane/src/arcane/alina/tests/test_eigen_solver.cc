@@ -1,5 +1,9 @@
 #include <gtest/gtest.h>
 
+// To remove warnings about deprecated Eigen usage.
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#pragma GCC diagnostic ignored "-Wint-in-bool-context"
+
 #include <Eigen/SparseLU>
 #include <arcane/alina/solver_eigen.h>
 #include <arcane/alina/BuiltinBackend.h>
