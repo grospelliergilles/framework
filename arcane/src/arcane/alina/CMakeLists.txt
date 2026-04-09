@@ -5,6 +5,9 @@ arcane_add_library(arcane_alina
   RELATIVE_PATH arcane/alina
   FILES ${ARCANE_SOURCES}
 )
+#if (NOT arccore_message_passing_mpi)
+#  message(FATAL_ERROR "Can not compile arcane_alina because Arccore MPI is not available")
+#endif()
 
 #----------------------------------------------------------------------------
 # Common compile options and definitions
@@ -82,7 +85,11 @@ if (OPENMP_FOUND)
   )
 endif ()
 
-#----------------------------------------------------------------------------
+# Add Arccore MPI
+# In the future, it will not be needed. Only 'arccore_message_passing' will be needed
+target_link_libraries(arcane_alina PUBLIC Arccore::arccore_message_passing_mpi)
+
+  #----------------------------------------------------------------------------
 # Common compile options and definitions
 #----------------------------------------------------------------------------
 # target_compile_options(arcane_alina PUBLIC

@@ -1,238 +1,261 @@
-#ifndef ARCANE_ALINA_MPI_UTIL_HPP
-#define ARCANE_ALINA_MPI_UTIL_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* mp_util.h                                                   (C) 2026-2026 */
+/*                                                                           */
+/* MPI utilities.                                                            */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_MPI_MPUTIL_H
+#define ARCANE_ALINA_MPI_MPUTIL_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-Copyright (c) 2014, Riccardo Rossi, CIMNE (International Center for Numerical Methods in Engineering)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   alina/mpi/util.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  MPI utilities.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+#include <arccore/message_passing_mpi/StandaloneMpiMessagePassingMng.h>
+
+#include <arcane/alina/value_type_backend_interface.h>
 
 #include <vector>
 #include <numeric>
 #include <complex>
-
 #include <type_traits>
-#include <arcane/alina/value_type_backend_interface.h>
 
-#include <mpi.h>
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina {
-namespace mpi {
+namespace Arcane::Alina::mpi
+{
 
 /// Converts C type to MPI datatype.
 template <class T, class Enable = void>
-struct datatype_impl {
-    static MPI_Datatype get() {
-        static const MPI_Datatype t = create();
-        return t;
-    }
+struct datatype_impl
+{
+  static MPI_Datatype get()
+  {
+    static const MPI_Datatype t = create();
+    return t;
+  }
 
-    static MPI_Datatype create() {
-        typedef typename math::scalar_of<T>::type S;
-        MPI_Datatype t;
-        int n = sizeof(T) / sizeof(S);
-        MPI_Type_contiguous(n, datatype_impl<S>::get(), &t);
-        MPI_Type_commit(&t);
-        return t;
-    }
+  static MPI_Datatype create()
+  {
+    typedef typename math::scalar_of<T>::type S;
+    MPI_Datatype t;
+    int n = sizeof(T) / sizeof(S);
+    MPI_Type_contiguous(n, datatype_impl<S>::get(), &t);
+    MPI_Type_commit(&t);
+    return t;
+  }
 };
 
 template <>
-struct datatype_impl<float> {
-    static MPI_Datatype get() { return MPI_FLOAT; }
+struct datatype_impl<float>
+{
+  static MPI_Datatype get() { return MPI_FLOAT; }
 };
 
 template <>
-struct datatype_impl<double> {
-    static MPI_Datatype get() { return MPI_DOUBLE; }
+struct datatype_impl<double>
+{
+  static MPI_Datatype get() { return MPI_DOUBLE; }
 };
 
 template <>
-struct datatype_impl<long double> {
-    static MPI_Datatype get() { return MPI_LONG_DOUBLE; }
+struct datatype_impl<long double>
+{
+  static MPI_Datatype get() { return MPI_LONG_DOUBLE; }
 };
 
 template <>
-struct datatype_impl<int> {
-    static MPI_Datatype get() { return MPI_INT; }
+struct datatype_impl<int>
+{
+  static MPI_Datatype get() { return MPI_INT; }
 };
 
 template <>
-struct datatype_impl<unsigned> {
-    static MPI_Datatype get() { return MPI_UNSIGNED; }
+struct datatype_impl<unsigned>
+{
+  static MPI_Datatype get() { return MPI_UNSIGNED; }
 };
 
 template <>
-struct datatype_impl<long long> {
-    static MPI_Datatype get() { return MPI_LONG_LONG_INT; }
+struct datatype_impl<long long>
+{
+  static MPI_Datatype get() { return MPI_LONG_LONG_INT; }
 };
 
 template <>
-struct datatype_impl<unsigned long long> {
-    static MPI_Datatype get() { return MPI_UNSIGNED_LONG_LONG; }
+struct datatype_impl<unsigned long long>
+{
+  static MPI_Datatype get() { return MPI_UNSIGNED_LONG_LONG; }
 };
 
 #if (MPI_VERSION > 2) || (MPI_VERSION == 2 && MPI_SUBVERSION >= 2)
 template <>
-struct datatype_impl< std::complex<double> > {
-    static MPI_Datatype get() { return MPI_CXX_DOUBLE_COMPLEX; }
+struct datatype_impl<std::complex<double>>
+{
+  static MPI_Datatype get() { return MPI_CXX_DOUBLE_COMPLEX; }
 };
 
 template <>
-struct datatype_impl< std::complex<float> > {
-    static MPI_Datatype get() { return MPI_CXX_FLOAT_COMPLEX; }
+struct datatype_impl<std::complex<float>>
+{
+  static MPI_Datatype get() { return MPI_CXX_FLOAT_COMPLEX; }
 };
 #endif
 
 template <typename T>
 struct datatype_impl<T,
-    typename std::enable_if<
-        std::is_same<T, ptrdiff_t>::value &&
-        !std::is_same<ptrdiff_t, long long>::value &&
-        !std::is_same<ptrdiff_t, int>::value
-        >::type
-    > : std::conditional<
-        sizeof(ptrdiff_t) == sizeof(int), datatype_impl<int>, datatype_impl<long long>
-        >::type
+                     typename std::enable_if<
+                     std::is_same<T, ptrdiff_t>::value &&
+                     !std::is_same<ptrdiff_t, long long>::value &&
+                     !std::is_same<ptrdiff_t, int>::value>::type> : std::conditional<sizeof(ptrdiff_t) == sizeof(int), datatype_impl<int>, datatype_impl<long long>>::type
 {};
 
 template <typename T>
 struct datatype_impl<T,
-    typename std::enable_if<
-        std::is_same<T, size_t>::value &&
-        !std::is_same<size_t, unsigned long long>::value &&
-        !std::is_same<ptrdiff_t, unsigned int>::value
-        >::type
-    >
-    : std::conditional<
-        sizeof(size_t) == sizeof(unsigned), datatype_impl<unsigned>, datatype_impl<unsigned long long>
-        >::type
+                     typename std::enable_if<
+                     std::is_same<T, size_t>::value &&
+                     !std::is_same<size_t, unsigned long long>::value &&
+                     !std::is_same<ptrdiff_t, unsigned int>::value>::type>
+: std::conditional<
+  sizeof(size_t) == sizeof(unsigned), datatype_impl<unsigned>, datatype_impl<unsigned long long>>::type
 {};
 
 template <>
-struct datatype_impl<char> {
-    static MPI_Datatype get() { return MPI_CHAR; }
+struct datatype_impl<char>
+{
+  static MPI_Datatype get() { return MPI_CHAR; }
 };
 
 template <typename T>
-MPI_Datatype datatype() {
-    return datatype_impl<T>::get();
+MPI_Datatype datatype()
+{
+  return datatype_impl<T>::get();
 }
 
 /// Convenience wrapper around MPI_Init/MPI_Finalize.
-struct init {
-    init(int* argc, char ***argv) {
-        MPI_Init(argc, argv);
-    }
+struct init
+{
+  init(int* argc, char*** argv)
+  {
+    MPI_Init(argc, argv);
+  }
 
-    ~init() {
-        MPI_Finalize();
-    }
+  ~init()
+  {
+    MPI_Finalize();
+  }
 };
 
 /// Convenience wrapper around MPI_Init_threads/MPI_Finalize.
-struct init_thread {
-    init_thread(int* argc, char ***argv) {
-        int _;
-        MPI_Init_thread(argc, argv, MPI_THREAD_MULTIPLE, &_);
-    }
+struct init_thread
+{
+  init_thread(int* argc, char*** argv)
+  {
+    int _;
+    MPI_Init_thread(argc, argv, MPI_THREAD_MULTIPLE, &_);
+  }
 
-    ~init_thread() {
-        MPI_Finalize();
-    }
+  ~init_thread()
+  {
+    MPI_Finalize();
+  }
 };
 
 /// Convenience wrapper around MPI_Comm.
-struct communicator {
-    MPI_Comm comm;
-    int      rank;
-    int      size;
+struct communicator
+{
+  MPI_Comm comm = MPI_COMM_NULL;
+  int rank = 0;
+  int size = 0;
+  Ref<IMessagePassingMng> m_message_passing_mng;
 
-    communicator() {}
+  communicator() {}
 
-    communicator(MPI_Comm comm) : comm(comm) {
-        MPI_Comm_rank(comm, &rank);
-        MPI_Comm_size(comm, &size);
-    };
+  communicator(MPI_Comm comm)
+  : comm(comm)
+  {
+    MPI_Comm_rank(comm, &rank);
+    MPI_Comm_size(comm, &size);
+    m_message_passing_mng = MessagePassing::Mpi::StandaloneMpiMessagePassingMng::createRef(comm);
+  };
 
-    operator MPI_Comm() const {
-        return comm;
+  operator MPI_Comm() const
+  {
+    return comm;
+  }
+
+  /// Exclusive sum over mpi communicator
+  template <typename T>
+  std::vector<T> exclusive_sum(T n) const
+  {
+    // TODO: Utiliser scan.
+    std::vector<T> v(size + 1);
+    v[0] = 0;
+    MPI_Allgather(&n, 1, datatype<T>(), &v[1], 1, datatype<T>(), comm);
+    std::partial_sum(v.begin(), v.end(), v.begin());
+    return v;
+  }
+
+  template <typename T>
+  T reduce(MPI_Op op, const T& lval) const
+  {
+    const int elems = math::static_rows<T>::value * math::static_cols<T>::value;
+    T gval;
+
+    MPI_Allreduce((void*)&lval, &gval, elems, datatype<T>(), op, comm);
+    return gval;
+  }
+
+  /// Communicator-wise condition checking.
+  /**
+   * Checks conditions at each process in the communicator;
+   *
+   * If the condition is false on any of the participating processes, outputs the
+   * provided message together with the ranks of the offending process.
+   * After that each process in the communicator throws.
+   */
+  template <class Condition, class Message>
+  void check(const Condition& cond, const Message& message)
+  {
+    int lc = static_cast<int>(cond);
+    int gc = reduce(MPI_PROD, lc);
+
+    if (!gc) {
+      std::vector<int> c(size);
+      MPI_Gather(&lc, 1, MPI_INT, &c[0], size, MPI_INT, 0, comm);
+      if (rank == 0) {
+        std::cerr << "Failed assumption: " << message << std::endl;
+        std::cerr << "Offending processes:";
+        for (int i = 0; i < size; ++i)
+          if (!c[i])
+            std::cerr << " " << i;
+        std::cerr << std::endl;
+      }
+      MPI_Barrier(comm);
+      throw std::runtime_error(message);
     }
-
-    /// Exclusive sum over mpi communicator
-    template <typename T>
-    std::vector<T> exclusive_sum(T n) const {
-        std::vector<T> v(size + 1); v[0] = 0;
-        MPI_Allgather(&n, 1, datatype<T>(), &v[1], 1, datatype<T>(), comm);
-        std::partial_sum(v.begin(), v.end(), v.begin());
-        return v;
-    }
-
-    template <typename T>
-    T reduce(MPI_Op op, const T &lval) const {
-        const int elems = math::static_rows<T>::value * math::static_cols<T>::value;
-        T gval;
-
-        MPI_Allreduce((void*)&lval, &gval, elems, datatype<T>(), op, comm);
-        return gval;
-    }
-
-    /// Communicator-wise condition checking.
-    /**
-     * Checks conditions at each process in the communicator;
-     *
-     * If the condition is false on any of the participating processes, outputs the
-     * provided message together with the ranks of the offending process.
-     * After that each process in the communicator throws.
-     */
-    template <class Condition, class Message>
-    void check(const Condition &cond, const Message &message) {
-        int lc = static_cast<int>(cond);
-        int gc = reduce(MPI_PROD, lc);
-
-        if (!gc) {
-            std::vector<int> c(size);
-            MPI_Gather(&lc, 1, MPI_INT, &c[0], size, MPI_INT, 0, comm);
-            if (rank == 0) {
-                std::cerr << "Failed assumption: " << message << std::endl;
-                std::cerr << "Offending processes:";
-                for (int i = 0; i < size; ++i)
-                    if (!c[i]) std::cerr << " " << i;
-                std::cerr << std::endl;
-            }
-            MPI_Barrier(comm);
-            throw std::runtime_error(message);
-        }
-    }
-
+  }
 };
 
-} // namespace mpi
-} // namespace amgcl
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::mpi
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif
