@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
     typedef Alina::backend::BuiltinBackend<float>  PBackend; // the preconditioner backend
 
     typedef Alina::mpi::make_solver<
-        Alina::mpi::AMG<
+        Alina::mpi::DistributedAMG<
             PBackend,
             Alina::mpi::coarsening::smoothed_aggregation<PBackend>,
             Alina::mpi::relaxation::spai0<PBackend>

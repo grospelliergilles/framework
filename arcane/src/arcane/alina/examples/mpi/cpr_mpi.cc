@@ -259,7 +259,7 @@ int main(int argc, char *argv[]) {
     typedef
         Alina::mpi::make_solver<
             Alina::mpi::cpr<
-                Alina::mpi::AMG<
+                Alina::mpi::DistributedAMG<
                     Backend,
                     Alina::runtime::mpi::coarsening::wrapper<Backend>,
                     Alina::runtime::mpi::relaxation::RuntimeDistributedRelaxation<Backend>,

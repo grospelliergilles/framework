@@ -48,7 +48,7 @@ template <class Backend,
           class Relaxation,
           class DirectSolver = direct::skyline_lu<typename Backend::value_type>,
           class Repartition = partition::merge<Backend>>
-class AMG
+class DistributedAMG
 {
  public:
 
@@ -160,7 +160,7 @@ class AMG
   } prm;
 
   template <class Matrix>
-  AMG(communicator comm,
+  DistributedAMG(communicator comm,
       const Matrix& A,
       const params& prm = params(),
       const backend_params& bprm = backend_params())
@@ -171,7 +171,7 @@ class AMG
     init(std::make_shared<matrix>(comm, A, backend::rows(A)), bprm);
   }
 
-  AMG(communicator comm,
+  DistributedAMG(communicator comm,
       std::shared_ptr<matrix> A,
       const params& prm = params(),
       const backend_params& bprm = backend_params())
@@ -476,13 +476,13 @@ class AMG
   }
 
   template <class B, class C, class R, class D, class I>
-  friend std::ostream& operator<<(std::ostream& os, const AMG<B, C, R, D, I>& a);
+  friend std::ostream& operator<<(std::ostream& os, const DistributedAMG<B, C, R, D, I>& a);
 };
 
 template <class B, class C, class R, class D, class I>
-std::ostream& operator<<(std::ostream& os, const AMG<B, C, R, D, I>& a)
+std::ostream& operator<<(std::ostream& os, const DistributedAMG<B, C, R, D, I>& a)
 {
-  typedef typename AMG<B, C, R, D, I>::level level;
+  typedef typename DistributedAMG<B, C, R, D, I>::level level;
   ios_saver ss(os);
 
   size_t sum_dof = 0;
