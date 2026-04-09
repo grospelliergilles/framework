@@ -20,7 +20,7 @@
 
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_make_solver.h>
-#include <arcane/alina/mpi/mp_preconditioner.h>
+#include <arcane/alina/mpi/DistributedPreconditioner.h>
 #include <arcane/alina/mpi/mp_solver_runtime.h>
 
 #include <arcane/alina/IO.h>

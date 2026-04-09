@@ -8,8 +8,8 @@ set(ARCANE_SOURCES
   AlinaLibMPI.cc
   adapter_ublas.h
   AMG.h
-        BlockCSRBackend.h
-        BuiltinBackend.h
+  BlockCSRBackend.h
+  BuiltinBackend.h
   backend_builtin_hybrid.h
   backend_cuda.h
   backend_detail_default_direct_solver.h
@@ -35,11 +35,11 @@ set(ARCANE_SOURCES
   make_block_solver.h
   make_solver.h
   perf_counter_clock.h
-        CPRDynamicRowSumPreconditioner.h
-        CPRPreconditioner.h
-        DummyPreconditioner.h
+  CPRDynamicRowSumPreconditioner.h
+  CPRPreconditioner.h
+  DummyPreconditioner.h
   preconditioner_runtime.h
-        SchurPressureCorrectionPreconditioner.h
+  SchurPressureCorrectionPreconditioner.h
   perf_counter_mpi_aggregator.h
   profiler.h
   relaxation_cusparse_ilu0.h
@@ -48,19 +48,19 @@ set(ARCANE_SOURCES
   RelaxationRuntime.cc
   relaxation.h
   reorder_cuthill_mckee.h
-        BiCGStabSolver.h
-        FlexibleGMRESSolver.h
-        ConjugateGradientSolver.h
+  BiCGStabSolver.h
+  FlexibleGMRESSolver.h
+  ConjugateGradientSolver.h
   solver_detail_default_inner_product.h
   solver_detail_givens_rotations.h
   solver_eigen.h
-        FlexibleGMRESSolver.h
-        GMRESSolver.h
-        IDRSSolver.h
-        LooseGMRESSolver.h
+  FlexibleGMRESSolver.h
+  GMRESSolver.h
+  IDRSSolver.h
+  LooseGMRESSolver.h
   solver_precond_side.h
-        PreconditionerOnlySolver.h
-        RichardsonSolver.h
+  PreconditionerOnlySolver.h
+  RichardsonSolver.h
   solver_runtime.h
   solver_skyline_lu.h
   util.h
@@ -80,14 +80,14 @@ set(ARCANE_SOURCES
   mpi/mp_direct_solver_base.h
   mpi/mp_direct_solver_runtime.h
   mpi/mp_direct_solver_skyline_lu.h
-        mpi/DistributedMatrix.h
+  mpi/DistributedMatrix.h
   mpi/mp_inner_product.h
   mpi/mp_make_solver.h
   mpi/mp_partition_merge.h
   mpi/mp_partition_parmetis.h
   mpi/mp_partition_runtime.h
   mpi/mp_partition_util.h
-  mpi/mp_preconditioner.h
+  mpi/DistributedPreconditioner.h
   mpi/mp_relaxation_runtime.h
   mpi/mp_relaxation.h
   mpi/mp_schur_pressure_correction.h
