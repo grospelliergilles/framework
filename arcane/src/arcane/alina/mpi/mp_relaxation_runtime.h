@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/mpi/mp_relaxation.h>
 #include <arcane/alina/mpi/mp_util.h>
-#include <arcane/alina/mpi/mp_distributed_matrix.h>
+#include <arcane/alina/mpi/DistributedMatrix.h>
 
 namespace Arcane::Alina::runtime::mpi::relaxation
 {

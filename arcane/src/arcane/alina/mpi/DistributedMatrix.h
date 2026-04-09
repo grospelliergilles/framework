@@ -5,11 +5,12 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* mp_distributed_matrix.h                                     (C) 2026-2026 */
+/* DistributedMatrix.h                                         (C) 2026-2026 */
 /*                                                                           */
+/* Distributed Matrix using message passing.                                 */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_MP_DISTRIBUTED_MATRIX_H
-#define ARCANE_ALINA_MPI_MP_DISTRIBUTED_MATRIX_H
+#ifndef ARCANE_ALINA_MPI_DISTRIBUTED_MATRIX_H
+#define ARCANE_ALINA_MPI_DISTRIBUTED_MATRIX_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -337,7 +338,9 @@ class comm_pattern
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
+/*!
+ * \brief Distributed Matrix using message passing.
+ */
 template <class Backend>
 class distributed_matrix
 {

@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
 
-#include <arcane/alina/mpi/mp_distributed_matrix.h>
+#include <arcane/alina/mpi/DistributedMatrix.h>
 #include <arcane/alina/mpi/mp_make_solver.h>
 #include <arcane/alina/mpi/mp_AMG.h>
 #include <arcane/alina/mpi/mp_coarsening_smoothed_aggregation.h>

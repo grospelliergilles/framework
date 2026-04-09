@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/coarsening_detail_scaled_galerkin.h>
 #include <arcane/alina/mpi/mp_util.h>
-#include <arcane/alina/mpi/mp_distributed_matrix.h>
+#include <arcane/alina/mpi/DistributedMatrix.h>
 #include <arcane/alina/mpi/mp_coarsening_pmis.h>
 
 namespace Arcane::Alina {

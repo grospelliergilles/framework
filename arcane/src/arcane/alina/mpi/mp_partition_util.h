@@ -39,7 +39,7 @@ THE SOFTWARE.
 
 #include <arcane/alina/BackendInterface.h>
 #include <arcane/alina/mpi/mp_util.h>
-#include <arcane/alina/mpi/mp_distributed_matrix.h>
+#include <arcane/alina/mpi/DistributedMatrix.h>
 
 namespace Arcane::Alina {
 namespace mpi {

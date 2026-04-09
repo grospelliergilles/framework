@@ -45,7 +45,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_direct_solver_skyline_lu.h>
 #include <arcane/alina/mpi/mp_inner_product.h>
-#include <arcane/alina/mpi/mp_distributed_matrix.h>
+#include <arcane/alina/mpi/DistributedMatrix.h>
 
 namespace Arcane::Alina {
 namespace mpi {

@@ -80,7 +80,7 @@ set(ARCANE_SOURCES
   mpi/mp_direct_solver_base.h
   mpi/mp_direct_solver_runtime.h
   mpi/mp_direct_solver_skyline_lu.h
-  mpi/mp_distributed_matrix.h
+        mpi/DistributedMatrix.h
   mpi/mp_inner_product.h
   mpi/mp_make_solver.h
   mpi/mp_partition_merge.h
