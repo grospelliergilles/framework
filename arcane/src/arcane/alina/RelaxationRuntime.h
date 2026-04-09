@@ -64,7 +64,7 @@ std::istream& operator>>(std::istream& in, type& r);
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct wrapper
+struct RuntimeRelaxation
 {
   typedef Alina::PropertyTree params;
   typedef typename Backend::params backend_params;
@@ -72,7 +72,7 @@ struct wrapper
   void* handle;
 
   template <class Matrix>
-  wrapper(const Matrix& A, params prm = params(),
+  RuntimeRelaxation(const Matrix& A, params prm = params(),
           const backend_params& bprm = backend_params())
   : r(prm.get("type", runtime::relaxation::spai0))
   , handle(0)
@@ -103,7 +103,7 @@ struct wrapper
     }
   }
 
-  ~wrapper()
+  ~RuntimeRelaxation()
   {
     switch (r) {
 

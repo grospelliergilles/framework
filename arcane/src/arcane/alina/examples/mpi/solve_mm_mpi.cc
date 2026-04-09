@@ -314,7 +314,7 @@ int main(int argc, char *argv[]) {
             Alina::AMG<
                 Alina::backend::BuiltinBackend<double>,
                 Alina::runtime::coarsening::RuntimeCoarsening,
-                Alina::runtime::relaxation::wrapper
+                Alina::runtime::relaxation::RuntimeRelaxation
                 >,
             Alina::runtime::mpi::solver::wrapper<Alina::backend::BuiltinBackend<double>>,
             Alina::runtime::mpi::direct::solver<double>

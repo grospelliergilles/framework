@@ -288,12 +288,12 @@ int main(int argc, char *argv[]) {
             Alina::mpi::schur_pressure_correction<
                 Alina::mpi::make_solver<
                     Alina::mpi::block_preconditioner<
-                        Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::wrapper>
+                        Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>
                         >,
                     Alina::runtime::mpi::solver::wrapper<Backend>
                     >,
                 Alina::mpi::subdomain_deflation<
-                    Alina::AMG<Backend, Alina::runtime::coarsening::RuntimeCoarsening, Alina::runtime::relaxation::wrapper>,
+                    Alina::AMG<Backend, Alina::runtime::coarsening::RuntimeCoarsening, Alina::runtime::relaxation::RuntimeRelaxation>,
                     Alina::runtime::mpi::solver::wrapper<Backend>,
                     Alina::runtime::mpi::direct::solver<double>
                     >

@@ -44,7 +44,7 @@ namespace Arcane::Alina::runtime::mpi::relaxation
 {
 
 template <class Backend>
-struct wrapper
+struct RuntimeDistributedRelaxation
 {
   typedef Backend backend_type;
   typedef typename Backend::params backend_params;
@@ -53,7 +53,7 @@ struct wrapper
   runtime::relaxation::type r;
   void* handle;
 
-  wrapper(const Alina::mpi::DistributedMatrix<Backend>& A,
+  RuntimeDistributedRelaxation(const Alina::mpi::DistributedMatrix<Backend>& A,
           params prm, const backend_params& bprm = backend_params())
   : r(prm.get("type", runtime::relaxation::spai0))
   , handle(0)
@@ -97,7 +97,7 @@ struct wrapper
     }
   }
 
-  ~wrapper()
+  ~RuntimeDistributedRelaxation()
   {
     switch (r) {
 #define ARCANE_ALINA_RELAX_DISTR(type) \

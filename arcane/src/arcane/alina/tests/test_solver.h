@@ -52,7 +52,7 @@ void test_solver(const Matrix& A,
     prm.put("precond.coarsening.nullspace.B", &null[0]);
   }
 
-  Alina::make_solver<Alina::AMG<Backend, Alina::runtime::coarsening::RuntimeCoarsening, Alina::runtime::relaxation::wrapper>,
+  Alina::make_solver<Alina::AMG<Backend, Alina::runtime::coarsening::RuntimeCoarsening, Alina::runtime::relaxation::RuntimeRelaxation>,
                      Alina::runtime::solver::wrapper<Backend>>
   solve(A, prm, bprm);
 
@@ -83,7 +83,7 @@ void test_rap(const Matrix& A,
   prm.put("solver.type", solver);
 
   Alina::make_solver<
-  Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::wrapper>,
+  Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>,
   Alina::runtime::solver::wrapper<Backend>>
   solve(A, prm, bprm);
 

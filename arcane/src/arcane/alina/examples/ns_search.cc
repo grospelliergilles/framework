@@ -199,7 +199,7 @@ int main(int argc, char *argv[]) {
         Alina::AMG<
             Backend,
             Alina::runtime::coarsening::RuntimeCoarsening,
-            Alina::runtime::relaxation::wrapper
+            Alina::runtime::relaxation::RuntimeRelaxation
             >,
         Alina::runtime::solver::wrapper<Backend>
         > Solver;
