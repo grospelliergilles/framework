@@ -53,7 +53,7 @@ struct wrapper
   runtime::relaxation::type r;
   void* handle;
 
-  wrapper(const Alina::mpi::distributed_matrix<Backend>& A,
+  wrapper(const Alina::mpi::DistributedMatrix<Backend>& A,
           params prm, const backend_params& bprm = backend_params())
   : r(prm.get("type", runtime::relaxation::spai0))
   , handle(0)

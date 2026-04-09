@@ -77,7 +77,7 @@ inline std::istream& operator>>(std::istream& in, type& s)
 template <class Backend>
 struct wrapper
 {
-  typedef Alina::mpi::distributed_matrix<Backend> matrix;
+  typedef Alina::mpi::DistributedMatrix<Backend> matrix;
   typedef PropertyTree params;
 
   type c;

@@ -88,7 +88,7 @@ class preconditioner {
         typedef typename backend_type::params backend_params;
         typedef Alina::PropertyTree params;
         typedef typename backend_type::value_type value_type;
-        typedef Alina::mpi::distributed_matrix<backend_type> matrix;
+        typedef Alina::mpi::DistributedMatrix<backend_type> matrix;
 
         template <class Matrix>
         preconditioner(

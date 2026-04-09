@@ -92,11 +92,11 @@ struct smoothed_aggregation {
     smoothed_aggregation(const params &prm = params()) : prm(prm) {}
 
     std::tuple<
-        std::shared_ptr< distributed_matrix<Backend> >,
-        std::shared_ptr< distributed_matrix<Backend> >
+        std::shared_ptr< DistributedMatrix<Backend> >,
+        std::shared_ptr< DistributedMatrix<Backend> >
         >
-    transfer_operators(const distributed_matrix<Backend> &A) {
-        typedef distributed_matrix<Backend> DM;
+    transfer_operators(const DistributedMatrix<Backend> &A) {
+        typedef DistributedMatrix<Backend> DM;
         typedef backend::CSRMatrix<char> bool_matrix;
 
         pmis<Backend> aggr(A, prm.aggr);
@@ -187,11 +187,11 @@ struct smoothed_aggregation {
         return std::make_tuple(P, transpose(*P));
     }
 
-    std::shared_ptr< distributed_matrix<Backend> >
+    std::shared_ptr< DistributedMatrix<Backend> >
     coarse_operator(
-            const distributed_matrix<Backend> &A,
-            const distributed_matrix<Backend> &P,
-            const distributed_matrix<Backend> &R
+            const DistributedMatrix<Backend> &A,
+            const DistributedMatrix<Backend> &P,
+            const DistributedMatrix<Backend> &R
             ) const
     {
         return Alina::coarsening::detail::galerkin(A, P, R);

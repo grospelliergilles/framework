@@ -51,7 +51,7 @@ struct chebyshev
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  chebyshev(const distributed_matrix<Backend>& A,
+  chebyshev(const DistributedMatrix<Backend>& A,
             const params& prm = params(),
             const backend_params& bprm = backend_params())
   : Base(A, prm, bprm)
@@ -70,7 +70,7 @@ struct damped_jacobi
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  damped_jacobi(const distributed_matrix<Backend>& A,
+  damped_jacobi(const DistributedMatrix<Backend>& A,
                 const params& prm = params(),
                 const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
@@ -89,7 +89,7 @@ struct gauss_seidel
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  gauss_seidel(const distributed_matrix<Backend>& A,
+  gauss_seidel(const DistributedMatrix<Backend>& A,
                const params& prm = params(),
                const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
@@ -127,7 +127,7 @@ struct ilu0
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  ilu0(const distributed_matrix<Backend>& A,
+  ilu0(const DistributedMatrix<Backend>& A,
        const params& prm = params(),
        const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
@@ -145,7 +145,7 @@ struct iluk : public Alina::relaxation::iluk<Backend>
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  iluk(const distributed_matrix<Backend>& A,
+  iluk(const DistributedMatrix<Backend>& A,
        const params& prm = params(),
        const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
@@ -163,7 +163,7 @@ struct ilup : public Alina::relaxation::ilup<Backend>
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  ilup(const distributed_matrix<Backend>& A,
+  ilup(const DistributedMatrix<Backend>& A,
        const params& prm = params(),
        const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
@@ -181,7 +181,7 @@ struct ilut : public Alina::relaxation::ilut<Backend>
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  ilut(const distributed_matrix<Backend>& A,
+  ilut(const DistributedMatrix<Backend>& A,
        const params& prm = params(),
        const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
@@ -201,7 +201,7 @@ struct spai0
   typedef Alina::detail::empty_params params;
   typedef typename Backend::params backend_params;
 
-  spai0(const distributed_matrix<Backend>& A,
+  spai0(const DistributedMatrix<Backend>& A,
         const params&, const backend_params& bprm = backend_params())
   {
     typedef backend::CSRMatrix<value_type> build_matrix;
@@ -281,7 +281,7 @@ struct spai1 : public Alina::relaxation::spai1<Backend>
   typedef typename Base::params params;
 
   spai1(
-  const distributed_matrix<Backend>& A,
+  const DistributedMatrix<Backend>& A,
   const params& prm = params(),
   const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
@@ -299,7 +299,7 @@ struct as_preconditioner
   typedef typename backend_type::params backend_params;
   typedef typename backend_type::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
-  typedef distributed_matrix<backend_type> matrix;
+  typedef DistributedMatrix<backend_type> matrix;
   typedef typename backend_type::vector vector;
 
   template <class Matrix>

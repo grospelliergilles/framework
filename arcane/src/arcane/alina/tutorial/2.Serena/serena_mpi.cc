@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
     d_ptr.back() = chunk;
 
     // Create the distributed diagonal matrix:
-    Alina::mpi::distributed_matrix<DBackend> D(world,
+    Alina::mpi::DistributedMatrix<DBackend> D(world,
             Alina::adapter::block_matrix<dmat_type>(
                 std::tie(chunk, d_ptr, d_col, dia)));
 
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
     // where A is the local chunk of the matrix
     // converted to the block format on the fly.
     auto A = product(D, *product(
-                Alina::mpi::distributed_matrix<DBackend>(world,
+                Alina::mpi::DistributedMatrix<DBackend>(world,
                     Alina::adapter::block_matrix<dmat_type>(
                         std::tie(chunk, ptr, col, val))),
                 D));

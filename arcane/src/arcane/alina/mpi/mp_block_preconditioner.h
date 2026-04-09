@@ -54,7 +54,7 @@ class block_preconditioner {
 
         typedef typename backend_type::value_type value_type;
         typedef typename backend_type::matrix     bmatrix;
-        typedef distributed_matrix<backend_type>  matrix;
+        typedef DistributedMatrix<backend_type>  matrix;
 
         template <class Matrix>
         block_preconditioner(

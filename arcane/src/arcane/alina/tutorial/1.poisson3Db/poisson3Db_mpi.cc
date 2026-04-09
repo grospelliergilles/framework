@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
   Solver;
 
   // Create the distributed matrix from the local parts.
-  auto A = std::make_shared<Alina::mpi::distributed_matrix<DBackend>>(
+  auto A = std::make_shared<Alina::mpi::DistributedMatrix<DBackend>>(
   world, std::tie(chunk, ptr, col, val));
 
   // Partition the matrix and the RHS vector.

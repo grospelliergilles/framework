@@ -45,7 +45,7 @@ namespace partition {
 template <class Backend>
 struct merge {
     typedef typename Backend::value_type value_type;
-    typedef distributed_matrix<Backend>  matrix;
+    typedef DistributedMatrix<Backend>  matrix;
 
     struct params {
         bool      enable;

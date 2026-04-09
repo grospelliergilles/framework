@@ -181,14 +181,14 @@ ptrdiff_t read_binary(
 
 //---------------------------------------------------------------------------
 template <class Backend, class Matrix>
-std::shared_ptr< Alina::mpi::distributed_matrix<Backend> >
+std::shared_ptr< Alina::mpi::DistributedMatrix<Backend> >
 partition(Alina::mpi::communicator comm, const Matrix &Astrip,
         typename Backend::vector &rhs, const typename Backend::params &bprm,
         Alina::runtime::mpi::partition::type ptype, int block_size = 1)
 {
     typedef typename Backend::value_type val_type;
     typedef typename Alina::math::rhs_of<val_type>::type rhs_type;
-    typedef Alina::mpi::distributed_matrix<Backend> DMatrix;
+    typedef Alina::mpi::DistributedMatrix<Backend> DMatrix;
 
     using Alina::prof;
 
@@ -240,7 +240,7 @@ void solve_block(
 
     typedef Alina::backend::BuiltinBackend<val_type> Backend;
 
-    typedef Alina::mpi::distributed_matrix<Backend> DMatrix;
+    typedef Alina::mpi::DistributedMatrix<Backend> DMatrix;
 
     typedef
         Alina::mpi::make_solver<
@@ -343,7 +343,7 @@ void solve_scalar(
     typedef Alina::backend::cuda<double> Backend;
 #endif
 
-    typedef Alina::mpi::distributed_matrix<Backend> DMatrix;
+    typedef Alina::mpi::DistributedMatrix<Backend> DMatrix;
 
     typedef
         Alina::mpi::make_solver<

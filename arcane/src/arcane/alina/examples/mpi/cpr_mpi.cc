@@ -96,12 +96,12 @@ ptrdiff_t read_binary(
 
 //---------------------------------------------------------------------------
 template <class Backend, class Matrix>
-std::shared_ptr< Alina::mpi::distributed_matrix<Backend> >
+std::shared_ptr< Alina::mpi::DistributedMatrix<Backend> >
 partition(Alina::mpi::communicator comm, const Matrix &Astrip,
         std::vector<double> &rhs, const typename Backend::params &bprm,
         Alina::runtime::mpi::partition::type ptype, int block_size = 1)
 {
-    typedef Alina::mpi::distributed_matrix<Backend> DMatrix;
+    typedef Alina::mpi::DistributedMatrix<Backend> DMatrix;
 
     using Alina::prof;
 

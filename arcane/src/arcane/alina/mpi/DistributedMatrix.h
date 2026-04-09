@@ -46,9 +46,11 @@ namespace Arcane::Alina::mpi
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
+/*!
+ * \brief Call to handle communication pattern.
+ */
 template <class Backend>
-class comm_pattern
+class CommunicationPattern
 {
  public:
 
@@ -90,7 +92,7 @@ class comm_pattern
 
   std::shared_ptr<vector> x_rem;
 
-  comm_pattern(communicator comm,
+  CommunicationPattern(communicator comm,
                ptrdiff_t n_loc_cols,
                size_t n_rem_cols, const ptrdiff_t* p_rem_cols)
   : comm(comm)
@@ -194,7 +196,7 @@ class comm_pattern
   }
 
   template <class OtherBackend>
-  comm_pattern(const comm_pattern<OtherBackend>& C)
+  CommunicationPattern(const CommunicationPattern<OtherBackend>& C)
   : comm(C.comm)
   , idx(C.idx)
   , loc_beg(C.loc_beg)
@@ -333,7 +335,7 @@ class comm_pattern
   ptrdiff_t loc_beg, loc_cols;
 
   template <class B>
-  friend class comm_pattern;
+  friend class CommunicationPattern;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -342,7 +344,7 @@ class comm_pattern
  * \brief Distributed Matrix using message passing.
  */
 template <class Backend>
-class distributed_matrix
+class DistributedMatrix
 {
  public:
 
@@ -351,10 +353,10 @@ class distributed_matrix
   typedef typename math::scalar_of<value_type>::type scalar_type;
   typedef typename Backend::params backend_params;
   typedef typename Backend::matrix matrix;
-  typedef comm_pattern<Backend> CommPattern;
+  typedef CommunicationPattern<Backend> CommPattern;
   typedef backend::CSRMatrix<value_type> build_matrix;
 
-  distributed_matrix(communicator comm,
+  DistributedMatrix(communicator comm,
                      std::shared_ptr<build_matrix> a_loc,
                      std::shared_ptr<build_matrix> a_rem,
                      std::shared_ptr<CommPattern> c = std::shared_ptr<CommPattern>())
@@ -381,7 +383,7 @@ class distributed_matrix
 
   // Copy the distributed_matrix from another backend
   template <class OtherBackend>
-  distributed_matrix(const distributed_matrix<OtherBackend>& A)
+  DistributedMatrix(const DistributedMatrix<OtherBackend>& A)
   : a_loc(std::make_shared<build_matrix>(*A.local()))
   , a_rem(std::make_shared<build_matrix>(*A.remote()))
   {
@@ -398,7 +400,7 @@ class distributed_matrix
   }
 
   template <class Matrix>
-  distributed_matrix(communicator comm,
+  DistributedMatrix(communicator comm,
                      const Matrix& A,
                      ptrdiff_t _n_loc_cols = -1)
   : n_loc_rows(backend::rows(A))
@@ -525,7 +527,7 @@ class distributed_matrix
     return n_glob_nonzeros;
   }
 
-  const comm_pattern<Backend>& cpat() const
+  const CommunicationPattern<Backend>& cpat() const
   {
     return *C;
   }
@@ -609,12 +611,12 @@ class distributed_matrix
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-std::shared_ptr<distributed_matrix<Backend>>
-transpose(const distributed_matrix<Backend>& A)
+std::shared_ptr<DistributedMatrix<Backend>>
+transpose(const DistributedMatrix<Backend>& A)
 {
   ARCANE_ALINA_TIC("MPI Transpose");
   typedef typename Backend::value_type value_type;
-  typedef comm_pattern<Backend> CommPattern;
+  typedef CommunicationPattern<Backend> CommPattern;
   typedef backend::CSRMatrix<value_type> build_matrix;
 
   static const int tag_cnt = 2001;
@@ -765,7 +767,7 @@ transpose(const distributed_matrix<Backend>& A)
 
   ARCANE_ALINA_TOC("MPI Transpose");
 
-  return std::make_shared<distributed_matrix<Backend>>(
+  return std::make_shared<DistributedMatrix<Backend>>(
   comm, backend::transpose(A_loc), T_ptr);
 }
 
@@ -774,8 +776,8 @@ transpose(const distributed_matrix<Backend>& A)
 
 template <class Backend>
 std::shared_ptr<backend::CSRMatrix<typename Backend::value_type>>
-remote_rows(const comm_pattern<Backend>& C,
-            const distributed_matrix<Backend>& B,
+remote_rows(const CommunicationPattern<Backend>& C,
+            const DistributedMatrix<Backend>& B,
             bool need_values = true)
 {
   typedef typename Backend::value_type value_type;
@@ -912,14 +914,14 @@ remote_rows(const comm_pattern<Backend>& C,
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-std::shared_ptr<distributed_matrix<Backend>>
-product(const distributed_matrix<Backend>& A, const distributed_matrix<Backend>& B)
+std::shared_ptr<DistributedMatrix<Backend>>
+product(const DistributedMatrix<Backend>& A, const DistributedMatrix<Backend>& B)
 {
   typedef typename Backend::value_type value_type;
   typedef backend::CSRMatrix<value_type> build_matrix;
   ARCANE_ALINA_TIC("product");
 
-  const comm_pattern<Backend>& Acp = A.cpat();
+  const CommunicationPattern<Backend>& Acp = A.cpat();
 
   build_matrix& A_loc = *A.local();
   build_matrix& A_rem = *A.remote();
@@ -1131,14 +1133,14 @@ product(const distributed_matrix<Backend>& A, const distributed_matrix<Backend>&
   ARCANE_ALINA_TOC("compute");
   ARCANE_ALINA_TOC("product");
 
-  return std::make_shared<distributed_matrix<Backend>>(A.comm(), c_loc, c_rem);
+  return std::make_shared<DistributedMatrix<Backend>>(A.comm(), c_loc, c_rem);
 }
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
 template <class Backend, class T>
-void scale(distributed_matrix<Backend>& A, T s)
+void scale(DistributedMatrix<Backend>& A, T s)
 {
   typedef typename Backend::value_type value_type;
   typedef backend::CSRMatrix<value_type> build_matrix;
@@ -1161,7 +1163,7 @@ void scale(distributed_matrix<Backend>& A, T s)
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-void sort_rows(distributed_matrix<Backend>& A)
+void sort_rows(DistributedMatrix<Backend>& A)
 {
   backend::sort_rows(*A.local());
   backend::sort_rows(*A.remote());
@@ -1182,19 +1184,19 @@ namespace Arcane::Alina::backend
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct rows_impl<mpi::distributed_matrix<Backend>>
+struct rows_impl<mpi::DistributedMatrix<Backend>>
 {
-  static size_t get(const mpi::distributed_matrix<Backend>& A)
+  static size_t get(const mpi::DistributedMatrix<Backend>& A)
   {
     return A.loc_rows();
   }
 };
 
 template <class Backend, class Alpha, class Vec1, class Beta, class Vec2>
-struct spmv_impl<Alpha, mpi::distributed_matrix<Backend>, Vec1, Beta, Vec2>
+struct spmv_impl<Alpha, mpi::DistributedMatrix<Backend>, Vec1, Beta, Vec2>
 {
   static void apply(Alpha alpha,
-                    const mpi::distributed_matrix<Backend>& A,
+                    const mpi::DistributedMatrix<Backend>& A,
                     const Vec1& x, Beta beta, Vec2& y)
   {
     A.mul(alpha, x, beta, y);
@@ -1202,10 +1204,10 @@ struct spmv_impl<Alpha, mpi::distributed_matrix<Backend>, Vec1, Beta, Vec2>
 };
 
 template <class Backend, class Vec1, class Vec2, class Vec3>
-struct residual_impl<mpi::distributed_matrix<Backend>, Vec1, Vec2, Vec3>
+struct residual_impl<mpi::DistributedMatrix<Backend>, Vec1, Vec2, Vec3>
 {
   static void apply(const Vec1& rhs,
-                    const mpi::distributed_matrix<Backend>& A,
+                    const mpi::DistributedMatrix<Backend>& A,
                     const Vec2& x, Vec3& r)
   {
     A.residual(rhs, x, r);
@@ -1218,7 +1220,7 @@ struct residual_impl<mpi::distributed_matrix<Backend>, Vec1, Vec2, Vec3>
 // Diagonal of the matrix
 template <class Backend>
 std::shared_ptr<numa_vector<typename Backend::value_type>>
-diagonal(const mpi::distributed_matrix<Backend>& A, bool invert = false)
+diagonal(const mpi::DistributedMatrix<Backend>& A, bool invert = false)
 {
   return diagonal(*A.local(), invert);
 }
@@ -1229,7 +1231,7 @@ diagonal(const mpi::distributed_matrix<Backend>& A, bool invert = false)
 // Estimate spectral radius of the matrix.
 template <bool scale, class Backend>
 typename math::scalar_of<typename Backend::value_type>::type
-spectral_radius(const mpi::distributed_matrix<Backend>& A, int power_iters = 0)
+spectral_radius(const mpi::DistributedMatrix<Backend>& A, int power_iters = 0)
 {
   ARCANE_ALINA_TIC("spectral radius");
   typedef typename Backend::value_type value_type;
@@ -1241,7 +1243,7 @@ spectral_radius(const mpi::distributed_matrix<Backend>& A, int power_iters = 0)
 
   const build_matrix& A_loc = *A.local();
   const build_matrix& A_rem = *A.remote();
-  const mpi::comm_pattern<Backend>& C = A.cpat();
+  const mpi::CommunicationPattern<Backend>& C = A.cpat();
 
   const ptrdiff_t n = A_loc.nrows;
   scalar_type radius = 0;

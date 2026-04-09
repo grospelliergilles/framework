@@ -89,19 +89,19 @@ struct aggregation {
     aggregation(const params &prm = params()) : prm(prm) {}
 
     std::tuple<
-        std::shared_ptr< distributed_matrix<Backend> >,
-        std::shared_ptr< distributed_matrix<Backend> >
+        std::shared_ptr< DistributedMatrix<Backend> >,
+        std::shared_ptr< DistributedMatrix<Backend> >
         >
-    transfer_operators(const distributed_matrix<Backend> &A) {
+    transfer_operators(const DistributedMatrix<Backend> &A) {
         pmis<Backend> aggr(A, prm.aggr);
         return std::make_tuple(aggr.p_tent, transpose(*aggr.p_tent));
     }
 
-    std::shared_ptr< distributed_matrix<Backend> >
+    std::shared_ptr< DistributedMatrix<Backend> >
     coarse_operator(
-            const distributed_matrix<Backend> &A,
-            const distributed_matrix<Backend> &P,
-            const distributed_matrix<Backend> &R
+            const DistributedMatrix<Backend> &A,
+            const DistributedMatrix<Backend> &P,
+            const DistributedMatrix<Backend> &R
             ) const
     {
         return Alina::coarsening::detail::scaled_galerkin(A, P, R, 1 / prm.over_interp);

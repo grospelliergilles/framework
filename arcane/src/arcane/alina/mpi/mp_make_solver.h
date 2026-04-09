@@ -57,7 +57,7 @@ class make_solver : public Alina::detail::non_copyable {
             );
     public:
         typedef typename IterativeSolver::backend_type backend_type;
-        typedef Alina::mpi::distributed_matrix<typename Precond::backend_type> matrix;
+        typedef Alina::mpi::DistributedMatrix<typename Precond::backend_type> matrix;
         typedef typename backend_type::value_type value_type;
         typedef typename backend_type::params backend_params;
         typedef typename backend::BuiltinBackend<value_type>::matrix build_matrix;
@@ -107,7 +107,7 @@ class make_solver : public Alina::detail::non_copyable {
 
         template <class Backend>
         make_solver(
-                communicator comm, std::shared_ptr<distributed_matrix<Backend>> A,
+                communicator comm, std::shared_ptr<DistributedMatrix<Backend>> A,
                 const params &prm = params(),
                 const backend_params &bprm = backend_params()
                 ) :

@@ -158,7 +158,7 @@ class subdomain_deflation {
         typedef typename math::scalar_of<value_type>::type scalar_type;
         typedef typename backend_type::matrix     bmatrix;
         typedef typename backend_type::vector     vector;
-        typedef distributed_matrix<backend_type>  matrix;
+        typedef DistributedMatrix<backend_type>  matrix;
 
 
         template <class Matrix>
@@ -218,7 +218,7 @@ class subdomain_deflation {
             auto a_loc = A->local();
             auto a_rem = A->remote();
 
-            const comm_pattern<backend_type> &Acp = A->cpat();
+            const CommunicationPattern<backend_type> &Acp = A->cpat();
 
             // Fill deflation vectors.
             ARCANE_ALINA_TIC("copy deflation vectors");

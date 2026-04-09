@@ -47,7 +47,7 @@ template <class Backend>
 struct parmetis
 {
   typedef typename Backend::value_type value_type;
-  typedef distributed_matrix<Backend> matrix;
+  typedef DistributedMatrix<Backend> matrix;
 
   struct params
   {
@@ -140,7 +140,7 @@ struct parmetis
         typedef backend::BuiltinBackend<scalar> sbackend;
         ptrdiff_t np = n / block_size;
 
-        distributed_matrix<sbackend> A_pw(A.comm(),
+        DistributedMatrix<sbackend> A_pw(A.comm(),
                                           pointwise_matrix(*A.local(), block_size),
                                           pointwise_matrix(*A.remote(), block_size));
 
@@ -166,7 +166,7 @@ struct parmetis
 
   template <class B>
   std::tuple<ptrdiff_t, ptrdiff_t>
-  partition(const distributed_matrix<B>& A, idx_t npart, std::vector<ptrdiff_t>& perm) const
+  partition(const DistributedMatrix<B>& A, idx_t npart, std::vector<ptrdiff_t>& perm) const
   {
     communicator comm = A.comm();
     idx_t n = A.loc_rows();

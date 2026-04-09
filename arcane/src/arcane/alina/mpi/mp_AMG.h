@@ -56,7 +56,7 @@ class AMG
   typedef typename Backend::params backend_params;
   typedef typename Backend::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
-  typedef distributed_matrix<Backend> matrix;
+  typedef DistributedMatrix<Backend> matrix;
   typedef typename Backend::vector vector;
 
   struct params
@@ -197,7 +197,7 @@ class AMG
 
   template <class OtherBackend>
   typename std::enable_if<!std::is_same<Backend, OtherBackend>::value, void>::type
-  rebuild(std::shared_ptr<distributed_matrix<OtherBackend>> A,
+  rebuild(std::shared_ptr<DistributedMatrix<OtherBackend>> A,
           const backend_params& bprm = backend_params())
   {
     return rebuild(std::make_shared<matrix>(*A), bprm);

@@ -67,7 +67,7 @@ class schur_pressure_correction
   typedef typename backend_type::vector vector;
   typedef typename backend_type::params backend_params;
 
-  typedef distributed_matrix<backend_type> matrix;
+  typedef DistributedMatrix<backend_type> matrix;
 
   typedef typename backend::BuiltinBackend<value_type>::matrix build_matrix;
 
@@ -639,7 +639,7 @@ class schur_pressure_correction
 
  private:
 
-  typedef comm_pattern<backend_type> CommPattern;
+  typedef CommunicationPattern<backend_type> CommPattern;
   communicator comm;
 
   std::shared_ptr<bmatrix> x2p, x2u, p2x, u2x;

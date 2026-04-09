@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
     prof.toc("assemble");
 
     typedef Alina::backend::BuiltinBackend<double>         Backend;
-    typedef Alina::mpi::distributed_matrix<Backend> Matrix;
+    typedef Alina::mpi::DistributedMatrix<Backend> Matrix;
 
     prof.tic("create distributed version");
     Matrix A(world, std::tie(chunk, ptr, col, val), chunk);

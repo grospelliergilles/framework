@@ -46,7 +46,7 @@ namespace mpi {
 namespace partition {
 
 template <class Backend, class Ptr, class Col>
-void symm_graph(const distributed_matrix<Backend> &A,
+void symm_graph(const DistributedMatrix<Backend> &A,
         std::vector<Ptr> &ptr, std::vector<Col> &col)
 {
     typedef typename Backend::value_type value_type;
@@ -257,7 +257,7 @@ std::tuple<ptrdiff_t, ptrdiff_t> graph_perm_index(
 }
 
 template <class Backend, class Idx>
-std::shared_ptr< distributed_matrix<Backend> > graph_perm_matrix(
+std::shared_ptr< DistributedMatrix<Backend> > graph_perm_matrix(
         communicator comm, ptrdiff_t col_beg, ptrdiff_t col_end,
         const std::vector<Idx> &perm)
 {
@@ -313,7 +313,7 @@ std::shared_ptr< distributed_matrix<Backend> > graph_perm_matrix(
     }
 
     ARCANE_ALINA_TOC("perm matrix");
-    return std::make_shared< distributed_matrix<Backend> >(comm, i_loc, i_rem);
+    return std::make_shared< DistributedMatrix<Backend> >(comm, i_loc, i_rem);
 }
 
 } // namespace partition

@@ -50,8 +50,8 @@ struct pmis
 {
   typedef typename Backend::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
-  typedef distributed_matrix<Backend> matrix;
-  typedef comm_pattern<Backend> CommPattern;
+  typedef DistributedMatrix<Backend> matrix;
+  typedef CommunicationPattern<Backend> CommPattern;
   typedef backend::CSRMatrix<value_type> build_matrix;
   typedef backend::BuiltinBackend<char> bool_backend;
   typedef backend::CSRMatrix<char> bool_matrix;
@@ -89,7 +89,7 @@ struct pmis
 
   } & prm;
 
-  std::shared_ptr<distributed_matrix<bool_backend>> conn;
+  std::shared_ptr<DistributedMatrix<bool_backend>> conn;
   std::shared_ptr<matrix> p_tent;
 
   pmis(const matrix& A, params& prm)
@@ -113,7 +113,7 @@ struct pmis
 
       assert(np * prm.block_size == n && "Matrix size should be divisible by block_size");
 
-      distributed_matrix<sbackend> A_pw(A.comm(),
+      DistributedMatrix<sbackend> A_pw(A.comm(),
                                         pointwise_matrix(*A.local(), prm.block_size),
                                         pointwise_matrix(*A.remote(), prm.block_size));
 
@@ -124,7 +124,7 @@ struct pmis
 
       ptrdiff_t naggr = aggregates(*conn_pw, state_pw, owner_pw);
 
-      conn = std::make_shared<distributed_matrix<bool_backend>>(
+      conn = std::make_shared<DistributedMatrix<bool_backend>>(
       A.comm(),
       expand_conn(*A.local(), *A_pw.local(), *conn_pw->local(), prm.block_size),
       expand_conn(*A.remote(), *A_pw.remote(), *conn_pw->remote(), prm.block_size));
@@ -145,10 +145,10 @@ struct pmis
     }
   }
 
-  std::shared_ptr<distributed_matrix<bool_backend>>
-  squared_interface(const distributed_matrix<bool_backend>& A)
+  std::shared_ptr<DistributedMatrix<bool_backend>>
+  squared_interface(const DistributedMatrix<bool_backend>& A)
   {
-    const comm_pattern<bool_backend>& C = A.cpat();
+    const CommunicationPattern<bool_backend>& C = A.cpat();
 
     bool_matrix& A_loc = *A.local();
     bool_matrix& A_rem = *A.remote();
@@ -336,12 +336,12 @@ struct pmis
     }
     ARCANE_ALINA_TOC("compute");
 
-    return std::make_shared<distributed_matrix<bool_backend>>(A.comm(), s_loc, s_rem);
+    return std::make_shared<DistributedMatrix<bool_backend>>(A.comm(), s_loc, s_rem);
   }
 
   template <class B>
-  std::shared_ptr<distributed_matrix<bool_backend>>
-  conn_strength(const distributed_matrix<B>& A, scalar_type eps_strong)
+  std::shared_ptr<DistributedMatrix<bool_backend>>
+  conn_strength(const DistributedMatrix<B>& A, scalar_type eps_strong)
   {
     typedef typename B::value_type val_type;
     typedef backend::CSRMatrix<val_type> B_matrix;
@@ -351,7 +351,7 @@ struct pmis
 
     const B_matrix& A_loc = *A.local();
     const B_matrix& A_rem = *A.remote();
-    const comm_pattern<B>& C = A.cpat();
+    const CommunicationPattern<B>& C = A.cpat();
 
     scalar_type eps_squared = eps_strong * eps_strong;
 
@@ -420,10 +420,10 @@ struct pmis
     }
     ARCANE_ALINA_TOC("conn_strength");
 
-    return std::make_shared<distributed_matrix<bool_backend>>(A.comm(), s_loc, s_rem);
+    return std::make_shared<DistributedMatrix<bool_backend>>(A.comm(), s_loc, s_rem);
   }
 
-  ptrdiff_t aggregates(const distributed_matrix<bool_backend>& A,
+  ptrdiff_t aggregates(const DistributedMatrix<bool_backend>& A,
                        std::vector<ptrdiff_t>& loc_state,
                        std::vector<int>& loc_owner)
   {
@@ -443,7 +443,7 @@ struct pmis
     auto S = squared_interface(A);
     const bool_matrix& S_loc = *S->local();
     const bool_matrix& S_rem = *S->remote();
-    const comm_pattern<bool_backend>& Sp = S->cpat();
+    const CommunicationPattern<bool_backend>& Sp = S->cpat();
     ARCANE_ALINA_TOC("symbolic square");
 
     // 2. Apply PMIS algorithm to the symbolic square.
