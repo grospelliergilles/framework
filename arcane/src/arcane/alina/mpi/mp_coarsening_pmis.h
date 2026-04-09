@@ -912,7 +912,7 @@ struct pmis
 
 #pragma omp parallel
       {
-        Alina::detail::QR<double> qr;
+        Alina::detail::QRFactorization<double> qr;
         std::vector<double> Bpart;
 
 #pragma omp for

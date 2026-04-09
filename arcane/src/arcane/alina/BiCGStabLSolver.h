@@ -496,7 +496,7 @@ class BiCGStabLSolver
 
   mutable multi_array<coef_type, 2> MZa, MZb;
   mutable std::vector<coef_type> Y0, YL;
-  mutable Alina::detail::QR<coef_type> qr;
+  mutable Alina::detail::QRFactorization<coef_type> qr;
 
   InnerProduct inner_product;
 

@@ -68,7 +68,7 @@ void qr_factorize(int n, int m)
 
   boost::multi_array<value_type, 2> A = A0;
 
-  Alina::detail::QR<value_type> qr;
+  Alina::detail::QRFactorization<value_type> qr;
 
   qr.factorize(n, m, A.data(), order);
 
@@ -106,7 +106,7 @@ void qr_solve(int n, int m)
 
   boost::multi_array<value_type, 2> A = A0;
 
-  Alina::detail::QR<value_type> qr;
+  Alina::detail::QRFactorization<value_type> qr;
 
   std::vector<rhs_type> f0(n, Alina::math::constant<rhs_type>(1));
   std::vector<rhs_type> f = f0;
@@ -197,7 +197,7 @@ TEST(alina_test_qr, qr_issue_39)
 
   boost::multi_array<double, 2> A = A0;
 
-  Alina::detail::QR<double> qr;
+  Alina::detail::QRFactorization<double> qr;
 
   qr.factorize(2, 2, A.data());
 

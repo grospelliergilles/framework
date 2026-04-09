@@ -120,17 +120,13 @@ inline T real(std::complex<T> a)
  * \brief In-place QR factorization of a dense matrix.
  */
 template <typename value_type, class Enable = void>
-class QR
+class QRFactorization
 {
  public:
 
-  QR()
-  : m(0)
-  , n(0)
-  , row_stride(0)
-  , col_stride(0)
-  , r(NULL)
-  {}
+  QRFactorization() = default;
+
+ public:
 
   void compute(int rows, int cols, int row_stride, int col_stride, value_type* A)
   {
@@ -355,9 +351,12 @@ class QR
 
   static scalar_type sqr(scalar_type x) { return x * x; }
 
-  int m, n, row_stride, col_stride;
+  int m = 0;
+  int n = 0;
+  int row_stride = 0;
+  int col_stride = 0;
 
-  value_type* r;
+  value_type* r = nullptr;
   std::vector<value_type> tau, f;
   std::vector<value_type> q;
 
@@ -498,13 +497,13 @@ class QR
 /*---------------------------------------------------------------------------*/
 
 template <class value_type>
-class QR<value_type, typename std::enable_if<math::is_static_matrix<value_type>::value>::type>
+class QRFactorization<value_type, typename std::enable_if<math::is_static_matrix<value_type>::value>::type>
 {
  public:
 
   typedef typename Alina::math::rhs_of<value_type>::type rhs_type;
 
-  QR() {}
+  QRFactorization() {}
 
   void compute(int rows, int cols, int row_stride, int col_stride, value_type* A)
   {
@@ -614,7 +613,7 @@ class QR<value_type, typename std::enable_if<math::is_static_matrix<value_type>:
   int m, n;
   value_type* r;
 
-  QR<scalar_type> base;
+  QRFactorization<scalar_type> base;
   std::vector<scalar_type> buf;
 
   void copy_to_scalar_buf(int rows, int cols, int row_stride, int col_stride, value_type* A)

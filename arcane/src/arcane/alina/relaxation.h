@@ -2017,7 +2017,7 @@ struct spai1
       std::vector<ptrdiff_t> marker(m, -1);
       std::vector<ptrdiff_t> I, J;
       std::vector<value_type> B, ek;
-      Alina::detail::QR<value_type> qr;
+      Alina::detail::QRFactorization<value_type> qr;
 
 #pragma omp for
       for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i) {
