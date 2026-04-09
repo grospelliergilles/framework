@@ -1,35 +1,27 @@
-#ifndef ARCANE_ALINA_MPI_PRECONDITIONER_HPP
-#define ARCANE_ALINA_MPI_PRECONDITIONER_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* DistributedPreconditioner.h                                 (C) 2026-2026 */
+/*                                                                           */
+/* Runtime wrapper around mpi preconditioners.                               */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDPRECONDITIONER_H
+#define ARCANE_ALINA_MPI_DISTRIBUTEDPRECONDITIONER_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   alina/mpi/preconditioner.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Runtime wrapper around mpi preconditioners.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <iostream>
 
@@ -42,279 +34,259 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/DistributedMatrix.h>
 #include <arcane/alina/mpi/mp_util.h>
 
-namespace Arcane::Alina {
-namespace runtime {
-namespace mpi {
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+namespace Arcane::Alina::runtime::mpi
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 /// Preconditioner kinds.
-namespace precond_class {
-enum type {
-    amg,            ///< AMG
-    relaxation      ///< Single-level relaxation
-};
-
-inline std::ostream& operator<<(std::ostream &os, type p) {
-    switch (p) {
-        case amg:
-            return os << "amg";
-        case relaxation:
-            return os << "relaxation";
-        default:
-            return os << "???";
-    }
-}
-
-inline std::istream& operator>>(std::istream &in, type &p)
+namespace precond_class
 {
+  enum type
+  {
+    amg, ///< AMG
+    relaxation ///< Single-level relaxation
+  };
+
+  inline std::ostream& operator<<(std::ostream& os, type p)
+  {
+    switch (p) {
+    case amg:
+      return os << "amg";
+    case relaxation:
+      return os << "relaxation";
+    default:
+      return os << "???";
+    }
+  }
+
+  inline std::istream& operator>>(std::istream& in, type& p)
+  {
     std::string val;
     in >> val;
 
     if (val == "amg")
-        p = amg;
+      p = amg;
     else if (val == "relaxation")
-        p = relaxation;
+      p = relaxation;
     else
-        throw std::invalid_argument("Invalid preconditioner class. "
-                "Valid choices are: amg, relaxation");
+      throw std::invalid_argument("Invalid preconditioner class. "
+                                  "Valid choices are: amg, relaxation");
 
     return in;
-}
+  }
 } // namespace precond_class
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Distributed Preconditioner.
+ */
 template <class Backend>
-class preconditioner {
-    public:
-        typedef Backend backend_type;
-        typedef typename backend_type::params backend_params;
-        typedef Alina::PropertyTree params;
-        typedef typename backend_type::value_type value_type;
-        typedef Alina::mpi::DistributedMatrix<backend_type> matrix;
+class DistributedPreconditioner
+{
+ public:
 
-        template <class Matrix>
-        preconditioner(
-                Alina::mpi::communicator comm,
-                const Matrix &Astrip,
-                params prm = params(),
-                const backend_params &bprm = backend_params()
-                ) : _class(prm.get("class", precond_class::amg)), handle(0)
-        {
-            init(std::make_shared<matrix>(comm, Astrip, backend::rows(Astrip)), prm, bprm);
-        }
+  typedef Backend backend_type;
+  typedef typename backend_type::params backend_params;
+  typedef Alina::PropertyTree params;
+  typedef typename backend_type::value_type value_type;
+  typedef Alina::mpi::DistributedMatrix<backend_type> matrix;
 
-        preconditioner(
-                Alina::mpi::communicator,
-                std::shared_ptr<matrix> A,
-                params prm = params(),
-                const backend_params &bprm = backend_params()
-                ) : _class(prm.get("class", precond_class::amg)), handle(0)
-        {
-            init(A, prm, bprm);
-        }
+  template <class Matrix>
+  DistributedPreconditioner(Alina::mpi::communicator comm,
+                            const Matrix& Astrip,
+                            params prm = params(),
+                            const backend_params& bprm = backend_params())
+  : _class(prm.get("class", precond_class::amg))
+  , handle(0)
+  {
+    init(std::make_shared<matrix>(comm, Astrip, backend::rows(Astrip)), prm, bprm);
+  }
 
-        ~preconditioner() {
-            switch (_class) {
-                case precond_class::amg:
-                    {
-                        typedef
-                            Alina::mpi::AMG<
-                                Backend,
-                                Alina::runtime::mpi::coarsening::wrapper<Backend>,
-                                Alina::runtime::mpi::relaxation::wrapper<Backend>,
-                                Alina::runtime::mpi::direct::solver<value_type>,
-                                Alina::runtime::mpi::partition::wrapper<Backend>
-                                >
-                            Precond;
+  DistributedPreconditioner(Alina::mpi::communicator,
+                            std::shared_ptr<matrix> A,
+                            params prm = params(),
+                            const backend_params& bprm = backend_params())
+  : _class(prm.get("class", precond_class::amg))
+  , handle(0)
+  {
+    init(A, prm, bprm);
+  }
 
-                        delete static_cast<Precond*>(handle);
-                    }
-                    break;
-                case precond_class::relaxation:
-                    {
-                        typedef
-                            Alina::mpi::relaxation::as_preconditioner<
-                                Alina::runtime::mpi::relaxation::wrapper<Backend>
-                                >
-                            Precond;
+  ~DistributedPreconditioner()
+  {
+    switch (_class) {
+    case precond_class::amg: {
+      typedef Alina::mpi::AMG<
+      Backend,
+      Alina::runtime::mpi::coarsening::wrapper<Backend>,
+      Alina::runtime::mpi::relaxation::wrapper<Backend>,
+      Alina::runtime::mpi::direct::solver<value_type>,
+      Alina::runtime::mpi::partition::wrapper<Backend>>
+      Precond;
 
-                        delete static_cast<Precond*>(handle);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
+      delete static_cast<Precond*>(handle);
+    } break;
+    case precond_class::relaxation: {
+      typedef Alina::mpi::relaxation::as_preconditioner<
+      Alina::runtime::mpi::relaxation::wrapper<Backend>>
+      Precond;
 
-        template <class Matrix>
-        void rebuild(
-                const Matrix &A,
-                const backend_params &bprm = backend_params()
-                )
-        {
-            switch (_class) {
-                case precond_class::amg:
-                    {
-                        typedef
-                            Alina::mpi::AMG<
-                                Backend,
-                                Alina::runtime::mpi::coarsening::wrapper<Backend>,
-                                Alina::runtime::mpi::relaxation::wrapper<Backend>,
-                                Alina::runtime::mpi::direct::solver<value_type>,
-                                Alina::runtime::mpi::partition::wrapper<Backend>
-                                >
-                            Precond;
+      delete static_cast<Precond*>(handle);
+    } break;
+    default:
+      break;
+    }
+  }
 
-                        static_cast<Precond*>(handle)->rebuild(A, bprm);
-                    }
-                    break;
-                default:
-                    std::cerr << "rebuild is a noop unless the preconditioner is AMG" << std::endl;
-                    return;
-            }
-        }
+  template <class Matrix>
+  void rebuild(const Matrix& A,
+               const backend_params& bprm = backend_params())
+  {
+    switch (_class) {
+    case precond_class::amg: {
+      typedef Alina::mpi::AMG<Backend,
+                              Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                              Alina::runtime::mpi::relaxation::wrapper<Backend>,
+                              Alina::runtime::mpi::direct::solver<value_type>,
+                              Alina::runtime::mpi::partition::wrapper<Backend>>
+      Precond;
 
-        template <class Vec1, class Vec2>
-        void apply(const Vec1 &rhs, Vec2 &&x) const {
-            switch(_class) {
-                case precond_class::amg:
-                    {
-                        typedef
-                            Alina::mpi::AMG<
-                                Backend,
-                                Alina::runtime::mpi::coarsening::wrapper<Backend>,
-                                Alina::runtime::mpi::relaxation::wrapper<Backend>,
-                                Alina::runtime::mpi::direct::solver<value_type>,
-                                Alina::runtime::mpi::partition::wrapper<Backend>
-                                >
-                            Precond;
+      static_cast<Precond*>(handle)->rebuild(A, bprm);
+    } break;
+    default:
+      std::cerr << "rebuild is a noop unless the preconditioner is AMG" << std::endl;
+      return;
+    }
+  }
 
-                        static_cast<Precond*>(handle)->apply(rhs, x);
-                    }
-                    break;
-                case precond_class::relaxation:
-                    {
-                        typedef
-                            Alina::mpi::relaxation::as_preconditioner<
-                                Alina::runtime::mpi::relaxation::wrapper<Backend>
-                                >
-                            Precond;
+  template <class Vec1, class Vec2>
+  void apply(const Vec1& rhs, Vec2&& x) const
+  {
+    switch (_class) {
+    case precond_class::amg: {
+      typedef Alina::mpi::AMG<Backend,
+                              Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                              Alina::runtime::mpi::relaxation::wrapper<Backend>,
+                              Alina::runtime::mpi::direct::solver<value_type>,
+                              Alina::runtime::mpi::partition::wrapper<Backend>>
+      Precond;
 
-                        static_cast<Precond*>(handle)->apply(rhs, x);
-                    }
-                    break;
-                default:
-                    throw std::invalid_argument("Unsupported preconditioner class");
-            }
-        }
+      static_cast<Precond*>(handle)->apply(rhs, x);
+    } break;
+    case precond_class::relaxation: {
+      typedef Alina::mpi::relaxation::as_preconditioner<
+      Alina::runtime::mpi::relaxation::wrapper<Backend>>
+      Precond;
 
-        /// Returns the system matrix from the finest level.
-        std::shared_ptr<matrix> system_matrix_ptr() const {
-            switch(_class) {
-                case precond_class::amg:
-                    {
-                        typedef
-                            Alina::mpi::AMG<
-                                Backend,
-                                Alina::runtime::mpi::coarsening::wrapper<Backend>,
-                                Alina::runtime::mpi::relaxation::wrapper<Backend>,
-                                Alina::runtime::mpi::direct::solver<value_type>,
-                                Alina::runtime::mpi::partition::wrapper<Backend>
-                                >
-                            Precond;
+      static_cast<Precond*>(handle)->apply(rhs, x);
+    } break;
+    default:
+      throw std::invalid_argument("Unsupported preconditioner class");
+    }
+  }
 
-                        return static_cast<Precond*>(handle)->system_matrix_ptr();
-                    }
-                case precond_class::relaxation:
-                    {
-                        typedef
-                            Alina::mpi::relaxation::as_preconditioner<
-                                Alina::runtime::mpi::relaxation::wrapper<Backend>
-                                >
-                            Precond;
+  /// Returns the system matrix from the finest level.
+  std::shared_ptr<matrix> system_matrix_ptr() const
+  {
+    switch (_class) {
+    case precond_class::amg: {
+      typedef Alina::mpi::AMG<Backend,
+                              Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                              Alina::runtime::mpi::relaxation::wrapper<Backend>,
+                              Alina::runtime::mpi::direct::solver<value_type>,
+                              Alina::runtime::mpi::partition::wrapper<Backend>>
+      Precond;
 
-                        return static_cast<Precond*>(handle)->system_matrix_ptr();
-                    }
-                default:
-                    throw std::invalid_argument("Unsupported preconditioner class");
-            }
-        }
+      return static_cast<Precond*>(handle)->system_matrix_ptr();
+    }
+    case precond_class::relaxation: {
+      typedef Alina::mpi::relaxation::as_preconditioner<
+      Alina::runtime::mpi::relaxation::wrapper<Backend>>
+      Precond;
 
-        const matrix& system_matrix() const {
-            return *system_matrix_ptr();
-        }
+      return static_cast<Precond*>(handle)->system_matrix_ptr();
+    }
+    default:
+      throw std::invalid_argument("Unsupported preconditioner class");
+    }
+  }
 
-        friend std::ostream& operator<<(std::ostream &os, const preconditioner &p) {
-            switch(p._class) {
-                case precond_class::amg:
-                    {
-                        typedef
-                            Alina::mpi::AMG<
-                                Backend,
-                                Alina::runtime::mpi::coarsening::wrapper<Backend>,
-                                Alina::runtime::mpi::relaxation::wrapper<Backend>,
-                                Alina::runtime::mpi::direct::solver<value_type>,
-                                Alina::runtime::mpi::partition::wrapper<Backend>
-                                >
-                            Precond;
+  const matrix& system_matrix() const
+  {
+    return *system_matrix_ptr();
+  }
 
-                        return os << *static_cast<Precond*>(p.handle);
-                    }
-                case precond_class::relaxation:
-                    {
-                        typedef
-                            Alina::mpi::relaxation::as_preconditioner<
-                                Alina::runtime::mpi::relaxation::wrapper<Backend>
-                                >
-                            Precond;
+  friend std::ostream& operator<<(std::ostream& os, const DistributedPreconditioner& p)
+  {
+    switch (p._class) {
+    case precond_class::amg: {
+      typedef Alina::mpi::AMG<Backend,
+                              Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                              Alina::runtime::mpi::relaxation::wrapper<Backend>,
+                              Alina::runtime::mpi::direct::solver<value_type>,
+                              Alina::runtime::mpi::partition::wrapper<Backend>>
+      Precond;
 
-                        return os << *static_cast<Precond*>(p.handle);
-                    }
-                default:
-                    throw std::invalid_argument("Unsupported preconditioner class");
-            }
-        }
+      return os << *static_cast<Precond*>(p.handle);
+    }
+    case precond_class::relaxation: {
+      typedef Alina::mpi::relaxation::as_preconditioner<
+      Alina::runtime::mpi::relaxation::wrapper<Backend>>
+      Precond;
 
-    private:
-        precond_class::type _class;
-        void *handle;
+      return os << *static_cast<Precond*>(p.handle);
+    }
+    default:
+      throw std::invalid_argument("Unsupported preconditioner class");
+    }
+  }
 
-        void init(std::shared_ptr<matrix> A, params &prm, const backend_params &bprm) {
-            if (!prm.erase("class")) ARCANE_ALINA_PARAM_MISSING("class");
+ private:
 
-            switch(_class) {
-                case precond_class::amg:
-                    {
-                        typedef
-                            Alina::mpi::AMG<
-                                Backend,
-                                Alina::runtime::mpi::coarsening::wrapper<Backend>,
-                                Alina::runtime::mpi::relaxation::wrapper<Backend>,
-                                Alina::runtime::mpi::direct::solver<value_type>,
-                                Alina::runtime::mpi::partition::wrapper<Backend>
-                                >
-                            Precond;
+  precond_class::type _class;
+  void* handle;
 
-                        handle = static_cast<void*>(new Precond(A->comm(), A, prm, bprm));
-                    }
-                    break;
-                case precond_class::relaxation:
-                    {
-                        typedef
-                            Alina::mpi::relaxation::as_preconditioner<
-                                Alina::runtime::mpi::relaxation::wrapper<Backend>
-                                >
-                            Precond;
+  void init(std::shared_ptr<matrix> A, params& prm, const backend_params& bprm)
+  {
+    if (!prm.erase("class"))
+      ARCANE_ALINA_PARAM_MISSING("class");
 
-                        handle = static_cast<void*>(new Precond(A->comm(), A, prm, bprm));
-                    }
-                    break;
-                default:
-                    throw std::invalid_argument("Unsupported preconditioner class");
-            }
-        }
+    switch (_class) {
+    case precond_class::amg: {
+      typedef Alina::mpi::AMG<Backend,
+                              Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                              Alina::runtime::mpi::relaxation::wrapper<Backend>,
+                              Alina::runtime::mpi::direct::solver<value_type>,
+                              Alina::runtime::mpi::partition::wrapper<Backend>>
+      Precond;
+
+      handle = static_cast<void*>(new Precond(A->comm(), A, prm, bprm));
+    } break;
+    case precond_class::relaxation: {
+      typedef Alina::mpi::relaxation::as_preconditioner<
+      Alina::runtime::mpi::relaxation::wrapper<Backend>>
+      Precond;
+
+      handle = static_cast<void*>(new Precond(A->comm(), A, prm, bprm));
+    } break;
+    default:
+      throw std::invalid_argument("Unsupported preconditioner class");
+    }
+  }
 };
 
-} // namespace mpi
-} // namespace runtime
-} // namespace amgcl
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::runtime::mpi
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif

@@ -13,7 +13,6 @@
 #define ARCANE_ALINA_MPI_DISTRIBUTED_MATRIX_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
 /*
  * This file is based on the work on AMGCL library (version march 2026)
  * which can be found at https://github.com/ddemidov/amgcl.
@@ -21,7 +20,6 @@
  * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
  * SPDX-License-Identifier: MIT
  */
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
