@@ -42,7 +42,7 @@ add_arcane_alina_example(cpr_drs cpr_drs.cc ${SAMPLE_MATRIX_ARGS})
 add_arcane_alina_example(ns_search ns_search.cc ${SAMPLE_MATRIX_ARGS})
 add_arcane_alina_example_no_test(schur_pressure_correction schur_pressure_correction.cc)
 add_arcane_alina_example_no_test(schurpc_mixed schurpc_mixed.cc)
-add_arcane_alina_example_no_test(deflated_solver deflated_solver.cc)
+add_arcane_alina_example_no_test(deflated_solver DeflatedSolver.cc)
 
 target_link_libraries(ublas PUBLIC ${Boost_SERIALIZATION_LIBRARY})
 
