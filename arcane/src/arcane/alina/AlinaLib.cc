@@ -5,7 +5,7 @@
 #include <boost/range/iterator_range.hpp>
 
 #include <arcane/alina/RelaxationRuntime.h>
-#include <arcane/alina/RuntimeCoarsening.h>
+#include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/solver_runtime.h>
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/AMG.h>
@@ -26,7 +26,7 @@ using namespace Arcane;
 //---------------------------------------------------------------------------
 
 typedef Alina::backend::BuiltinBackend<double> Backend;
-typedef Alina::AMG<Backend, Alina::runtime::coarsening::RuntimeCoarsening, Alina::runtime::relaxation::RuntimeRelaxation> AMG;
+typedef Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation> AMG;
 typedef Alina::runtime::solver::wrapper<Backend>  ISolver;
 typedef Alina::make_solver<AMG, ISolver> Solver;
 typedef Alina::PropertyTree Params;

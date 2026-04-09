@@ -16,7 +16,7 @@
 #include <boost/program_options.hpp>
 
 #include <arcane/alina/AMG.h>
-#include <arcane/alina/RuntimeCoarsening.h>
+#include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/mpi/mp_subdomain_deflation.h>
 #include <arcane/alina/mpi/mp_solver_runtime.h>
@@ -313,7 +313,7 @@ int main(int argc, char *argv[]) {
         Alina::mpi::subdomain_deflation<
             Alina::AMG<
                 Alina::backend::BuiltinBackend<double>,
-                Alina::runtime::coarsening::RuntimeCoarsening,
+                Alina::runtime::coarsening::CoarseningRuntime,
                 Alina::runtime::relaxation::RuntimeRelaxation
                 >,
             Alina::runtime::mpi::solver::wrapper<Alina::backend::BuiltinBackend<double>>,

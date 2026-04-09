@@ -89,14 +89,14 @@ inline std::istream& operator>>(std::istream& in, type& c)
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct RuntimeCoarsening
+struct CoarseningRuntime
 {
   typedef Alina::PropertyTree params;
   type c;
   bool as_scalar;
   void* handle = nullptr;
 
-  explicit RuntimeCoarsening(params prm = params())
+  explicit CoarseningRuntime(params prm = params())
   : c(prm.get("type", runtime::coarsening::smoothed_aggregation))
   {
     if (!prm.erase("type"))
@@ -133,7 +133,7 @@ struct RuntimeCoarsening
     }
   }
 
-  ~RuntimeCoarsening()
+  ~CoarseningRuntime()
   {
     switch (c) {
 

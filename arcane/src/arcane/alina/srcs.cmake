@@ -21,7 +21,7 @@ set(ARCANE_SOURCES
   coarsening.h
   coarsening_detail_galerkin.h
   coarsening_detail_scaled_galerkin.h
-  RuntimeCoarsening.h
+        CoarseningRuntime.h
   DeflatedSolver.h
   detail_inverse.h
   detail_qr.h
