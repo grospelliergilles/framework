@@ -38,7 +38,7 @@ set(ARCANE_SOURCES
   CPRDynamicRowSumPreconditioner.h
   CPRPreconditioner.h
   DummyPreconditioner.h
-  preconditioner_runtime.h
+        PreconditionerRuntime.h
   SchurPressureCorrectionPreconditioner.h
   perf_counter_mpi_aggregator.h
   profiler.h
