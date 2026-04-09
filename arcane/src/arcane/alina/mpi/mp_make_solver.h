@@ -129,14 +129,13 @@ class make_solver : public Alina::detail::non_copyable {
         {}
 
         template <class Matrix, class Vec1, class Vec2>
-        std::tuple<size_t, scalar_type> operator()(
-                const Matrix &A, const Vec1 &rhs, Vec2 &&x) const
+        SolverResult operator()(const Matrix &A, const Vec1 &rhs, Vec2 &&x) const
         {
             return S(A, P, rhs, x);
         }
 
         template <class Vec1, class Vec2>
-        std::tuple<size_t, scalar_type> operator()(const Vec1 &rhs, Vec2 &&x) const {
+        SolverResult operator()(const Vec1 &rhs, Vec2 &&x) const {
             return S(P, rhs, x);
         }
 

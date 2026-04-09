@@ -172,20 +172,17 @@ int main(int argc, char* argv[])
     if (world.rank == 0) std::cout << solve << std::endl;
 
     // Solve the system with the zero initial approximation:
-    int iters;
-    double error;
     std::vector<double> x(chunk, 0.0);
 
     prof.tic("solve");
-    std::tie(iters, error) = solve(*A, rhs, x);
+    SolverResult r = solve(*A, rhs, x);
     prof.toc("solve");
 
     // Output the number of iterations, the relative error,
     // and the profiling data:
     if (world.rank == 0) {
-        std::cout
-            << "Iters: " << iters << std::endl
-            << "Error: " << error << std::endl
-            << prof << std::endl;
+        std::cout << "Iters: " << r.nbIteration() << std::endl
+                  << "Error: " << r.residual() << std::endl
+                  << prof << std::endl;
     }
 }

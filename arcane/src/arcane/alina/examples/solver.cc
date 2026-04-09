@@ -2,6 +2,10 @@
 #include <string>
 #include <random>
 
+// To remove warnings about deprecated Eigen usage.
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#pragma GCC diagnostic ignored "-Wint-in-bool-context"
+
 #include <boost/program_options.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>

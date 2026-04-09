@@ -5,12 +5,12 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* solver_cg.h                                                 (C) 2026-2026 */
+/* ConjugateGradientSolver.h                                   (C) 2026-2026 */
 /*                                                                           */
-/* Conjugate Gradient method.                                 .              */
+/* Conjugate Gradient method.                                                */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_CG_H
-#define ARCANE_ALINA_CG_H
+#ifndef ARCANE_ALINA_CONJUGATEGRADIENTSOLVER_H
+#define ARCANE_ALINA_CONJUGATEGRADIENTSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -114,8 +114,8 @@ class ConjugateGradientSolver
 
   /// Preallocates necessary data structures for the system of size \p n.
   ConjugateGradientSolver(size_t n, const params& prm = params(),
-                    const backend_params& backend_prm = backend_params(),
-                    const InnerProduct& inner_product = InnerProduct())
+                          const backend_params& backend_prm = backend_params(),
+                          const InnerProduct& inner_product = InnerProduct())
   : prm(prm)
   , n(n)
   , r(Backend::create_vector(n, backend_prm))
@@ -138,8 +138,7 @@ class ConjugateGradientSolver
    * good preconditioner for several subsequent time steps [DeSh12]_.
    */
   template <class Matrix, class Precond, class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type>
-  operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
+  SolverResult operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
     static const coef_type one = math::identity<coef_type>();
     static const coef_type zero = math::zero<coef_type>();
@@ -153,7 +152,7 @@ class ConjugateGradientSolver
       }
       else {
         backend::clear(x);
-        return std::make_tuple(0, norm_rhs);
+        return SolverResult(0, norm_rhs);
       }
     }
 
@@ -189,7 +188,7 @@ class ConjugateGradientSolver
         std::cout << iter << "\t" << std::scientific << res_norm / norm_rhs << std::endl;
     }
 
-    return std::make_tuple(iter, res_norm / norm_rhs);
+    return SolverResult(iter, res_norm / norm_rhs);
   }
 
   /*!
@@ -203,8 +202,7 @@ class ConjugateGradientSolver
    * solution on output.
    */
   template <class Precond, class Vec1, class Vec2>
-  std::tuple<size_t, scalar_type>
-  operator()(const Precond& P, const Vec1& rhs, Vec2&& x) const
+  SolverResult operator()(const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
     return (*this)(P.system_matrix(), P, rhs, x);
   }

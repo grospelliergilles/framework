@@ -9,6 +9,10 @@
 #include <omp.h>
 #endif
 
+// To remove warnings about deprecated Eigen usage.
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#pragma GCC diagnostic ignored "-Wint-in-bool-context"
+
 #if defined(SOLVER_BACKEND_CUDA)
 // This seems not defined with CUDA
 namespace boost::math
