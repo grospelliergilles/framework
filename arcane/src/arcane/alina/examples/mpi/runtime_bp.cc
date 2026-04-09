@@ -225,7 +225,7 @@ int main(int argc, char *argv[]) {
     if (single_level)
         prm.put("precond.class", "relaxation");
 
-    std::tie(iters, error) = solve<Alina::runtime::preconditioner>(
+    std::tie(iters, error) = solve<Alina::runtime::PreconditionerRuntime>(
             world, prm, std::tie(chunk, ptr, col, val));
 
     if (world.rank == 0) {

@@ -190,7 +190,7 @@ int main(int argc, char* argv[])
     prm.put("precond.class", "relaxation");
 
   typedef Alina::backend::BuiltinBackend<double> Backend;
-  typedef Alina::DeflatedSolver<Alina::runtime::preconditioner<Backend>,
+  typedef Alina::DeflatedSolver<Alina::runtime::PreconditionerRuntime<Backend>,
                                 Alina::runtime::solver::wrapper<Backend>>
   Solver;
 

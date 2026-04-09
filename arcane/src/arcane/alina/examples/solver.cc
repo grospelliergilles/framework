@@ -69,7 +69,7 @@ std::tuple<size_t, double> block_solve(
     typedef Alina::backend::BuiltinBackend<value_type> BBackend;
 
     typedef Alina::make_solver<
-        Alina::runtime::preconditioner<BBackend>,
+        Alina::runtime::PreconditionerRuntime<BBackend>,
         Alina::runtime::solver::wrapper<BBackend>
         > Solver;
 
@@ -143,7 +143,7 @@ std::tuple<size_t, double> block_solve(
     typedef Alina::backend::vexcl<value_type> BBackend;
 
     typedef Alina::make_solver<
-        Alina::runtime::preconditioner<BBackend>,
+        Alina::runtime::PreconditionerRuntime<BBackend>,
         Alina::runtime::solver::wrapper<BBackend>
         > Solver;
 
@@ -249,7 +249,7 @@ std::tuple<size_t, double> scalar_solve(
 #endif
 
     typedef Alina::make_solver<
-        Alina::runtime::preconditioner<Backend>,
+        Alina::runtime::PreconditionerRuntime<Backend>,
         Alina::runtime::solver::wrapper<Backend>
         > Solver;
 

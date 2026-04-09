@@ -80,7 +80,7 @@ void solve_schur(const Matrix& K, const std::vector<double>& rhs, Alina::Propert
   case B: {                                             \
     typedef Backend<BlockMatrix<float, B, B>> BBackend; \
     typedef ::Arcane::Alina::make_block_solver<                   \
-        ::Arcane::Alina::runtime::preconditioner<BBackend>,       \
+        ::Arcane::Alina::runtime::PreconditionerRuntime<BBackend>,       \
         ::Arcane::Alina::runtime::solver::wrapper<BBackend> >     \
         PSolver;                                        \
     solve_schur<USolver, PSolver>(K, rhs, prm);         \
@@ -93,7 +93,7 @@ void solve_schur(int pb, const Matrix& K, const std::vector<double>& rhs, Alina:
   switch (pb) {
   case 1: {
     typedef Alina::make_solver<
-    Alina::runtime::preconditioner<Backend<float>>,
+    Alina::runtime::PreconditionerRuntime<Backend<float>>,
     Alina::runtime::solver::wrapper<Backend<float>>>
     PSolver;
     solve_schur<USolver, PSolver>(K, rhs, prm);
@@ -110,7 +110,7 @@ void solve_schur(int pb, const Matrix& K, const std::vector<double>& rhs, Alina:
   case B: { \
     typedef Backend<BlockMatrix<float, B, B>> BBackend; \
     typedef ::Arcane::Alina::make_block_solver< \
-    ::Arcane::Alina::runtime::preconditioner<BBackend>, \
+    ::Arcane::Alina::runtime::PreconditionerRuntime<BBackend>, \
     ::Arcane::Alina::runtime::solver::wrapper<BBackend>> \
     USolver; \
     solve_schur<USolver>(pb, K, rhs, prm); \
@@ -122,7 +122,7 @@ void solve_schur(int ub, int pb, const Matrix& K, const std::vector<double>& rhs
 {
   switch (ub) {
   case 1: {
-    using USolver = Alina::make_solver<Alina::runtime::preconditioner<Backend<float>>,
+    using USolver = Alina::make_solver<Alina::runtime::PreconditionerRuntime<Backend<float>>,
                                        Alina::runtime::solver::wrapper<Backend<float>>>;
     solve_schur<USolver>(pb, K, rhs, prm);
   } break;
