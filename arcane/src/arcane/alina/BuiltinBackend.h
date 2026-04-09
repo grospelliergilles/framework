@@ -43,7 +43,7 @@
 #include <arcane/alina/solver_skyline_lu.h>
 #include <arcane/alina/detail_inverse.h>
 #include <arcane/alina/detail_sort_row.h>
-#include <arcane/alina/detail_spgemm.h>
+#include <arcane/alina/SparseMatrixMatrixProduct.h>
 #include <arcane/alina/backend_detail_matrix_ops.h>
 #include <arcane/alina/CSRMatrix.h>
 

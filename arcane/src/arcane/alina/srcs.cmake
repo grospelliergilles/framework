@@ -21,12 +21,12 @@ set(ARCANE_SOURCES
   coarsening.h
   coarsening_detail_galerkin.h
   coarsening_detail_scaled_galerkin.h
-        CoarseningRuntime.h
+  CoarseningRuntime.h
   DeflatedSolver.h
   detail_inverse.h
   detail_qr.h
   detail_sort_row.h
-  detail_spgemm.h
+  SparseMatrixMatrixProduct.h
   EigenAdapter.h
   EigenBackend.h
   EpetraAdapter.h
@@ -38,7 +38,7 @@ set(ARCANE_SOURCES
   CPRDynamicRowSumPreconditioner.h
   CPRPreconditioner.h
   DummyPreconditioner.h
-        PreconditionerRuntime.h
+  PreconditionerRuntime.h
   SchurPressureCorrectionPreconditioner.h
   perf_counter_mpi_aggregator.h
   profiler.h
@@ -61,7 +61,7 @@ set(ARCANE_SOURCES
   solver_precond_side.h
   PreconditionerOnlySolver.h
   RichardsonSolver.h
-        SolverRuntime.h
+  SolverRuntime.h
   solver_skyline_lu.h
   util.h
   value_type_backend_interface.h
