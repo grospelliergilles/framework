@@ -285,7 +285,7 @@ int main(int argc, char *argv[]) {
     prof.tic("setup");
     typedef
         Alina::mpi::make_solver<
-            Alina::mpi::schur_pressure_correction<
+            Alina::mpi::DistributedSchurPressureCorrection<
                 Alina::mpi::make_solver<
                     Alina::mpi::block_preconditioner<
                         Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>

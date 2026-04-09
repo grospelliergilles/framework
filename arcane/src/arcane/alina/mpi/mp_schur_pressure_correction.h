@@ -5,12 +5,12 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* mp_schur_pressure_correction.h.h                            (C) 2026-2026 */
+/* DistributedSchurPressureCorrection.h                        (C) 2026-2026 */
 /*                                                                           */
 /* Distributed Schur complement pressure correction preconditioner.          */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_MP_SCHURPRESSURECORRECTION_H
-#define ARCANE_ALINA_MPI_MP_SCHURPRESSURECORRECTION_H
+#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDSCHURPRESSURECORRECTION_H
+#define ARCANE_ALINA_MPI_DISTRIBUTEDSCHURPRESSURECORRECTION_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -45,21 +45,18 @@ namespace Arcane::Alina::mpi
  * \brief Distributed Schur complement pressure correction preconditioner.
  */
 template <class USolver, class PSolver>
-class schur_pressure_correction
+class DistributedSchurPressureCorrection
 {
-  static_assert(
-  std::is_same<
-  typename USolver::backend_type,
-  typename PSolver::backend_type>::value,
-  "Backends for pressure and flow preconditioners should coincide!");
+  static_assert(std::is_same<
+                typename USolver::backend_type,
+                typename PSolver::backend_type>::value,
+                "Backends for pressure and flow preconditioners should coincide!");
 
  public:
 
   typedef
-  typename backend::detail::common_scalar_backend<
-  typename USolver::backend_type,
-  typename PSolver::backend_type>::type
-  backend_type;
+  typename backend::detail::common_scalar_backend<typename USolver::backend_type,
+                                                  typename PSolver::backend_type>::type backend_type;
 
   typedef typename backend_type::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
@@ -171,10 +168,10 @@ class schur_pressure_correction
   };
 
   template <class Matrix>
-  schur_pressure_correction(communicator comm,
-                            const Matrix& K,
-                            const params& prm = params(),
-                            const backend_params& bprm = backend_params())
+  DistributedSchurPressureCorrection(communicator comm,
+                                     const Matrix& K,
+                                     const params& prm = params(),
+                                     const backend_params& bprm = backend_params())
   : prm(prm)
   , comm(comm)
   {
@@ -182,10 +179,10 @@ class schur_pressure_correction
     init(bprm);
   }
 
-  schur_pressure_correction(communicator comm,
-                            std::shared_ptr<matrix> K,
-                            const params& prm = params(),
-                            const backend_params& bprm = backend_params())
+  DistributedSchurPressureCorrection(communicator comm,
+                                     std::shared_ptr<matrix> K,
+                                     const params& prm = params(),
+                                     const backend_params& bprm = backend_params())
   : prm(prm)
   , comm(comm)
   , K(K)
@@ -679,18 +676,18 @@ namespace Arcane::Alina::backend
 /*---------------------------------------------------------------------------*/
 
 template <class US, class PS, class Alpha, class Beta, class Vec1, class Vec2>
-struct spmv_impl<Alpha, mpi::schur_pressure_correction<US, PS>, Vec1, Beta, Vec2>
+struct spmv_impl<Alpha, mpi::DistributedSchurPressureCorrection<US, PS>, Vec1, Beta, Vec2>
 {
-  static void apply(Alpha alpha, const mpi::schur_pressure_correction<US, PS>& A, const Vec1& x, Beta beta, Vec2& y)
+  static void apply(Alpha alpha, const mpi::DistributedSchurPressureCorrection<US, PS>& A, const Vec1& x, Beta beta, Vec2& y)
   {
     A.spmv(alpha, x, beta, y);
   }
 };
 
 template <class US, class PS, class Vec1, class Vec2, class Vec3>
-struct residual_impl<mpi::schur_pressure_correction<US, PS>, Vec1, Vec2, Vec3>
+struct residual_impl<mpi::DistributedSchurPressureCorrection<US, PS>, Vec1, Vec2, Vec3>
 {
-  static void apply(const Vec1& rhs, const mpi::schur_pressure_correction<US, PS>& A, const Vec2& x, Vec3& r)
+  static void apply(const Vec1& rhs, const mpi::DistributedSchurPressureCorrection<US, PS>& A, const Vec2& x, Vec3& r)
   {
     backend::copy(rhs, r);
     A.spmv(-1, x, 1, r);
