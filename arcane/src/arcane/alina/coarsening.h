@@ -38,7 +38,7 @@
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/coarsening_detail_scaled_galerkin.h>
 #include <arcane/alina/util.h>
-#include <arcane/alina/detail_qr.h>
+#include <arcane/alina/QRFactorizationImpl.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/coarsening_detail_galerkin.h>

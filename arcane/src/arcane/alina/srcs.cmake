@@ -23,8 +23,8 @@ set(ARCANE_SOURCES
   coarsening_detail_scaled_galerkin.h
   CoarseningRuntime.h
   DeflatedSolver.h
-        DenseMatrixInverseImpl.h
-  detail_qr.h
+  DenseMatrixInverseImpl.h
+  QRFactorizationImpl.h
   detail_sort_row.h
   SparseMatrixMatrixProduct.h
   EigenAdapter.h

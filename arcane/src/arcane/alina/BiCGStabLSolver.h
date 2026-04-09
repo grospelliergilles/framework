@@ -65,7 +65,7 @@
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/solver_detail_default_inner_product.h>
 #include <arcane/alina/solver_precond_side.h>
-#include <arcane/alina/detail_qr.h>
+#include <arcane/alina/QRFactorizationImpl.h>
 #include <arcane/alina/util.h>
 
 /*---------------------------------------------------------------------------*/

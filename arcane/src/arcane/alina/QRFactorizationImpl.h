@@ -7,7 +7,7 @@
 /*---------------------------------------------------------------------------*/
 /* QRFactorizationImpl.h                                       (C) 2026-2026 */
 /*                                                                           */
-/* QR factorization of a dense matrix   .                                    */
+/* QR factorization of a dense matrix.                                       */
 /*---------------------------------------------------------------------------*/
 #ifndef ARCANE_ALINA_QRFACTORIZATIONIMPL_H
 #define ARCANE_ALINA_QRFACTORIZATIONIMPL_H
@@ -23,7 +23,6 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
- *
  * This is a port of ZGEQR2 procedure from LAPACK and its dependencies.
  * The original code included the following copyright notice:
  * \verbatim
