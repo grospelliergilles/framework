@@ -3,7 +3,7 @@
 
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/solver_runtime.h>
-#include <arcane/alina/coarsening_runtime.h>
+#include <arcane/alina/RuntimeCoarsening.h>
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/relaxation.h>
 #include <arcane/alina/make_solver.h>
@@ -52,7 +52,7 @@ void test_solver(const Matrix& A,
     prm.put("precond.coarsening.nullspace.B", &null[0]);
   }
 
-  Alina::make_solver<Alina::AMG<Backend, Alina::runtime::coarsening::wrapper, Alina::runtime::relaxation::wrapper>,
+  Alina::make_solver<Alina::AMG<Backend, Alina::runtime::coarsening::RuntimeCoarsening, Alina::runtime::relaxation::wrapper>,
                      Alina::runtime::solver::wrapper<Backend>>
   solve(A, prm, bprm);
 

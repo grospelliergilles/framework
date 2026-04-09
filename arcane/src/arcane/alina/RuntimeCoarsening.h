@@ -5,11 +5,11 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* coarsening_runtime.h                                        (C) 2000-2026 */
+/* RuntimeCoarsening.h                                         (C) 2000-2026 */
 /*                                                                           */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_COARSENING_RUNTIME_H
-#define ARCANE_ALINA_COARSENING_RUNTIME_H
+#ifndef ARCANE_ALINA_RUNTIMECOARSENING_H
+#define ARCANE_ALINA_RUNTIMECOARSENING_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -89,16 +89,15 @@ inline std::istream& operator>>(std::istream& in, type& c)
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct wrapper
+struct RuntimeCoarsening
 {
   typedef Alina::PropertyTree params;
   type c;
   bool as_scalar;
-  void* handle;
+  void* handle = nullptr;
 
-  wrapper(params prm = params())
+  explicit RuntimeCoarsening(params prm = params())
   : c(prm.get("type", runtime::coarsening::smoothed_aggregation))
-  , handle(0)
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");
@@ -134,7 +133,7 @@ struct wrapper
     }
   }
 
-  ~wrapper()
+  ~RuntimeCoarsening()
   {
     switch (c) {
 

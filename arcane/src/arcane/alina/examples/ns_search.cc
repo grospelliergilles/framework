@@ -5,7 +5,7 @@
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/RelaxationRuntime.h>
-#include <arcane/alina/coarsening_runtime.h>
+#include <arcane/alina/RuntimeCoarsening.h>
 #include <arcane/alina/solver_runtime.h>
 #include <arcane/alina/preconditioner_runtime.h>
 #include <arcane/alina/deflated_solver.h>
@@ -198,7 +198,7 @@ int main(int argc, char *argv[]) {
     typedef Alina::make_solver<
         Alina::AMG<
             Backend,
-            Alina::runtime::coarsening::wrapper,
+            Alina::runtime::coarsening::RuntimeCoarsening,
             Alina::runtime::relaxation::wrapper
             >,
         Alina::runtime::solver::wrapper<Backend>

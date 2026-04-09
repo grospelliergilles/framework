@@ -11,7 +11,7 @@
 #include <arcane/alina/Adapters.h>
 
 #include <arcane/alina/solver_runtime.h>
-#include <arcane/alina/coarsening_runtime.h>
+#include <arcane/alina/RuntimeCoarsening.h>
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/preconditioner_runtime.h>
 #include <arcane/alina/make_solver.h>
