@@ -31,7 +31,7 @@ THE SOFTWARE.
  * \brief  Runtime-configurable MPI wrapper around amgcl iterative solvers.
  */
 
-#include <arcane/alina/solver_runtime.h>
+#include <arcane/alina/SolverRuntime.h>
 #include <arcane/alina/mpi/mp_inner_product.h>
 
 namespace Arcane::Alina {

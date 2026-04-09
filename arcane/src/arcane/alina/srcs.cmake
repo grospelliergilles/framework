@@ -61,7 +61,7 @@ set(ARCANE_SOURCES
   solver_precond_side.h
   PreconditionerOnlySolver.h
   RichardsonSolver.h
-  solver_runtime.h
+        SolverRuntime.h
   solver_skyline_lu.h
   util.h
   value_type_backend_interface.h

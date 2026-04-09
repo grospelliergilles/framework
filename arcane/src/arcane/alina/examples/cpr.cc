@@ -8,7 +8,7 @@
 #include <arcane/alina/value_type_static_matrix.h>
 #include <arcane/alina/make_solver.h>
 #include <arcane/alina/AMG.h>
-#include <arcane/alina/solver_runtime.h>
+#include <arcane/alina/SolverRuntime.h>
 #include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/relaxation.h>

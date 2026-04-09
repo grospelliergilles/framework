@@ -6,7 +6,7 @@
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/CoarseningRuntime.h>
-#include <arcane/alina/solver_runtime.h>
+#include <arcane/alina/SolverRuntime.h>
 #include <arcane/alina/PreconditionerRuntime.h>
 #include <arcane/alina/DeflatedSolver.h>
 #include <arcane/alina/AMG.h>
