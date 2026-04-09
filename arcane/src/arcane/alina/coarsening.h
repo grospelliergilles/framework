@@ -5,14 +5,14 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* coarsening.h                                                (C) 2026-2026 */
+/* Coarsening.h                                                (C) 2026-2026 */
 /*                                                                           */
+/* Coarsening strategies for AMG hirarchy construction.                      */
 /*---------------------------------------------------------------------------*/
 #ifndef ARCANE_ALINA_COARSENING_H
 #define ARCANE_ALINA_COARSENING_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
 /*
  * This file is based on the work on AMGCL library (version march 2026)
  * which can be found at https://github.com/ddemidov/amgcl.
@@ -20,7 +20,6 @@
  * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
  * SPDX-License-Identifier: MIT
  */
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -155,23 +154,28 @@ struct plain_aggregates
   /// Number of aggregates.
   size_t count;
 
-  /// Strong connectivity matrix.
-  /**
-     * This is just 'values' part of CRS matrix. 'col' and 'ptr' arrays are
-     * borrowed from the system matrix.
-     */
+  /*!
+   * \brief Strong connectivity matrix.
+   *
+   * This is just 'values' part of CRS matrix. 'col' and 'ptr' arrays are
+   * borrowed from the system matrix.
+   */
   std::vector<char> strong_connection;
 
-  /// Aggerate id that each fine-level variable belongs to.
-  /** When id[i] < 0, then variable i stays at the fine level (this could be
-     * the case for a Dirichelt condition variable).*/
+  /*!
+   * \brief Aggerate id that each fine-level variable belongs to.
+   *
+   * When id[i] < 0, then variable i stays at the fine level (this could be
+   * the case for a Dirichelt condition variable).
+   */
   std::vector<ptrdiff_t> id;
 
-  /// Constructs aggregates for a given matrix.
-  /**
-     * \param A   The system matrix.
-     * \param prm Aggregation parameters.
-     */
+  /*!
+   * \brief Constructs aggregates for a given matrix.
+   *
+   * \param A   The system matrix.
+   * \param prm Aggregation parameters.
+   */
   template <class Matrix>
   plain_aggregates(const Matrix& A, const params& prm)
   : count(0)
@@ -299,8 +303,9 @@ namespace detail
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-/// Tentative prolongation operator
 /*!
+ * \brief Tentative prolongation operator.
+ *
  * If near nullspace vectors are not provided, returns piecewise-constant
  * prolongation operator. If user provides near nullspace vectors, those are
  * used to improve the prolongation operator.
@@ -421,8 +426,9 @@ tentative_prolongation(size_t n,
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-/// Pointwise aggregation.
 /*!
+ * \brief Pointwise aggregation.
+ *
  * The system matrix should have block structure. It is reduced to a single
  * value per block and is subjected to coarsening::plain_aggregation.
  *
@@ -435,11 +441,12 @@ class pointwise_aggregates
   /// Aggregation parameters.
   struct params : plain_aggregates::params
   {
-    /// Block size for the system matrix.
     /**
-             * When block_size=1, the scheme is equivalent to (and performs on
-             * par with) plain_aggregates.
-             */
+     * \brief Block size for the system matrix.
+     *
+     * When block_size=1, the scheme is equivalent to (and performs on
+     * par with) plain_aggregates.
+     */
     unsigned block_size;
 
     params()
@@ -463,16 +470,16 @@ class pointwise_aggregates
   static const ptrdiff_t undefined = -1;
   static const ptrdiff_t removed = -2;
 
-  /// \copydoc amgcl::coarsening::plain_aggregates::count
+  /// \copydoc coarsening::plain_aggregates::count
   size_t count;
 
-  /// \copydoc amgcl::coarsening::plain_aggregates::strong_connection
+  /// \copydoc coarsening::plain_aggregates::strong_connection
   std::vector<char> strong_connection;
 
-  /// \copydoc amgcl::coarsening::plain_aggregates::id
+  /// \copydoc coarsening::plain_aggregates::id
   std::vector<ptrdiff_t> id;
 
-  /// \copydoc amgcl::coarsening::plain_aggregates::plain_aggregates
+  /// \copydoc coarsening::plain_aggregates::plain_aggregates
   template <class Matrix>
   pointwise_aggregates(const Matrix& A, const params& prm, unsigned min_aggregate)
   : count(0)
@@ -579,7 +586,6 @@ class pointwise_aggregates
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
 /*!
  * \defgroup coarsening Coarsening strategies
  * \brief Coarsening strategies for AMG hirarchy construction.
@@ -597,9 +603,9 @@ class pointwise_aggregates
  * The AMG hierarchy is constructed by recursive invocation of the selected
  * coarsener.
  */
-
-/// Non-smoothed aggregation.
-/**
+/*!
+ * \brief Non-smoothed aggregation.
+ *
  * \ingroup coarsening
  */
 template <class Backend>
@@ -616,19 +622,20 @@ struct aggregation
     /// Near nullspace parameters.
     nullspace_params nullspace;
 
-    /// Over-interpolation factor \f$\alpha\f$.
-    /**
-         * In case of aggregation coarsening, coarse-grid
-         * correction of smooth error, and by this the overall convergence, can
-         * often be substantially improved by using "over-interpolation", that is,
-         * by multiplying the actual correction (corresponding to piecewise
-         * constant interpolation) by some factor \f$\alpha > 1\f$. Equivalently,
-         * this means that the coarse-level Galerkin operator is re-scaled by
-         * \f$1 / \alpha\f$:
-         * \f[I_h^HA_hI_H^h \to \frac{1}{\alpha}I_h^HA_hI_H^h.\f]
-         *
-         * \sa  \cite Stuben1999, Section 9.1 "Re-scaling of the Galerkin operator".
-         */
+    /*!
+     * \brief Over-interpolation factor \f$\alpha\f$.
+     *
+     * In case of aggregation coarsening, coarse-grid
+     * correction of smooth error, and by this the overall convergence, can
+     * often be substantially improved by using "over-interpolation", that is,
+     * by multiplying the actual correction (corresponding to piecewise
+     * constant interpolation) by some factor \f$\alpha > 1\f$. Equivalently,
+     * this means that the coarse-level Galerkin operator is re-scaled by
+     * \f$1 / \alpha\f$:
+     * \f[I_h^HA_hI_H^h \to \frac{1}{\alpha}I_h^HA_hI_H^h.\f]
+     *
+     * \sa  \cite Stuben1999, Section 9.1 "Re-scaling of the Galerkin operator".
+     */
     float over_interp;
 
     params()
@@ -655,16 +662,16 @@ struct aggregation
   : prm(prm)
   {}
 
-  /// Creates transfer operators for the given system matrix.
-  /**
-     * \param A   The system matrix.
-     * \param prm Coarsening parameters.
-     * \returns   A tuple of prolongation and restriction operators.
-     */
+  /*!
+   * \brief Creates transfer operators for the given system matrix.
+   *
+   * \param A   The system matrix.
+   * \param prm Coarsening parameters.
+   * \returns   A tuple of prolongation and restriction operators.
+   */
   template <class Matrix>
-  std::tuple<
-  std::shared_ptr<Matrix>,
-  std::shared_ptr<Matrix>>
+  std::tuple<std::shared_ptr<Matrix>,
+             std::shared_ptr<Matrix>>
   transfer_operators(const Matrix& A)
   {
     const size_t n = rows(A);
@@ -681,13 +688,14 @@ struct aggregation
     return std::make_tuple(P, transpose(*P));
   }
 
-  /// Creates system matrix for the coarser level.
-  /**
-     * \param A The system matrix at the finer level.
-     * \param P Prolongation operator returned by transfer_operators().
-     * \param R Restriction operator returned by transfer_operators().
-     * \returns System matrix for the coarser level.
-     */
+  /*!
+   * \brief Creates system matrix for the coarser level.
+   *
+   * \param A The system matrix at the finer level.
+   * \param P Prolongation operator returned by transfer_operators().
+   * \param R Restriction operator returned by transfer_operators().
+   * \returns System matrix for the coarser level.
+   */
   template <class Matrix>
   std::shared_ptr<Matrix>
   coarse_operator(const Matrix& A, const Matrix& P, const Matrix& R) const
@@ -719,12 +727,11 @@ struct as_scalar
     : base(prm) {};
 
     template <class Matrix>
-    typename std::enable_if<
-    backend::coarsening_is_supported<BaseBackend, Coarsening>::value &&
-    (math::static_rows<typename backend::value_type<Matrix>::type>::value > 1),
-    std::tuple<
-    std::shared_ptr<Matrix>,
-    std::shared_ptr<Matrix>>>::type
+    typename std::enable_if<backend::coarsening_is_supported<BaseBackend, Coarsening>::value &&
+                            (math::static_rows<typename backend::value_type<Matrix>::type>::value > 1),
+                            std::tuple<
+                            std::shared_ptr<Matrix>,
+                            std::shared_ptr<Matrix>>>::type
     transfer_operators(const Matrix& B)
     {
       typedef typename backend::value_type<Matrix>::type Block;
@@ -742,23 +749,21 @@ struct as_scalar
     }
 
     template <class Matrix>
-    typename std::enable_if<
-    backend::coarsening_is_supported<BaseBackend, Coarsening>::value &&
-    (math::static_rows<typename backend::value_type<Matrix>::type>::value == 1),
-    std::tuple<
-    std::shared_ptr<Matrix>,
-    std::shared_ptr<Matrix>>>::type
+    typename std::enable_if<backend::coarsening_is_supported<BaseBackend, Coarsening>::value &&
+                            (math::static_rows<typename backend::value_type<Matrix>::type>::value == 1),
+                            std::tuple<
+                            std::shared_ptr<Matrix>,
+                            std::shared_ptr<Matrix>>>::type
     transfer_operators(const Matrix& A)
     {
       return base.transfer_operators(A);
     }
 
     template <class Matrix>
-    typename std::enable_if<
-    !backend::coarsening_is_supported<BaseBackend, Coarsening>::value,
-    std::tuple<
-    std::shared_ptr<Matrix>,
-    std::shared_ptr<Matrix>>>::type
+    typename std::enable_if<!backend::coarsening_is_supported<BaseBackend, Coarsening>::value,
+                            std::tuple<
+                            std::shared_ptr<Matrix>,
+                            std::shared_ptr<Matrix>>>::type
     transfer_operators(const Matrix&)
     {
       throw std::logic_error("The coarsening is not supported by the backend");
@@ -872,8 +877,9 @@ int rigid_body_modes(int ndim, const Vector& coo, std::vector<double>& B, bool t
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-/// Classic Ruge-Stuben coarsening with direct interpolation.
 /*!
+ * \brief Classic Ruge-Stuben coarsening with direct interpolation.
+ *
  * \ingroup coarsening
  * \sa \cite Stuben1999
  */
@@ -883,8 +889,9 @@ struct ruge_stuben
   /// Coarsening parameters.
   struct params
   {
-    /// Parameter \f$\varepsilon_{str}\f$ defining strong couplings.
     /*!
+     * \brief Parameter \f$\varepsilon_{str}\f$ defining strong couplings.
+     *
      * Variable \f$i\f$ is defined to be strongly negatively coupled to
      * another variable, \f$j\f$, if \f[-a_{ij} \geq
      * \varepsilon_{str}\max\limits_{a_{ik}<0}|a_{ik}|\quad \text{with
@@ -893,16 +900,17 @@ struct ruge_stuben
      */
     float eps_strong;
 
-    /// Truncate prolongation operator?
     /**
-         * Interpolation operators, and, hence coarse operators may increase
-         * substabtially towards coarser levels. Without truncation, this may
-         * become too costly. Truncation ignores all interpolatory connections
-         * which are smaller (in absolute value) than the largest one by a
-         * factor of \f$\varepsilon_{tr}\f$. The remaining weights are rescaled
-         * so that the total sum remains unchanged. In practice, a value of
-         * \f$\varepsilon_{tr}=0.2\f$ is usually taken.
-         */
+     * \brief Truncate prolongation operator?
+     *
+     * Interpolation operators, and, hence coarse operators may increase
+     * substabtially towards coarser levels. Without truncation, this may
+     * become too costly. Truncation ignores all interpolatory connections
+     * which are smaller (in absolute value) than the largest one by a
+     * factor of \f$\varepsilon_{tr}\f$. The remaining weights are rescaled
+     * so that the total sum remains unchanged. In practice, a value of
+     * \f$\varepsilon_{tr}=0.2\f$ is usually taken.
+     */
     bool do_trunc;
 
     /// Truncation parameter \f$\varepsilon_{tr}\f$.
@@ -1293,8 +1301,9 @@ struct ruge_stuben
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-/// Smoothed aggregation coarsening.
 /*!
+ * \brief Smoothed aggregation coarsening.
+ *
  * \ingroup coarsening
  * \sa \cite Vanek1996
  */
@@ -1312,8 +1321,9 @@ struct smoothed_aggregation
     /// Near nullspace parameters.
     nullspace_params nullspace;
 
-    /// Relaxation factor.
     /*!
+     * \brief Relaxation factor.
+     *
      * Used as a scaling for the damping factor omega.
      * When estimate_spectral_radius is set, then
      *   omega = relax * (4/3) / rho.
@@ -1502,8 +1512,9 @@ struct smoothed_aggregation
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-/// Smoothed aggregation with energy minimization.
 /*!
+ * \brief Smoothed aggregation with energy minimization.
+ *
  * \ingroup coarsening
  * \sa \cite Sala2008
  */
@@ -1543,9 +1554,7 @@ struct smoothed_aggr_emin
 
   /// \copydoc amgcl::coarsening::aggregation::transfer_operators
   template <class Matrix>
-  std::tuple<
-  std::shared_ptr<Matrix>,
-  std::shared_ptr<Matrix>>
+  std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>
   transfer_operators(const Matrix& A)
   {
     typedef typename backend::value_type<Matrix>::type Val;
@@ -1772,11 +1781,11 @@ struct smoothed_aggr_emin
 
     // Compute R = R_tent - Omega R_tent A D^-1.
     /*
-             * Here we use the fact that if R(i,j) != 0,
-             * then with necessity RA(i,j) != 0:
-             *
-             * RA(i,j) = sum_k(R_ik A_kj), and A_jj != 0.
-             */
+     * Here we use the fact that if R(i,j) != 0,
+     * then with necessity RA(i,j) != 0:
+     *
+     * RA(i,j) = sum_k(R_ik A_kj), and A_jj != 0.
+     */
 #pragma omp parallel for
     for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nc); ++i) {
       Val w = omega[i];
