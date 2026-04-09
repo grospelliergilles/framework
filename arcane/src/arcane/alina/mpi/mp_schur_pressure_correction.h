@@ -651,16 +651,14 @@ class schur_pressure_correction
   std::shared_ptr<PSolver> P;
 
 #ifdef ARCANE_ALINA_DEBUG
-  template <typename I, typename E>
-  void report(const std::string& name, const std::tuple<I, E>& c) const
+  void report(const std::string& name, const SolverResult& sr) const
   {
     if (comm.rank == 0 && prm.report >= 1) {
-      std::cout << name << " (" << std::get<0>(c) << ", " << std::get<1>(c) << ")\n";
+      std::cout << name << " (" << sr.nbIteration() << ", " << sr.residual() << ")\n";
     }
   }
 #else
-  template <typename I, typename E>
-  void report(const std::string&, const std::tuple<I, E>&) const
+  void report(const std::string&, const SolverResult&) const
   {
   }
 #endif

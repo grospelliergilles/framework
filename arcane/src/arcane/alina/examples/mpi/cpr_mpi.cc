@@ -283,15 +283,12 @@ int main(int argc, char *argv[]) {
     std::vector<double> x(rhs.size(), 0.0);
 
     prof.tic("solve");
-    size_t iters;
-    double error;
-    std::tie(iters, error) = solve(rhs, x);
+    Alina::SolverResult r = solve(rhs, x);
     prof.toc("solve");
 
     if (comm.rank == 0) {
-        std::cout
-            << "Iterations: " << iters << std::endl
-            << "Error:      " << error << std::endl
-            << prof << std::endl;
+      std::cout << "Iterations: " << r.nbIteration() << std::endl
+                << "Error:      " << r.residual() << std::endl
+                << prof << std::endl;
     }
 }

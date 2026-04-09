@@ -130,18 +130,14 @@ void solve_scalar(Alina::mpi::communicator comm,
 
   std::vector<std::complex<double>> x(chunk);
 
-  int iters;
-  double error;
-
   prof.tic("solve");
-  std::tie(iters, error) = solve(rhs, x);
+  Alina::SolverResult r = solve(rhs, x);
   prof.toc("solve");
 
   if (comm.rank == 0) {
-    std::cout
-    << "Iterations: " << iters << std::endl
-    << "Error:      " << error << std::endl
-    << prof << std::endl;
+    std::cout << "Iterations: " << r.nbIteration() << std::endl
+              << "Error:      " << r.residual() << std::endl
+              << prof << std::endl;
   }
 }
 

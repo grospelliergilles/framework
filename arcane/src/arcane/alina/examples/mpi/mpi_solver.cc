@@ -309,18 +309,14 @@ void solve_block(
 
     Alina::backend::numa_vector<rhs_type> x(chunk);
 
-    int    iters;
-    double error;
-
     prof.tic("solve");
-    std::tie(iters, error) = (*solve)(rhs, x);
+    Alina::SolverResult r = (*solve)(rhs, x);
     prof.toc("solve");
 
     if (comm.rank == 0) {
-        std::cout
-            << "Iterations: " << iters << std::endl
-            << "Error:      " << error << std::endl
-            << prof << std::endl;
+      std::cout << "Iterations: " << r.nbIteration() << std::endl
+                << "Error:      " << r.residual() << std::endl
+                << prof << std::endl;
     }
 }
 #endif
@@ -414,23 +410,20 @@ void solve_scalar(
     thrust::device_vector<double> x(chunk, 0.0);
 #endif
 
-    int    iters;
-    double error;
-
     prof.tic("solve");
-    std::tie(iters, error) = (*solve)(rhs, x);
+    Alina::SolverResult r = (*solve)(rhs, x);
     prof.toc("solve");
 
     if (comm.rank == 0) {
-        std::cout
-            << "Iterations: " << iters << std::endl
-            << "Error:      " << error << std::endl
-            << prof << std::endl;
+      std::cout << "Iterations: " << r.nbIteration() << std::endl
+                << "Error:      " << r.residual() << std::endl
+                << prof << std::endl;
     }
 }
 
 //---------------------------------------------------------------------------
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
     Alina::mpi::init_thread mpi(&argc, &argv);
     Alina::mpi::communicator comm(MPI_COMM_WORLD);
 

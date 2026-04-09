@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
     std::vector<double> x(chunk, 0.0);
 
     prof.tic("solve");
-    SolverResult r = solve(*A, rhs, x);
+    Alina::SolverResult r = solve(*A, rhs, x);
     prof.toc("solve");
 
     // Output the number of iterations, the relative error,

@@ -305,17 +305,13 @@ int main(int argc, char *argv[]) {
     double tm_setup = prof.toc("setup");
 
     prof.tic("solve");
-    size_t iters;
-    double resid;
-    std::tie(iters, resid) = solve(*f, *x);
+    Alina::SolverResult r = solve(*f, *x);
     double tm_solve = prof.toc("solve");
 
     if (world.rank == 0) {
-        std::cout
-            << "Iterations: " << iters << std::endl
-            << "Error:      " << resid << std::endl
-            << std::endl
-            << prof << std::endl;
+      std::cout << "Iters: " << r.nbIteration() << std::endl
+                << "Error: " << r.residual() << std::endl
+                << prof << std::endl;
 
 #ifdef _OPENMP
         int nt = omp_get_max_threads();
@@ -327,6 +323,6 @@ int main(int argc, char *argv[]) {
         std::ofstream log(log_name.str().c_str(), std::ios::app);
         log << domain.back() << "\t" << nt << "\t" << world.size
             << "\t" << tm_setup << "\t" << tm_solve
-            << "\t" << iters << "\t" << std::endl;
+            << "\t" << r.nbIteration() << "\t" << std::endl;
     }
 }
