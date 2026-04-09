@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Compute the inverse of a dense matrix.                                    */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_DENSEMATRIXINVERSE_H
-#define ARCANE_ALINA_DENSEMATRIXINVERSE_H
+#ifndef ARCANE_ALINA_DENSEMATRIXINVERSEIMPL_H
+#define ARCANE_ALINA_DENSEMATRIXINVERSEIMPL_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

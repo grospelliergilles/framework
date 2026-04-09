@@ -25,7 +25,7 @@
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/util.h>
-#include <arcane/alina/detail_inverse.h>
+#include <arcane/alina/DenseMatrixInverseImpl.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

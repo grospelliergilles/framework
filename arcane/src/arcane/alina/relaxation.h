@@ -43,7 +43,7 @@
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/detail_qr.h>
 #include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/detail_inverse.h>
+#include <arcane/alina/DenseMatrixInverseImpl.h>
 #include <arcane/alina/BackendInterface.h>
 #include <arcane/alina/relaxation_detail_ilu_solve.h>
 #include <arcane/alina/value_type_backend_interface.h>
