@@ -1,35 +1,27 @@
-#ifndef ARCANE_ALINA_SOLVER_RUNTIME_HPP
-#define ARCANE_ALINA_SOLVER_RUNTIME_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* SolverRuntime.h                                             (C) 2026-2026 */
+/*                                                                           */
+/* Runtime-configurable solvers.                                             */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_SOLVERRUNTIME_H
+#define ARCANE_ALINA_SOLVERRUNTIME_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   alina/solver/runtime.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Runtime-configurable wrappers around amgcl iterative solvers.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <iostream>
 #include <stdexcept>
@@ -147,10 +139,12 @@ inline std::istream& operator>>(std::istream& in, type& s)
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
+/*!
+ * \brief Runtime-configurable wrappers around iterative solvers.
+ */
 template <class Backend,
           class InnerProduct = Alina::solver::detail::default_inner_product>
-struct wrapper
+struct SolverRuntime
 {
   typedef PropertyTree params;
   typedef typename Backend::params backend_params;
@@ -161,7 +155,7 @@ struct wrapper
   type s;
   void* handle = nullptr;
 
-  explicit wrapper(size_t n, params prm = params(),
+  explicit SolverRuntime(size_t n, params prm = params(),
                    const backend_params& bprm = backend_params(),
                    const InnerProduct& inner_product = InnerProduct())
   : s(prm.get("type", runtime::solver::bicgstab))
@@ -185,7 +179,7 @@ struct wrapper
     }
   }
 
-  ~wrapper()
+  ~SolverRuntime()
   {
     switch (s) {
 
@@ -224,7 +218,7 @@ struct wrapper
     return (*this)(P.system_matrix(), P, rhs, x);
   }
 
-  friend std::ostream& operator<<(std::ostream& os, const wrapper& w)
+  friend std::ostream& operator<<(std::ostream& os, const SolverRuntime& w)
   {
     switch (w.s) {
 

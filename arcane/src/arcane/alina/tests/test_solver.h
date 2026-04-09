@@ -53,7 +53,7 @@ void test_solver(const Matrix& A,
   }
 
   Alina::make_solver<Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
-                     Alina::runtime::solver::wrapper<Backend>>
+                     Alina::runtime::solver::SolverRuntime<Backend>>
   solve(A, prm, bprm);
 
   std::cout << solve.precond() << std::endl;
@@ -84,7 +84,7 @@ void test_rap(const Matrix& A,
 
   Alina::make_solver<
   Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>,
-  Alina::runtime::solver::wrapper<Backend>>
+  Alina::runtime::solver::SolverRuntime<Backend>>
   solve(A, prm, bprm);
 
   std::cout << "Using " << relaxation << " as preconditioner" << std::endl;

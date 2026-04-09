@@ -54,7 +54,7 @@ solve(const Matrix& A,
 
   typedef Alina::make_solver<
   Precond,
-  Alina::runtime::solver::wrapper<Backend>>
+  Alina::runtime::solver::SolverRuntime<Backend>>
   Solver;
 
   prof.tic("setup");

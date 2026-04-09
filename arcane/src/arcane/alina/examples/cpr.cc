@@ -35,7 +35,7 @@ void solve_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::PropertyT
 
   prof.tic("setup");
   Alina::make_solver<Alina::preconditioner::CPRPreconditioner<PPrecond, SPrecond>,
-                     Alina::runtime::solver::wrapper<Backend>>
+                     Alina::runtime::solver::SolverRuntime<Backend>>
   solve(K, prm);
   prof.toc("setup");
 
@@ -76,7 +76,7 @@ void solve_block_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::Pro
   prof.tic("setup");
   Alina::make_solver<
   Alina::preconditioner::CPRPreconditioner<PPrecond, SPrecond>,
-  Alina::runtime::solver::wrapper<SBackend>>
+  Alina::runtime::solver::SolverRuntime<SBackend>>
   solve(Alina::adapter::block_matrix<val_type>(K), prm);
   prof.toc("setup");
 

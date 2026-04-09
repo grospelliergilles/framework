@@ -140,7 +140,7 @@ class PreconditionerRuntime
     case precond_class::nested: {
       typedef make_solver<
       PreconditionerRuntime,
-      runtime::solver::wrapper<Backend>>
+      runtime::solver::SolverRuntime<Backend>>
       Precond;
 
       handle = static_cast<void*>(new Precond(A, prm, bprm));
@@ -174,7 +174,7 @@ class PreconditionerRuntime
     case precond_class::nested: {
       typedef make_solver<
       PreconditionerRuntime,
-      runtime::solver::wrapper<Backend>>
+      runtime::solver::SolverRuntime<Backend>>
       Precond;
 
       delete static_cast<Precond*>(handle);
@@ -227,7 +227,7 @@ class PreconditionerRuntime
     case precond_class::nested: {
       typedef make_solver<
       PreconditionerRuntime,
-      runtime::solver::wrapper<Backend>>
+      runtime::solver::SolverRuntime<Backend>>
       Precond;
 
       static_cast<Precond*>(handle)->apply(rhs, x);
@@ -261,7 +261,7 @@ class PreconditionerRuntime
     case precond_class::nested: {
       typedef make_solver<
       PreconditionerRuntime,
-      runtime::solver::wrapper<Backend>>
+      runtime::solver::SolverRuntime<Backend>>
       Precond;
 
       return static_cast<Precond*>(handle)->system_matrix_ptr();
@@ -305,7 +305,7 @@ class PreconditionerRuntime
     case precond_class::nested: {
       typedef make_solver<
       PreconditionerRuntime,
-      runtime::solver::wrapper<Backend>>
+      runtime::solver::SolverRuntime<Backend>>
       Precond;
 
       return backend::bytes(*static_cast<Precond*>(handle));
@@ -339,7 +339,7 @@ class PreconditionerRuntime
     case precond_class::nested: {
       typedef make_solver<
       PreconditionerRuntime,
-      runtime::solver::wrapper<Backend>>
+      runtime::solver::SolverRuntime<Backend>>
       Precond;
 
       return os << *static_cast<Precond*>(p.handle);

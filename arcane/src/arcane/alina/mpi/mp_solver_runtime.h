@@ -40,8 +40,8 @@ namespace mpi {
 namespace solver {
 
 template <class Backend, class InnerProduct = Alina::mpi::inner_product>
-struct wrapper : public Alina::runtime::solver::wrapper<Backend, InnerProduct> {
-    typedef Alina::runtime::solver::wrapper<Backend, InnerProduct> Base;
+struct wrapper : public Alina::runtime::solver::SolverRuntime<Backend, InnerProduct> {
+    typedef Alina::runtime::solver::SolverRuntime<Backend, InnerProduct> Base;
     using Base::Base;
 };
 

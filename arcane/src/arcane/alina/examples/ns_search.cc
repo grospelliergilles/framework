@@ -201,7 +201,7 @@ int main(int argc, char *argv[]) {
             Alina::runtime::coarsening::CoarseningRuntime,
             Alina::runtime::relaxation::RuntimeRelaxation
             >,
-        Alina::runtime::solver::wrapper<Backend>
+        Alina::runtime::solver::SolverRuntime<Backend>
         > Solver;
 
     std::mt19937 rng;

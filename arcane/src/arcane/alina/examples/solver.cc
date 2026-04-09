@@ -70,7 +70,7 @@ std::tuple<size_t, double> block_solve(
 
     typedef Alina::make_solver<
         Alina::runtime::PreconditionerRuntime<BBackend>,
-        Alina::runtime::solver::wrapper<BBackend>
+        Alina::runtime::solver::SolverRuntime<BBackend>
         > Solver;
 
     auto As = std::tie(rows, ptr, col, val);
@@ -144,7 +144,7 @@ std::tuple<size_t, double> block_solve(
 
     typedef Alina::make_solver<
         Alina::runtime::PreconditionerRuntime<BBackend>,
-        Alina::runtime::solver::wrapper<BBackend>
+        Alina::runtime::solver::SolverRuntime<BBackend>
         > Solver;
 
     typename BBackend::params bprm;
@@ -250,7 +250,7 @@ std::tuple<size_t, double> scalar_solve(
 
     typedef Alina::make_solver<
         Alina::runtime::PreconditionerRuntime<Backend>,
-        Alina::runtime::solver::wrapper<Backend>
+        Alina::runtime::solver::SolverRuntime<Backend>
         > Solver;
 
     std::tuple<size_t, double> info;
