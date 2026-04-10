@@ -47,7 +47,7 @@ template <class Backend,
           class Coarsening,
           class Relaxation,
           class DirectSolver = DistributedSkylineLUDirectSolver<typename Backend::value_type>,
-          class Repartition = partition::merge<Backend>>
+          class Repartition = partition::SimpleMatrixPartitioner<Backend>>
 class DistributedAMG
 {
  public:

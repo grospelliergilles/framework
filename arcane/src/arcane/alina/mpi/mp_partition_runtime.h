@@ -115,7 +115,7 @@ struct wrapper
 
     switch (t) {
     case merge: {
-      typedef Alina::mpi::partition::merge<Backend> R;
+      typedef Alina::mpi::partition::SimpleMatrixPartitioner<Backend> R;
       handle = static_cast<void*>(new R(prm));
     } break;
 #ifdef ARCANE_ALINA_HAVE_PARMETIS
@@ -133,7 +133,7 @@ struct wrapper
   {
     switch (t) {
     case merge: {
-      typedef Alina::mpi::partition::merge<Backend> R;
+      typedef Alina::mpi::partition::SimpleMatrixPartitioner<Backend> R;
       delete static_cast<R*>(handle);
     } break;
 #ifdef ARCANE_ALINA_HAVE_PARMETIS
@@ -151,7 +151,7 @@ struct wrapper
   {
     switch (t) {
     case merge: {
-      typedef Alina::mpi::partition::merge<Backend> R;
+      typedef Alina::mpi::partition::SimpleMatrixPartitioner<Backend> R;
       return static_cast<const R*>(handle)->is_needed(A);
     }
 #ifdef ARCANE_ALINA_HAVE_PARMETIS
@@ -169,7 +169,7 @@ struct wrapper
   {
     switch (t) {
     case merge: {
-      typedef Alina::mpi::partition::merge<Backend> R;
+      typedef Alina::mpi::partition::SimpleMatrixPartitioner<Backend> R;
       return static_cast<const R*>(handle)->operator()(A, block_size);
     }
 #ifdef ARCANE_ALINA_HAVE_PARMETIS
