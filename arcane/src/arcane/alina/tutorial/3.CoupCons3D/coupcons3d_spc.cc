@@ -42,7 +42,7 @@ THE SOFTWARE.
 #include <arcane/alina/BiCGStabSolver.h>
 #include <arcane/alina/PreconditionerOnlySolver.h>
 #include <arcane/alina/coarsening.h>
-#include <arcane/alina/relaxation.h>
+#include <arcane/alina/Relaxation.h>
 
 #include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>

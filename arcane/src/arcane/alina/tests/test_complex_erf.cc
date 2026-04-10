@@ -7,7 +7,7 @@
 #include <arcane/alina/make_solver.h>
 
 #include <arcane/alina/coarsening.h>
-#include <arcane/alina/relaxation.h>
+#include <arcane/alina/Relaxation.h>
 
 #include <arcane/alina/ConjugateGradientSolver.h>
 #include <arcane/alina/BiCGStabSolver.h>

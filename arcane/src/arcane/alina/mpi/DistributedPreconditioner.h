@@ -32,7 +32,7 @@
 #include <arcane/alina/mpi/DistributedRelaxationRuntime.h>
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
 #include <arcane/alina/mpi/mp_partition_runtime.h>
-#include <arcane/alina/mpi/mp_relaxation.h>
+#include <arcane/alina/mpi/DistributedRelaxation.h>
 #include <arcane/alina/mpi/DistributedMatrix.h>
 #include <arcane/alina/mpi/mp_util.h>
 

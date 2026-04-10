@@ -29,7 +29,7 @@
 #include <type_traits>
 
 #include <arcane/alina/util.h>
-#include <arcane/alina/relaxation.h>
+#include <arcane/alina/Relaxation.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

@@ -8,7 +8,7 @@
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/BlockCSRBackend.h>
 #include <arcane/alina/coarsening.h>
-#include <arcane/alina/relaxation.h>
+#include <arcane/alina/Relaxation.h>
 #include <arcane/alina/BiCGStabSolver.h>
 #include <arcane/alina/profiler.h>
 

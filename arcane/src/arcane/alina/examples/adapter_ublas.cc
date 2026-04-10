@@ -10,7 +10,7 @@
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/adapter_ublas.h>
 #include <arcane/alina/coarsening.h>
-#include <arcane/alina/relaxation.h>
+#include <arcane/alina/Relaxation.h>
 #include <arcane/alina/BiCGStabLSolver.h>
 #include <arcane/alina/profiler.h>
 

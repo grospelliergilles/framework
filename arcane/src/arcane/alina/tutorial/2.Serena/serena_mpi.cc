@@ -40,7 +40,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_make_solver.h>
 #include <arcane/alina/mpi/DistributedAMG.h>
 #include <arcane/alina/mpi/DistributedCoarsening.h>
-#include <arcane/alina/mpi/mp_relaxation.h>
+#include <arcane/alina/mpi/DistributedRelaxation.h>
 #include <arcane/alina/mpi/DistributedSolver.h>
 
 #include <arcane/alina/IO.h>
