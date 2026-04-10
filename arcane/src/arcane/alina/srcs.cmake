@@ -68,6 +68,7 @@ set(ARCANE_SOURCES
   value_type_static_matrix.h
   mpi/DistributedAMG.h
   mpi/DistributedCoarsening.h
+  mpi/DistributedCPRPreconditioner.h
   mpi/DistributedDirectSolverBase.h
   mpi/DistributedSkylineLUDirectSolver.h
   mpi/DistributedMatrix.h
@@ -75,7 +76,6 @@ set(ARCANE_SOURCES
   mpi/DistributedPreconditioner.h
   mpi/DistributedSchurPressureCorrection.h
   mpi/mp_coarsening_runtime.h
-  mpi/mp_cpr.h
   mpi/mp_direct_solve_eigen_splu.h
   mpi/mp_direct_solver_runtime.h
   mpi/mp_make_solver.h
