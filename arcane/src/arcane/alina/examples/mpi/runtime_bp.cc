@@ -18,7 +18,7 @@
 #include <arcane/alina/util.h>
 
 // Pour test compilation uniquement
-#include <arcane/alina/mpi/mp_solver.h>
+#include <arcane/alina/mpi/DistributedSolver.h>
 #include <arcane/alina/mpi/mp_solver_runtime.h>
 
 // Pour test compilation uniquement

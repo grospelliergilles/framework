@@ -23,14 +23,6 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-/**
- * \file   alina/mpi/coarsening/aggregation.h
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Runtime wrapper for distributed coarsening schemes.
- */
-
-#include <arcane/alina/util.h>
-#include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/DistributedMatrix.h>
 #include <arcane/alina/mpi/DistributedCoarsening.h>
 
@@ -88,7 +80,6 @@ struct DistributedCoarseningRuntime
 
   explicit DistributedCoarseningRuntime(params prm = params())
   : c(prm.get("type", smoothed_aggregation))
-  , handle(0)
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");

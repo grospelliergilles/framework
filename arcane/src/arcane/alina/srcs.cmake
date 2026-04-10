@@ -75,7 +75,7 @@ set(ARCANE_SOURCES
   mpi/DistributedInnerProduct.h
   mpi/DistributedPreconditioner.h
   mpi/DistributedSchurPressureCorrection.h
-  mpi/mp_coarsening_runtime.h
+        mpi/DistributedCoarseningRuntime.h
   mpi/mp_direct_solve_eigen_splu.h
   mpi/mp_direct_solver_runtime.h
   mpi/mp_make_solver.h
@@ -85,7 +85,7 @@ set(ARCANE_SOURCES
   mpi/mp_partition_util.h
   mpi/mp_relaxation_runtime.h
   mpi/mp_relaxation.h
-  mpi/mp_solver.h
+        mpi/DistributedSolver.h
   mpi/mp_solver_runtime.h
   mpi/mp_subdomain_deflation.h
   mpi/mp_util.h

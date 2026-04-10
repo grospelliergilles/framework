@@ -12,7 +12,7 @@
 #include <arcane/alina/mpi/mp_make_solver.h>
 #include <arcane/alina/mpi/DistributedCPRPreconditioner.h>
 #include <arcane/alina/mpi/DistributedAMG.h>
-#include <arcane/alina/mpi/mp_coarsening_runtime.h>
+#include <arcane/alina/mpi/DistributedCoarseningRuntime.h>
 #include <arcane/alina/mpi/mp_relaxation_runtime.h>
 #include <arcane/alina/mpi/mp_solver_runtime.h>
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
