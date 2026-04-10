@@ -34,7 +34,7 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/DistributedMatrix.h>
-#include <arcane/alina/mpi/mp_coarsening_pmis.h>
+#include <arcane/alina/mpi/DistributedCoarsening.h>
 
 namespace Arcane::Alina::runtime::mpi::coarsening
 {

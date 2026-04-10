@@ -66,12 +66,11 @@ set(ARCANE_SOURCES
   value_type_complex.h
   value_type_eigen.h
   value_type_static_matrix.h
-
   mpi/DistributedAMG.h
   mpi/mp_block_preconditioner.h
-  mpi/mp_coarsening_pmis.h
+        mpi/DistributedCoarsening.h
   mpi/mp_coarsening_runtime.h
-  mpi/mp_cpr.h
+        mpi/mp_cpr.h
   mpi/mp_direct_solve_eigen_splu.h
   mpi/mp_direct_solver_base.h
   mpi/mp_direct_solver_runtime.h
