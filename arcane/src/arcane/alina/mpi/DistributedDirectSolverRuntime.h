@@ -23,7 +23,6 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/util.h>
 #include <arcane/alina/mpi/DistributedSkylineLUDirectSolver.h>
 #ifdef ARCANE_ALINA_HAVE_EIGEN
 #include <arcane/alina/mpi/mp_direct_solve_eigen_splu.h>
@@ -114,7 +113,7 @@ class DistributedDirectSolverRuntime
     } break;
 #ifdef ARCANE_ALINA_HAVE_EIGEN
     case eDistributedDirectSolverType::eigen_splu: {
-      typedef Alina::mpi::direct::eigen_splu<value_type> S;
+      typedef Alina::mpi::direct::DistributedEigenSparseLUDirectSolver<value_type> S;
       do_construct<S, value_type>(comm, A, prm);
     } break;
 #endif
@@ -138,7 +137,7 @@ class DistributedDirectSolverRuntime
     } break;
 #ifdef ARCANE_ALINA_HAVE_EIGEN
     case eDistributedDirectSolverType::eigen_splu: {
-      typedef Alina::mpi::direct::eigen_splu<value_type> S;
+      typedef Alina::mpi::direct::DistributedEigenSparseLUDirectSolver<value_type> S;
       do_solve<S, value_type>(rhs, x);
     } break;
 #endif
@@ -156,7 +155,7 @@ class DistributedDirectSolverRuntime
     } break;
 #ifdef ARCANE_ALINA_HAVE_EIGEN
     case eDistributedDirectSolverType::eigen_splu: {
-      typedef Alina::mpi::direct::eigen_splu<value_type> S;
+      typedef Alina::mpi::direct::DistributedEigenSparseLUDirectSolver<value_type> S;
       do_destruct<S, value_type>();
     } break;
 #endif
