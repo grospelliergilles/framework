@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
         Alina::AMG<
             PBackend,
             Alina::coarsening::smoothed_aggregation,
-            Alina::relaxation::spai0
+            Alina::relaxation::SPAI0Relaxation
             >,
         Alina::solver::BiCGStabSolver<SBackend>
         > Solver;

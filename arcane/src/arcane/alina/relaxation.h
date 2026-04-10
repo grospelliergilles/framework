@@ -7,12 +7,12 @@
 /*---------------------------------------------------------------------------*/
 /* relaxation.h                                                (C) 2000-2026 */
 /*                                                                           */
+/* Various relaxation algorithms.                                            */
 /*---------------------------------------------------------------------------*/
 #ifndef ARCANE_ALINA_RELAXATION_H
 #define ARCANE_ALINA_RELAXATION_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
 /*
  * This file is based on the work on AMGCL library (version march 2026)
  * which can be found at https://github.com/ddemidov/amgcl.
@@ -20,7 +20,6 @@
  * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
  * SPDX-License-Identifier: MIT
  */
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -250,7 +249,7 @@ class as_preconditioner
  *
  */
 template <class Backend>
-class chebyshev
+class ChebyshevRelaxation
 {
  public:
 
@@ -314,8 +313,8 @@ class chebyshev
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
   template <class Matrix>
-  chebyshev(const Matrix& A, const params& prm,
-            const typename Backend::params& backend_prm)
+  ChebyshevRelaxation(const Matrix& A, const params& prm,
+                      const typename Backend::params& backend_prm)
   : prm(prm)
   , p(Backend::create_vector(rows(A), backend_prm))
   , r(Backend::create_vector(rows(A), backend_prm))
@@ -418,7 +417,7 @@ class chebyshev
  * \ingroup relaxation
  */
 template <class Backend>
-struct damped_jacobi
+struct DampedJacobiRelaxation
 {
   typedef typename Backend::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
@@ -454,9 +453,9 @@ struct damped_jacobi
    * \param backend_prm Backend parameters.
    */
   template <class Matrix>
-  damped_jacobi(const Matrix& A,
-                const params& prm,
-                const typename Backend::params& backend_prm)
+  DampedJacobiRelaxation(const Matrix& A,
+                         const params& prm,
+                         const typename Backend::params& backend_prm)
   : prm(prm)
   , dia(Backend::copy_vector(diagonal(A, true), backend_prm))
   {}
@@ -509,14 +508,14 @@ struct damped_jacobi
 /// Gauss-Seidel relaxation.
 /**
  * \note This is a serial relaxation and is only applicable to backends that
- * support matrix row iteration (e.g. amgcl::backend::builtin or
- * amgcl::backend::eigen).
+ * support matrix row iteration (e.g. BuiltinBackend or
+ * EigenBackend).
  *
  * \param Backend Backend for temporary structures allocation.
  * \ingroup relaxation
  */
 template <class Backend>
-struct gauss_seidel
+struct GaussSeidelRelaxation
 {
   /// Relaxation parameters.
   struct params
@@ -544,7 +543,7 @@ struct gauss_seidel
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
   template <class Matrix>
-  gauss_seidel(const Matrix& A, const params& prm, const typename Backend::params&)
+  GaussSeidelRelaxation(const Matrix& A, const params& prm, const typename Backend::params&)
   : is_serial(prm.serial || num_threads() < 4)
   {
     if (!is_serial) {
@@ -862,7 +861,7 @@ struct gauss_seidel
  * \ingroup relaxation
  */
 template <class Backend>
-struct ilu0
+struct ILU0Relaxation
 {
   typedef typename Backend::value_type value_type;
   typedef typename Backend::col_type col_type;
@@ -903,7 +902,7 @@ struct ilu0
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
   template <class Matrix>
-  ilu0(const Matrix& A, const params& prm, const typename Backend::params& bprm)
+  ILU0Relaxation(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
   {
     typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
@@ -1070,7 +1069,7 @@ struct ilu0
 
 /// ILU(k) smoother.
 template <class Backend>
-struct iluk
+struct ILUKRelaxation
 {
   typedef typename Backend::value_type value_type;
   typedef typename Backend::col_type col_type;
@@ -1118,7 +1117,7 @@ struct iluk
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
   template <class Matrix>
-  iluk(const Matrix& A, const params& prm, const typename Backend::params& bprm)
+  ILUKRelaxation(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
   {
     typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
@@ -1416,11 +1415,11 @@ namespace detail
 
 /// ILU(k) smoother.
 template <class Backend>
-struct ilup
+struct ILUPRelaxation
 {
   typedef typename Backend::value_type value_type;
 
-  typedef ilu0<Backend> Base;
+  typedef ILU0Relaxation<Backend> Base;
 
   /// Relaxation parameters.
   struct params : Base::params
@@ -1450,7 +1449,7 @@ struct ilup
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
   template <class Matrix>
-  ilup(const Matrix& A, const params& prm, const typename Backend::params& bprm)
+  ILUPRelaxation(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
   {
     if (prm.k == 0) {
@@ -1521,14 +1520,14 @@ struct ilup
 /*---------------------------------------------------------------------------*/
 /*!
  * \note ILUT is a serial algorithm and is only applicable to backends that
- * support matrix row iteration (e.g. amgcl::backend::builtin or
- * amgcl::backend::eigen).
+ * support matrix row iteration (e.g. BuiltinBaclend or
+ * EigenBackend).
  *
  * \param Backend Backend for temporary structures allocation.
  * \ingroup relaxation
  */
 template <class Backend>
-struct ilut
+struct ILUTRelaxation
 {
   typedef typename Backend::value_type value_type;
   typedef typename Backend::col_type col_type;
@@ -1582,7 +1581,7 @@ struct ilut
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
   template <class Matrix>
-  ilut(const Matrix& A, const params& prm, const typename Backend::params& bprm)
+  ILUTRelaxation(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
   {
     const size_t n = backend::rows(A);
@@ -1911,7 +1910,7 @@ struct ilut
  * \sa \cite Broker2002
  */
 template <class Backend>
-struct spai0
+struct SPAI0Relaxation
 {
   typedef typename Backend::value_type value_type;
   typedef typename Backend::matrix_diagonal matrix_diagonal;
@@ -1922,7 +1921,7 @@ struct spai0
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
   template <class Matrix>
-  spai0(const Matrix& A, const params&, const typename Backend::params& backend_prm)
+  SPAI0Relaxation(const Matrix& A, const params&, const typename Backend::params& backend_prm)
   {
     const size_t n = rows(A);
 
@@ -1981,9 +1980,9 @@ struct spai0
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-/// Sparse approximate interface smoother.
-/**
+/*!
+ * \brief Sparse approximate interface smoother.
+ *
  * Sparsity pattern of the approximate inverse matrix coincides with that of A.
  *
  * \tparam Backend Backend for temporary structures allocation.
@@ -1991,7 +1990,7 @@ struct spai0
  * \sa \cite Broker2002
  */
 template <class Backend>
-struct spai1
+struct SPAI1Relaxation
 {
   typedef typename Backend::value_type value_type;
   typedef typename Backend::vector vector;
@@ -2003,7 +2002,7 @@ struct spai1
 
   /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
   template <class Matrix>
-  spai1(const Matrix& A, const params&, const typename Backend::params& backend_prm)
+  SPAI1Relaxation(const Matrix& A, const params&, const typename Backend::params& backend_prm)
   {
     typedef typename backend::value_type<Matrix>::type value_type;
 
@@ -2107,13 +2106,13 @@ namespace Arcane::Alina::backend
 {
 
 template <class Backend>
-struct relaxation_is_supported<Backend, relaxation::spai1,
+struct relaxation_is_supported<Backend, relaxation::SPAI1Relaxation,
                                typename std::enable_if<(Alina::math::static_rows<typename Backend::value_type>::value > 1)>::type> : std::false_type
 {};
 
 template <class Backend>
 struct relaxation_is_supported<Backend,
-                               relaxation::gauss_seidel,
+                               relaxation::GaussSeidelRelaxation,
                                typename std::enable_if<
                                !Backend::provides_row_iterator::value>::type> : std::false_type
 {};

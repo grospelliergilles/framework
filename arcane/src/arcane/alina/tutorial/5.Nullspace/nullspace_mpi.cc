@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
         Alina::mpi::DistributedAMG<
             PBackend,
             Alina::mpi::coarsening::smoothed_aggregation<PBackend>,
-            Alina::mpi::relaxation::spai0<PBackend>
+            Alina::mpi::relaxation::DistributedSPAI0Relaxation<PBackend>
             >,
         Alina::mpi::solver::cg<PBackend>
         > Solver;

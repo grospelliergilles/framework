@@ -32,7 +32,7 @@ int main()
   // double-precision Krylov solver.
   typedef Alina::make_solver<Alina::AMG<fBackend,
                                         Alina::coarsening::smoothed_aggregation,
-                                        Alina::relaxation::spai0>,
+                                        Alina::relaxation::SPAI0Relaxation>,
                              Alina::solver::ConjugateGradientSolver<dBackend>>
   Solver;
 

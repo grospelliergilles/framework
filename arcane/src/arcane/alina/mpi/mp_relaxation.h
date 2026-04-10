@@ -5,15 +5,14 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* MPRelaxation.h                                              (C) 2000-2026 */
+/* DistributedRelaxation.h                                     (C) 2000-2026 */
 /*                                                                           */
-/* Relaxtion with message passing support.                                   */
+/* Relaxation with distribution support.                                     */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MP_RELAXATION_H
-#define ARCANE_ALINA_MP_RELAXATION_H
+#ifndef ARCANE_ALINA_DISTRIBUTEDRELAXATION_H
+#define ARCANE_ALINA_DISTRIBUTEDRELAXATION_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
 /*
  * This file is based on the work on AMGCL library (version march 2026)
  * which can be found at https://github.com/ddemidov/amgcl.
@@ -21,20 +20,14 @@
  * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
  * SPDX-License-Identifier: MIT
  */
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-#include <arcane/alina/relaxation.h>
 
 #include <arcane/alina/BackendInterface.h>
 #include <arcane/alina/BuiltinBackend.h>
+#include <arcane/alina/relaxation.h>
 
 #include <arcane/alina/mpi/DistributedMatrix.h>
-#include <arcane/alina/mpi/mp_util.h>
-
-#include <memory>
-#include <vector>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -42,18 +35,21 @@
 namespace Arcane::Alina::mpi::relaxation
 {
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 template <class Backend>
-struct chebyshev
-: public Alina::relaxation::chebyshev<Backend>
+struct DistributedChebyshevRelaxation
+: public Alina::relaxation::ChebyshevRelaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::chebyshev<Backend> Base;
+  typedef Alina::relaxation::ChebyshevRelaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  chebyshev(const DistributedMatrix<Backend>& A,
-            const params& prm = params(),
-            const backend_params& bprm = backend_params())
+  DistributedChebyshevRelaxation(const DistributedMatrix<Backend>& A,
+                                 const params& prm = params(),
+                                 const backend_params& bprm = backend_params())
   : Base(A, prm, bprm)
   {}
 };
@@ -62,17 +58,17 @@ struct chebyshev
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct damped_jacobi
-: public Alina::relaxation::damped_jacobi<Backend>
+struct DistributedDampedJacobiRelaxation
+: public Alina::relaxation::DampedJacobiRelaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::damped_jacobi<Backend> Base;
+  typedef Alina::relaxation::DampedJacobiRelaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  damped_jacobi(const DistributedMatrix<Backend>& A,
-                const params& prm = params(),
-                const backend_params& bprm = backend_params())
+  DistributedDampedJacobiRelaxation(const DistributedMatrix<Backend>& A,
+                                    const params& prm = params(),
+                                    const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
   {}
 };
@@ -81,17 +77,17 @@ struct damped_jacobi
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct gauss_seidel
-: public Alina::relaxation::gauss_seidel<Backend>
+struct DistributedGaussSeidelRelaxation
+: public Alina::relaxation::GaussSeidelRelaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::gauss_seidel<Backend> Base;
+  typedef Alina::relaxation::GaussSeidelRelaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  gauss_seidel(const DistributedMatrix<Backend>& A,
-               const params& prm = params(),
-               const backend_params& bprm = backend_params())
+  DistributedGaussSeidelRelaxation(const DistributedMatrix<Backend>& A,
+                                   const params& prm = params(),
+                                   const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
   {}
 
@@ -119,17 +115,17 @@ struct gauss_seidel
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct ilu0
-: public Alina::relaxation::ilu0<Backend>
+struct DistributedILU0Relaxation
+: public Alina::relaxation::ILU0Relaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::ilu0<Backend> Base;
+  typedef Alina::relaxation::ILU0Relaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  ilu0(const DistributedMatrix<Backend>& A,
-       const params& prm = params(),
-       const backend_params& bprm = backend_params())
+  DistributedILU0Relaxation(const DistributedMatrix<Backend>& A,
+                            const params& prm = params(),
+                            const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
   {}
 };
@@ -138,16 +134,17 @@ struct ilu0
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct iluk : public Alina::relaxation::iluk<Backend>
+struct DistributedILUKRelaxation
+: public Alina::relaxation::ILUKRelaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::iluk<Backend> Base;
+  typedef Alina::relaxation::ILUKRelaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  iluk(const DistributedMatrix<Backend>& A,
-       const params& prm = params(),
-       const backend_params& bprm = backend_params())
+  DistributedILUKRelaxation(const DistributedMatrix<Backend>& A,
+                            const params& prm = params(),
+                            const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
   {}
 };
@@ -156,16 +153,17 @@ struct iluk : public Alina::relaxation::iluk<Backend>
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct ilup : public Alina::relaxation::ilup<Backend>
+struct DistributedILUPRelaxation
+: public Alina::relaxation::ILUPRelaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::ilup<Backend> Base;
+  typedef Alina::relaxation::ILUPRelaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  ilup(const DistributedMatrix<Backend>& A,
-       const params& prm = params(),
-       const backend_params& bprm = backend_params())
+  DistributedILUPRelaxation(const DistributedMatrix<Backend>& A,
+                            const params& prm = params(),
+                            const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
   {}
 };
@@ -174,16 +172,16 @@ struct ilup : public Alina::relaxation::ilup<Backend>
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct ilut : public Alina::relaxation::ilut<Backend>
+struct DistributedILUTRelaxation : public Alina::relaxation::ILUTRelaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::ilut<Backend> Base;
+  typedef Alina::relaxation::ILUTRelaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  ilut(const DistributedMatrix<Backend>& A,
-       const params& prm = params(),
-       const backend_params& bprm = backend_params())
+  DistributedILUTRelaxation(const DistributedMatrix<Backend>& A,
+                            const params& prm = params(),
+                            const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
   {}
 };
@@ -192,7 +190,7 @@ struct ilut : public Alina::relaxation::ilut<Backend>
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct spai0
+struct DistributedSPAI0Relaxation
 {
   typedef Backend backend_type;
   typedef typename Backend::value_type value_type;
@@ -201,8 +199,8 @@ struct spai0
   typedef Alina::detail::empty_params params;
   typedef typename Backend::params backend_params;
 
-  spai0(const DistributedMatrix<Backend>& A,
-        const params&, const backend_params& bprm = backend_params())
+  DistributedSPAI0Relaxation(const DistributedMatrix<Backend>& A,
+                             const params&, const backend_params& bprm = backend_params())
   {
     typedef backend::CSRMatrix<value_type> build_matrix;
 
@@ -240,8 +238,7 @@ struct spai0
 
   /// \copydoc amgcl::relaxation::damped_jacobi::apply_pre
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
-  void apply_pre(
-  const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
+  void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
     static const scalar_type one = math::identity<scalar_type>();
     backend::residual(rhs, A, x, tmp);
@@ -250,8 +247,7 @@ struct spai0
 
   /// \copydoc amgcl::relaxation::damped_jacobi::apply_post
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
-  void apply_post(
-  const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
+  void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
     static const scalar_type one = math::identity<scalar_type>();
     backend::residual(rhs, A, x, tmp);
@@ -273,17 +269,17 @@ struct spai0
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct spai1 : public Alina::relaxation::spai1<Backend>
+struct DistributedSPAI1Relaxation
+: public Alina::relaxation::SPAI1Relaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::spai1<Backend> Base;
+  typedef Alina::relaxation::SPAI1Relaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
-  spai1(
-  const DistributedMatrix<Backend>& A,
-  const params& prm = params(),
-  const backend_params& bprm = backend_params())
+  DistributedSPAI1Relaxation(const DistributedMatrix<Backend>& A,
+                             const params& prm = params(),
+                             const backend_params& bprm = backend_params())
   : Base(*A.local(), prm, bprm)
   {}
 };
@@ -357,7 +353,7 @@ struct as_preconditioner
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace amgcl::mpi::relaxation
+} // namespace Arcane::Alina::mpi::relaxation
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

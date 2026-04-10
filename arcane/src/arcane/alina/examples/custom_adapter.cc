@@ -131,7 +131,7 @@ int main() {
         Alina::AMG<
             Backend,
             Alina::coarsening::aggregation,
-            Alina::relaxation::spai0
+            Alina::relaxation::SPAI0Relaxation
             >,
         Alina::solver::ConjugateGradientSolver<Backend>
         > solve( A );

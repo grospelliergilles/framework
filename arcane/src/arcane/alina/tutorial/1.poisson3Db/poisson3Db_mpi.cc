@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
   Alina::mpi::DistributedAMG<
   FBackend,
   Alina::mpi::coarsening::smoothed_aggregation<FBackend>,
-  Alina::mpi::relaxation::spai0<FBackend>>,
+  Alina::mpi::relaxation::DistributedSPAI0Relaxation<FBackend>>,
   Alina::mpi::solver::bicgstab<DBackend>>
   Solver;
 

@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
   Alina::AMG<
   Alina::backend::BuiltinBackend<double>,
   Alina::coarsening::smoothed_aggregation,
-  Alina::relaxation::gauss_seidel>,
+  Alina::relaxation::GaussSeidelRelaxation>,
   Alina::solver::ConjugateGradientSolver<
   Alina::backend::BuiltinBackend<double>>>
   Solver;

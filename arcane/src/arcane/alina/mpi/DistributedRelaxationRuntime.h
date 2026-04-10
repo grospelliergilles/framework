@@ -61,7 +61,7 @@ struct DistributedRelaxationRuntime
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
-    handle = static_cast<void*>(new ::Arcane::Alina::mpi::relaxation::type<Backend>(A, prm, bprm)); \
+    handle = static_cast<void*>(new ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>(A, prm, bprm)); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
@@ -74,15 +74,15 @@ struct DistributedRelaxationRuntime
     handle = call_constructor<::Arcane::Alina::relaxation::type>(*A.local(), prm, bprm); \
     break;
 
-      ARCANE_ALINA_RELAX_DISTR(spai0);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(chebyshev);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(damped_jacobi);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ilu0);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(iluk);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ilup);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ilut);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(spai1);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(gauss_seidel);
+      ARCANE_ALINA_RELAX_DISTR(SPAI0Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ChebyshevRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(DampedJacobiRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ILU0Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ILUKRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ILUPRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ILUTRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(SPAI1Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(GaussSeidelRelaxation);
 
 #undef ARCANE_ALINA_RELAX_LOCAL_LOCAL
 #undef ARCANE_ALINA_RELAX_LOCAL_DISTR
@@ -98,7 +98,7 @@ struct DistributedRelaxationRuntime
     switch (r) {
 #define ARCANE_ALINA_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
-    delete static_cast<::Arcane::Alina::mpi::relaxation::type<Backend>*>(handle); \
+    delete static_cast<::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL(type) \
@@ -106,15 +106,15 @@ struct DistributedRelaxationRuntime
     delete static_cast<::Arcane::Alina::relaxation::type<Backend>*>(handle); \
     break;
 
-      ARCANE_ALINA_RELAX_DISTR(spai0);
-      ARCANE_ALINA_RELAX_LOCAL(damped_jacobi);
-      ARCANE_ALINA_RELAX_LOCAL(ilu0);
-      ARCANE_ALINA_RELAX_LOCAL(iluk);
-      ARCANE_ALINA_RELAX_LOCAL(ilup);
-      ARCANE_ALINA_RELAX_LOCAL(ilut);
-      ARCANE_ALINA_RELAX_LOCAL(spai1);
-      ARCANE_ALINA_RELAX_LOCAL(chebyshev);
-      ARCANE_ALINA_RELAX_LOCAL(gauss_seidel);
+      ARCANE_ALINA_RELAX_DISTR(SPAI0Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL(DampedJacobiRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL(ILU0Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL(ILUKRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL(ILUPRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL(ILUTRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL(SPAI1Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL(ChebyshevRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL(GaussSeidelRelaxation);
 
 #undef ARCANE_ALINA_RELAX_LOCAL
 #undef ARCANE_ALINA_RELAX_DISTR
@@ -131,7 +131,7 @@ struct DistributedRelaxationRuntime
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
-    static_cast<const ::Arcane::Alina::mpi::relaxation::type<Backend>*>(handle)->apply_pre(A, rhs, x, tmp); \
+    static_cast<const ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle)->apply_pre(A, rhs, x, tmp); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
@@ -144,15 +144,15 @@ struct DistributedRelaxationRuntime
     call_apply_pre<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x, tmp); \
     break;
 
-      ARCANE_ALINA_RELAX_DISTR(spai0);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(damped_jacobi);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilu0);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(iluk);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilup);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilut);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(spai1);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(chebyshev);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(gauss_seidel);
+      ARCANE_ALINA_RELAX_DISTR(SPAI0Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(DampedJacobiRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILU0Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUKRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUPRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUTRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(SPAI1Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ChebyshevRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(GaussSeidelRelaxation);
 
 #undef ARCANE_ALINA_RELAX_LOCAL_LOCAL
 #undef ARCANE_ALINA_RELAX_LOCAL_DISTR
@@ -170,7 +170,7 @@ struct DistributedRelaxationRuntime
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
-    static_cast<const ::Arcane::Alina::mpi::relaxation::type<Backend>*>(handle)->apply_post(A, rhs, x, tmp); \
+    static_cast<const ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle)->apply_post(A, rhs, x, tmp); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
@@ -183,15 +183,15 @@ struct DistributedRelaxationRuntime
     call_apply_post<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x, tmp); \
     break;
 
-      ARCANE_ALINA_RELAX_DISTR(spai0);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(damped_jacobi);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilu0);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(iluk);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilup);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilut);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(spai1);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(chebyshev);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(gauss_seidel);
+      ARCANE_ALINA_RELAX_DISTR(SPAI0Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(DampedJacobiRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILU0Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUKRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUPRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUTRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(SPAI1Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ChebyshevRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(GaussSeidelRelaxation);
 
 #undef ARCANE_ALINA_RELAX_LOCAL_LOCAL
 #undef ARCANE_ALINA_RELAX_LOCAL_DISTR
@@ -209,7 +209,7 @@ struct DistributedRelaxationRuntime
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
   case runtime::relaxation::type: \
-    static_cast<const ::Arcane::Alina::mpi::relaxation::type<Backend>*>(handle)->apply(A, rhs, x); \
+    static_cast<const ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle)->apply(A, rhs, x); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
@@ -222,15 +222,15 @@ struct DistributedRelaxationRuntime
     call_apply<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x); \
     break;
 
-      ARCANE_ALINA_RELAX_DISTR(spai0);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(damped_jacobi);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(gauss_seidel);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilu0);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(iluk);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilup);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ilut);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(spai1);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(chebyshev);
+      ARCANE_ALINA_RELAX_DISTR(SPAI0Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(DampedJacobiRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_LOCAL(GaussSeidelRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILU0Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUKRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUPRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUTRelaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(SPAI1Relaxation);
+      ARCANE_ALINA_RELAX_LOCAL_DISTR(ChebyshevRelaxation);
 
 #undef ARCANE_ALINA_RELAX_LOCAL_LOCAL
 #undef ARCANE_ALINA_RELAX_LOCAL_DISTR
@@ -293,8 +293,7 @@ struct DistributedRelaxationRuntime
   template <template <class> class Relaxation, class Matrix, class VectorRHS, class VectorX>
   typename std::enable_if<backend::relaxation_is_supported<Backend, Relaxation>::value,
                           void>::type
-  call_apply(
-  const Matrix& A, const VectorRHS& rhs, VectorX& x) const
+  call_apply(const Matrix& A, const VectorRHS& rhs, VectorX& x) const
   {
     static_cast<Relaxation<Backend>*>(handle)->apply(A, rhs, x);
   }
