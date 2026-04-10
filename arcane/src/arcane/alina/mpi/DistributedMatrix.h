@@ -174,12 +174,12 @@ class CommunicationPattern
     // What columns do you need from me?
     for (size_t i = 0; i < send.nbr.size(); ++i)
       MPI_Irecv(&send.col[send.ptr[i]], send.ptr[i + 1] - send.ptr[i],
-                datatype<ptrdiff_t>(), send.nbr[i], tag_exc_cols, comm, &send.req[i]);
+                mpi_datatype<ptrdiff_t>(), send.nbr[i], tag_exc_cols, comm, &send.req[i]);
 
     // Here is what I need from you:
     for (size_t i = 0; i < recv.nbr.size(); ++i)
       MPI_Isend(&rem_cols[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
-                datatype<ptrdiff_t>(), recv.nbr[i], tag_exc_cols, comm, &recv.req[i]);
+                mpi_datatype<ptrdiff_t>(), recv.nbr[i], tag_exc_cols, comm, &recv.req[i]);
 
     ARCANE_ALINA_TIC("MPI Wait");
     MPI_Waitall(recv.req.size(), recv.req.data(), MPI_STATUSES_IGNORE);
@@ -268,7 +268,7 @@ class CommunicationPattern
     // Start receiving ghost values from our neighbours.
     for (size_t i = 0; i < recv.nbr.size(); ++i)
       MPI_Irecv(&recv.val[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
-                datatype<rhs_type>(), recv.nbr[i], tag_exc_vals, comm, &recv.req[i]);
+                mpi_datatype<rhs_type>(), recv.nbr[i], tag_exc_vals, comm, &recv.req[i]);
 
     // Start sending our data to neighbours.
     if (!send.val.empty()) {
@@ -276,7 +276,7 @@ class CommunicationPattern
 
       for (size_t i = 0; i < send.nbr.size(); ++i)
         MPI_Isend(&send.val[send.ptr[i]], send.ptr[i + 1] - send.ptr[i],
-                  datatype<rhs_type>(), send.nbr[i], tag_exc_vals, comm, &send.req[i]);
+                  mpi_datatype<rhs_type>(), send.nbr[i], tag_exc_vals, comm, &send.req[i]);
     }
   }
 
@@ -296,11 +296,11 @@ class CommunicationPattern
   {
     for (size_t i = 0; i < recv.nbr.size(); ++i)
       MPI_Irecv(&recv_val[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
-                datatype<T>(), recv.nbr[i], tag_exc_vals, comm, &recv.req[i]);
+                mpi_datatype<T>(), recv.nbr[i], tag_exc_vals, comm, &recv.req[i]);
 
     for (size_t i = 0; i < send.nbr.size(); ++i)
       MPI_Isend(const_cast<T*>(&send_val[send.ptr[i]]), send.ptr[i + 1] - send.ptr[i],
-                datatype<T>(), send.nbr[i], tag_exc_vals, comm, &send.req[i]);
+                mpi_datatype<T>(), send.nbr[i], tag_exc_vals, comm, &send.req[i]);
 
     ARCANE_ALINA_TIC("MPI Wait");
     MPI_Waitall(recv.req.size(), recv.req.data(), MPI_STATUSES_IGNORE);
@@ -674,7 +674,7 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t beg = C.send.ptr[i];
     ptrdiff_t end = C.send.ptr[i + 1];
 
-    MPI_Irecv(&rem_ptr[beg + 1], end - beg, datatype<ptrdiff_t>(),
+    MPI_Irecv(&rem_ptr[beg + 1], end - beg, mpi_datatype<ptrdiff_t>(),
               C.send.nbr[i], tag_cnt, comm, &recv_cnt_req[i]);
   }
 
@@ -682,7 +682,7 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t beg = C.recv.ptr[i];
     ptrdiff_t end = C.recv.ptr[i + 1];
 
-    MPI_Isend(&row_size[beg], end - beg, datatype<ptrdiff_t>(),
+    MPI_Isend(&row_size[beg], end - beg, mpi_datatype<ptrdiff_t>(),
               C.recv.nbr[i], tag_cnt, comm, &send_cnt_req[i]);
   }
 
@@ -702,10 +702,10 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t cbeg = rem_ptr[rbeg];
     ptrdiff_t cend = rem_ptr[rend];
 
-    MPI_Irecv(&rem_col[cbeg], cend - cbeg, datatype<ptrdiff_t>(),
+    MPI_Irecv(&rem_col[cbeg], cend - cbeg, mpi_datatype<ptrdiff_t>(),
               C.send.nbr[i], tag_col, comm, &recv_col_req[i]);
 
-    MPI_Irecv(&rem_val[cbeg], cend - cbeg, datatype<value_type>(),
+    MPI_Irecv(&rem_val[cbeg], cend - cbeg, mpi_datatype<value_type>(),
               C.send.nbr[i], tag_val, comm, &recv_val_req[i]);
   }
 
@@ -716,10 +716,10 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t cbeg = t_rem.ptr[rbeg];
     ptrdiff_t cend = t_rem.ptr[rend];
 
-    MPI_Isend(&t_rem.col[cbeg], cend - cbeg, datatype<ptrdiff_t>(),
+    MPI_Isend(&t_rem.col[cbeg], cend - cbeg, mpi_datatype<ptrdiff_t>(),
               C.recv.nbr[i], tag_col, comm, &send_col_req[i]);
 
-    MPI_Isend(&t_rem.val[cbeg], cend - cbeg, datatype<value_type>(),
+    MPI_Isend(&t_rem.val[cbeg], cend - cbeg, mpi_datatype<value_type>(),
               C.recv.nbr[i], tag_val, comm, &send_val_req[i]);
   }
 
@@ -819,7 +819,7 @@ remote_rows(const CommunicationPattern<Backend>& C,
       m.nnz += w;
     }
 
-    MPI_Isend(m.ptr, m.nrows, datatype<ptrdiff_t>(),
+    MPI_Isend(m.ptr, m.nrows, mpi_datatype<ptrdiff_t>(),
               C.send.nbr[k], tag_ptr, comm, &send_ptr_req[k]);
 
     m.set_nonzeros(m.nnz, need_values);
@@ -848,10 +848,10 @@ remote_rows(const CommunicationPattern<Backend>& C,
       }
     }
 
-    MPI_Isend(m.col, m.nnz, datatype<ptrdiff_t>(),
+    MPI_Isend(m.col, m.nnz, mpi_datatype<ptrdiff_t>(),
               C.send.nbr[k], tag_col, comm, &send_col_req[k]);
     if (need_values)
-      MPI_Isend(m.val, m.nnz, datatype<value_type>(),
+      MPI_Isend(m.val, m.nnz, mpi_datatype<value_type>(),
                 C.send.nbr[k], tag_val, comm, &send_val_req[k]);
   }
 
@@ -868,7 +868,7 @@ remote_rows(const CommunicationPattern<Backend>& C,
     ptrdiff_t beg = C.recv.ptr[k];
     ptrdiff_t end = C.recv.ptr[k + 1];
 
-    MPI_Irecv(&B_nbr->ptr[beg + 1], end - beg, datatype<ptrdiff_t>(),
+    MPI_Irecv(&B_nbr->ptr[beg + 1], end - beg, mpi_datatype<ptrdiff_t>(),
               C.recv.nbr[k], tag_ptr, comm, &recv_ptr_req[k]);
   }
 
@@ -885,11 +885,11 @@ remote_rows(const CommunicationPattern<Backend>& C,
     ptrdiff_t cbeg = B_nbr->ptr[rbeg];
     ptrdiff_t cend = B_nbr->ptr[rend];
 
-    MPI_Irecv(&B_nbr->col[cbeg], cend - cbeg, datatype<ptrdiff_t>(),
+    MPI_Irecv(&B_nbr->col[cbeg], cend - cbeg, mpi_datatype<ptrdiff_t>(),
               C.recv.nbr[k], tag_col, comm, &recv_col_req[k]);
 
     if (need_values)
-      MPI_Irecv(&B_nbr->val[cbeg], cend - cbeg, datatype<value_type>(),
+      MPI_Irecv(&B_nbr->val[cbeg], cend - cbeg, mpi_datatype<value_type>(),
                 C.recv.nbr[k], tag_val, comm, &recv_val_req[k]);
   }
 
@@ -1237,7 +1237,7 @@ spectral_radius(const mpi::DistributedMatrix<Backend>& A, int power_iters = 0)
   typedef typename math::scalar_of<value_type>::type scalar_type;
   typedef backend::CSRMatrix<value_type> build_matrix;
 
-  mpi::mpi_communicator comm = A.comm();
+  mpi_communicator comm = A.comm();
 
   const build_matrix& A_loc = *A.local();
   const build_matrix& A_rem = *A.remote();

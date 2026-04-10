@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
   }
   BOOST_SCOPE_EXIT_END
 
-  Alina::mpi::mpi_communicator world(MPI_COMM_WORLD);
+  Alina::mpi_communicator world(MPI_COMM_WORLD);
 
   if (world.rank == 0)
     std::cout << "World size: " << world.size << std::endl;
@@ -209,8 +209,8 @@ int main(int argc, char* argv[])
   ptrdiff_t chunk = part.size(world.rank);
 
   std::vector<ptrdiff_t> domain(world.size + 1);
-  MPI_Allgather(&chunk, 1, Alina::mpi::datatype<ptrdiff_t>(),
-                &domain[1], 1, Alina::mpi::datatype<ptrdiff_t>(), world);
+  MPI_Allgather(&chunk, 1, Alina::mpi_datatype<ptrdiff_t>(),
+                &domain[1], 1, Alina::mpi_datatype<ptrdiff_t>(), world);
   std::partial_sum(domain.begin(), domain.end(), domain.begin());
 
   lo = part.domain(world.rank).min_corner();

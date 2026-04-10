@@ -126,7 +126,7 @@ class DistributedDirectSolverBase
       for (int j = 0; j < group_size; ++j) {
         int i = slaves[j];
 
-        MPI_Irecv(&A.ptr[shift], counts[j], datatype<ptrdiff_t>(),
+        MPI_Irecv(&A.ptr[shift], counts[j], mpi_datatype<ptrdiff_t>(),
                   i, cnt_tag, comm, &cnt_req[j]);
 
         shift += counts[j];
@@ -145,10 +145,10 @@ class DistributedDirectSolverBase
 
         int nnz = A.ptr[domain[i + 1] - d0] - A.ptr[domain[i] - d0];
 
-        MPI_Irecv(A.col + shift, nnz, datatype<ptrdiff_t>(),
+        MPI_Irecv(A.col + shift, nnz, mpi_datatype<ptrdiff_t>(),
                   i, col_tag, comm, &col_req[j]);
 
-        MPI_Irecv(A.val + shift, nnz, datatype<value_type>(),
+        MPI_Irecv(A.val + shift, nnz, mpi_datatype<value_type>(),
                   i, val_tag, comm, &val_req[j]);
 
         shift += nnz;
@@ -160,11 +160,11 @@ class DistributedDirectSolverBase
       solver().init(masters_comm, A);
     }
     else {
-      MPI_Send(widths.data(), n, datatype<ptrdiff_t>(),
+      MPI_Send(widths.data(), n, mpi_datatype<ptrdiff_t>(),
                group_master, cnt_tag, comm);
-      MPI_Send(Astrip.col, Astrip.nnz, datatype<ptrdiff_t>(),
+      MPI_Send(Astrip.col, Astrip.nnz, mpi_datatype<ptrdiff_t>(),
                group_master, col_tag, comm);
-      MPI_Send(Astrip.val, Astrip.nnz, datatype<value_type>(),
+      MPI_Send(Astrip.val, Astrip.nnz, mpi_datatype<value_type>(),
                group_master, val_tag, comm);
     }
 
@@ -223,7 +223,7 @@ class DistributedDirectSolverBase
   template <class VecF, class VecX>
   void operator()(const VecF& f, VecX& x) const
   {
-    static const MPI_Datatype T = datatype<rhs_type>();
+    static const MPI_Datatype T = mpi_datatype<rhs_type>();
 
     if (!n)
       return;

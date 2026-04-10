@@ -602,7 +602,7 @@ struct DistributedPMISAggregation
 
         if (!npts)
           continue;
-        MPI_Isend(&send_pts[i][0], npts, datatype<ptrdiff_t>(), Sp.recv.nbr[i], tag_exc_pts, comm, &send_pts_req[i]);
+        MPI_Isend(&send_pts[i][0], npts, mpi_datatype<ptrdiff_t>(), Sp.recv.nbr[i], tag_exc_pts, comm, &send_pts_req[i]);
       }
 
       for (size_t i = 0; i < Sp.send.nbr.size(); ++i) {
@@ -612,7 +612,7 @@ struct DistributedPMISAggregation
         if (!npts)
           continue;
         recv_pts.resize(npts);
-        MPI_Recv(&recv_pts[0], npts, datatype<ptrdiff_t>(), Sp.send.nbr[i], tag_exc_pts, comm, MPI_STATUS_IGNORE);
+        MPI_Recv(&recv_pts[0], npts, mpi_datatype<ptrdiff_t>(), Sp.send.nbr[i], tag_exc_pts, comm, MPI_STATUS_IGNORE);
 
         for (int k = 0; k < npts; k += 2) {
           ptrdiff_t c = recv_pts[k] - Sp.loc_col_shift();
@@ -693,7 +693,7 @@ struct DistributedPMISAggregation
 
         if (!npts)
           continue;
-        MPI_Isend(&send_pts[i][0], npts, datatype<ptrdiff_t>(), Sp.recv.nbr[i], tag_exc_pts, comm, &send_pts_req[i]);
+        MPI_Isend(&send_pts[i][0], npts, mpi_datatype<ptrdiff_t>(), Sp.recv.nbr[i], tag_exc_pts, comm, &send_pts_req[i]);
       }
 
       for (size_t i = 0; i < Sp.send.nbr.size(); ++i) {
@@ -703,7 +703,7 @@ struct DistributedPMISAggregation
         if (!npts)
           continue;
         recv_pts.resize(npts);
-        MPI_Recv(&recv_pts[0], npts, datatype<ptrdiff_t>(), Sp.send.nbr[i], tag_exc_pts, comm, MPI_STATUS_IGNORE);
+        MPI_Recv(&recv_pts[0], npts, mpi_datatype<ptrdiff_t>(), Sp.send.nbr[i], tag_exc_pts, comm, MPI_STATUS_IGNORE);
 
         for (int k = 0; k < npts; k += 2) {
           ptrdiff_t c = recv_pts[k] - Sp.loc_col_shift();
@@ -855,9 +855,9 @@ struct DistributedPMISAggregation
 
         MPI_Request* req = &recv_req[3 * i];
 
-        MPI_Irecv(&recv_agg[p], w, datatype<ptrdiff_t>(), n, tag_exc_agg, comm, &req[0]);
-        MPI_Irecv(&recv_dof[p], w, datatype<ptrdiff_t>(), n, tag_exc_dof, comm, &req[1]);
-        MPI_Irecv(&recv_row[null_cols * p], null_cols * w, datatype<double>(), n, tag_exc_row, comm, &req[2]);
+        MPI_Irecv(&recv_agg[p], w, mpi_datatype<ptrdiff_t>(), n, tag_exc_agg, comm, &req[0]);
+        MPI_Irecv(&recv_dof[p], w, mpi_datatype<ptrdiff_t>(), n, tag_exc_dof, comm, &req[1]);
+        MPI_Irecv(&recv_row[null_cols * p], null_cols * w, mpi_datatype<double>(), n, tag_exc_row, comm, &req[2]);
       }
 
       for (int i = 0; i < snbr; ++i) {
@@ -867,9 +867,9 @@ struct DistributedPMISAggregation
 
         MPI_Request* req = &send_req[3 * i];
 
-        MPI_Isend(&send_agg[p], w, datatype<ptrdiff_t>(), n, tag_exc_agg, comm, &req[0]);
-        MPI_Isend(&send_dof[p], w, datatype<ptrdiff_t>(), n, tag_exc_dof, comm, &req[1]);
-        MPI_Isend(&send_row[null_cols * p], null_cols * w, datatype<double>(), n, tag_exc_row, comm, &req[2]);
+        MPI_Isend(&send_agg[p], w, mpi_datatype<ptrdiff_t>(), n, tag_exc_agg, comm, &req[0]);
+        MPI_Isend(&send_dof[p], w, mpi_datatype<ptrdiff_t>(), n, tag_exc_dof, comm, &req[1]);
+        MPI_Isend(&send_row[null_cols * p], null_cols * w, mpi_datatype<double>(), n, tag_exc_row, comm, &req[2]);
       }
 
       ARCANE_ALINA_TIC("MPI Wait");
@@ -959,14 +959,14 @@ struct DistributedPMISAggregation
         int n = send_nbr[i];
         int p = send_ptr[i];
         int w = send_ptr[i + 1] - p;
-        MPI_Irecv(&send_row[null_cols * p], null_cols * w, datatype<double>(), n, tag_exc_row, comm, &send_req[i]);
+        MPI_Irecv(&send_row[null_cols * p], null_cols * w, mpi_datatype<double>(), n, tag_exc_row, comm, &send_req[i]);
       }
 
       for (int i = 0; i < rnbr; ++i) {
         int n = recv_nbr[i];
         int p = recv_ptr[i];
         int w = recv_ptr[i + 1] - p;
-        MPI_Isend(&recv_row[null_cols * p], null_cols * w, datatype<double>(), n, tag_exc_row, comm, &recv_req[i]);
+        MPI_Isend(&recv_row[null_cols * p], null_cols * w, mpi_datatype<double>(), n, tag_exc_row, comm, &recv_req[i]);
       }
 
       // Fill column numbers

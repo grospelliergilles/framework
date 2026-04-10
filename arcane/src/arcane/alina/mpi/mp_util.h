@@ -35,7 +35,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::mpi
+namespace Arcane::Alina
 {
 
 /// Converts C type to MPI datatype.
@@ -117,18 +117,18 @@ struct mpi_datatype_impl<std::complex<float>>
 
 template <typename T>
 struct mpi_datatype_impl<T,
-                     typename std::enable_if<
-                     std::is_same<T, ptrdiff_t>::value &&
-                     !std::is_same<ptrdiff_t, long long>::value &&
-                     !std::is_same<ptrdiff_t, int>::value>::type> : std::conditional<sizeof(ptrdiff_t) == sizeof(int), mpi_datatype_impl<int>, mpi_datatype_impl<long long>>::type
+                         typename std::enable_if<
+                         std::is_same<T, ptrdiff_t>::value &&
+                         !std::is_same<ptrdiff_t, long long>::value &&
+                         !std::is_same<ptrdiff_t, int>::value>::type> : std::conditional<sizeof(ptrdiff_t) == sizeof(int), mpi_datatype_impl<int>, mpi_datatype_impl<long long>>::type
 {};
 
 template <typename T>
 struct mpi_datatype_impl<T,
-                     typename std::enable_if<
-                     std::is_same<T, size_t>::value &&
-                     !std::is_same<size_t, unsigned long long>::value &&
-                     !std::is_same<ptrdiff_t, unsigned int>::value>::type>
+                         typename std::enable_if<
+                         std::is_same<T, size_t>::value &&
+                         !std::is_same<size_t, unsigned long long>::value &&
+                         !std::is_same<ptrdiff_t, unsigned int>::value>::type>
 : std::conditional<
   sizeof(size_t) == sizeof(unsigned), mpi_datatype_impl<unsigned>, mpi_datatype_impl<unsigned long long>>::type
 {};
@@ -139,11 +139,19 @@ struct mpi_datatype_impl<char>
   static MPI_Datatype get() { return MPI_CHAR; }
 };
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Wrapper to obtain the equivalent MPI datatype for a datatype.
+ */
 template <typename T>
-MPI_Datatype datatype()
+MPI_Datatype mpi_datatype()
 {
   return mpi_datatype_impl<T>::get();
 }
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 /// Convenience wrapper around MPI_Init/MPI_Finalize.
 struct mpi_init
@@ -159,6 +167,9 @@ struct mpi_init
   }
 };
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 /// Convenience wrapper around MPI_Init_threads/MPI_Finalize.
 struct mpi_init_thread
 {
@@ -173,6 +184,9 @@ struct mpi_init_thread
     MPI_Finalize();
   }
 };
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 /// Convenience wrapper around MPI_Comm.
 struct mpi_communicator
@@ -204,7 +218,7 @@ struct mpi_communicator
     // TODO: Utiliser scan.
     std::vector<T> v(size + 1);
     v[0] = 0;
-    MPI_Allgather(&n, 1, datatype<T>(), &v[1], 1, datatype<T>(), comm);
+    MPI_Allgather(&n, 1, mpi_datatype<T>(), &v[1], 1, mpi_datatype<T>(), comm);
     std::partial_sum(v.begin(), v.end(), v.begin());
     return v;
   }
@@ -215,7 +229,7 @@ struct mpi_communicator
     const int elems = math::static_rows<T>::value * math::static_cols<T>::value;
     T gval;
 
-    MPI_Allreduce((void*)&lval, &gval, elems, datatype<T>(), op, comm);
+    MPI_Allreduce((void*)&lval, &gval, elems, mpi_datatype<T>(), op, comm);
     return gval;
   }
 
@@ -253,7 +267,7 @@ struct mpi_communicator
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::mpi
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
         MPI_Finalize();
     } BOOST_SCOPE_EXIT_END
 
-    Alina::mpi::mpi_communicator comm(MPI_COMM_WORLD);
+    Alina::mpi_communicator comm(MPI_COMM_WORLD);
 
     int n = 16;
     int chunk_len = (n + comm.size - 1) / comm.size;

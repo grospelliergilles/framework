@@ -60,7 +60,7 @@ template <class Val>
 void test() {
     typedef typename math::rhs_of<Val>::type Rhs;
 
-    Alina::mpi::mpi_communicator comm(MPI_COMM_WORLD);
+    Alina::mpi_communicator comm(MPI_COMM_WORLD);
 
     int n = 16;
     int chunk_len = (n + comm.size - 1) / comm.size;
@@ -95,8 +95,8 @@ void test() {
     Alina::backend::spmv(1, *B, x, 0, y);
 
     std::vector<Rhs> X(n), R(n);
-    MPI_Gatherv(&x[0], chunk, Alina::mpi::datatype<Rhs>(), &X[0], &chunks[0], &displ[0], Alina::mpi::datatype<Rhs>(), 0, comm);
-    MPI_Gatherv(&y[0], chunk, Alina::mpi::datatype<Rhs>(), &R[0], &chunks[0], &displ[0], Alina::mpi::datatype<Rhs>(), 0, comm);
+    MPI_Gatherv(&x[0], chunk, Alina::mpi_datatype<Rhs>(), &X[0], &chunks[0], &displ[0], Alina::mpi_datatype<Rhs>(), 0, comm);
+    MPI_Gatherv(&y[0], chunk, Alina::mpi_datatype<Rhs>(), &R[0], &chunks[0], &displ[0], Alina::mpi_datatype<Rhs>(), 0, comm);
 
     if (comm.rank == 0) {
         std::vector<Rhs> Y(n);

@@ -170,7 +170,7 @@ class subdomain_deflation {
                 )
         : comm(comm),
           nrows(backend::rows(Astrip)), ndv(prm.num_def_vec),
-          dtype( datatype<value_type>() ), dv_start(comm.size + 1, 0),
+          dtype( mpi_datatype<value_type>() ), dv_start(comm.size + 1, 0),
           Z( ndv ), q( backend_type::create_vector(nrows, bprm) ),
           S(nrows, prm.isolver, bprm, mpi::inner_product(comm))
         {
@@ -186,7 +186,7 @@ class subdomain_deflation {
                 )
         : comm(comm),
           nrows(A->loc_rows()), ndv(prm.num_def_vec),
-          dtype( datatype<value_type>() ), A(A), dv_start(comm.size + 1, 0),
+          dtype( mpi_datatype<value_type>() ), A(A), dv_start(comm.size + 1, 0),
           Z( ndv ), q( backend_type::create_vector(nrows, bprm) ),
           S(nrows, prm.isolver, bprm, mpi::inner_product(comm))
         {
@@ -203,7 +203,7 @@ class subdomain_deflation {
 
             // Lets see how many deflation vectors are there.
             std::vector<ptrdiff_t> dv_size(comm.size);
-            MPI_Allgather(&ndv, 1, datatype<ptrdiff_t>(), &dv_size[0], 1, datatype<ptrdiff_t>(), comm);
+            MPI_Allgather(&ndv, 1, mpi_datatype<ptrdiff_t>(), &dv_size[0], 1, mpi_datatype<ptrdiff_t>(), comm);
 
             std::partial_sum(dv_size.begin(), dv_size.end(), dv_start.begin() + 1);
             nz = dv_start.back();
