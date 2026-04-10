@@ -113,7 +113,7 @@ void solve_scalar(Alina::mpi::communicator comm,
 {
   typedef Alina::backend::BuiltinBackend<std::complex<double>> Backend;
 
-  typedef Alina::mpi::make_solver<
+  typedef Alina::mpi::DistributedPreconditionedSolver<
   Alina::runtime::mpi::DistributedPreconditioner<Backend>,
   Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>
   Solver;

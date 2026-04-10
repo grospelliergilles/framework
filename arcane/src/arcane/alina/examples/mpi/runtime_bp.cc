@@ -61,7 +61,7 @@ solve(const Alina::mpi::communicator& comm,
 {
   typedef Alina::backend::BuiltinBackend<double> Backend;
 
-  typedef Alina::mpi::make_solver<
+  typedef Alina::mpi::DistributedPreconditionedSolver<
   Alina::mpi::block_preconditioner<Precond<Backend>>,
   Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>
   Solver;

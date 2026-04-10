@@ -1,189 +1,202 @@
-#ifndef ARCANE_ALINA_MPI_MAKE_SOLVER_HPP
-#define ARCANE_ALINA_MPI_MAKE_SOLVER_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* DistributedPreconditionedSolver.h                           (C) 2000-2026 */
+/*                                                                           */
+/* Iterative solver wrapper for distributed linear systems.                  */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_DISTRIBUTEDPRECONDITIONEDSOLVER_H
+#define ARCANE_ALINA_DISTRIBUTEDPRECONDITIONEDSOLVER_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   alina/mpi/block_preconditioner.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Iterative solver wrapper for distributed linear systmes.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <iostream>
-#include <memory>
-
-#include <mpi.h>
 
 #include <arcane/alina/util.h>
 #include <arcane/alina/mpi/DistributedInnerProduct.h>
 #include <arcane/alina/mpi/DistributedMatrix.h>
 
-namespace Arcane::Alina {
-namespace mpi {
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
-template <
-    class Precond,
-    class IterativeSolver
-    >
-class make_solver : public Alina::detail::non_copyable {
-    static_assert(
-            backend::backends_compatible<
+namespace Arcane::Alina::mpi
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Iterative solver wrapper for distributed linear systems.
+ */
+template <class Precond,
+          class IterativeSolver>
+class DistributedPreconditionedSolver
+: public Alina::detail::non_copyable
+{
+  static_assert(backend::backends_compatible<
                 typename IterativeSolver::backend_type,
-                typename Precond::backend_type
-            >::value,
-            "Backends for preconditioner and iterative solver should be compatible"
-            );
-    public:
-        typedef typename IterativeSolver::backend_type backend_type;
-        typedef Alina::mpi::DistributedMatrix<typename Precond::backend_type> matrix;
-        typedef typename backend_type::value_type value_type;
-        typedef typename backend_type::params backend_params;
-        typedef typename backend::BuiltinBackend<value_type>::matrix build_matrix;
-        typedef typename math::scalar_of<value_type>::type scalar_type;
+                typename Precond::backend_type>::value,
+                "Backends for preconditioner and iterative solver should be compatible");
 
-        struct params {
-            typename Precond::params precond; ///< Preconditioner parameters.
-            typename IterativeSolver::params  solver;  ///< Iterative solver parameters.
+ public:
 
-            params() {}
+  typedef typename IterativeSolver::backend_type backend_type;
+  typedef Alina::mpi::DistributedMatrix<typename Precond::backend_type> matrix;
+  typedef typename backend_type::value_type value_type;
+  typedef typename backend_type::params backend_params;
+  typedef typename backend::BuiltinBackend<value_type>::matrix build_matrix;
+  typedef typename math::scalar_of<value_type>::type scalar_type;
 
-            params(const PropertyTree &p)
-                : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, precond),
-                  ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solver)
-            {
-                check_params(p, {"precond", "solver"});
-            }
+  struct params
+  {
+    typename Precond::params precond; ///< Preconditioner parameters.
+    typename IterativeSolver::params solver; ///< Iterative solver parameters.
 
-            void get(PropertyTree &p, const std::string &path = "") const
-            {
-                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, precond);
-                ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solver);
-            }
-        } prm;
+    params() {}
 
-        template <class Matrix>
-        make_solver(
-                communicator comm, const Matrix &A,
-                const params &prm = params(),
-                const backend_params &bprm = backend_params()
-                ) :
-            prm(prm), n(backend::rows(A)),
-            P(comm, A, prm.precond, bprm),
-            S(backend::rows(A), prm.solver, bprm, mpi::inner_product(comm))
-        {}
+    params(const PropertyTree& p)
+    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, precond)
+    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solver)
+    {
+      check_params(p, { "precond", "solver" });
+    }
 
-        make_solver(
-                communicator comm, std::shared_ptr<matrix> A,
-                const params &prm = params(),
-                const backend_params &bprm = backend_params()
-                ) :
-            prm(prm), n(A->loc_rows()),
-            P(comm, A, prm.precond, bprm),
-            S(n, prm.solver, bprm, mpi::inner_product(comm))
-        {
-        }
+    void get(PropertyTree& p, const std::string& path = "") const
+    {
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, precond);
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solver);
+    }
+  } prm;
 
-        template <class Backend>
-        make_solver(
-                communicator comm, std::shared_ptr<DistributedMatrix<Backend>> A,
-                const params &prm = params(),
-                const backend_params &bprm = backend_params()
-                ) :
-            prm(prm), n(A->loc_rows()),
-            P(comm, std::make_shared<matrix>(*A), prm.precond, bprm),
-            S(n, prm.solver, bprm, mpi::inner_product(comm))
-        {
-            A->move_to_backend(bprm);
-        }
+  template <class Matrix>
+  DistributedPreconditionedSolver(communicator comm, const Matrix& A,
+                                  const params& prm = params(),
+                                  const backend_params& bprm = backend_params())
+  : prm(prm)
+  , n(backend::rows(A))
+  , P(comm, A, prm.precond, bprm)
+  , S(backend::rows(A), prm.solver, bprm, mpi::inner_product(comm))
+  {}
 
-        make_solver(
-                communicator comm, std::shared_ptr<build_matrix> A,
-                const params &prm = params(),
-                const backend_params &bprm = backend_params()
-                ) :
-            prm(prm), n(backend::rows(*A)),
-            P(comm, A, prm.precond, bprm),
-            S(backend::rows(*A), prm.solver, bprm, mpi::inner_product(comm))
-        {}
+  DistributedPreconditionedSolver(communicator comm,
+                                  std::shared_ptr<matrix> A,
+                                  const params& prm = params(),
+                                  const backend_params& bprm = backend_params())
+  : prm(prm)
+  , n(A->loc_rows())
+  , P(comm, A, prm.precond, bprm)
+  , S(n, prm.solver, bprm, mpi::inner_product(comm))
+  {
+  }
 
-        template <class Matrix, class Vec1, class Vec2>
-        SolverResult operator()(const Matrix &A, const Vec1 &rhs, Vec2 &&x) const
-        {
-            return S(A, P, rhs, x);
-        }
+  template <class Backend>
+  DistributedPreconditionedSolver(communicator comm,
+                                  std::shared_ptr<DistributedMatrix<Backend>> A,
+                                  const params& prm = params(),
+                                  const backend_params& bprm = backend_params())
+  : prm(prm)
+  , n(A->loc_rows())
+  , P(comm, std::make_shared<matrix>(*A), prm.precond, bprm)
+  , S(n, prm.solver, bprm, mpi::inner_product(comm))
+  {
+    A->move_to_backend(bprm);
+  }
 
-        template <class Vec1, class Vec2>
-        SolverResult operator()(const Vec1 &rhs, Vec2 &&x) const {
-            return S(P, rhs, x);
-        }
+  DistributedPreconditionedSolver(communicator comm, std::shared_ptr<build_matrix> A,
+                                  const params& prm = params(),
+                                  const backend_params& bprm = backend_params())
+  : prm(prm)
+  , n(backend::rows(*A))
+  , P(comm, A, prm.precond, bprm)
+  , S(backend::rows(*A), prm.solver, bprm, mpi::inner_product(comm))
+  {}
 
-        template <class Vec1, class Vec2>
-        void apply(const Vec1 &rhs, Vec2 &&x) const {
-            backend::clear(x);
-            (*this)(rhs, x);
-        }
+  template <class Matrix, class Vec1, class Vec2>
+  SolverResult operator()(const Matrix& A, const Vec1& rhs, Vec2&& x) const
+  {
+    return S(A, P, rhs, x);
+  }
 
-        const Precond& precond() const {
-            return P;
-        }
+  template <class Vec1, class Vec2>
+  SolverResult operator()(const Vec1& rhs, Vec2&& x) const
+  {
+    return S(P, rhs, x);
+  }
 
-        Precond& precond() {
-            return P;
-        }
+  template <class Vec1, class Vec2>
+  void apply(const Vec1& rhs, Vec2&& x) const
+  {
+    backend::clear(x);
+    (*this)(rhs, x);
+  }
 
-        const IterativeSolver& solver() const {
-            return S;
-        }
+  const Precond& precond() const
+  {
+    return P;
+  }
 
-        std::shared_ptr<matrix> system_matrix_ptr() const {
-            return P.system_matrix_ptr();
-        }
+  Precond& precond()
+  {
+    return P;
+  }
 
-        const matrix& system_matrix() const {
-            return P.system_matrix();
-        }
+  const IterativeSolver& solver() const
+  {
+    return S;
+  }
 
-        void get_params(Alina::PropertyTree &p) const {
-            prm.get(p);
-        }
+  std::shared_ptr<matrix> system_matrix_ptr() const
+  {
+    return P.system_matrix_ptr();
+  }
 
-        size_t size() const {
-            return n;
-        }
+  const matrix& system_matrix() const
+  {
+    return P.system_matrix();
+  }
 
-        friend std::ostream& operator<<(std::ostream &os, const make_solver &M) {
-            return os << M.S << std::endl << M.P;
-        }
-    private:
-        size_t n;
+  void get_params(Alina::PropertyTree& p) const
+  {
+    prm.get(p);
+  }
 
-        Precond P;
-        IterativeSolver  S;
+  size_t size() const
+  {
+    return n;
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const DistributedPreconditionedSolver& M)
+  {
+    return os << M.S << std::endl
+              << M.P;
+  }
+
+ private:
+
+  size_t n;
+
+  Precond P;
+  IterativeSolver S;
 };
 
-} // namespace mpi
-} // namespace amgcl
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::mpi
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif
