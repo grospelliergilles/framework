@@ -115,7 +115,7 @@ void solve_scalar(Alina::mpi::communicator comm,
 
   typedef Alina::mpi::make_solver<
   Alina::runtime::mpi::DistributedPreconditioner<Backend>,
-  Alina::runtime::mpi::solver::wrapper<Backend>>
+  Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>
   Solver;
 
   using Alina::prof;

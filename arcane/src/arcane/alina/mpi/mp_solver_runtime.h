@@ -1,53 +1,54 @@
-#ifndef ARCANE_ALINA_MPI_SOLVER_RUNTIME_HPP
-#define ARCANE_ALINA_MPI_SOLVER_RUNTIME_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* DistributedSolverRuntime.h                                  (C) 2000-2026 */
+/*                                                                           */
+/* Runtime-configurable MPI wrapper around iterative solvers.                */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_DISTRIBUTEDSOLVERRUNTIME_H
+#define ARCANE_ALINA_DISTRIBUTEDSOLVERRUNTIME_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   alina/mpi/solver/runtime.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Runtime-configurable MPI wrapper around amgcl iterative solvers.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <arcane/alina/SolverRuntime.h>
 #include <arcane/alina/mpi/DistributedInnerProduct.h>
 
-namespace Arcane::Alina {
-namespace runtime { 
-namespace mpi {
-namespace solver {
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+namespace Arcane::Alina::runtime::mpi::solver
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 template <class Backend, class InnerProduct = Alina::mpi::inner_product>
-struct wrapper : public Alina::runtime::solver::SolverRuntime<Backend, InnerProduct> {
-    typedef Alina::runtime::solver::SolverRuntime<Backend, InnerProduct> Base;
-    using Base::Base;
+struct DistributedSolverRuntime
+: public Alina::runtime::solver::SolverRuntime<Backend, InnerProduct>
+{
+  typedef Alina::runtime::solver::SolverRuntime<Backend, InnerProduct> Base;
+  using Base::Base;
 };
 
-} // namespace solver
-} // namespace mpi
-} // namespace runtime
-} // namespace amgcl
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::runtime::mpi::solver
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif

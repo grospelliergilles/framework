@@ -328,7 +328,7 @@ int main(int argc, char* argv[])
       prof.tic("setup");
       typedef Alina::mpi::subdomain_deflation<
       Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>,
-      Alina::runtime::mpi::solver::wrapper<Backend>,
+      Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
       Alina::runtime::mpi::direct::solver<double>>
       SDD;
 
@@ -346,7 +346,7 @@ int main(int argc, char* argv[])
       prof.tic("setup");
       typedef Alina::mpi::subdomain_deflation<
       Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
-      Alina::runtime::mpi::solver::wrapper<Backend>,
+      Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
       Alina::runtime::mpi::direct::solver<double>>
       SDD;
 

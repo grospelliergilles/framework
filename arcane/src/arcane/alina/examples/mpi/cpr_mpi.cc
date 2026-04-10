@@ -270,7 +270,7 @@ int main(int argc, char *argv[]) {
                     Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>
                     >
                 >,
-            Alina::runtime::mpi::solver::wrapper<Backend>
+            Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>
             >
         Solver;
 

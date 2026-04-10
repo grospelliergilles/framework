@@ -316,7 +316,7 @@ int main(int argc, char *argv[]) {
                 Alina::runtime::coarsening::CoarseningRuntime,
                 Alina::runtime::relaxation::RuntimeRelaxation
                 >,
-            Alina::runtime::mpi::solver::wrapper<Alina::backend::BuiltinBackend<double>>,
+            Alina::runtime::mpi::solver::DistributedSolverRuntime<Alina::backend::BuiltinBackend<double>>,
             Alina::runtime::mpi::direct::solver<double>
         > SDD;
 

@@ -23,7 +23,7 @@ typedef Alina::PropertyTree Params;
 
 typedef Alina::mpi::subdomain_deflation<
 Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
-Alina::runtime::mpi::solver::wrapper<Backend>,
+Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
 Alina::runtime::mpi::direct::solver<double>>
 Solver;
 

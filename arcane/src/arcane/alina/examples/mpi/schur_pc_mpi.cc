@@ -290,15 +290,15 @@ int main(int argc, char *argv[]) {
                     Alina::mpi::block_preconditioner<
                         Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>
                         >,
-                    Alina::runtime::mpi::solver::wrapper<Backend>
+                    Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>
                     >,
                 Alina::mpi::subdomain_deflation<
                     Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
-                    Alina::runtime::mpi::solver::wrapper<Backend>,
+                    Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
                     Alina::runtime::mpi::direct::solver<double>
                     >
                 >,
-            Alina::runtime::mpi::solver::wrapper<Backend>
+            Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>
             > Solver;
 
     Solver solve(world, std::tie(chunk, ptr, col, val), prm, bprm);

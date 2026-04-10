@@ -63,7 +63,7 @@ solve(const Alina::mpi::communicator& comm,
 
   typedef Alina::mpi::make_solver<
   Alina::mpi::block_preconditioner<Precond<Backend>>,
-  Alina::runtime::mpi::solver::wrapper<Backend>>
+  Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>
   Solver;
 
   const size_t n = Alina::backend::rows(A);

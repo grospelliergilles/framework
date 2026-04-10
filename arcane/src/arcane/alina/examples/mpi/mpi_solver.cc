@@ -245,7 +245,7 @@ void solve_block(
     typedef
         Alina::mpi::make_solver<
             Alina::runtime::mpi::DistributedPreconditioner<Backend>,
-            Alina::runtime::mpi::solver::wrapper<Backend>
+            Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>
             >
         Solver;
 
@@ -344,7 +344,7 @@ void solve_scalar(
     typedef
         Alina::mpi::make_solver<
             Alina::runtime::mpi::DistributedPreconditioner<Backend>,
-            Alina::runtime::mpi::solver::wrapper<Backend>
+            Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>
             >
         Solver;
 
