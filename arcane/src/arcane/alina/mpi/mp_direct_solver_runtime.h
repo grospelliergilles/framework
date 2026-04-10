@@ -119,7 +119,7 @@ class solver {
             switch (s) {
                 case skyline_lu:
                     {
-                        typedef Alina::mpi::direct::skyline_lu<value_type> S;
+                        typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
                         handle = static_cast<void*>(new S(comm, A, prm));
                     }
                     break;
@@ -145,7 +145,7 @@ class solver {
             switch (s) {
                 case skyline_lu:
                     {
-                        typedef Alina::mpi::direct::skyline_lu<value_type> S;
+                        typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
                         static_cast<const S*>(handle)->operator()(rhs, x);
                     }
                     break;
@@ -180,7 +180,7 @@ class solver {
             switch (s) {
                 case skyline_lu:
                     {
-                        typedef Alina::mpi::direct::skyline_lu<value_type> S;
+                        typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
                         delete static_cast<S*>(handle);
                     }
                     break;

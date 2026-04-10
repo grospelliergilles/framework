@@ -108,7 +108,7 @@ sdd_projected_matrix<SDD, Matrix> make_sdd_projected_matrix(const SDD &S, const 
 template <
     class LocalPrecond,
     class IterativeSolver,
-    class DirectSolver = mpi::direct::skyline_lu<typename LocalPrecond::backend_type::value_type>
+    class DirectSolver = mpi::direct::DistributedSkylineLUDirectSolver<typename LocalPrecond::backend_type::value_type>
     >
 class subdomain_deflation {
     public:
