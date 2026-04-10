@@ -39,7 +39,7 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/DistributedMatrix.h>
 #include <arcane/alina/mpi/mp_make_solver.h>
 #include <arcane/alina/mpi/DistributedAMG.h>
-#include <arcane/alina/mpi/mp_coarsening_smoothed_aggregation.h>
+#include <arcane/alina/mpi/mp_coarsening_pmis.h>
 #include <arcane/alina/mpi/mp_relaxation.h>
 #include <arcane/alina/mpi/mp_solver.h>
 

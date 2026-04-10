@@ -5,12 +5,12 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* mp_coarsening_pmis.h                                        (C) 2026-2026 */
+/* DistributedCoarsening.h                                     (C) 2026-2026 */
 /*                                                                           */
-/* Distributed PMIS aggregation.                                             */
+/* Distributed coarsening algorithms.                                        */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_MP_COARSENINGPMIS_H
-#define ARCANE_ALINA_MPI_MP_COARSENINGPMIS_H
+#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDCOARSENING_H
+#define ARCANE_ALINA_MPI_DISTRIBUTEDCOARSENING_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -30,9 +30,9 @@
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/util.h>
+#include <arcane/alina/coarsening.h>
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/DistributedMatrix.h>
-#include <arcane/alina/coarsening.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -46,7 +46,7 @@ namespace Arcane::Alina::mpi::coarsening
  * \brief Distributed PMIS aggregation.
  */
 template <class Backend>
-struct pmis
+struct DistributedPMISAggregation
 {
   typedef typename Backend::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
@@ -92,7 +92,7 @@ struct pmis
   std::shared_ptr<DistributedMatrix<bool_backend>> conn;
   std::shared_ptr<matrix> p_tent;
 
-  pmis(const matrix& A, params& prm)
+  DistributedPMISAggregation(const matrix& A, params& prm)
   : prm(prm)
   {
     ptrdiff_t n = A.loc_rows();
@@ -114,8 +114,8 @@ struct pmis
       assert(np * prm.block_size == n && "Matrix size should be divisible by block_size");
 
       DistributedMatrix<sbackend> A_pw(A.comm(),
-                                        pointwise_matrix(*A.local(), prm.block_size),
-                                        pointwise_matrix(*A.remote(), prm.block_size));
+                                       pointwise_matrix(*A.local(), prm.block_size),
+                                       pointwise_matrix(*A.remote(), prm.block_size));
 
       auto conn_pw = conn_strength(A_pw, prm.eps_strong);
 
@@ -448,7 +448,7 @@ struct pmis
 
     // 2. Apply PMIS algorithm to the symbolic square.
     ptrdiff_t n_undone = 0;
-    std::vector<ptrdiff_t> rem_state(Sp.recv.count(), pmis::undone);
+    std::vector<ptrdiff_t> rem_state(Sp.recv.count(), DistributedPMISAggregation::undone);
     std::vector<int> rem_owner(Sp.recv.count(), -1);
     std::vector<ptrdiff_t> send_state(Sp.send.count());
     std::vector<int> send_owner(Sp.send.count());
@@ -460,11 +460,11 @@ struct pmis
       ptrdiff_t wr = S_rem.ptr[i + 1] - S_rem.ptr[i];
 
       if (wl + wr == 1) {
-        loc_state[i] = pmis::deleted;
+        loc_state[i] = DistributedPMISAggregation::deleted;
         ++n_undone;
       }
       else {
-        loc_state[i] = pmis::undone;
+        loc_state[i] = DistributedPMISAggregation::undone;
       }
 
       loc_owner[i] = -1;
@@ -493,7 +493,7 @@ struct pmis
 
       if (n_undone) {
         for (ptrdiff_t i = 0; i < n; ++i) {
-          if (loc_state[i] != pmis::undone)
+          if (loc_state[i] != DistributedPMISAggregation::undone)
             continue;
 
           if (S_rem.ptr[i + 1] > S_rem.ptr[i]) {
@@ -503,7 +503,7 @@ struct pmis
               int d, c;
               std::tie(d, c) = Sp.remote_info(S_rem.col[j]);
 
-              if (rem_state[c] == pmis::undone && Sp.recv.nbr[d] > comm.rank) {
+              if (rem_state[c] == DistributedPMISAggregation::undone && Sp.recv.nbr[d] > comm.rank) {
                 selectable = false;
                 break;
               }
@@ -521,7 +521,7 @@ struct pmis
             for (ptrdiff_t j = A_loc.ptr[i], e = A_loc.ptr[i + 1]; j < e; ++j) {
               ptrdiff_t c = A_loc.col[j];
               if (c != i) {
-                if (loc_state[c] == pmis::undone)
+                if (loc_state[c] == DistributedPMISAggregation::undone)
                   --n_undone;
                 loc_owner[c] = comm.rank;
                 loc_state[c] = id;
@@ -542,7 +542,7 @@ struct pmis
             // S gives removed neighbors
             for (ptrdiff_t j = S_loc.ptr[i], e = S_loc.ptr[i + 1]; j < e; ++j) {
               ptrdiff_t c = S_loc.col[j];
-              if (c != i && loc_state[c] == pmis::undone) {
+              if (c != i && loc_state[c] == DistributedPMISAggregation::undone) {
                 loc_owner[c] = comm.rank;
                 loc_state[c] = id;
                 --n_undone;
@@ -554,7 +554,7 @@ struct pmis
               int d, k;
               std::tie(d, k) = Sp.remote_info(c);
 
-              if (rem_state[k] == pmis::undone) {
+              if (rem_state[k] == DistributedPMISAggregation::undone) {
                 rem_state[k] = id;
                 send_pts[d].push_back(c);
                 send_pts[d].push_back(id);
@@ -573,8 +573,8 @@ struct pmis
             for (ptrdiff_t j = A_loc.ptr[i], e = A_loc.ptr[i + 1]; j < e; ++j) {
               ptrdiff_t c = A_loc.col[j];
 
-              if (c != i && loc_state[c] != pmis::deleted) {
-                if (loc_state[c] == pmis::undone)
+              if (c != i && loc_state[c] != DistributedPMISAggregation::deleted) {
+                if (loc_state[c] == DistributedPMISAggregation::undone)
                   --n_undone;
                 loc_owner[c] = comm.rank;
                 loc_state[c] = id;
@@ -585,7 +585,7 @@ struct pmis
             for (ptrdiff_t k : nbr) {
               for (ptrdiff_t j = A_loc.ptr[k], e = A_loc.ptr[k + 1]; j < e; ++j) {
                 ptrdiff_t c = A_loc.col[j];
-                if (c != k && loc_state[c] == pmis::undone) {
+                if (c != k && loc_state[c] == DistributedPMISAggregation::undone) {
                   loc_owner[c] = comm.rank;
                   loc_state[c] = id;
                   --n_undone;
@@ -618,7 +618,7 @@ struct pmis
           ptrdiff_t c = recv_pts[k] - Sp.loc_col_shift();
           ptrdiff_t id = recv_pts[k + 1];
 
-          if (loc_state[c] == pmis::undone)
+          if (loc_state[c] == DistributedPMISAggregation::undone)
             --n_undone;
 
           loc_owner[c] = Sp.send.nbr[i];
@@ -758,7 +758,7 @@ struct pmis
       ptrdiff_t loc_dofs = 0;
 
       for (ptrdiff_t i = 0; i < n; ++i) {
-        if (state[i] == pmis::deleted)
+        if (state[i] == DistributedPMISAggregation::deleted)
           continue;
 
         if (owner[i] == comm.rank) {
@@ -832,7 +832,7 @@ struct pmis
         auto s = state[i];
         auto o = owner[i];
 
-        if (s == pmis::deleted)
+        if (s == DistributedPMISAggregation::deleted)
           continue;
         if (o == comm.rank)
           continue;
@@ -886,7 +886,7 @@ struct pmis
         auto s = state[i];
         auto o = owner[i];
 
-        if (s == pmis::deleted)
+        if (s == DistributedPMISAggregation::deleted)
           continue;
         if (o != comm.rank)
           continue;
@@ -973,7 +973,7 @@ struct pmis
 #pragma omp parallel for
       for (ptrdiff_t i = 0; i < n; ++i) {
         ptrdiff_t s = state[i];
-        if (s == pmis::deleted)
+        if (s == DistributedPMISAggregation::deleted)
           continue;
 
         int d = owner[i];
@@ -1017,7 +1017,7 @@ struct pmis
 
 #pragma omp parallel for
       for (ptrdiff_t i = 0; i < n; ++i) {
-        if (state[i] == pmis::deleted)
+        if (state[i] == DistributedPMISAggregation::deleted)
           continue;
 
         if (owner[i] == comm.rank) {
@@ -1034,7 +1034,7 @@ struct pmis
 #pragma omp parallel for
       for (ptrdiff_t i = 0; i < n; ++i) {
         ptrdiff_t s = state[i];
-        if (s == pmis::deleted)
+        if (s == DistributedPMISAggregation::deleted)
           continue;
 
         int d = owner[i];
@@ -1160,6 +1160,267 @@ struct pmis
   static const int tag_exc_row = 4013;
 };
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Distributed non-smoothed aggregation coarsening scheme.
+ */
+template <class Backend>
+struct aggregation
+{
+  typedef typename Backend::value_type value_type;
+  typedef typename math::scalar_of<value_type>::type scalar_type;
+  typedef backend::CSRMatrix<value_type> build_matrix;
+
+  struct params
+  {
+    // aggregation params
+    typedef typename DistributedPMISAggregation<Backend>::params aggr_params;
+    aggr_params aggr;
+
+    /*!
+     * \brief Over-interpolation factor \f$\alpha\f$.
+     *
+     * In case of aggregation coarsening, coarse-grid
+     * correction of smooth error, and by this the overall convergence, can
+     * often be substantially improved by using "over-interpolation", that is,
+     * by multiplying the actual correction (corresponding to piecewise
+     * constant interpolation) by some factor \f$\alpha > 1\f$. Equivalently,
+     * this means that the coarse-level Galerkin operator is re-scaled by
+     * \f$1 / \alpha\f$:
+     * \f[I_h^HA_hI_H^h \to \frac{1}{\alpha}I_h^HA_hI_H^h.\f]
+     *
+     * \sa  \cite Stuben1999, Section 9.1 "Re-scaling of the Galerkin operator".
+     */
+    float over_interp = 1.5f;
+
+    params() = default;
+
+    params(const Alina::PropertyTree& p)
+    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, over_interp)
+    {
+      check_params(p, { "aggr", "over_interp" });
+    }
+
+    void get(Alina::PropertyTree& p, const std::string& path) const
+    {
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, over_interp);
+    }
+  } prm;
+
+  aggregation(const params& prm = params())
+  : prm(prm)
+  {}
+
+  std::tuple<std::shared_ptr<DistributedMatrix<Backend>>,
+             std::shared_ptr<DistributedMatrix<Backend>>>
+  transfer_operators(const DistributedMatrix<Backend>& A)
+  {
+    DistributedPMISAggregation<Backend> aggr(A, prm.aggr);
+    return std::make_tuple(aggr.p_tent, transpose(*aggr.p_tent));
+  }
+
+  std::shared_ptr<DistributedMatrix<Backend>>
+  coarse_operator(const DistributedMatrix<Backend>& A,
+                  const DistributedMatrix<Backend>& P,
+                  const DistributedMatrix<Backend>& R) const
+  {
+    return Alina::coarsening::detail::scaled_galerkin(A, P, R, 1 / prm.over_interp);
+  }
+};
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+template <class Backend>
+unsigned block_size(const aggregation<Backend>& c)
+{
+  return c.prm.aggr.block_size;
+}
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Distributed smoothed aggregation coarsening scheme.
+ */
+template <class Backend>
+struct smoothed_aggregation
+{
+  typedef typename Backend::value_type value_type;
+  typedef typename math::scalar_of<value_type>::type scalar_type;
+  typedef backend::CSRMatrix<value_type> build_matrix;
+
+  struct params
+  {
+    // aggregation params
+    typedef typename DistributedPMISAggregation<Backend>::params aggr_params;
+    aggr_params aggr;
+
+    /// Relaxation factor.
+    scalar_type relax;
+
+    // Estimate the matrix spectral radius.
+    // This usually improves convergence rate and results in faster solves,
+    // but costs some time during setup.
+    bool estimate_spectral_radius;
+
+    // Number of power iterations to apply for the spectral radius
+    // estimation. Use Gershgorin disk theorem when power_iters = 0.
+    int power_iters;
+
+    params()
+    : relax(1.0f)
+    , estimate_spectral_radius(false)
+    , power_iters(0)
+    {}
+
+    params(const PropertyTree& p)
+    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, relax)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, estimate_spectral_radius)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
+    {
+      check_params(p, { "aggr", "relax", "estimate_spectral_radius", "power_iters" });
+    }
+
+    void get(PropertyTree& p, const std::string& path) const
+    {
+      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, relax);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, estimate_spectral_radius);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, power_iters);
+    }
+  } prm;
+
+  smoothed_aggregation(const params& prm = params())
+  : prm(prm)
+  {}
+
+  std::tuple<std::shared_ptr<DistributedMatrix<Backend>>,
+             std::shared_ptr<DistributedMatrix<Backend>>>
+  transfer_operators(const DistributedMatrix<Backend>& A)
+  {
+    typedef DistributedMatrix<Backend> DM;
+    typedef backend::CSRMatrix<char> bool_matrix;
+
+    DistributedPMISAggregation<Backend> aggr(A, prm.aggr);
+    prm.aggr.eps_strong *= 0.5;
+
+    communicator comm = A.comm();
+    const build_matrix& A_loc = *A.local();
+    const build_matrix& A_rem = *A.remote();
+
+    bool_matrix& S_loc = *aggr.conn->local();
+    bool_matrix& S_rem = *aggr.conn->remote();
+
+    ARCANE_ALINA_TIC("filtered matrix");
+    ptrdiff_t n = A.loc_rows();
+
+    scalar_type omega = prm.relax;
+    if (prm.estimate_spectral_radius) {
+      omega *= static_cast<scalar_type>(4.0 / 3) / backend::spectral_radius<true>(A, prm.power_iters);
+    }
+    else {
+      omega *= static_cast<scalar_type>(2.0 / 3);
+    }
+
+    auto af_loc = std::make_shared<build_matrix>();
+    auto af_rem = std::make_shared<build_matrix>();
+
+    build_matrix& Af_loc = *af_loc;
+    build_matrix& Af_rem = *af_rem;
+
+    backend::numa_vector<value_type> Af_loc_val(S_loc.nnz, false);
+    backend::numa_vector<value_type> Af_rem_val(S_rem.nnz, false);
+
+    Af_loc.own_data = false;
+    Af_loc.nrows = S_loc.nrows;
+    Af_loc.ncols = S_loc.ncols;
+    Af_loc.nnz = S_loc.nnz;
+    Af_loc.ptr = S_loc.ptr;
+    Af_loc.col = S_loc.col;
+    Af_loc.val = Af_loc_val.data();
+
+    Af_rem.own_data = false;
+    Af_rem.nrows = S_rem.nrows;
+    Af_rem.ncols = S_rem.ncols;
+    Af_rem.nnz = S_rem.nnz;
+    Af_rem.ptr = S_rem.ptr;
+    Af_rem.col = S_rem.col;
+    Af_rem.val = Af_rem_val.data();
+
+    backend::numa_vector<value_type> Df(n, false);
+
+#pragma omp parallel for
+    for (ptrdiff_t i = 0; i < n; ++i) {
+      ptrdiff_t loc_head = Af_loc.ptr[i];
+      ptrdiff_t rem_head = Af_rem.ptr[i];
+
+      value_type dia_f = math::zero<value_type>();
+
+      for (ptrdiff_t j = A_loc.ptr[i], e = A_loc.ptr[i + 1]; j < e; ++j)
+        if (A_loc.col[j] == i || !S_loc.val[j])
+          dia_f += A_loc.val[j];
+
+      for (ptrdiff_t j = A_rem.ptr[i], e = A_rem.ptr[i + 1]; j < e; ++j)
+        if (!S_rem.val[j])
+          dia_f += A_rem.val[j];
+
+      dia_f = -omega * math::inverse(dia_f);
+
+      for (ptrdiff_t j = A_loc.ptr[i], e = A_loc.ptr[i + 1]; j < e; ++j) {
+        if (A_loc.col[j] == i) {
+          Af_loc.val[loc_head++] = (1 - omega) * math::identity<value_type>();
+        }
+        else if (S_loc.val[j]) {
+          Af_loc.val[loc_head++] = dia_f * A_loc.val[j];
+        }
+      }
+
+      for (ptrdiff_t j = A_rem.ptr[i], e = A_rem.ptr[i + 1]; j < e; ++j) {
+        if (S_rem.val[j]) {
+          Af_rem.val[rem_head++] = dia_f * A_rem.val[j];
+        }
+      }
+    }
+
+    auto Af = std::make_shared<DM>(comm, af_loc, af_rem);
+    ARCANE_ALINA_TOC("filtered matrix");
+
+    // 5. Smooth tentative prolongation with the filtered matrix.
+    ARCANE_ALINA_TIC("smoothing");
+    auto P = product(*Af, *aggr.p_tent);
+    ARCANE_ALINA_TOC("smoothing");
+
+    return std::make_tuple(P, transpose(*P));
+  }
+
+  std::shared_ptr<DistributedMatrix<Backend>>
+  coarse_operator(const DistributedMatrix<Backend>& A,
+                  const DistributedMatrix<Backend>& P,
+                  const DistributedMatrix<Backend>& R) const
+  {
+    return Alina::coarsening::detail::galerkin(A, P, R);
+  }
+};
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+template <class Backend>
+unsigned block_size(const smoothed_aggregation<Backend>& c)
+{
+  return c.prm.aggr.block_size;
+}
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 } // namespace Arcane::Alina::mpi::coarsening
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif

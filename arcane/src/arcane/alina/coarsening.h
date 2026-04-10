@@ -7,7 +7,7 @@
 /*---------------------------------------------------------------------------*/
 /* Coarsening.h                                                (C) 2026-2026 */
 /*                                                                           */
-/* Coarsening strategies for AMG hirarchy construction.                      */
+/* Coarsening strategies for AMG hierarchy construction.                     */
 /*---------------------------------------------------------------------------*/
 #ifndef ARCANE_ALINA_COARSENING_H
 #define ARCANE_ALINA_COARSENING_H
