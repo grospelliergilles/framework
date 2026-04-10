@@ -46,7 +46,7 @@ THE SOFTWARE.
 #include <arcane/alina/profiler.h>
 
 #if defined(ARCANE_ALINA_HAVE_PARMETIS)
-#  include <arcane/alina/mpi/mp_partition_parmetis.h>
+#include <arcane/alina/mpi/ParmetisMatrixPartitioner.h>
 #endif
 
 using namespace Arcane;
