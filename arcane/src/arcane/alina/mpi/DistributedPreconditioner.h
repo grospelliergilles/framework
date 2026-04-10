@@ -95,12 +95,12 @@ class DistributedPreconditioner
 
   typedef Backend backend_type;
   typedef typename backend_type::params backend_params;
-  typedef Alina::PropertyTree params;
+  typedef PropertyTree params;
   typedef typename backend_type::value_type value_type;
-  typedef Alina::mpi::DistributedMatrix<backend_type> matrix;
+  typedef DistributedMatrix<backend_type> matrix;
 
   template <class Matrix>
-  DistributedPreconditioner(Alina::mpi_communicator comm,
+  DistributedPreconditioner(mpi_communicator comm,
                             const Matrix& Astrip,
                             params prm = params(),
                             const backend_params& bprm = backend_params())
@@ -110,7 +110,7 @@ class DistributedPreconditioner
     init(std::make_shared<matrix>(comm, Astrip, backend::rows(Astrip)), prm, bprm);
   }
 
-  DistributedPreconditioner(Alina::mpi_communicator,
+  DistributedPreconditioner(mpi_communicator,
                             std::shared_ptr<matrix> A,
                             params prm = params(),
                             const backend_params& bprm = backend_params())

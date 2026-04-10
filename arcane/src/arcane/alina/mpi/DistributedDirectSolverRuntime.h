@@ -108,7 +108,7 @@ class DistributedDirectSolverRuntime
 
     switch (s) {
     case eDistributedDirectSolverType::skyline_lu: {
-      typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
+      typedef DistributedSkylineLUDirectSolver<value_type> S;
       handle = static_cast<void*>(new S(comm, A, prm));
     } break;
 #ifdef ARCANE_ALINA_HAVE_EIGEN
@@ -132,7 +132,7 @@ class DistributedDirectSolverRuntime
   {
     switch (s) {
     case eDistributedDirectSolverType::skyline_lu: {
-      typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
+      typedef DistributedSkylineLUDirectSolver<value_type> S;
       static_cast<const S*>(handle)->operator()(rhs, x);
     } break;
 #ifdef ARCANE_ALINA_HAVE_EIGEN
@@ -150,7 +150,7 @@ class DistributedDirectSolverRuntime
   {
     switch (s) {
     case eDistributedDirectSolverType::skyline_lu: {
-      typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
+      typedef DistributedSkylineLUDirectSolver<value_type> S;
       delete static_cast<S*>(handle);
     } break;
 #ifdef ARCANE_ALINA_HAVE_EIGEN

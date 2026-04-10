@@ -187,14 +187,14 @@ read_binary(Alina::mpi_communicator comm,
 
 //---------------------------------------------------------------------------
 template <class Backend, class Matrix>
-std::shared_ptr<Alina::mpi::DistributedMatrix<Backend>>
+std::shared_ptr<Alina::DistributedMatrix<Backend>>
 partition(Alina::mpi_communicator comm, const Matrix& Astrip,
           typename Backend::vector& rhs, const typename Backend::params& bprm,
           Alina::runtime::mpi::partition::type ptype, int block_size = 1)
 {
   typedef typename Backend::value_type val_type;
   typedef typename Alina::math::rhs_of<val_type>::type rhs_type;
-  typedef Alina::mpi::DistributedMatrix<Backend> DMatrix;
+  typedef Alina::DistributedMatrix<Backend> DMatrix;
 
   using Alina::prof;
 
@@ -244,7 +244,7 @@ void solve_block(Alina::mpi_communicator comm,
 
   typedef Alina::backend::BuiltinBackend<val_type> Backend;
 
-  typedef Alina::mpi::DistributedMatrix<Backend> DMatrix;
+  typedef Alina::DistributedMatrix<Backend> DMatrix;
 
   typedef Alina::mpi::DistributedPreconditionedSolver<
   Alina::runtime::mpi::DistributedPreconditioner<Backend>,
@@ -338,7 +338,7 @@ void solve_scalar(Alina::mpi_communicator comm,
   typedef Alina::backend::cuda<double> Backend;
 #endif
 
-  typedef Alina::mpi::DistributedMatrix<Backend> DMatrix;
+  typedef Alina::DistributedMatrix<Backend> DMatrix;
 
   typedef Alina::mpi::DistributedPreconditionedSolver<
   Alina::runtime::mpi::DistributedPreconditioner<Backend>,

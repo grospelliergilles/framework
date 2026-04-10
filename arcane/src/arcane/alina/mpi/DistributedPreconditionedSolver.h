@@ -53,7 +53,7 @@ class DistributedPreconditionedSolver
  public:
 
   typedef typename IterativeSolver::backend_type backend_type;
-  typedef Alina::mpi::DistributedMatrix<typename Precond::backend_type> matrix;
+  typedef DistributedMatrix<typename Precond::backend_type> matrix;
   typedef typename backend_type::value_type value_type;
   typedef typename backend_type::params backend_params;
   typedef typename backend::BuiltinBackend<value_type>::matrix build_matrix;

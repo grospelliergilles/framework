@@ -49,7 +49,7 @@ struct DistributedRelaxationRuntime
   runtime::relaxation::type r;
   void* handle = nullptr;
 
-  DistributedRelaxationRuntime(const Alina::mpi::DistributedMatrix<Backend>& A,
+  DistributedRelaxationRuntime(const DistributedMatrix<Backend>& A,
                                params prm, const backend_params& bprm = backend_params())
   : r(prm.get("type", runtime::relaxation::spai0))
   , handle(0)

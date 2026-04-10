@@ -136,14 +136,14 @@ int main(int argc, char* argv[])
   d_ptr.back() = chunk;
 
   // Create the distributed diagonal matrix:
-  Alina::mpi::DistributedMatrix<DBackend> D(world,
+  Alina::DistributedMatrix<DBackend> D(world,
                                             Alina::adapter::block_matrix<dmat_type>(
                                             std::tie(chunk, d_ptr, d_col, dia)));
 
   // The scaled matrix is formed as product D * A * D,
   // where A is the local chunk of the matrix
   // converted to the block format on the fly.
-  auto A = product(D, *product(Alina::mpi::DistributedMatrix<DBackend>(world, Alina::adapter::block_matrix<dmat_type>(std::tie(chunk, ptr, col, val))), D));
+  auto A = product(D, *product(Alina::DistributedMatrix<DBackend>(world, Alina::adapter::block_matrix<dmat_type>(std::tie(chunk, ptr, col, val))), D));
   prof.toc("scale");
 
   // Since the RHS in this case is filled with ones,
@@ -155,12 +155,8 @@ int main(int argc, char* argv[])
   // Partition the matrix and the RHS vector.
   // If neither ParMETIS not PT-SCOTCH are not available,
   // just keep the current naive partitioning.
-#if defined(ARCANE_ALINA_HAVE_PARMETIS) || defined(ARCANE_ALINA_HAVE_SCOTCH)
 #if defined(ARCANE_ALINA_HAVE_PARMETIS)
   typedef Alina::mpi::partition::parmetis<DBackend> Partition;
-#elif defined(ARCANE_ALINA_HAVE_SCOTCH)
-  typedef Alina::mpi::partition::ptscotch<DBackend> Partition;
-#endif
 
   if (world.size > 1) {
     prof.tic("partition");

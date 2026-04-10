@@ -85,11 +85,11 @@ void test() {
     for(int i = 0; i < chunk; ++i) x[i] = math::constant<Rhs>(drand48());
 
     typedef Alina::backend::BuiltinBackend<Val> Backend;
-    typedef Alina::mpi::DistributedMatrix<Backend> Matrix; 
+    typedef Alina::DistributedMatrix<Backend> Matrix;
 
     Matrix A(comm, std::tie(chunk, ptr, col, val), chunk);
 
-    auto B = Alina::mpi::product(A, A);
+    auto B = Alina::product(A, A);
     B->move_to_backend();
 
     Alina::backend::spmv(1, *B, x, 0, y);

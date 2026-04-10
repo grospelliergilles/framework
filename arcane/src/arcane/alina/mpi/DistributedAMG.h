@@ -46,7 +46,7 @@ namespace Arcane::Alina::mpi
 template <class Backend,
           class Coarsening,
           class Relaxation,
-          class DirectSolver = direct::DistributedSkylineLUDirectSolver<typename Backend::value_type>,
+          class DirectSolver = DistributedSkylineLUDirectSolver<typename Backend::value_type>,
           class Repartition = partition::merge<Backend>>
 class DistributedAMG
 {

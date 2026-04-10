@@ -72,7 +72,7 @@ inline std::istream& operator>>(std::istream& in, type& s)
 template <class Backend>
 struct DistributedCoarseningRuntime
 {
-  typedef Alina::mpi::DistributedMatrix<Backend> matrix;
+  typedef DistributedMatrix<Backend> matrix;
   typedef PropertyTree params;
 
   type c;

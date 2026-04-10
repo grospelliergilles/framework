@@ -94,8 +94,8 @@ operator>>(std::istream& in, type& s)
 template <class Backend>
 struct wrapper
 {
-  typedef Alina::mpi::DistributedMatrix<Backend> matrix;
-  typedef Alina::PropertyTree params;
+  typedef DistributedMatrix<Backend> matrix;
+  typedef PropertyTree params;
 
   type t;
   void* handle;

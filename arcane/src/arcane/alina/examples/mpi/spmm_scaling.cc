@@ -146,14 +146,14 @@ int main(int argc, char* argv[])
   prof.toc("assemble");
 
   typedef Alina::backend::BuiltinBackend<double> Backend;
-  typedef Alina::mpi::DistributedMatrix<Backend> Matrix;
+  typedef Alina::DistributedMatrix<Backend> Matrix;
 
   prof.tic("create distributed version");
   Matrix A(world, std::tie(chunk, ptr, col, val), chunk);
   prof.toc("create distributed version");
 
   prof.tic("distributed product");
-  auto B = Alina::mpi::product(A, A);
+  auto B = product(A, A);
   prof.toc("distributed product");
 
   if (world.rank == 0) {

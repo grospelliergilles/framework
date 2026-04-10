@@ -39,7 +39,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::mpi
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -1182,19 +1182,19 @@ namespace Arcane::Alina::backend
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct rows_impl<mpi::DistributedMatrix<Backend>>
+struct rows_impl<DistributedMatrix<Backend>>
 {
-  static size_t get(const mpi::DistributedMatrix<Backend>& A)
+  static size_t get(const DistributedMatrix<Backend>& A)
   {
     return A.loc_rows();
   }
 };
 
 template <class Backend, class Alpha, class Vec1, class Beta, class Vec2>
-struct spmv_impl<Alpha, mpi::DistributedMatrix<Backend>, Vec1, Beta, Vec2>
+struct spmv_impl<Alpha, DistributedMatrix<Backend>, Vec1, Beta, Vec2>
 {
   static void apply(Alpha alpha,
-                    const mpi::DistributedMatrix<Backend>& A,
+                    const DistributedMatrix<Backend>& A,
                     const Vec1& x, Beta beta, Vec2& y)
   {
     A.mul(alpha, x, beta, y);
@@ -1202,10 +1202,10 @@ struct spmv_impl<Alpha, mpi::DistributedMatrix<Backend>, Vec1, Beta, Vec2>
 };
 
 template <class Backend, class Vec1, class Vec2, class Vec3>
-struct residual_impl<mpi::DistributedMatrix<Backend>, Vec1, Vec2, Vec3>
+struct residual_impl<DistributedMatrix<Backend>, Vec1, Vec2, Vec3>
 {
   static void apply(const Vec1& rhs,
-                    const mpi::DistributedMatrix<Backend>& A,
+                    const DistributedMatrix<Backend>& A,
                     const Vec2& x, Vec3& r)
   {
     A.residual(rhs, x, r);
@@ -1218,7 +1218,7 @@ struct residual_impl<mpi::DistributedMatrix<Backend>, Vec1, Vec2, Vec3>
 // Diagonal of the matrix
 template <class Backend>
 std::shared_ptr<numa_vector<typename Backend::value_type>>
-diagonal(const mpi::DistributedMatrix<Backend>& A, bool invert = false)
+diagonal(const DistributedMatrix<Backend>& A, bool invert = false)
 {
   return diagonal(*A.local(), invert);
 }
@@ -1229,7 +1229,7 @@ diagonal(const mpi::DistributedMatrix<Backend>& A, bool invert = false)
 // Estimate spectral radius of the matrix.
 template <bool scale, class Backend>
 typename math::scalar_of<typename Backend::value_type>::type
-spectral_radius(const mpi::DistributedMatrix<Backend>& A, int power_iters = 0)
+spectral_radius(const DistributedMatrix<Backend>& A, int power_iters = 0)
 {
   ARCANE_ALINA_TIC("spectral radius");
   typedef typename Backend::value_type value_type;
@@ -1241,7 +1241,7 @@ spectral_radius(const mpi::DistributedMatrix<Backend>& A, int power_iters = 0)
 
   const build_matrix& A_loc = *A.local();
   const build_matrix& A_rem = *A.remote();
-  const mpi::CommunicationPattern<Backend>& C = A.cpat();
+  const CommunicationPattern<Backend>& C = A.cpat();
 
   const ptrdiff_t n = A_loc.nrows;
   scalar_type radius = 0;
