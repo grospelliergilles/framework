@@ -27,7 +27,7 @@
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/mpi/DistributedAMG.h>
-#include <arcane/alina/mpi/mp_inner_product.h>
+#include <arcane/alina/mpi/DistributedInnerProduct.h>
 #include <arcane/alina/mpi/mp_coarsening_runtime.h>
 #include <arcane/alina/mpi/mp_relaxation_runtime.h>
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>

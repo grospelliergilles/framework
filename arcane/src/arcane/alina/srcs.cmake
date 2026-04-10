@@ -68,23 +68,23 @@ set(ARCANE_SOURCES
   value_type_static_matrix.h
   mpi/DistributedAMG.h
   mpi/DistributedCoarsening.h
+  mpi/DistributedDirectSolverBase.h
+  mpi/DistributedSkylineLUDirectSolver.h
+  mpi/DistributedMatrix.h
+  mpi/DistributedInnerProduct.h
+  mpi/DistributedPreconditioner.h
+  mpi/DistributedSchurPressureCorrection.h
   mpi/mp_coarsening_runtime.h
   mpi/mp_cpr.h
   mpi/mp_direct_solve_eigen_splu.h
-        mpi/DistributedDirectSolverBase.h
   mpi/mp_direct_solver_runtime.h
-        mpi/DistributedSkylineLUDirectSolver.h
-  mpi/DistributedMatrix.h
-  mpi/mp_inner_product.h
   mpi/mp_make_solver.h
   mpi/mp_partition_merge.h
   mpi/mp_partition_parmetis.h
   mpi/mp_partition_runtime.h
   mpi/mp_partition_util.h
-  mpi/DistributedPreconditioner.h
   mpi/mp_relaxation_runtime.h
   mpi/mp_relaxation.h
-        mpi/DistributedSchurPressureCorrection.h
   mpi/mp_solver.h
   mpi/mp_solver_runtime.h
   mpi/mp_subdomain_deflation.h

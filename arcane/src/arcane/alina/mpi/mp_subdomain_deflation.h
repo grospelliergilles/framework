@@ -44,7 +44,7 @@ THE SOFTWARE.
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/DistributedSkylineLUDirectSolver.h>
-#include <arcane/alina/mpi/mp_inner_product.h>
+#include <arcane/alina/mpi/DistributedInnerProduct.h>
 #include <arcane/alina/mpi/DistributedMatrix.h>
 
 namespace Arcane::Alina {

@@ -32,7 +32,7 @@ THE SOFTWARE.
  */
 
 #include <arcane/alina/SolverRuntime.h>
-#include <arcane/alina/mpi/mp_inner_product.h>
+#include <arcane/alina/mpi/DistributedInnerProduct.h>
 
 namespace Arcane::Alina {
 namespace runtime { 

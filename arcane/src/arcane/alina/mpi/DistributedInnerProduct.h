@@ -1,0 +1,77 @@
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* DistributedInnerProduct.h                                   (C) 2026-2026 */
+/*                                                                           */
+/* Distributed inner products of two vectors.                                */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDINNERPRODUCT_H
+#define ARCANE_ALINA_MPI_DISTRIBUTEDINNERPRODUCT_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
+ */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+#include <arcane/alina/BuiltinBackend.h>
+#include <arcane/alina/value_type_backend_interface.h>
+#include <arcane/alina/mpi/mp_util.h>
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+namespace Arcane::Alina::mpi
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Inner product for distributed vectors.
+ */
+struct inner_product
+{
+  communicator comm;
+
+  explicit inner_product(communicator comm)
+  : comm(comm)
+  {}
+
+  template <class Vec1, class Vec2>
+  typename math::inner_product_impl<typename backend::value_type<Vec1>::type>::return_type
+  operator()(const Vec1& x, const Vec2& y) const
+  {
+    typedef typename backend::value_type<Vec1>::type value_type;
+    typedef typename math::inner_product_impl<value_type>::return_type coef_type;
+
+    ARCANE_ALINA_TIC("inner product");
+    coef_type sum = comm.reduce(MPI_SUM, backend::inner_product(x, y));
+    ARCANE_ALINA_TOC("inner product");
+
+    return sum;
+  }
+
+  int rank() const
+  {
+    return comm.rank;
+  }
+};
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::mpi
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+#endif
