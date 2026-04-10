@@ -126,7 +126,7 @@ class DistributedPreconditioner
     case precond_class::amg: {
       typedef Alina::mpi::DistributedAMG<
       Backend,
-      Alina::runtime::mpi::coarsening::wrapper<Backend>,
+      Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
       Alina::runtime::mpi::relaxation::RuntimeDistributedRelaxation<Backend>,
       Alina::runtime::mpi::direct::solver<value_type>,
       Alina::runtime::mpi::partition::wrapper<Backend>>
@@ -153,7 +153,7 @@ class DistributedPreconditioner
     switch (_class) {
     case precond_class::amg: {
       typedef Alina::mpi::DistributedAMG<Backend,
-                                         Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                                         Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
                                          Alina::runtime::mpi::relaxation::RuntimeDistributedRelaxation<Backend>,
                                          Alina::runtime::mpi::direct::solver<value_type>,
                                          Alina::runtime::mpi::partition::wrapper<Backend>>
@@ -173,7 +173,7 @@ class DistributedPreconditioner
     switch (_class) {
     case precond_class::amg: {
       typedef Alina::mpi::DistributedAMG<Backend,
-                                         Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                                         Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
                                          Alina::runtime::mpi::relaxation::RuntimeDistributedRelaxation<Backend>,
                                          Alina::runtime::mpi::direct::solver<value_type>,
                                          Alina::runtime::mpi::partition::wrapper<Backend>>
@@ -199,7 +199,7 @@ class DistributedPreconditioner
     switch (_class) {
     case precond_class::amg: {
       typedef Alina::mpi::DistributedAMG<Backend,
-                                         Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                                         Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
                                          Alina::runtime::mpi::relaxation::RuntimeDistributedRelaxation<Backend>,
                                          Alina::runtime::mpi::direct::solver<value_type>,
                                          Alina::runtime::mpi::partition::wrapper<Backend>>
@@ -229,7 +229,7 @@ class DistributedPreconditioner
     switch (p._class) {
     case precond_class::amg: {
       typedef Alina::mpi::DistributedAMG<Backend,
-                                         Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                                         Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
                                          Alina::runtime::mpi::relaxation::RuntimeDistributedRelaxation<Backend>,
                                          Alina::runtime::mpi::direct::solver<value_type>,
                                          Alina::runtime::mpi::partition::wrapper<Backend>>
@@ -262,7 +262,7 @@ class DistributedPreconditioner
     switch (_class) {
     case precond_class::amg: {
       typedef Alina::mpi::DistributedAMG<Backend,
-                                         Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                                         Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
                                          Alina::runtime::mpi::relaxation::RuntimeDistributedRelaxation<Backend>,
                                          Alina::runtime::mpi::direct::solver<value_type>,
                                          Alina::runtime::mpi::partition::wrapper<Backend>>

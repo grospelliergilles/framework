@@ -1,29 +1,27 @@
-#ifndef ARCANE_ALINA_MPI_COARSENING_RUNTIME_HPP
-#define ARCANE_ALINA_MPI_COARSENING_RUNTIME_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* DistributedCoarseningRuntime.h                              (C) 2026-2026 */
+/*                                                                           */
+/* Runtime wrapper for distributed coarsening schemes.                       */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDCOARSENINGRUNTIME_H
+#define ARCANE_ALINA_MPI_DISTRIBUTEDCOARSENINGRUNTIME_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
+ */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 /**
  * \file   alina/mpi/coarsening/aggregation.h
@@ -35,6 +33,9 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/DistributedMatrix.h>
 #include <arcane/alina/mpi/DistributedCoarsening.h>
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 namespace Arcane::Alina::runtime::mpi::coarsening
 {
@@ -73,16 +74,19 @@ inline std::istream& operator>>(std::istream& in, type& s)
   return in;
 }
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 template <class Backend>
-struct wrapper
+struct DistributedCoarseningRuntime
 {
   typedef Alina::mpi::DistributedMatrix<Backend> matrix;
   typedef PropertyTree params;
 
   type c;
-  void* handle;
+  void* handle = nullptr;
 
-  wrapper(params prm = params())
+  explicit DistributedCoarseningRuntime(params prm = params())
   : c(prm.get("type", smoothed_aggregation))
   , handle(0)
   {
@@ -103,7 +107,7 @@ struct wrapper
     }
   }
 
-  ~wrapper()
+  ~DistributedCoarseningRuntime()
   {
     switch (c) {
     case aggregation: {
@@ -155,7 +159,7 @@ struct wrapper
 };
 
 template <class Backend>
-unsigned block_size(const wrapper<Backend>& w)
+unsigned block_size(const DistributedCoarseningRuntime<Backend>& w)
 {
   switch (w.c) {
   case aggregation: {
@@ -171,6 +175,12 @@ unsigned block_size(const wrapper<Backend>& w)
   }
 }
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 } // namespace Arcane::Alina::runtime::mpi::coarsening
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif

@@ -261,7 +261,7 @@ int main(int argc, char *argv[]) {
             Alina::mpi::DistributedCPRPreconditioner<
                 Alina::mpi::DistributedAMG<
                     Backend,
-                    Alina::runtime::mpi::coarsening::wrapper<Backend>,
+                    Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
                     Alina::runtime::mpi::relaxation::RuntimeDistributedRelaxation<Backend>,
                     Alina::runtime::mpi::direct::solver<double>,
                     Alina::runtime::mpi::partition::wrapper<Backend>
