@@ -22,7 +22,7 @@
 #include <arcane/alina/mpi/mp_solver_runtime.h>
 
 // Pour test compilation uniquement
-#include <arcane/alina/mpi/mp_relaxation_runtime.h>
+#include <arcane/alina/mpi/DistributedRelaxationRuntime.h>
 
 #include "domain_partition.h"
 
