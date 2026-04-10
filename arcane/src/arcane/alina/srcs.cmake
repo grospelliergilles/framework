@@ -60,16 +60,16 @@ set(ARCANE_SOURCES
   PreconditionerOnlySolver.h
   RichardsonSolver.h
   SolverRuntime.h
-  solver_skyline_lu.h
+  SkylineLUSolver.h
   util.h
   value_type_backend_interface.h
   value_type_complex.h
   value_type_eigen.h
   value_type_static_matrix.h
   mpi/DistributedAMG.h
-        mpi/DistributedCoarsening.h
+  mpi/DistributedCoarsening.h
   mpi/mp_coarsening_runtime.h
-        mpi/mp_cpr.h
+  mpi/mp_cpr.h
   mpi/mp_direct_solve_eigen_splu.h
   mpi/mp_direct_solver_base.h
   mpi/mp_direct_solver_runtime.h

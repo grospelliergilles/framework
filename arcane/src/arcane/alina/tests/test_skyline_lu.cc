@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/solver_skyline_lu.h>
+#include <arcane/alina/SkylineLUSolver.h>
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/profiler.h>
 #include "sample_problem.h"

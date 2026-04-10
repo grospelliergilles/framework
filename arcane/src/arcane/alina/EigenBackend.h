@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #include <memory>
 #include <arcane/alina/EigenAdapter.h>
-#include <arcane/alina/solver_skyline_lu.h>
+#include <arcane/alina/SkylineLUSolver.h>
 
 namespace Arcane::Alina::backend
 {

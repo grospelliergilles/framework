@@ -40,7 +40,7 @@ distributed direct solver interface but always works sequentially.
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/solver_skyline_lu.h>
+#include <arcane/alina/SkylineLUSolver.h>
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/mp_direct_solver_base.h>
 

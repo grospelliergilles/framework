@@ -40,7 +40,7 @@
 
 #include <arcane/alina/util.h>
 #include <arcane/alina/value_type_backend_interface.h>
-#include <arcane/alina/solver_skyline_lu.h>
+#include <arcane/alina/SkylineLUSolver.h>
 #include <arcane/alina/DenseMatrixInverseImpl.h>
 #include <arcane/alina/detail_sort_row.h>
 #include <arcane/alina/SparseMatrixMatrixProduct.h>
