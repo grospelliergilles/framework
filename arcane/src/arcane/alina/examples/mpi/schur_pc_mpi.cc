@@ -33,7 +33,7 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #include <arcane/alina/mpi/DistributedPreconditionedSolver.h>
 #include <arcane/alina/mpi/DistributedSchurPressureCorrection.h>
 #include <arcane/alina/mpi/DistributedPreconditioner.h>
-#include <arcane/alina/mpi/mp_subdomain_deflation.h>
+#include <arcane/alina/mpi/DistributedSubDomainDeflation.h>
 #include <arcane/alina/mpi/DistributedSolverRuntime.h>
 #include <arcane/alina/mpi/DistributedDirectSolverRuntime.h>
 #include <arcane/alina/profiler.h>

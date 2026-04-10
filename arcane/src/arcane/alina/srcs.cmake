@@ -87,6 +87,6 @@ set(ARCANE_SOURCES
   mpi/mp_partition_parmetis.h
   mpi/mp_partition_runtime.h
   mpi/mp_partition_util.h
-  mpi/mp_subdomain_deflation.h
+        mpi/DistributedSubDomainDeflation.h
   mpi/mp_util.h
 )
