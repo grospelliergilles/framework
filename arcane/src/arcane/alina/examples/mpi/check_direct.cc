@@ -13,7 +13,7 @@
 #include <boost/scope_exit.hpp>
 #include <boost/program_options.hpp>
 
-#include <arcane/alina/mpi/mp_direct_solver_runtime.h>
+#include <arcane/alina/mpi/DistributedDirectSolverRuntime.h>
 #include <arcane/alina/profiler.h>
 
 namespace Arcane::Alina {
