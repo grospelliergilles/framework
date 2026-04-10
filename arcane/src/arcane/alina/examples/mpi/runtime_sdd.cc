@@ -464,7 +464,7 @@ int main(int argc, char* argv[])
   Alina::runtime::coarsening::type coarsening = Alina::runtime::coarsening::smoothed_aggregation;
   Alina::runtime::relaxation::type relaxation = Alina::runtime::relaxation::spai0;
   Alina::runtime::solver::type iterative_solver = Alina::runtime::solver::bicgstabl;
-  Alina::runtime::mpi::direct::type direct_solver = Alina::runtime::mpi::direct::skyline_lu;
+  auto direct_solver = Alina::eDistributedDirectSolverType::skyline_lu;
 
   bool just_relax = false;
   bool symm_dirichlet = true;
@@ -495,7 +495,7 @@ int main(int argc, char* argv[])
   po::value<Alina::runtime::solver::type>(&iterative_solver)->default_value(iterative_solver),
   "cg, bicgstab, bicgstabl, gmres")(
   "dir_solver,d",
-  po::value<Alina::runtime::mpi::direct::type>(&direct_solver)->default_value(direct_solver),
+  po::value<Alina::eDistributedDirectSolverType>(&direct_solver)->default_value(direct_solver),
   "skyline_lu"
 #ifdef ARCANE_ALINA_HAVE_PASTIX
   ", pastix"
@@ -739,7 +739,7 @@ int main(int argc, char* argv[])
   typedef Alina::mpi::subdomain_deflation<
   Alina::runtime::PreconditionerRuntime<Backend>,
   Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
-  Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<double>>
+  Alina::DistributedDirectSolverRuntime<double>>
   SDD;
 
   SDD solve(world, std::tie(chunk, ptr, col, val), prm, bprm);

@@ -210,7 +210,7 @@ int main(int argc, char *argv[]) {
     Alina::runtime::coarsening::type    coarsening       = Alina::runtime::coarsening::smoothed_aggregation;
     Alina::runtime::relaxation::type    relaxation       = Alina::runtime::relaxation::spai0;
     Alina::runtime::solver::type        iterative_solver = Alina::runtime::solver::bicgstabl;
-    Alina::runtime::mpi::direct::type   direct_solver    = Alina::runtime::mpi::direct::skyline_lu;
+    auto direct_solver = Alina::eDistributedDirectSolverType::skyline_lu;
     std::string parameter_file;
     std::string A_file    = "A.mtx";
     std::string rhs_file  = "b.mtx";
@@ -239,7 +239,7 @@ int main(int argc, char *argv[]) {
         )
         (
          "dir_solver,d",
-         po::value<Alina::runtime::mpi::direct::type>(&direct_solver)->default_value(direct_solver),
+         po::value<Alina::eDistributedDirectSolverType>(&direct_solver)->default_value(direct_solver),
          "skyline_lu"
 #ifdef ARCANE_ALINA_HAVE_PASTIX
          ", pastix"
@@ -317,7 +317,7 @@ int main(int argc, char *argv[]) {
                 Alina::runtime::relaxation::RuntimeRelaxation
                 >,
             Alina::runtime::mpi::solver::DistributedSolverRuntime<Alina::backend::BuiltinBackend<double>>,
-            Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<double>
+            Alina::DistributedDirectSolverRuntime<double>
         > SDD;
 
     std::function<double(ptrdiff_t,unsigned)> dv = Alina::mpi::constant_deflation(block_size);

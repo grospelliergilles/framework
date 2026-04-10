@@ -32,13 +32,12 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::runtime::mpi::direct
+namespace Arcane::Alina
 {
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-enum type
+enum class eDistributedDirectSolverType
 {
   skyline_lu
 #ifdef ARCANE_ALINA_HAVE_EIGEN
@@ -50,13 +49,13 @@ enum type
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-inline std::ostream& operator<<(std::ostream& os, type s)
+inline std::ostream& operator<<(std::ostream& os, eDistributedDirectSolverType s)
 {
   switch (s) {
-  case skyline_lu:
+  case eDistributedDirectSolverType::skyline_lu:
     return os << "skyline_lu";
 #ifdef ARCANE_ALINA_HAVE_EIGEN
-  case eigen_splu:
+  case eDistributedDirectSolverType::eigen_splu:
     return os << "eigen_splu";
 #endif
   default:
@@ -67,16 +66,16 @@ inline std::ostream& operator<<(std::ostream& os, type s)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-inline std::istream& operator>>(std::istream& in, type& s)
+inline std::istream& operator>>(std::istream& in, eDistributedDirectSolverType& s)
 {
   std::string val;
   in >> val;
 
   if (val == "skyline_lu")
-    s = skyline_lu;
+    s = eDistributedDirectSolverType::skyline_lu;
 #ifdef ARCANE_ALINA_HAVE_EIGEN
   else if (val == "eigen_splu")
-    s = eigen_splu;
+    s = eDistributedDirectSolverType::eigen_splu;
 #endif
   else
     throw std::invalid_argument("Invalid direct solver value. Valid choices are: "
@@ -103,18 +102,18 @@ class DistributedDirectSolverRuntime
 
   template <class Matrix>
   DistributedDirectSolverRuntime(Alina::mpi::communicator comm, const Matrix& A, params prm = params())
-  : s(prm.get("type", skyline_lu))
+  : s(prm.get("type", eDistributedDirectSolverType::skyline_lu))
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");
 
     switch (s) {
-    case skyline_lu: {
+    case eDistributedDirectSolverType::skyline_lu: {
       typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
       handle = static_cast<void*>(new S(comm, A, prm));
     } break;
 #ifdef ARCANE_ALINA_HAVE_EIGEN
-    case eigen_splu: {
+    case eDistributedDirectSolverType::eigen_splu: {
       typedef Alina::mpi::direct::eigen_splu<value_type> S;
       do_construct<S, value_type>(comm, A, prm);
     } break;
@@ -133,12 +132,12 @@ class DistributedDirectSolverRuntime
   void operator()(const Vec1& rhs, Vec2& x) const
   {
     switch (s) {
-    case skyline_lu: {
+    case eDistributedDirectSolverType::skyline_lu: {
       typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
       static_cast<const S*>(handle)->operator()(rhs, x);
     } break;
 #ifdef ARCANE_ALINA_HAVE_EIGEN
-    case eigen_splu: {
+    case eDistributedDirectSolverType::eigen_splu: {
       typedef Alina::mpi::direct::eigen_splu<value_type> S;
       do_solve<S, value_type>(rhs, x);
     } break;
@@ -151,12 +150,12 @@ class DistributedDirectSolverRuntime
   ~DistributedDirectSolverRuntime()
   {
     switch (s) {
-    case skyline_lu: {
+    case eDistributedDirectSolverType::skyline_lu: {
       typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
       delete static_cast<S*>(handle);
     } break;
 #ifdef ARCANE_ALINA_HAVE_EIGEN
-    case eigen_splu: {
+    case eDistributedDirectSolverType::eigen_splu: {
       typedef Alina::mpi::direct::eigen_splu<value_type> S;
       do_destruct<S, value_type>();
     } break;
@@ -168,7 +167,7 @@ class DistributedDirectSolverRuntime
 
  private:
 
-  direct::type s;
+  eDistributedDirectSolverType s;
   void* handle = nullptr;
 
   template <class S, class V, class Matrix>
@@ -216,7 +215,7 @@ class DistributedDirectSolverRuntime
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::runtime::mpi::direct
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

@@ -295,7 +295,7 @@ int main(int argc, char *argv[]) {
                 Alina::mpi::subdomain_deflation<
                     Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
                     Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
-                    Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<double>
+                    Alina::DistributedDirectSolverRuntime<double>
                     >
                 >,
             Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>

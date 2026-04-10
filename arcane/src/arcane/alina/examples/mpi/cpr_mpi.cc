@@ -263,7 +263,7 @@ int main(int argc, char *argv[]) {
                     Backend,
                     Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
                     Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
-                    Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<double>,
+                    Alina::DistributedDirectSolverRuntime<double>,
                     Alina::runtime::mpi::partition::wrapper<Backend>
                     >,
                 Alina::mpi::relaxation::as_preconditioner<
