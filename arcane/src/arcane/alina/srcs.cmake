@@ -84,7 +84,7 @@ set(ARCANE_SOURCES
   mpi/DistributedPreconditioner.h
   mpi/mp_relaxation_runtime.h
   mpi/mp_relaxation.h
-  mpi/mp_schur_pressure_correction.h
+        mpi/DistributedSchurPressureCorrection.h
   mpi/mp_solver.h
   mpi/mp_solver_runtime.h
   mpi/mp_subdomain_deflation.h

@@ -112,9 +112,7 @@ class DistributedSchurPressureCorrection
 
       n = p.get("pmask_size", n);
 
-      Alina::precondition(n > 0,
-                          "Error in schur_complement parameters: "
-                          "pmask_size is not set");
+      precondition(n > 0, "Error in schur_complement parameters: pmask_size is not set");
 
       if (p.count("pmask_pattern")) {
         pmask.resize(n, 0);
