@@ -45,7 +45,7 @@ namespace Arcane::Alina::mpi::direct
  */
 template <typename value_type>
 class DistributedSkylineLUDirectSolver
-: public solver_base<value_type, DistributedSkylineLUDirectSolver<value_type>>
+: public DistributedDirectSolverBase<value_type, DistributedSkylineLUDirectSolver<value_type>>
 {
  public:
 
@@ -91,7 +91,7 @@ class DistributedSkylineLUDirectSolver
 
  private:
 
-  typedef solver_base<value_type, DistributedSkylineLUDirectSolver<value_type>> Base;
+  typedef DistributedDirectSolverBase<value_type, DistributedSkylineLUDirectSolver<value_type>> Base;
   params prm;
   std::shared_ptr<Solver> S;
 };

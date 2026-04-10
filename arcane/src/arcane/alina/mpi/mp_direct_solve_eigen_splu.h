@@ -50,7 +50,7 @@ namespace direct {
 
 /// Provides distributed direct solver interface for Skyline LU solver.
 template <typename value_type>
-class eigen_splu : public solver_base< value_type, eigen_splu<value_type> > {
+class eigen_splu : public DistributedDirectSolverBase< value_type, eigen_splu<value_type> > {
     public:
         typedef
             Alina::solver::EigenSolver<
@@ -92,7 +92,7 @@ class eigen_splu : public solver_base< value_type, eigen_splu<value_type> > {
             (*S)(rhs, x);
         }
     private:
-        typedef solver_base< value_type, eigen_splu<value_type> > Base;
+        typedef DistributedDirectSolverBase< value_type, eigen_splu<value_type> > Base;
         params prm;
         std::shared_ptr<Solver> S;
 };

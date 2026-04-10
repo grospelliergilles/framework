@@ -1,272 +1,291 @@
-#ifndef ARCANE_ALINA_MPI_DIRECT_SOLVER_SOLVER_BASE_HPP
-#define ARCANE_ALINA_MPI_DIRECT_SOLVER_SOLVER_BASE_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* DistributedDirectSolverBase.h                               (C) 2026-2026 */
+/*                                                                           */
+/* Base class for distributed direct solver.                                 */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDDIRECTSOLVERBASE_H
+#define ARCANE_ALINA_MPI_DISTRIBUTEDDIRECTSOLVERBASE_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
-\file   alina/mpi/direct_solver/solver_base.hpp
-\author Denis Demidov <dennis.demidov@gmail.com>
-\brief  Basic functionality for distributed direct solvers.
-*/
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
+ */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/DistributedMatrix.h>
 
-namespace Arcane::Alina {
-namespace mpi {
-namespace direct {
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
+namespace Arcane::Alina::mpi::direct
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Base class for distributed direct solver.
+ */
 template <class value_type, class Solver>
-class solver_base {
-    public:
-        typedef typename math::scalar_of<value_type>::type scalar_type;
-        typedef typename math::rhs_of<value_type>::type    rhs_type;
-        typedef backend::CSRMatrix<value_type> build_matrix;
+class DistributedDirectSolverBase
+{
+ public:
 
-        solver_base() {}
+  typedef typename math::scalar_of<value_type>::type scalar_type;
+  typedef typename math::rhs_of<value_type>::type rhs_type;
+  typedef backend::CSRMatrix<value_type> build_matrix;
 
-        void init(communicator comm, const build_matrix &Astrip) {
-            this->comm = comm;
-            n = Astrip.nrows;
+  DistributedDirectSolverBase() {}
 
-            std::vector<int> domain = comm.exclusive_sum(n);
-            std::vector<int> active; active.reserve(comm.size);
+  void init(communicator comm, const build_matrix& Astrip)
+  {
+    this->comm = comm;
+    n = Astrip.nrows;
 
-            // Find out how many ranks are active (own non-zero matrix rows):
-            int active_rank = 0;
-            for(int i = 0; i < comm.size; ++i) {
-                if (domain[i+1] - domain[i] > 0) {
-                    if (comm.rank == i) active_rank = active.size();
-                    active.push_back(i);
-                }
-            }
+    std::vector<int> domain = comm.exclusive_sum(n);
+    std::vector<int> active;
+    active.reserve(comm.size);
 
-            // Consolidate the matrix on a fewer processes.
-            int nmasters = std::min<int>(active.size(), solver().comm_size(domain.back()));
-            int slaves_per_master = (active.size() + nmasters - 1) / nmasters;
-            int group_beg = (active_rank / slaves_per_master) * slaves_per_master;
+    // Find out how many ranks are active (own non-zero matrix rows):
+    int active_rank = 0;
+    for (int i = 0; i < comm.size; ++i) {
+      if (domain[i + 1] - domain[i] > 0) {
+        if (comm.rank == i)
+          active_rank = active.size();
+        active.push_back(i);
+      }
+    }
 
-            group_master = active[group_beg];
+    // Consolidate the matrix on a fewer processes.
+    int nmasters = std::min<int>(active.size(), solver().comm_size(domain.back()));
+    int slaves_per_master = (active.size() + nmasters - 1) / nmasters;
+    int group_beg = (active_rank / slaves_per_master) * slaves_per_master;
 
-            // Communicator for masters (used to solve the coarse problem):
-            MPI_Comm_split(comm,
-                    comm.rank == group_master ? 0 : MPI_UNDEFINED,
-                    comm.rank, &masters_comm
-                    );
+    group_master = active[group_beg];
 
-            if (!n) return; // I am not active
+    // Communicator for masters (used to solve the coarse problem):
+    MPI_Comm_split(comm,
+                   comm.rank == group_master ? 0 : MPI_UNDEFINED,
+                   comm.rank, &masters_comm);
 
-            // Shift from row pointers to row widths:
-            std::vector<ptrdiff_t> widths(n);
-            for(ptrdiff_t i = 0; i < n; ++i)
-                widths[i] = Astrip.ptr[i+1] - Astrip.ptr[i];
+    if (!n)
+      return; // I am not active
 
-            if (comm.rank == group_master) {
-                int group_end = std::min<int>(group_beg + slaves_per_master, active.size());
-                group_beg += 1;
-                int group_size = group_end - group_beg;
+    // Shift from row pointers to row widths:
+    std::vector<ptrdiff_t> widths(n);
+    for (ptrdiff_t i = 0; i < n; ++i)
+      widths[i] = Astrip.ptr[i + 1] - Astrip.ptr[i];
 
-                std::vector<MPI_Request> cnt_req(group_size);
-                std::vector<MPI_Request> col_req(group_size);
-                std::vector<MPI_Request> val_req(group_size);
+    if (comm.rank == group_master) {
+      int group_end = std::min<int>(group_beg + slaves_per_master, active.size());
+      group_beg += 1;
+      int group_size = group_end - group_beg;
 
-                solve_req.resize(group_size);
-                slaves.reserve(group_size);
-                counts.reserve(group_size);
+      std::vector<MPI_Request> cnt_req(group_size);
+      std::vector<MPI_Request> col_req(group_size);
+      std::vector<MPI_Request> val_req(group_size);
 
-                // Count rows in local chunk of the consolidated matrix,
-                // see who is reporting to us.
-                int nloc = n;
-                for(int j = group_beg; j < group_end; ++j) {
-                    int i = active[j];
+      solve_req.resize(group_size);
+      slaves.reserve(group_size);
+      counts.reserve(group_size);
 
-                    int m = domain[i+1] - domain[i];
-                    nloc += m;
-                    counts.push_back(m);
-                    slaves.push_back(i);
-                }
+      // Count rows in local chunk of the consolidated matrix,
+      // see who is reporting to us.
+      int nloc = n;
+      for (int j = group_beg; j < group_end; ++j) {
+        int i = active[j];
 
-                // Get matrix chunks from my slaves.
-                build_matrix A;
-                A.set_size(nloc, domain.back(), false);
-                A.ptr[0] = 0;
+        int m = domain[i + 1] - domain[i];
+        nloc += m;
+        counts.push_back(m);
+        slaves.push_back(i);
+      }
 
-                cons_f.resize(A.nrows);
-                cons_x.resize(A.nrows);
+      // Get matrix chunks from my slaves.
+      build_matrix A;
+      A.set_size(nloc, domain.back(), false);
+      A.ptr[0] = 0;
 
-                int shift = n+1;
-                std::copy(widths.begin(), widths.end(), &A.ptr[1]);
+      cons_f.resize(A.nrows);
+      cons_x.resize(A.nrows);
 
-                for(int j = 0; j < group_size; ++j) {
-                    int i = slaves[j];
+      int shift = n + 1;
+      std::copy(widths.begin(), widths.end(), &A.ptr[1]);
 
-                    MPI_Irecv(&A.ptr[shift], counts[j], datatype<ptrdiff_t>(),
-                            i, cnt_tag, comm, &cnt_req[j]);
+      for (int j = 0; j < group_size; ++j) {
+        int i = slaves[j];
 
-                    shift += counts[j];
-                }
+        MPI_Irecv(&A.ptr[shift], counts[j], datatype<ptrdiff_t>(),
+                  i, cnt_tag, comm, &cnt_req[j]);
 
-                MPI_Waitall(cnt_req.size(), cnt_req.data(), MPI_STATUSES_IGNORE);
+        shift += counts[j];
+      }
 
-                A.set_nonzeros(A.scan_row_sizes());
+      MPI_Waitall(cnt_req.size(), cnt_req.data(), MPI_STATUSES_IGNORE);
 
-                std::copy(Astrip.col, Astrip.col + Astrip.nnz, A.col);
-                std::copy(Astrip.val, Astrip.val + Astrip.nnz, A.val);
+      A.set_nonzeros(A.scan_row_sizes());
 
-                shift = Astrip.nnz;
-                for(int j = 0, d0 = domain[comm.rank]; j < group_size; ++j) {
-                    int i = slaves[j];
+      std::copy(Astrip.col, Astrip.col + Astrip.nnz, A.col);
+      std::copy(Astrip.val, Astrip.val + Astrip.nnz, A.val);
 
-                    int nnz = A.ptr[domain[i+1] - d0] - A.ptr[domain[i] - d0];
+      shift = Astrip.nnz;
+      for (int j = 0, d0 = domain[comm.rank]; j < group_size; ++j) {
+        int i = slaves[j];
 
-                    MPI_Irecv(A.col + shift, nnz, datatype<ptrdiff_t>(),
-                            i, col_tag, comm, &col_req[j]);
+        int nnz = A.ptr[domain[i + 1] - d0] - A.ptr[domain[i] - d0];
 
-                    MPI_Irecv(A.val + shift, nnz, datatype<value_type>(),
-                            i, val_tag, comm, &val_req[j]);
+        MPI_Irecv(A.col + shift, nnz, datatype<ptrdiff_t>(),
+                  i, col_tag, comm, &col_req[j]);
 
-                    shift += nnz;
-                }
+        MPI_Irecv(A.val + shift, nnz, datatype<value_type>(),
+                  i, val_tag, comm, &val_req[j]);
 
-                MPI_Waitall(col_req.size(), col_req.data(), MPI_STATUSES_IGNORE);
-                MPI_Waitall(val_req.size(), val_req.data(), MPI_STATUSES_IGNORE);
+        shift += nnz;
+      }
 
-                solver().init(masters_comm, A);
-            } else {
-                MPI_Send(widths.data(), n, datatype<ptrdiff_t>(),
-                        group_master, cnt_tag, comm);
-                MPI_Send(Astrip.col, Astrip.nnz, datatype<ptrdiff_t>(),
-                        group_master, col_tag, comm);
-                MPI_Send(Astrip.val, Astrip.nnz, datatype<value_type>(),
-                        group_master, val_tag, comm);
-            }
+      MPI_Waitall(col_req.size(), col_req.data(), MPI_STATUSES_IGNORE);
+      MPI_Waitall(val_req.size(), val_req.data(), MPI_STATUSES_IGNORE);
 
-            host_v.resize(n);
-        }
+      solver().init(masters_comm, A);
+    }
+    else {
+      MPI_Send(widths.data(), n, datatype<ptrdiff_t>(),
+               group_master, cnt_tag, comm);
+      MPI_Send(Astrip.col, Astrip.nnz, datatype<ptrdiff_t>(),
+               group_master, col_tag, comm);
+      MPI_Send(Astrip.val, Astrip.nnz, datatype<value_type>(),
+               group_master, val_tag, comm);
+    }
 
-        template <class B>
-        void init(communicator comm, const DistributedMatrix<B> &A) {
-            const build_matrix &A_loc = *A.local();
-            const build_matrix &A_rem = *A.remote();
+    host_v.resize(n);
+  }
 
-            build_matrix a;
+  template <class B>
+  void init(communicator comm, const DistributedMatrix<B>& A)
+  {
+    const build_matrix& A_loc = *A.local();
+    const build_matrix& A_rem = *A.remote();
 
-            a.set_size(A.loc_rows(), A.glob_cols(), false);
-            a.set_nonzeros(A_loc.nnz + A_rem.nnz);
-            a.ptr[0] = 0;
+    build_matrix a;
 
-            for(size_t i = 0, head = 0; i < A_loc.nrows; ++i) {
-                ptrdiff_t shift = A.loc_col_shift();
+    a.set_size(A.loc_rows(), A.glob_cols(), false);
+    a.set_nonzeros(A_loc.nnz + A_rem.nnz);
+    a.ptr[0] = 0;
 
-                for(ptrdiff_t j = A_loc.ptr[i], e = A_loc.ptr[i+1]; j < e; ++j) {
-                    a.col[head] = A_loc.col[j] + shift;
-                    a.val[head] = A_loc.val[j];
-                    ++head;
-                }
+    for (size_t i = 0, head = 0; i < A_loc.nrows; ++i) {
+      ptrdiff_t shift = A.loc_col_shift();
 
-                for(ptrdiff_t j = A_rem.ptr[i], e = A_rem.ptr[i+1]; j < e; ++j) {
-                    a.col[head] = A_rem.col[j];
-                    a.val[head] = A_rem.val[j];
-                    ++head;
-                }
+      for (ptrdiff_t j = A_loc.ptr[i], e = A_loc.ptr[i + 1]; j < e; ++j) {
+        a.col[head] = A_loc.col[j] + shift;
+        a.val[head] = A_loc.val[j];
+        ++head;
+      }
 
-                a.ptr[i+1] = head;
-            }
+      for (ptrdiff_t j = A_rem.ptr[i], e = A_rem.ptr[i + 1]; j < e; ++j) {
+        a.col[head] = A_rem.col[j];
+        a.val[head] = A_rem.val[j];
+        ++head;
+      }
 
-            init(comm, a);
-        }
+      a.ptr[i + 1] = head;
+    }
 
-        virtual ~solver_base() {
-            if (masters_comm != MPI_COMM_NULL) MPI_Comm_free(&masters_comm);
-        }
+    init(comm, a);
+  }
 
-        Solver& solver() {
-            return *static_cast<Solver*>(this);
-        }
+  virtual ~DistributedDirectSolverBase()
+  {
+    if (masters_comm != MPI_COMM_NULL)
+      MPI_Comm_free(&masters_comm);
+  }
 
-        const Solver& solver() const {
-            return *static_cast<const Solver*>(this);
-        }
+  Solver& solver()
+  {
+    return *static_cast<Solver*>(this);
+  }
 
-        template <class VecF, class VecX>
-        void operator()(const VecF &f, VecX &x) const {
-            static const MPI_Datatype T = datatype<rhs_type>();
+  const Solver& solver() const
+  {
+    return *static_cast<const Solver*>(this);
+  }
 
-            if (!n) return;
+  template <class VecF, class VecX>
+  void operator()(const VecF& f, VecX& x) const
+  {
+    static const MPI_Datatype T = datatype<rhs_type>();
 
-            backend::copy(f, host_v);
+    if (!n)
+      return;
 
-            if (comm.rank == group_master) {
-                std::copy(host_v.begin(), host_v.end(), cons_f.begin());
+    backend::copy(f, host_v);
 
-                int shift = n, j = 0;
-                for(int i : slaves) {
-                    MPI_Irecv(&cons_f[shift], counts[j], T, i, rhs_tag, comm, &solve_req[j]);
-                    shift += counts[j++];
-                }
+    if (comm.rank == group_master) {
+      std::copy(host_v.begin(), host_v.end(), cons_f.begin());
 
-                MPI_Waitall(solve_req.size(), solve_req.data(), MPI_STATUSES_IGNORE);
+      int shift = n, j = 0;
+      for (int i : slaves) {
+        MPI_Irecv(&cons_f[shift], counts[j], T, i, rhs_tag, comm, &solve_req[j]);
+        shift += counts[j++];
+      }
 
-                solver().solve(cons_f, cons_x);
+      MPI_Waitall(solve_req.size(), solve_req.data(), MPI_STATUSES_IGNORE);
 
-                std::copy(cons_x.begin(), cons_x.begin() + n, host_v.begin());
-                shift = n;
-                j = 0;
+      solver().solve(cons_f, cons_x);
 
-                for(int i : slaves) {
-                    MPI_Isend(&cons_x[shift], counts[j], T, i, sol_tag, comm, &solve_req[j]);
-                    shift += counts[j++];
-                }
+      std::copy(cons_x.begin(), cons_x.begin() + n, host_v.begin());
+      shift = n;
+      j = 0;
 
-                MPI_Waitall(solve_req.size(), solve_req.data(), MPI_STATUSES_IGNORE);
-            } else {
-                MPI_Send(host_v.data(), n, T, group_master, rhs_tag, comm);
-                MPI_Recv(host_v.data(), n, T, group_master, sol_tag, comm, MPI_STATUS_IGNORE);
-            }
+      for (int i : slaves) {
+        MPI_Isend(&cons_x[shift], counts[j], T, i, sol_tag, comm, &solve_req[j]);
+        shift += counts[j++];
+      }
 
-            backend::copy(host_v, x);
-        }
-    private:
-        static const int cnt_tag = 5001;
-        static const int col_tag = 5002;
-        static const int val_tag = 5003;
-        static const int rhs_tag = 5004;
-        static const int sol_tag = 5005;
+      MPI_Waitall(solve_req.size(), solve_req.data(), MPI_STATUSES_IGNORE);
+    }
+    else {
+      MPI_Send(host_v.data(), n, T, group_master, rhs_tag, comm);
+      MPI_Recv(host_v.data(), n, T, group_master, sol_tag, comm, MPI_STATUS_IGNORE);
+    }
 
-        communicator comm;
-        int          n;
-        int          group_master;
-        MPI_Comm     masters_comm;
-        std::vector<int> slaves;
-        std::vector<int> counts;
-        mutable std::vector<rhs_type> cons_f, cons_x, host_v;
-        mutable std::vector<MPI_Request> solve_req;
+    backend::copy(host_v, x);
+  }
+
+ private:
+
+  static const int cnt_tag = 5001;
+  static const int col_tag = 5002;
+  static const int val_tag = 5003;
+  static const int rhs_tag = 5004;
+  static const int sol_tag = 5005;
+
+  communicator comm;
+  int n;
+  int group_master;
+  MPI_Comm masters_comm;
+  std::vector<int> slaves;
+  std::vector<int> counts;
+  mutable std::vector<rhs_type> cons_f, cons_x, host_v;
+  mutable std::vector<MPI_Request> solve_req;
 };
 
-} // namespace direct
-} // namespace mpi
-} // namespace amgcl
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::mpi::direct
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif
