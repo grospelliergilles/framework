@@ -32,7 +32,7 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/mpi/mp_make_solver.h>
 #include <arcane/alina/mpi/mp_schur_pressure_correction.h>
-#include <arcane/alina/mpi/mp_block_preconditioner.h>
+#include <arcane/alina/mpi/DistributedPreconditioner.h>
 #include <arcane/alina/mpi/mp_subdomain_deflation.h>
 #include <arcane/alina/mpi/mp_solver_runtime.h>
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
