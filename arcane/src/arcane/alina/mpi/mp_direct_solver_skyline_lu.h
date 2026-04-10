@@ -27,7 +27,7 @@
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/SkylineLUSolver.h>
 #include <arcane/alina/mpi/mp_util.h>
-#include <arcane/alina/mpi/mp_direct_solver_base.h>
+#include <arcane/alina/mpi/DistributedDirectSolverBase.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

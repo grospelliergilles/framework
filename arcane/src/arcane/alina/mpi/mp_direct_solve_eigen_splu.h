@@ -42,7 +42,7 @@ distributed direct solver interface but always works sequentially.
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/solver_eigen.h>
 #include <arcane/alina/mpi/mp_util.h>
-#include <arcane/alina/mpi/mp_direct_solver_base.h>
+#include <arcane/alina/mpi/DistributedDirectSolverBase.h>
 
 namespace Arcane::Alina {
 namespace mpi {

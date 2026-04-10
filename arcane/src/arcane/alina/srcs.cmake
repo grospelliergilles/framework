@@ -71,7 +71,7 @@ set(ARCANE_SOURCES
   mpi/mp_coarsening_runtime.h
   mpi/mp_cpr.h
   mpi/mp_direct_solve_eigen_splu.h
-  mpi/mp_direct_solver_base.h
+        mpi/DistributedDirectSolverBase.h
   mpi/mp_direct_solver_runtime.h
   mpi/mp_direct_solver_skyline_lu.h
   mpi/DistributedMatrix.h
