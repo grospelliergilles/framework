@@ -75,6 +75,7 @@ set(ARCANE_SOURCES
   mpi/DistributedMatrix.h
   mpi/DistributedInnerProduct.h
   mpi/DistributedPreconditioner.h
+  mpi/DistributedPreconditionedSolver.h
   mpi/DistributedRelaxation.h
   mpi/DistributedRelaxationRuntime.h
   mpi/DistributedSchurPressureCorrection.h
@@ -82,7 +83,6 @@ set(ARCANE_SOURCES
   mpi/DistributedSolverRuntime.h
   mpi/mp_direct_solve_eigen_splu.h
   mpi/mp_direct_solver_runtime.h
-  mpi/mp_make_solver.h
   mpi/mp_partition_merge.h
   mpi/mp_partition_parmetis.h
   mpi/mp_partition_runtime.h

@@ -11,7 +11,7 @@
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/PreconditionerRuntime.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/mpi/mp_make_solver.h>
+#include <arcane/alina/mpi/DistributedPreconditionedSolver.h>
 #include <arcane/alina/mpi/DistributedSolverRuntime.h>
 #include <arcane/alina/mpi/DistributedPreconditioner.h>
 #include <arcane/alina/profiler.h>

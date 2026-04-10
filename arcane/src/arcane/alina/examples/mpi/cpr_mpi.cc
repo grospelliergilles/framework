@@ -9,7 +9,7 @@
 #include <arcane/alina/IO.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/mpi/mp_make_solver.h>
+#include <arcane/alina/mpi/DistributedPreconditionedSolver.h>
 #include <arcane/alina/mpi/DistributedCPRPreconditioner.h>
 #include <arcane/alina/mpi/DistributedAMG.h>
 #include <arcane/alina/mpi/DistributedCoarseningRuntime.h>

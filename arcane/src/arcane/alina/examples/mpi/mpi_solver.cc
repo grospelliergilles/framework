@@ -19,7 +19,7 @@
 #endif
 
 #include <arcane/alina/mpi/mp_util.h>
-#include <arcane/alina/mpi/mp_make_solver.h>
+#include <arcane/alina/mpi/DistributedPreconditionedSolver.h>
 #include <arcane/alina/mpi/DistributedPreconditioner.h>
 #include <arcane/alina/mpi/DistributedSolverRuntime.h>
 

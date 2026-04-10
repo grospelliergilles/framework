@@ -37,7 +37,7 @@ THE SOFTWARE.
 #include <arcane/alina/Adapters.h>
 
 #include <arcane/alina/mpi/DistributedMatrix.h>
-#include <arcane/alina/mpi/mp_make_solver.h>
+#include <arcane/alina/mpi/DistributedPreconditionedSolver.h>
 #include <arcane/alina/mpi/DistributedAMG.h>
 #include <arcane/alina/mpi/DistributedCoarsening.h>
 #include <arcane/alina/mpi/DistributedRelaxation.h>
