@@ -86,7 +86,7 @@ set(ARCANE_SOURCES
   mpi/DistributedSubDomainDeflation.h
   mpi/SimpleMatrixPartitioner.h
         mpi/ParmetisMatrixPartitioner.h
-  mpi/mp_partition_runtime.h
+        mpi/MatrixPartitionerRuntime.h
   mpi/mp_partition_util.h
   mpi/mp_util.h
 )
