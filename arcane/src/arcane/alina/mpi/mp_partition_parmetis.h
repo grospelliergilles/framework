@@ -5,14 +5,14 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* mp_partition_parmetis.h                                     (C) 2026-2026 */
+/* ParmetisMatrixPartitioner.h                                 (C) 2026-2026 */
 /*                                                                           */
+/* Matrix partitioning using ParMetis.                                       */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_MP_PARTITION_PARMETIS_H
-#define ARCANE_ALINA_MPI_MP_PARTITION_PARMETIS_H
+#ifndef ARCANE_ALINA_PARMETISMATRIXPARTITIONER_H
+#define ARCANE_ALINA_PARMETISMATRIXPARTITIONER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
 /*
  * This file is based on the work on AMGCL library (version march 2026)
  * which can be found at https://github.com/ddemidov/amgcl.
@@ -20,7 +20,6 @@
  * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
  * SPDX-License-Identifier: MIT
  */
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -37,14 +36,14 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::mpi::partition
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct parmetis
+struct ParmetisMatrixPartitioner
 {
   typedef typename Backend::value_type value_type;
   typedef DistributedMatrix<Backend> matrix;
@@ -78,7 +77,7 @@ struct parmetis
 
   } prm;
 
-  parmetis(const params& prm = params())
+  ParmetisMatrixPartitioner(const params& prm = params())
   : prm(prm)
   {}
 
@@ -141,8 +140,8 @@ struct parmetis
         ptrdiff_t np = n / block_size;
 
         DistributedMatrix<sbackend> A_pw(A.comm(),
-                                          pointwise_matrix(*A.local(), block_size),
-                                          pointwise_matrix(*A.remote(), block_size));
+                                         pointwise_matrix(*A.local(), block_size),
+                                         pointwise_matrix(*A.remote(), block_size));
 
         std::vector<ptrdiff_t> perm_pw(np);
 
@@ -161,7 +160,7 @@ struct parmetis
       }
     }
 
-    return graph_perm_matrix<Backend>(comm, col_beg, col_end, perm);
+    return mpi_graph_perm_matrix<Backend>(comm, col_beg, col_end, perm);
   }
 
   template <class B>
@@ -175,7 +174,7 @@ struct parmetis
     std::vector<idx_t> ptr;
     std::vector<idx_t> col;
 
-    symm_graph(A, ptr, col);
+    mpi_symm_graph(A, ptr, col);
 
     idx_t wgtflag = 0;
     idx_t numflag = 0;
@@ -203,14 +202,14 @@ struct parmetis
       MPI_Comm_free(&scomm);
     }
 
-    return graph_perm_index(comm, npart, part, perm);
+    return mpi_graph_perm_index(comm, npart, part, perm);
   }
 };
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::mpi::partition
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

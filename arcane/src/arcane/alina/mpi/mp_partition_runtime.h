@@ -5,14 +5,14 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* mp_partition_runtime.h                                      (C) 2026-2026 */
+/* MatrixPartitionerRuntime.h                                  (C) 2026-2026 */
 /*                                                                           */
+/* Runtime-configurable wrapper around matrix partitioner.                   */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_MP_PARTITION_RUNTIME_H
-#define ARCANE_ALINA_MPI_MP_PARTITION_RUNTIME_H
+#ifndef ARCANE_ALINA_MATRIXPARTITIONERRUNTIME_H
+#define ARCANE_ALINA_MATRIXPARTITIONERRUNTIME_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
 /*
  * This file is based on the work on AMGCL library (version march 2026)
  * which can be found at https://github.com/ddemidov/amgcl.
@@ -20,7 +20,6 @@
  * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
  * SPDX-License-Identifier: MIT
  */
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -35,13 +34,13 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::runtime::mpi::partition
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-enum type
+enum class eMatrixPartitionerType
 {
   merge
 #ifdef ARCANE_ALINA_HAVE_PARMETIS
@@ -51,13 +50,13 @@ enum type
 };
 
 inline std::ostream&
-operator<<(std::ostream& os, type s)
+operator<<(std::ostream& os, eMatrixPartitionerType s)
 {
   switch (s) {
-  case merge:
+  case eMatrixPartitionerType::merge:
     return os << "merge";
 #ifdef ARCANE_ALINA_HAVE_PARMETIS
-  case parmetis:
+  case eMatrixPartitionerType::parmetis:
     return os << "parmetis";
 #endif
   default:
@@ -66,16 +65,16 @@ operator<<(std::ostream& os, type s)
 }
 
 inline std::istream&
-operator>>(std::istream& in, type& s)
+operator>>(std::istream& in, eMatrixPartitionerType& s)
 {
   std::string val;
   in >> val;
 
   if (val == "merge")
-    s = merge;
+    s = eMatrixPartitionerType::merge;
 #ifdef ARCANE_ALINA_HAVE_PARMETIS
   else if (val == "parmetis")
-    s = parmetis;
+    s = eMatrixPartitionerType::parmetis;
 #endif
   else
     throw std::invalid_argument("Invalid partitioner value. Valid choices are: "
@@ -90,20 +89,22 @@ operator>>(std::istream& in, type& s)
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
+/*!
+ * \brief Runtime-configurable wrapper around matrix partitioner.
+ */
 template <class Backend>
-struct wrapper
+struct MatrixPartitionerRuntime
 {
   typedef DistributedMatrix<Backend> matrix;
   typedef PropertyTree params;
 
-  type t;
+  eMatrixPartitionerType t;
   void* handle;
 
-  wrapper(params prm = params())
+  MatrixPartitionerRuntime(params prm = params())
   : t(prm.get("type",
 #if defined(ARCANE_ALINA_HAVE_PARMETIS)
-              parmetis
+              eMatrixPartitionerType::parmetis
 #else
               merge
 #endif
@@ -114,13 +115,13 @@ struct wrapper
       ARCANE_ALINA_PARAM_MISSING("type");
 
     switch (t) {
-    case merge: {
-      typedef Alina::mpi::partition::SimpleMatrixPartitioner<Backend> R;
+    case eMatrixPartitionerType::merge: {
+      typedef SimpleMatrixPartitioner<Backend> R;
       handle = static_cast<void*>(new R(prm));
     } break;
 #ifdef ARCANE_ALINA_HAVE_PARMETIS
-    case parmetis: {
-      typedef Alina::mpi::partition::parmetis<Backend> R;
+    case eMatrixPartitionerType::parmetis: {
+      typedef ParmetisMatrixPartitioner<Backend> R;
       handle = static_cast<void*>(new R(prm));
     } break;
 #endif
@@ -129,16 +130,16 @@ struct wrapper
     }
   }
 
-  ~wrapper()
+  ~MatrixPartitionerRuntime()
   {
     switch (t) {
-    case merge: {
-      typedef Alina::mpi::partition::SimpleMatrixPartitioner<Backend> R;
+    case eMatrixPartitionerType::merge: {
+      typedef SimpleMatrixPartitioner<Backend> R;
       delete static_cast<R*>(handle);
     } break;
 #ifdef ARCANE_ALINA_HAVE_PARMETIS
-    case parmetis: {
-      typedef Alina::mpi::partition::parmetis<Backend> R;
+    case eMatrixPartitionerType::parmetis: {
+      typedef ParmetisMatrixPartitioner<Backend> R;
       delete static_cast<R*>(handle);
     } break;
 #endif
@@ -150,13 +151,13 @@ struct wrapper
   bool is_needed(const matrix& A) const
   {
     switch (t) {
-    case merge: {
-      typedef Alina::mpi::partition::SimpleMatrixPartitioner<Backend> R;
+    case eMatrixPartitionerType::merge: {
+      typedef SimpleMatrixPartitioner<Backend> R;
       return static_cast<const R*>(handle)->is_needed(A);
     }
 #ifdef ARCANE_ALINA_HAVE_PARMETIS
-    case parmetis: {
-      typedef Alina::mpi::partition::parmetis<Backend> R;
+    case eMatrixPartitionerType::parmetis: {
+      typedef ParmetisMatrixPartitioner<Backend> R;
       return static_cast<const R*>(handle)->is_needed(A);
     }
 #endif
@@ -168,13 +169,13 @@ struct wrapper
   std::shared_ptr<matrix> operator()(const matrix& A, unsigned block_size = 1) const
   {
     switch (t) {
-    case merge: {
-      typedef Alina::mpi::partition::SimpleMatrixPartitioner<Backend> R;
+    case eMatrixPartitionerType::merge: {
+      typedef SimpleMatrixPartitioner<Backend> R;
       return static_cast<const R*>(handle)->operator()(A, block_size);
     }
 #ifdef ARCANE_ALINA_HAVE_PARMETIS
-    case parmetis: {
-      typedef Alina::mpi::partition::parmetis<Backend> R;
+    case eMatrixPartitionerType::parmetis: {
+      typedef ParmetisMatrixPartitioner<Backend> R;
       return static_cast<const R*>(handle)->operator()(A, block_size);
     }
 #endif
@@ -187,7 +188,7 @@ struct wrapper
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::runtime::mpi::partition
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

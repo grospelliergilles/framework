@@ -190,7 +190,7 @@ template <class Backend, class Matrix>
 std::shared_ptr<Alina::DistributedMatrix<Backend>>
 partition(Alina::mpi_communicator comm, const Matrix& Astrip,
           typename Backend::vector& rhs, const typename Backend::params& bprm,
-          Alina::runtime::mpi::partition::type ptype, int block_size = 1)
+          Alina::eMatrixPartitionerType ptype, int block_size = 1)
 {
   typedef typename Backend::value_type val_type;
   typedef typename Alina::math::rhs_of<val_type>::type rhs_type;
@@ -200,13 +200,13 @@ partition(Alina::mpi_communicator comm, const Matrix& Astrip,
 
   auto A = std::make_shared<DMatrix>(comm, Astrip);
 
-  if (comm.size == 1 || ptype == Alina::runtime::mpi::partition::merge)
+  if (comm.size == 1 || ptype == Alina::eMatrixPartitionerType::merge)
     return A;
 
   prof.tic("partition");
   Alina::PropertyTree prm;
   prm.put("type", ptype);
-  Alina::runtime::mpi::partition::wrapper<Backend> part(prm);
+  Alina::MatrixPartitionerRuntime<Backend> part(prm);
 
   auto I = part(*A, block_size);
   auto J = transpose(*I);
@@ -237,7 +237,7 @@ void solve_block(Alina::mpi_communicator comm,
                  const std::vector<double>& val,
                  const Alina::PropertyTree& prm,
                  const std::vector<double>& f,
-                 Alina::runtime::mpi::partition::type ptype)
+                 Alina::eMatrixPartitionerType ptype)
 {
   typedef Alina::static_matrix<double, B, B> val_type;
   typedef Alina::static_matrix<double, B, 1> rhs_type;
@@ -255,8 +255,7 @@ void solve_block(Alina::mpi_communicator comm,
 
   typename Backend::params bprm;
 
-  Alina::backend::numa_vector<rhs_type> rhs(
-  reinterpret_cast<const rhs_type*>(&f[0]),
+  Alina::backend::numa_vector<rhs_type> rhs(  reinterpret_cast<const rhs_type*>(&f[0]),
   reinterpret_cast<const rhs_type*>(&f[0]) + chunk / B);
 
   auto get_distributed_matrix = [&]() {
@@ -264,7 +263,7 @@ void solve_block(Alina::mpi_communicator comm,
 
     std::shared_ptr<DMatrix> A;
 
-    if (ptype) {
+    if (ptype!=Alina::eMatrixPartitionerType::merge) {
       A = partition<Backend>(comm,
                              Alina::adapter::block_matrix<val_type>(std::tie(chunk, ptr, col, val)),
                              rhs, bprm, ptype, prm.get("precond.coarsening.aggr.block_size", 1));
@@ -330,7 +329,7 @@ void solve_scalar(Alina::mpi_communicator comm,
                   const std::vector<double>& val,
                   const Alina::PropertyTree& prm,
                   const std::vector<double>& f,
-                  Alina::runtime::mpi::partition::type ptype)
+                  Alina::eMatrixPartitionerType ptype)
 {
 #if defined(SOLVER_BACKEND_BUILTIN)
   typedef Alina::backend::BuiltinBackend<double> Backend;
@@ -360,7 +359,7 @@ void solve_scalar(Alina::mpi_communicator comm,
     auto t = prof.scoped_tic("distributed matrix");
     std::shared_ptr<DMatrix> A;
 
-    if (ptype) {
+    if (ptype != Alina::eMatrixPartitionerType::merge) {
       A = partition<Backend>(comm,
                              std::tie(chunk, ptr, col, val), rhs, bprm, ptype,
                              prm.get("precond.coarsening.aggr.block_size", 1));
@@ -460,13 +459,11 @@ int main(int argc, char* argv[])
   "This usually is the case for problems in elasticity, structural mechanics, "
   "for coupled systems of PDE (such as Navier-Stokes equations), etc. ")(
   "partitioner,r",
-  po::value<Alina::runtime::mpi::partition::type>()->default_value(
-#if defined(ARCANE_ALINA_HAVE_SCOTCH)
-  Alina::runtime::mpi::partition::ptscotch
-#elif defined(ARCANE_ALINA_HAVE_PARMETIS)
-  Alina::runtime::mpi::partition::parmetis
+  po::value<Alina::eMatrixPartitionerType>()->default_value(
+#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+  Alina::eMatrixPartitionerType::parmetis
 #else
-  Alina::runtime::mpi::partition::merge
+  Alina::eMatrixPartitionerType::merge
 #endif
   ),
   "Repartition the system matrix")(
@@ -519,7 +516,7 @@ int main(int argc, char* argv[])
   int aggr_block = prm.get("precond.coarsening.aggr.block_size", 1);
 
   bool binary = vm["binary"].as<bool>();
-  Alina::runtime::mpi::partition::type ptype = vm["partitioner"].as<Alina::runtime::mpi::partition::type>();
+  Alina::eMatrixPartitionerType ptype = vm["partitioner"].as<Alina::eMatrixPartitionerType>();
 
   if (vm.count("matrix")) {
     prof.tic("read");
@@ -539,7 +536,7 @@ int main(int argc, char* argv[])
   }
   else if (vm.count("Ap")) {
     prof.tic("read");
-    ptype = static_cast<Alina::runtime::mpi::partition::type>(0);
+    ptype = Alina::eMatrixPartitionerType::merge;
 
     std::vector<std::string> Aparts = vm["Ap"].as<std::vector<std::string>>();
     comm.check(Aparts.size() == static_cast<size_t>(comm.size),

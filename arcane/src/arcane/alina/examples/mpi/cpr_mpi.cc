@@ -105,7 +105,7 @@ template <class Backend, class Matrix>
 std::shared_ptr<Alina::DistributedMatrix<Backend>>
 partition(Alina::mpi_communicator comm, const Matrix& Astrip,
           std::vector<double>& rhs, const typename Backend::params& bprm,
-          Alina::runtime::mpi::partition::type ptype, int block_size = 1)
+          Alina::eMatrixPartitionerType ptype, int block_size = 1)
 {
   typedef Alina::DistributedMatrix<Backend> DMatrix;
 
@@ -113,13 +113,13 @@ partition(Alina::mpi_communicator comm, const Matrix& Astrip,
 
   auto A = std::make_shared<DMatrix>(comm, Astrip);
 
-  if (comm.size == 1 || ptype == Alina::runtime::mpi::partition::merge)
+  if (comm.size == 1 || ptype == Alina::eMatrixPartitionerType::merge)
     return A;
 
   prof.tic("partition");
   Alina::PropertyTree prm;
   prm.put("type", ptype);
-  Alina::runtime::mpi::partition::wrapper<Backend> part(prm);
+  Alina::MatrixPartitionerRuntime<Backend> part(prm);
 
   auto I = part(*A, block_size);
   auto J = transpose(*I);
@@ -176,13 +176,9 @@ int main(int argc, char* argv[])
   po::value<int>()->default_value(1),
   "The block size of the system matrix. ")(
   "partitioner,r",
-  po::value<Alina::runtime::mpi::partition::type>()->default_value(
-#if defined(ARCANE_ALINA_HAVE_SCOTCH)
-  Alina::runtime::mpi::partition::ptscotch
-#elif defined(ARCANE_ALINA_HAVE_PASTIX)
-  Alina::runtime::mpi::partition::parmetis
-#else
-  Alina::runtime::mpi::partition::merge
+  po::value<Alina::eMatrixPartitionerType>()->default_value(
+#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+  Alina::eMatrixPartitionerType::parmetis
 #endif
   ),
   "Repartition the system matrix")("prm-file,P",
@@ -244,7 +240,7 @@ int main(int argc, char* argv[])
 
   auto A = partition<Backend>(comm,
                               std::tie(n, ptr, col, val), rhs, Backend::params(),
-                              vm["partitioner"].as<Alina::runtime::mpi::partition::type>(),
+                              vm["partitioner"].as<Alina::eMatrixPartitionerType>(),
                               block_size);
 
   prof.tic("setup");
@@ -255,7 +251,7 @@ int main(int argc, char* argv[])
   Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
   Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
   Alina::DistributedDirectSolverRuntime<double>,
-  Alina::runtime::mpi::partition::wrapper<Backend>>,
+  Alina::MatrixPartitionerRuntime<Backend>>,
   Alina::mpi::relaxation::as_preconditioner<
   Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>>>,
   Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>

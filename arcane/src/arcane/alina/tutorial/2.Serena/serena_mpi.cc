@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
   // If neither ParMETIS not PT-SCOTCH are not available,
   // just keep the current naive partitioning.
 #if defined(ARCANE_ALINA_HAVE_PARMETIS)
-  typedef Alina::mpi::partition::parmetis<DBackend> Partition;
+  typedef Alina::ParmetisMatrixPartitioner<DBackend> Partition;
 
   if (world.size > 1) {
     prof.tic("partition");

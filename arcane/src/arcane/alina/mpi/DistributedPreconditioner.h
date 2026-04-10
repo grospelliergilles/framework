@@ -99,6 +99,12 @@ class DistributedPreconditioner
   typedef typename backend_type::value_type value_type;
   typedef DistributedMatrix<backend_type> matrix;
 
+  using AMGPrecondType = Alina::mpi::DistributedAMG<Backend,
+                                                    Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
+                                                    Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
+                                                    DistributedDirectSolverRuntime<value_type>,
+                                                    MatrixPartitionerRuntime<Backend>>;
+
   template <class Matrix>
   DistributedPreconditioner(mpi_communicator comm,
                             const Matrix& Astrip,
@@ -124,15 +130,7 @@ class DistributedPreconditioner
   {
     switch (_class) {
     case precond_class::amg: {
-      typedef Alina::mpi::DistributedAMG<
-      Backend,
-      Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
-      Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
-      Alina::DistributedDirectSolverRuntime<value_type>,
-      Alina::runtime::mpi::partition::wrapper<Backend>>
-      Precond;
-
-      delete static_cast<Precond*>(handle);
+      delete static_cast<AMGPrecondType*>(handle);
     } break;
     case precond_class::relaxation: {
       typedef Alina::mpi::relaxation::as_preconditioner<
@@ -152,14 +150,7 @@ class DistributedPreconditioner
   {
     switch (_class) {
     case precond_class::amg: {
-      typedef Alina::mpi::DistributedAMG<Backend,
-                                         Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
-                                         Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
-                                         Alina::DistributedDirectSolverRuntime<value_type>,
-                                         Alina::runtime::mpi::partition::wrapper<Backend>>
-      Precond;
-
-      static_cast<Precond*>(handle)->rebuild(A, bprm);
+      static_cast<AMGPrecondType*>(handle)->rebuild(A, bprm);
     } break;
     default:
       std::cerr << "rebuild is a noop unless the preconditioner is AMG" << std::endl;
@@ -172,14 +163,7 @@ class DistributedPreconditioner
   {
     switch (_class) {
     case precond_class::amg: {
-      typedef Alina::mpi::DistributedAMG<Backend,
-                                         Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
-                                         Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
-                                         Alina::DistributedDirectSolverRuntime<value_type>,
-                                         Alina::runtime::mpi::partition::wrapper<Backend>>
-      Precond;
-
-      static_cast<Precond*>(handle)->apply(rhs, x);
+      static_cast<AMGPrecondType*>(handle)->apply(rhs, x);
     } break;
     case precond_class::relaxation: {
       typedef Alina::mpi::relaxation::as_preconditioner<
@@ -198,14 +182,7 @@ class DistributedPreconditioner
   {
     switch (_class) {
     case precond_class::amg: {
-      typedef Alina::mpi::DistributedAMG<Backend,
-                                         Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
-                                         Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
-                                         Alina::DistributedDirectSolverRuntime<value_type>,
-                                         Alina::runtime::mpi::partition::wrapper<Backend>>
-      Precond;
-
-      return static_cast<Precond*>(handle)->system_matrix_ptr();
+      return static_cast<AMGPrecondType*>(handle)->system_matrix_ptr();
     }
     case precond_class::relaxation: {
       typedef Alina::mpi::relaxation::as_preconditioner<
@@ -228,14 +205,7 @@ class DistributedPreconditioner
   {
     switch (p._class) {
     case precond_class::amg: {
-      typedef Alina::mpi::DistributedAMG<Backend,
-                                         Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
-                                         Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
-                                         Alina::DistributedDirectSolverRuntime<value_type>,
-                                         Alina::runtime::mpi::partition::wrapper<Backend>>
-      Precond;
-
-      return os << *static_cast<Precond*>(p.handle);
+      return os << *static_cast<AMGPrecondType*>(p.handle);
     }
     case precond_class::relaxation: {
       typedef Alina::mpi::relaxation::as_preconditioner<
@@ -261,14 +231,7 @@ class DistributedPreconditioner
 
     switch (_class) {
     case precond_class::amg: {
-      typedef Alina::mpi::DistributedAMG<Backend,
-                                         Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
-                                         Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
-                                         Alina::DistributedDirectSolverRuntime<value_type>,
-                                         Alina::runtime::mpi::partition::wrapper<Backend>>
-      Precond;
-
-      handle = static_cast<void*>(new Precond(A->comm(), A, prm, bprm));
+      handle = static_cast<void*>(new AMGPrecondType(A->comm(), A, prm, bprm));
     } break;
     case precond_class::relaxation: {
       typedef Alina::mpi::relaxation::as_preconditioner<
