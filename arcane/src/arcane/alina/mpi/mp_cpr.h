@@ -42,7 +42,7 @@ namespace Arcane::Alina::mpi
  * \brief Distributed CPR preconditioner.
  */
 template <class PPrecond, class SPrecond>
-class cpr
+class DistributedCPRPreconditioner
 {
   static_assert(std::is_same<
                 typename PPrecond::backend_type,
@@ -91,7 +91,7 @@ class cpr
   };
 
   template <class Matrix>
-  cpr(communicator comm,
+  DistributedCPRPreconditioner(communicator comm,
       const Matrix& K,
       const params& prm = params(),
       const backend_params& bprm = backend_params())
@@ -102,7 +102,7 @@ class cpr
     init(std::make_shared<matrix>(comm, K, backend::rows(K)), bprm);
   }
 
-  cpr(communicator comm,
+  DistributedCPRPreconditioner(communicator comm,
       std::shared_ptr<matrix> K,
       const params& prm = params(),
       const backend_params& bprm = backend_params())
@@ -479,14 +479,14 @@ class cpr
   }
 
   template <class P, class S>
-  friend std::ostream& operator<<(std::ostream& os, const cpr<P, S>& cpr);
+  friend std::ostream& operator<<(std::ostream& os, const DistributedCPRPreconditioner<P, S>& cpr);
 };
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
 template <class P, class S>
-std::ostream& operator<<(std::ostream& os, const cpr<P, S>& cpr)
+std::ostream& operator<<(std::ostream& os, const DistributedCPRPreconditioner<P, S>& cpr)
 {
   os << "CPR (two-stage preconditioner)\n"
         "### Pressure preconditioner:\n"

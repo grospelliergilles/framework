@@ -258,7 +258,7 @@ int main(int argc, char *argv[]) {
     prof.tic("setup");
     typedef
         Alina::mpi::make_solver<
-            Alina::mpi::cpr<
+            Alina::mpi::DistributedCPRPreconditioner<
                 Alina::mpi::DistributedAMG<
                     Backend,
                     Alina::runtime::mpi::coarsening::wrapper<Backend>,
