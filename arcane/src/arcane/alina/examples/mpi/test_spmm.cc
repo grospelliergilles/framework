@@ -60,7 +60,7 @@ template <class Val>
 void test() {
     typedef typename math::rhs_of<Val>::type Rhs;
 
-    Alina::mpi::communicator comm(MPI_COMM_WORLD);
+    Alina::mpi::mpi_communicator comm(MPI_COMM_WORLD);
 
     int n = 16;
     int chunk_len = (n + comm.size - 1) / comm.size;

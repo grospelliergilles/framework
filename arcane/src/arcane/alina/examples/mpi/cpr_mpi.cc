@@ -31,7 +31,7 @@ using Alina::precondition;
 
 //---------------------------------------------------------------------------
 ptrdiff_t read_matrix_market(
-        Alina::mpi::communicator comm,
+        Alina::mpi::mpi_communicator comm,
         const std::string &A_file, const std::string &rhs_file, int block_size,
         std::vector<ptrdiff_t> &ptr,
         std::vector<ptrdiff_t> &col,
@@ -66,7 +66,7 @@ ptrdiff_t read_matrix_market(
 
 //---------------------------------------------------------------------------
 ptrdiff_t read_binary(
-        Alina::mpi::communicator comm,
+        Alina::mpi::mpi_communicator comm,
         const std::string &A_file, const std::string &rhs_file, int block_size,
         std::vector<ptrdiff_t> &ptr,
         std::vector<ptrdiff_t> &col,
@@ -101,7 +101,7 @@ ptrdiff_t read_binary(
 //---------------------------------------------------------------------------
 template <class Backend, class Matrix>
 std::shared_ptr< Alina::mpi::DistributedMatrix<Backend> >
-partition(Alina::mpi::communicator comm, const Matrix &Astrip,
+partition(Alina::mpi::mpi_communicator comm, const Matrix &Astrip,
         std::vector<double> &rhs, const typename Backend::params &bprm,
         Alina::runtime::mpi::partition::type ptype, int block_size = 1)
 {
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
         MPI_Finalize();
     } BOOST_SCOPE_EXIT_END
 
-    Alina::mpi::communicator comm(MPI_COMM_WORLD);
+    Alina::mpi::mpi_communicator comm(MPI_COMM_WORLD);
 
     if (comm.rank == 0)
         std::cout << "World size: " << comm.size << std::endl;

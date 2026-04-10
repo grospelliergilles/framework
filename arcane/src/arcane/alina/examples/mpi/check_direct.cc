@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
         MPI_Finalize();
     } BOOST_SCOPE_EXIT_END
 
-    Alina::mpi::communicator comm(MPI_COMM_WORLD);
+    Alina::mpi::mpi_communicator comm(MPI_COMM_WORLD);
 
     if (comm.rank == 0)
         std::cout << "World size: " << comm.size << std::endl;

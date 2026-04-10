@@ -39,7 +39,7 @@ namespace Arcane::Alina {
 namespace math = Alina::math;
 
 //---------------------------------------------------------------------------
-ptrdiff_t assemble_poisson3d(Alina::mpi::communicator comm,
+ptrdiff_t assemble_poisson3d(Alina::mpi::mpi_communicator comm,
         ptrdiff_t n, int block_size,
         std::vector<ptrdiff_t> &ptr,
         std::vector<ptrdiff_t> &col,
@@ -112,7 +112,7 @@ ptrdiff_t assemble_poisson3d(Alina::mpi::communicator comm,
 
 //---------------------------------------------------------------------------
 ptrdiff_t read_matrix_market(
-        Alina::mpi::communicator comm,
+        Alina::mpi::mpi_communicator comm,
         const std::string &A_file, const std::string &rhs_file, int block_size,
         std::vector<ptrdiff_t> &ptr,
         std::vector<ptrdiff_t> &col,
@@ -147,7 +147,7 @@ ptrdiff_t read_matrix_market(
 
 //---------------------------------------------------------------------------
 ptrdiff_t read_binary(
-        Alina::mpi::communicator comm,
+        Alina::mpi::mpi_communicator comm,
         const std::string &A_file, const std::string &rhs_file, int block_size,
         std::vector<ptrdiff_t> &ptr,
         std::vector<ptrdiff_t> &col,
@@ -182,7 +182,7 @@ ptrdiff_t read_binary(
 //---------------------------------------------------------------------------
 template <class Backend, class Matrix>
 std::shared_ptr< Alina::mpi::DistributedMatrix<Backend> >
-partition(Alina::mpi::communicator comm, const Matrix &Astrip,
+partition(Alina::mpi::mpi_communicator comm, const Matrix &Astrip,
         typename Backend::vector &rhs, const typename Backend::params &bprm,
         Alina::runtime::mpi::partition::type ptype, int block_size = 1)
 {
@@ -225,7 +225,7 @@ partition(Alina::mpi::communicator comm, const Matrix &Astrip,
 #if defined(SOLVER_BACKEND_BUILTIN)
 template <int B>
 void solve_block(
-        Alina::mpi::communicator comm,
+        Alina::mpi::mpi_communicator comm,
         ptrdiff_t chunk,
         const std::vector<ptrdiff_t>      &ptr,
         const std::vector<ptrdiff_t>      &col,
@@ -323,7 +323,7 @@ void solve_block(
 
 //---------------------------------------------------------------------------
 void solve_scalar(
-        Alina::mpi::communicator comm,
+        Alina::mpi::mpi_communicator comm,
         ptrdiff_t chunk,
         const std::vector<ptrdiff_t> &ptr,
         const std::vector<ptrdiff_t> &col,
@@ -424,8 +424,8 @@ void solve_scalar(
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-    Alina::mpi::init_thread mpi(&argc, &argv);
-    Alina::mpi::communicator comm(MPI_COMM_WORLD);
+    Alina::mpi::mpi_init_thread mpi(&argc, &argv);
+    Alina::mpi::mpi_communicator comm(MPI_COMM_WORLD);
 
     if (comm.rank == 0)
         std::cout << "World size: " << comm.size << std::endl;

@@ -64,8 +64,8 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  Alina::mpi::init mpi(&argc, &argv);
-  Alina::mpi::communicator world(MPI_COMM_WORLD);
+  Alina::mpi::mpi_init mpi(&argc, &argv);
+  Alina::mpi::mpi_communicator world(MPI_COMM_WORLD);
 
   // The profiler:
   Alina::profiler<> prof("Serena MPI");

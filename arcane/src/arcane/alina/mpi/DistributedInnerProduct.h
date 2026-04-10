@@ -40,9 +40,9 @@ namespace Arcane::Alina::mpi
  */
 struct inner_product
 {
-  communicator comm;
+  mpi_communicator comm;
 
-  explicit inner_product(communicator comm)
+  explicit inner_product(mpi_communicator comm)
   : comm(comm)
   {}
 

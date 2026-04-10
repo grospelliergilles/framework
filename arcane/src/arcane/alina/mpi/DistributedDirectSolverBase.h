@@ -48,7 +48,7 @@ class DistributedDirectSolverBase
 
   DistributedDirectSolverBase() {}
 
-  void init(communicator comm, const build_matrix& Astrip)
+  void init(mpi_communicator comm, const build_matrix& Astrip)
   {
     this->comm = comm;
     n = Astrip.nrows;
@@ -172,7 +172,7 @@ class DistributedDirectSolverBase
   }
 
   template <class B>
-  void init(communicator comm, const DistributedMatrix<B>& A)
+  void init(mpi_communicator comm, const DistributedMatrix<B>& A)
   {
     const build_matrix& A_loc = *A.local();
     const build_matrix& A_rem = *A.remote();
@@ -270,7 +270,7 @@ class DistributedDirectSolverBase
   static const int rhs_tag = 5004;
   static const int sol_tag = 5005;
 
-  communicator comm;
+  mpi_communicator comm;
   int n;
   int group_master;
   MPI_Comm masters_comm;

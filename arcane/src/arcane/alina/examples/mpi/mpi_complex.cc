@@ -28,7 +28,7 @@ namespace math = Alina::math;
 
 //---------------------------------------------------------------------------
 ptrdiff_t
-assemble_poisson3d(Alina::mpi::communicator comm,
+assemble_poisson3d(Alina::mpi::mpi_communicator comm,
                    ptrdiff_t n, int block_size,
                    std::vector<ptrdiff_t>& ptr,
                    std::vector<ptrdiff_t>& col,
@@ -103,7 +103,7 @@ assemble_poisson3d(Alina::mpi::communicator comm,
 }
 
 //---------------------------------------------------------------------------
-void solve_scalar(Alina::mpi::communicator comm,
+void solve_scalar(Alina::mpi::mpi_communicator comm,
                   ptrdiff_t chunk,
                   const std::vector<ptrdiff_t>& ptr,
                   const std::vector<ptrdiff_t>& col,
@@ -144,8 +144,8 @@ void solve_scalar(Alina::mpi::communicator comm,
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-  Alina::mpi::init_thread mpi(&argc, &argv);
-  Alina::mpi::communicator comm(MPI_COMM_WORLD);
+  Alina::mpi::mpi_init_thread mpi(&argc, &argv);
+  Alina::mpi::mpi_communicator comm(MPI_COMM_WORLD);
 
   if (comm.rank == 0)
     std::cout << "World size: " << comm.size << std::endl;

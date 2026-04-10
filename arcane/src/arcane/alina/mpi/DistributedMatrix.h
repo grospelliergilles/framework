@@ -90,7 +90,7 @@ class CommunicationPattern
 
   std::shared_ptr<vector> x_rem;
 
-  CommunicationPattern(communicator comm,
+  CommunicationPattern(mpi_communicator comm,
                ptrdiff_t n_loc_cols,
                size_t n_rem_cols, const ptrdiff_t* p_rem_cols)
   : comm(comm)
@@ -308,7 +308,7 @@ class CommunicationPattern
     ARCANE_ALINA_TOC("MPI Wait");
   }
 
-  communicator mpi_comm() const
+  mpi_communicator mpi_comm() const
   {
     return comm;
   }
@@ -326,7 +326,7 @@ class CommunicationPattern
   static const int tag_exc_cols = 1002;
   static const int tag_exc_vals = 1003;
 
-  communicator comm;
+  mpi_communicator comm;
 
   std::unordered_map<ptrdiff_t, std::tuple<int, int>> idx;
   std::shared_ptr<Gather> gather;
@@ -354,7 +354,7 @@ class DistributedMatrix
   typedef CommunicationPattern<Backend> CommPattern;
   typedef backend::CSRMatrix<value_type> build_matrix;
 
-  DistributedMatrix(communicator comm,
+  DistributedMatrix(mpi_communicator comm,
                      std::shared_ptr<build_matrix> a_loc,
                      std::shared_ptr<build_matrix> a_rem,
                      std::shared_ptr<CommPattern> c = std::shared_ptr<CommPattern>())
@@ -398,7 +398,7 @@ class DistributedMatrix
   }
 
   template <class Matrix>
-  DistributedMatrix(communicator comm,
+  DistributedMatrix(mpi_communicator comm,
                      const Matrix& A,
                      ptrdiff_t _n_loc_cols = -1)
   : n_loc_rows(backend::rows(A))
@@ -465,7 +465,7 @@ class DistributedMatrix
     a_rem->ncols = C->recv.count();
   }
 
-  communicator comm() const
+  mpi_communicator comm() const
   {
     return C->mpi_comm();
   }
@@ -621,7 +621,7 @@ transpose(const DistributedMatrix<Backend>& A)
   static const int tag_col = 2002;
   static const int tag_val = 2003;
 
-  communicator comm = A.comm();
+  mpi_communicator comm = A.comm();
   const CommPattern& C = A.cpat();
 
   build_matrix& A_loc = *A.local();
@@ -786,7 +786,7 @@ remote_rows(const CommunicationPattern<Backend>& C,
   static const int tag_val = 3003;
 
   ARCANE_ALINA_TIC("remote_rows");
-  communicator comm = C.mpi_comm();
+  mpi_communicator comm = C.mpi_comm();
 
   build_matrix& B_loc = *B.local();
   build_matrix& B_rem = *B.remote();
@@ -1237,7 +1237,7 @@ spectral_radius(const mpi::DistributedMatrix<Backend>& A, int power_iters = 0)
   typedef typename math::scalar_of<value_type>::type scalar_type;
   typedef backend::CSRMatrix<value_type> build_matrix;
 
-  mpi::communicator comm = A.comm();
+  mpi::mpi_communicator comm = A.comm();
 
   const build_matrix& A_loc = *A.local();
   const build_matrix& A_rem = *A.remote();

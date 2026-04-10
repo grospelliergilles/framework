@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
   }
   BOOST_SCOPE_EXIT_END
 
-  Alina::mpi::communicator world(MPI_COMM_WORLD);
+  Alina::mpi::mpi_communicator world(MPI_COMM_WORLD);
 
   if (world.rank == 0)
     std::cout << "World size: " << world.size << std::endl;

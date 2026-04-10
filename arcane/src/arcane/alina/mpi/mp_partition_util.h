@@ -223,7 +223,7 @@ void symm_graph(const DistributedMatrix<Backend> &A,
 
 template <class Idx>
 std::tuple<ptrdiff_t, ptrdiff_t> graph_perm_index(
-        communicator comm, int npart, const std::vector<Idx> &part,
+        mpi_communicator comm, int npart, const std::vector<Idx> &part,
         std::vector<ptrdiff_t> &perm)
 {
     ARCANE_ALINA_TIC("perm index");
@@ -258,7 +258,7 @@ std::tuple<ptrdiff_t, ptrdiff_t> graph_perm_index(
 
 template <class Backend, class Idx>
 std::shared_ptr< DistributedMatrix<Backend> > graph_perm_matrix(
-        communicator comm, ptrdiff_t col_beg, ptrdiff_t col_end,
+        mpi_communicator comm, ptrdiff_t col_beg, ptrdiff_t col_end,
         const std::vector<Idx> &perm)
 {
     typedef typename Backend::value_type value_type;

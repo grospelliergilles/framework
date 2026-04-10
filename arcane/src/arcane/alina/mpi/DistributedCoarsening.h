@@ -436,7 +436,7 @@ struct DistributedPMISAggregation
 
     ptrdiff_t n = A_loc.nrows;
 
-    communicator comm = A.comm();
+    mpi_communicator comm = A.comm();
 
     // 1. Get symbolic square of the connectivity matrix.
     ARCANE_ALINA_TIC("symbolic square");
@@ -729,7 +729,7 @@ struct DistributedPMISAggregation
   }
 
   std::shared_ptr<matrix>
-  tentative_prolongation(communicator comm, ptrdiff_t n, ptrdiff_t naggr,
+  tentative_prolongation(mpi_communicator comm, ptrdiff_t n, ptrdiff_t naggr,
                          std::vector<ptrdiff_t>& state, std::vector<int>& owner)
   {
     auto p_loc = std::make_shared<build_matrix>();
@@ -1308,7 +1308,7 @@ struct smoothed_aggregation
     DistributedPMISAggregation<Backend> aggr(A, prm.aggr);
     prm.aggr.eps_strong *= 0.5;
 
-    communicator comm = A.comm();
+    mpi_communicator comm = A.comm();
     const build_matrix& A_loc = *A.local();
     const build_matrix& A_rem = *A.remote();
 

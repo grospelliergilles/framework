@@ -163,7 +163,7 @@ class subdomain_deflation {
 
         template <class Matrix>
         subdomain_deflation(
-                communicator comm,
+                mpi_communicator comm,
                 const Matrix &Astrip,
                 const params &prm = params(),
                 const backend_params &bprm = backend_params()
@@ -179,7 +179,7 @@ class subdomain_deflation {
         }
 
         subdomain_deflation(
-                communicator comm,
+                mpi_communicator comm,
                 std::shared_ptr<matrix> A,
                 const params &prm = params(),
                 const backend_params &bprm = backend_params()
@@ -517,7 +517,7 @@ class subdomain_deflation {
         static const int tag_exc_dvec = 4011;
         static const int tag_exc_lnnz = 5011;
 
-        communicator comm;
+        mpi_communicator comm;
         ptrdiff_t nrows, ndv, nz;
 
         MPI_Datatype dtype;

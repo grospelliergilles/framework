@@ -40,7 +40,7 @@ namespace Arcane::Alina::mpi
 
 /// Converts C type to MPI datatype.
 template <class T, class Enable = void>
-struct datatype_impl
+struct mpi_datatype_impl
 {
   static MPI_Datatype get()
   {
@@ -53,88 +53,88 @@ struct datatype_impl
     typedef typename math::scalar_of<T>::type S;
     MPI_Datatype t;
     int n = sizeof(T) / sizeof(S);
-    MPI_Type_contiguous(n, datatype_impl<S>::get(), &t);
+    MPI_Type_contiguous(n, mpi_datatype_impl<S>::get(), &t);
     MPI_Type_commit(&t);
     return t;
   }
 };
 
 template <>
-struct datatype_impl<float>
+struct mpi_datatype_impl<float>
 {
   static MPI_Datatype get() { return MPI_FLOAT; }
 };
 
 template <>
-struct datatype_impl<double>
+struct mpi_datatype_impl<double>
 {
   static MPI_Datatype get() { return MPI_DOUBLE; }
 };
 
 template <>
-struct datatype_impl<long double>
+struct mpi_datatype_impl<long double>
 {
   static MPI_Datatype get() { return MPI_LONG_DOUBLE; }
 };
 
 template <>
-struct datatype_impl<int>
+struct mpi_datatype_impl<int>
 {
   static MPI_Datatype get() { return MPI_INT; }
 };
 
 template <>
-struct datatype_impl<unsigned>
+struct mpi_datatype_impl<unsigned>
 {
   static MPI_Datatype get() { return MPI_UNSIGNED; }
 };
 
 template <>
-struct datatype_impl<long long>
+struct mpi_datatype_impl<long long>
 {
   static MPI_Datatype get() { return MPI_LONG_LONG_INT; }
 };
 
 template <>
-struct datatype_impl<unsigned long long>
+struct mpi_datatype_impl<unsigned long long>
 {
   static MPI_Datatype get() { return MPI_UNSIGNED_LONG_LONG; }
 };
 
 #if (MPI_VERSION > 2) || (MPI_VERSION == 2 && MPI_SUBVERSION >= 2)
 template <>
-struct datatype_impl<std::complex<double>>
+struct mpi_datatype_impl<std::complex<double>>
 {
   static MPI_Datatype get() { return MPI_CXX_DOUBLE_COMPLEX; }
 };
 
 template <>
-struct datatype_impl<std::complex<float>>
+struct mpi_datatype_impl<std::complex<float>>
 {
   static MPI_Datatype get() { return MPI_CXX_FLOAT_COMPLEX; }
 };
 #endif
 
 template <typename T>
-struct datatype_impl<T,
+struct mpi_datatype_impl<T,
                      typename std::enable_if<
                      std::is_same<T, ptrdiff_t>::value &&
                      !std::is_same<ptrdiff_t, long long>::value &&
-                     !std::is_same<ptrdiff_t, int>::value>::type> : std::conditional<sizeof(ptrdiff_t) == sizeof(int), datatype_impl<int>, datatype_impl<long long>>::type
+                     !std::is_same<ptrdiff_t, int>::value>::type> : std::conditional<sizeof(ptrdiff_t) == sizeof(int), mpi_datatype_impl<int>, mpi_datatype_impl<long long>>::type
 {};
 
 template <typename T>
-struct datatype_impl<T,
+struct mpi_datatype_impl<T,
                      typename std::enable_if<
                      std::is_same<T, size_t>::value &&
                      !std::is_same<size_t, unsigned long long>::value &&
                      !std::is_same<ptrdiff_t, unsigned int>::value>::type>
 : std::conditional<
-  sizeof(size_t) == sizeof(unsigned), datatype_impl<unsigned>, datatype_impl<unsigned long long>>::type
+  sizeof(size_t) == sizeof(unsigned), mpi_datatype_impl<unsigned>, mpi_datatype_impl<unsigned long long>>::type
 {};
 
 template <>
-struct datatype_impl<char>
+struct mpi_datatype_impl<char>
 {
   static MPI_Datatype get() { return MPI_CHAR; }
 };
@@ -142,49 +142,49 @@ struct datatype_impl<char>
 template <typename T>
 MPI_Datatype datatype()
 {
-  return datatype_impl<T>::get();
+  return mpi_datatype_impl<T>::get();
 }
 
 /// Convenience wrapper around MPI_Init/MPI_Finalize.
-struct init
+struct mpi_init
 {
-  init(int* argc, char*** argv)
+  mpi_init(int* argc, char*** argv)
   {
     MPI_Init(argc, argv);
   }
 
-  ~init()
+  ~mpi_init()
   {
     MPI_Finalize();
   }
 };
 
 /// Convenience wrapper around MPI_Init_threads/MPI_Finalize.
-struct init_thread
+struct mpi_init_thread
 {
-  init_thread(int* argc, char*** argv)
+  mpi_init_thread(int* argc, char*** argv)
   {
     int _;
     MPI_Init_thread(argc, argv, MPI_THREAD_MULTIPLE, &_);
   }
 
-  ~init_thread()
+  ~mpi_init_thread()
   {
     MPI_Finalize();
   }
 };
 
 /// Convenience wrapper around MPI_Comm.
-struct communicator
+struct mpi_communicator
 {
   MPI_Comm comm = MPI_COMM_NULL;
   int rank = 0;
   int size = 0;
   Ref<IMessagePassingMng> m_message_passing_mng;
 
-  communicator() {}
+  mpi_communicator() {}
 
-  communicator(MPI_Comm comm)
+  mpi_communicator(MPI_Comm comm)
   : comm(comm)
   {
     MPI_Comm_rank(comm, &rank);

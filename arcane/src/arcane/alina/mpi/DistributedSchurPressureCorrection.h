@@ -166,7 +166,7 @@ class DistributedSchurPressureCorrection
   };
 
   template <class Matrix>
-  DistributedSchurPressureCorrection(communicator comm,
+  DistributedSchurPressureCorrection(mpi_communicator comm,
                                      const Matrix& K,
                                      const params& prm = params(),
                                      const backend_params& bprm = backend_params())
@@ -177,7 +177,7 @@ class DistributedSchurPressureCorrection
     init(bprm);
   }
 
-  DistributedSchurPressureCorrection(communicator comm,
+  DistributedSchurPressureCorrection(mpi_communicator comm,
                                      std::shared_ptr<matrix> K,
                                      const params& prm = params(),
                                      const backend_params& bprm = backend_params())
@@ -635,7 +635,7 @@ class DistributedSchurPressureCorrection
  private:
 
   typedef CommunicationPattern<backend_type> CommPattern;
-  communicator comm;
+  mpi_communicator comm;
 
   std::shared_ptr<bmatrix> x2p, x2u, p2x, u2x;
   std::shared_ptr<matrix> K, Kpu, Kup;

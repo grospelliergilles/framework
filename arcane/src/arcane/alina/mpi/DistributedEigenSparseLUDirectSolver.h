@@ -57,7 +57,7 @@ class DistributedEigenSparseLUDirectSolver
 
   /// Constructor.
   template <class Matrix>
-  DistributedEigenSparseLUDirectSolver(communicator comm, const Matrix& A,
+  DistributedEigenSparseLUDirectSolver(mpi_communicator comm, const Matrix& A,
                                        const params& prm = params())
   : prm(prm)
   {
@@ -74,7 +74,7 @@ class DistributedEigenSparseLUDirectSolver
     return 1;
   }
 
-  void init(communicator, const build_matrix& A)
+  void init(mpi_communicator, const build_matrix& A)
   {
     S = std::make_shared<Solver>(A, prm);
   }

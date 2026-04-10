@@ -299,7 +299,7 @@ struct as_preconditioner
   typedef typename backend_type::vector vector;
 
   template <class Matrix>
-  as_preconditioner(communicator comm,
+  as_preconditioner(mpi_communicator comm,
                     const Matrix& A,
                     const params& prm = params(),
                     const backend_params& bprm = backend_params())
@@ -309,7 +309,7 @@ struct as_preconditioner
     this->A->move_to_backend(bprm);
   }
 
-  as_preconditioner(communicator,
+  as_preconditioner(mpi_communicator,
                     std::shared_ptr<matrix> A,
                     const params& prm = params(),
                     const backend_params& bprm = backend_params())

@@ -81,7 +81,7 @@ class DistributedPreconditionedSolver
   } prm;
 
   template <class Matrix>
-  DistributedPreconditionedSolver(communicator comm, const Matrix& A,
+  DistributedPreconditionedSolver(mpi_communicator comm, const Matrix& A,
                                   const params& prm = params(),
                                   const backend_params& bprm = backend_params())
   : prm(prm)
@@ -90,7 +90,7 @@ class DistributedPreconditionedSolver
   , S(backend::rows(A), prm.solver, bprm, mpi::inner_product(comm))
   {}
 
-  DistributedPreconditionedSolver(communicator comm,
+  DistributedPreconditionedSolver(mpi_communicator comm,
                                   std::shared_ptr<matrix> A,
                                   const params& prm = params(),
                                   const backend_params& bprm = backend_params())
@@ -102,7 +102,7 @@ class DistributedPreconditionedSolver
   }
 
   template <class Backend>
-  DistributedPreconditionedSolver(communicator comm,
+  DistributedPreconditionedSolver(mpi_communicator comm,
                                   std::shared_ptr<DistributedMatrix<Backend>> A,
                                   const params& prm = params(),
                                   const backend_params& bprm = backend_params())
@@ -114,7 +114,7 @@ class DistributedPreconditionedSolver
     A->move_to_backend(bprm);
   }
 
-  DistributedPreconditionedSolver(communicator comm, std::shared_ptr<build_matrix> A,
+  DistributedPreconditionedSolver(mpi_communicator comm, std::shared_ptr<build_matrix> A,
                                   const params& prm = params(),
                                   const backend_params& bprm = backend_params())
   : prm(prm)

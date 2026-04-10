@@ -78,7 +78,7 @@ struct merge {
     bool is_needed(const matrix &A) const {
         if (!prm.enable) return false;
 
-        communicator comm = A.comm();
+        mpi_communicator comm = A.comm();
         ptrdiff_t n = A.loc_rows();
         std::vector<ptrdiff_t> row_dom = comm.exclusive_sum(n);
 
@@ -96,7 +96,7 @@ struct merge {
     }
 
     std::shared_ptr<matrix> operator()(const matrix &A, unsigned /*block_size*/ = 1) const {
-        communicator comm = A.comm();
+        mpi_communicator comm = A.comm();
         ptrdiff_t nrows = A.loc_rows();
 
         std::vector<ptrdiff_t> row_dom = comm.exclusive_sum(nrows);
