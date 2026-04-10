@@ -43,7 +43,7 @@ THE SOFTWARE.
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/mpi/mp_util.h>
-#include <arcane/alina/mpi/mp_direct_solver_skyline_lu.h>
+#include <arcane/alina/mpi/DistributedSkylineLUDirectSolver.h>
 #include <arcane/alina/mpi/mp_inner_product.h>
 #include <arcane/alina/mpi/DistributedMatrix.h>
 
