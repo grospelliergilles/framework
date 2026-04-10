@@ -329,7 +329,7 @@ int main(int argc, char* argv[])
       typedef Alina::mpi::subdomain_deflation<
       Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>,
       Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
-      Alina::runtime::mpi::direct::solver<double>>
+      Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<double>>
       SDD;
 
       SDD solve(world, std::tie(chunk, ptr, col, val), prm, bprm);
@@ -347,7 +347,7 @@ int main(int argc, char* argv[])
       typedef Alina::mpi::subdomain_deflation<
       Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
       Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
-      Alina::runtime::mpi::direct::solver<double>>
+      Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<double>>
       SDD;
 
       SDD solve(world, std::tie(chunk, ptr, col, val), prm, bprm);

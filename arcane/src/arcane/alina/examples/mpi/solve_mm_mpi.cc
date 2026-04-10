@@ -317,7 +317,7 @@ int main(int argc, char *argv[]) {
                 Alina::runtime::relaxation::RuntimeRelaxation
                 >,
             Alina::runtime::mpi::solver::DistributedSolverRuntime<Alina::backend::BuiltinBackend<double>>,
-            Alina::runtime::mpi::direct::solver<double>
+            Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<double>
         > SDD;
 
     std::function<double(ptrdiff_t,unsigned)> dv = Alina::mpi::constant_deflation(block_size);

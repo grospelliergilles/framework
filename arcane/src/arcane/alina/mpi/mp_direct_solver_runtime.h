@@ -1,35 +1,27 @@
-#ifndef ARCANE_ALINA_MPI_DIRECT_SOLVER_RUNTIME_HPP
-#define ARCANE_ALINA_MPI_DIRECT_SOLVER_RUNTIME_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* DistributedDirectSolverRuntime.h                            (C) 2026-2026 */
+/*                                                                           */
+/* Runtime wrapper for distributed direct solvers.                           */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDDIRECTSOLVERRUNTIME_H
+#define ARCANE_ALINA_MPI_DISTRIBUTEDDIRECTSOLVERRUNTIME_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   alina/mpi/direct_solver/runtime.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Runtime wrapper for distributed direct solvers.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <arcane/alina/util.h>
 #include <arcane/alina/mpi/DistributedSkylineLUDirectSolver.h>
@@ -37,240 +29,196 @@ THE SOFTWARE.
 #include <arcane/alina/mpi/mp_direct_solve_eigen_splu.h>
 #endif
 
-namespace Arcane::Alina {
-namespace runtime {
-namespace mpi {
-namespace direct {
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
-enum type {
-    skyline_lu
+namespace Arcane::Alina::runtime::mpi::direct
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+enum type
+{
+  skyline_lu
 #ifdef ARCANE_ALINA_HAVE_EIGEN
-  , eigen_splu
-#endif
-#ifdef ARCANE_ALINA_HAVE_PASTIX
-  , dpastix
-  , spastix
+  ,
+  eigen_splu
 #endif
 };
 
-inline std::ostream& operator<<(std::ostream &os, type s)
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+inline std::ostream& operator<<(std::ostream& os, type s)
 {
-    switch (s) {
-        case skyline_lu:
-            return os << "skyline_lu";
+  switch (s) {
+  case skyline_lu:
+    return os << "skyline_lu";
 #ifdef ARCANE_ALINA_HAVE_EIGEN
-        case eigen_splu:
-            return os << "eigen_splu";
+  case eigen_splu:
+    return os << "eigen_splu";
 #endif
-#ifdef ARCANE_ALINA_HAVE_PASTIX
-        case dpastix:
-            return os << "dpastix";
-        case spastix:
-            return os << "spastix";
-#endif
-        default:
-            return os << "???";
-    }
+  default:
+    return os << "???";
+  }
 }
 
-inline std::istream& operator>>(std::istream &in, type &s)
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+inline std::istream& operator>>(std::istream& in, type& s)
 {
-    std::string val;
-    in >> val;
+  std::string val;
+  in >> val;
 
-    if (val == "skyline_lu")
-        s = skyline_lu;
+  if (val == "skyline_lu")
+    s = skyline_lu;
 #ifdef ARCANE_ALINA_HAVE_EIGEN
-    else if (val == "eigen_splu")
-        s = eigen_splu;
+  else if (val == "eigen_splu")
+    s = eigen_splu;
 #endif
-#ifdef ARCANE_ALINA_HAVE_PASTIX
-    else if (val == "dpastix")
-        s = dpastix;
-    else if (val == "spastix")
-        s = spastix;
-#endif
-    else
-        throw std::invalid_argument("Invalid direct solver value. Valid choices are: "
-                "skyline_lu"
+  else
+    throw std::invalid_argument("Invalid direct solver value. Valid choices are: "
+                                "skyline_lu"
 #ifdef ARCANE_ALINA_HAVE_EIGEN
-                ", eigen_splu"
+                                ", eigen_splu"
 #endif
-#ifdef ARCANE_ALINA_HAVE_PASTIX
-                ", dpastix"
-                ", spastix"
-#endif
-                ".");
+                                ".");
 
-    return in;
+  return in;
 }
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief Runtime wrapper for distributed direct solvers.
+ */
 template <class value_type>
-class solver {
-    public:
-        typedef Alina::PropertyTree params;
+class DistributedDirectSolverRuntime
+{
+ public:
 
-        template <class Matrix>
-        solver(Alina::mpi::communicator comm, const Matrix &A, params prm = params())
-            : s(prm.get("type", skyline_lu))
-        {
-            if (!prm.erase("type")) ARCANE_ALINA_PARAM_MISSING("type");
+  typedef Alina::PropertyTree params;
 
-            switch (s) {
-                case skyline_lu:
-                    {
-                        typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
-                        handle = static_cast<void*>(new S(comm, A, prm));
-                    }
-                    break;
+  template <class Matrix>
+  DistributedDirectSolverRuntime(Alina::mpi::communicator comm, const Matrix& A, params prm = params())
+  : s(prm.get("type", skyline_lu))
+  {
+    if (!prm.erase("type"))
+      ARCANE_ALINA_PARAM_MISSING("type");
+
+    switch (s) {
+    case skyline_lu: {
+      typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
+      handle = static_cast<void*>(new S(comm, A, prm));
+    } break;
 #ifdef ARCANE_ALINA_HAVE_EIGEN
-                case eigen_splu:
-                    {
-                        typedef Alina::mpi::direct::eigen_splu<value_type> S;
-                        do_construct<S, value_type>(comm, A, prm);
-                    }
-                    break;
+    case eigen_splu: {
+      typedef Alina::mpi::direct::eigen_splu<value_type> S;
+      do_construct<S, value_type>(comm, A, prm);
+    } break;
 #endif
-                default:
-                    throw std::invalid_argument("Unsupported direct solver type");
-            }
-        }
+    default:
+      throw std::invalid_argument("Unsupported direct solver type");
+    }
+  }
 
-        static size_t coarse_enough() {
-            return 3000 / math::static_rows<value_type>::value;
-        }
+  static size_t coarse_enough()
+  {
+    return 3000 / math::static_rows<value_type>::value;
+  }
 
-        template <class Vec1, class Vec2>
-        void operator()(const Vec1 &rhs, Vec2 &x) const {
-            switch (s) {
-                case skyline_lu:
-                    {
-                        typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
-                        static_cast<const S*>(handle)->operator()(rhs, x);
-                    }
-                    break;
+  template <class Vec1, class Vec2>
+  void operator()(const Vec1& rhs, Vec2& x) const
+  {
+    switch (s) {
+    case skyline_lu: {
+      typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
+      static_cast<const S*>(handle)->operator()(rhs, x);
+    } break;
 #ifdef ARCANE_ALINA_HAVE_EIGEN
-                case eigen_splu:
-                    {
-                        typedef Alina::mpi::direct::eigen_splu<value_type> S;
-                        do_solve<S, value_type>(rhs, x);
-                    }
-                    break;
+    case eigen_splu: {
+      typedef Alina::mpi::direct::eigen_splu<value_type> S;
+      do_solve<S, value_type>(rhs, x);
+    } break;
 #endif
-#ifdef ARCANE_ALINA_HAVE_PASTIX
-                case dpastix:
-                    {
-                        typedef Alina::mpi::direct::pastix<value_type, true> S;
-                        do_solve<S, value_type>(rhs, x);
-                    }
-                    break;
-                case spastix:
-                    {
-                        typedef Alina::mpi::direct::pastix<value_type, false> S;
-                        do_solve<S, value_type>(rhs, x);
-                    }
-                    break;
-#endif
-                default:
-                    throw std::invalid_argument("Unsupported direct solver type");
-            }
-        }
+    default:
+      throw std::invalid_argument("Unsupported direct solver type");
+    }
+  }
 
-        ~solver() {
-            switch (s) {
-                case skyline_lu:
-                    {
-                        typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
-                        delete static_cast<S*>(handle);
-                    }
-                    break;
+  ~DistributedDirectSolverRuntime()
+  {
+    switch (s) {
+    case skyline_lu: {
+      typedef Alina::mpi::direct::DistributedSkylineLUDirectSolver<value_type> S;
+      delete static_cast<S*>(handle);
+    } break;
 #ifdef ARCANE_ALINA_HAVE_EIGEN
-                case eigen_splu:
-                    {
-                        typedef Alina::mpi::direct::eigen_splu<value_type> S;
-                        do_destruct<S, value_type>();
-                    }
-                    break;
+    case eigen_splu: {
+      typedef Alina::mpi::direct::eigen_splu<value_type> S;
+      do_destruct<S, value_type>();
+    } break;
 #endif
-#ifdef ARCANE_ALINA_HAVE_PASTIX
-                case dpastix:
-                    {
-                        typedef Alina::mpi::direct::pastix<value_type, true> S;
-                        do_destruct<S, value_type>();
-                    }
-                    break;
-                case spastix:
-                    {
-                        typedef Alina::mpi::direct::pastix<value_type, false> S;
-                        do_destruct<S, value_type>();
-                    }
-                    break;
-#endif
-                default:
-                    break;
-            }
-        }
-    private:
-        direct::type s;
-        void *handle;
+    default:
+      break;
+    }
+  }
 
-        template <class S, class V, class Matrix>
-        typename std::enable_if<
-            std::is_same<V, float>::value || std::is_same<V, double>::value,
-            void
-        >::type
-        do_construct(Alina::mpi::communicator comm, const Matrix &A, const params &prm) {
-            handle = static_cast<void*>(new S(comm, A, prm));
-        }
+ private:
 
-        template <class S, class V, class Matrix>
-        typename std::enable_if<
-            !std::is_same<V, float>::value && !std::is_same<V, double>::value,
-            void
-        >::type
-        do_construct(Alina::mpi::communicator, const Matrix&, const params&) {
-            throw std::logic_error("The direct solver does not support the value type");
-        }
+  direct::type s;
+  void* handle = nullptr;
 
-        template <class S, class V, class Vec1, class Vec2>
-        typename std::enable_if<
-            std::is_same<V, float>::value || std::is_same<V, double>::value,
-            void
-        >::type
-        do_solve(const Vec1 &rhs, Vec2 &x) const {
-            static_cast<const S*>(handle)->operator()(rhs, x);
-        }
+  template <class S, class V, class Matrix>
+  typename std::enable_if<std::is_same<V, float>::value || std::is_same<V, double>::value, void>::type
+  do_construct(Alina::mpi::communicator comm, const Matrix& A, const params& prm)
+  {
+    handle = static_cast<void*>(new S(comm, A, prm));
+  }
 
-        template <class S, class V, class Vec1, class Vec2>
-        typename std::enable_if<
-            !std::is_same<V, float>::value && !std::is_same<V, double>::value,
-            void
-        >::type
-        do_solve(const Vec1&, Vec2&) const {
-            throw std::logic_error("The direct solver does not support the value type");
-        }
+  template <class S, class V, class Matrix>
+  typename std::enable_if<!std::is_same<V, float>::value && !std::is_same<V, double>::value, void>::type
+  do_construct(Alina::mpi::communicator, const Matrix&, const params&)
+  {
+    throw std::logic_error("The direct solver does not support the value type");
+  }
 
-        template <class S, class V>
-        typename std::enable_if<
-            std::is_same<V, float>::value || std::is_same<V, double>::value,
-            void
-        >::type
-        do_destruct() {
-            delete static_cast<S*>(handle);
-        }
+  template <class S, class V, class Vec1, class Vec2>
+  typename std::enable_if<std::is_same<V, float>::value || std::is_same<V, double>::value, void>::type
+  do_solve(const Vec1& rhs, Vec2& x) const
+  {
+    static_cast<const S*>(handle)->operator()(rhs, x);
+  }
 
-        template <class S, class V>
-        typename std::enable_if<
-            !std::is_same<V, float>::value && !std::is_same<V, double>::value,
-            void
-        >::type
-        do_destruct() {
-        }
+  template <class S, class V, class Vec1, class Vec2>
+  typename std::enable_if<!std::is_same<V, float>::value && !std::is_same<V, double>::value, void>::type
+  do_solve(const Vec1&, Vec2&) const
+  {
+    throw std::logic_error("The direct solver does not support the value type");
+  }
+
+  template <class S, class V>
+  typename std::enable_if<std::is_same<V, float>::value || std::is_same<V, double>::value, void>::type
+  do_destruct()
+  {
+    delete static_cast<S*>(handle);
+  }
+
+  template <class S, class V>
+  typename std::enable_if<!std::is_same<V, float>::value && !std::is_same<V, double>::value, void>::type
+  do_destruct()
+  {
+  }
 };
 
-} // namespace direct
-} // namespace mpi
-} // namespace runtime
-} // namespace amgcl
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::runtime::mpi::direct
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif

@@ -739,7 +739,7 @@ int main(int argc, char* argv[])
   typedef Alina::mpi::subdomain_deflation<
   Alina::runtime::PreconditionerRuntime<Backend>,
   Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
-  Alina::runtime::mpi::direct::solver<double>>
+  Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<double>>
   SDD;
 
   SDD solve(world, std::tie(chunk, ptr, col, val), prm, bprm);

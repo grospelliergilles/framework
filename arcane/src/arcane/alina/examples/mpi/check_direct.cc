@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
     prof.toc("assemble");
 
     prof.tic("setup");
-    Alina::runtime::mpi::direct::solver<double> solve(comm, A, prm);
+    Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<double> solve(comm, A, prm);
     prof.toc("setup");
 
     prof.tic("solve");

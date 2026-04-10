@@ -128,7 +128,7 @@ class DistributedPreconditioner
       Backend,
       Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
       Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
-      Alina::runtime::mpi::direct::solver<value_type>,
+      Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<value_type>,
       Alina::runtime::mpi::partition::wrapper<Backend>>
       Precond;
 
@@ -155,7 +155,7 @@ class DistributedPreconditioner
       typedef Alina::mpi::DistributedAMG<Backend,
                                          Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
                                          Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
-                                         Alina::runtime::mpi::direct::solver<value_type>,
+                                         Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<value_type>,
                                          Alina::runtime::mpi::partition::wrapper<Backend>>
       Precond;
 
@@ -175,7 +175,7 @@ class DistributedPreconditioner
       typedef Alina::mpi::DistributedAMG<Backend,
                                          Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
                                          Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
-                                         Alina::runtime::mpi::direct::solver<value_type>,
+                                         Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<value_type>,
                                          Alina::runtime::mpi::partition::wrapper<Backend>>
       Precond;
 
@@ -201,7 +201,7 @@ class DistributedPreconditioner
       typedef Alina::mpi::DistributedAMG<Backend,
                                          Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
                                          Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
-                                         Alina::runtime::mpi::direct::solver<value_type>,
+                                         Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<value_type>,
                                          Alina::runtime::mpi::partition::wrapper<Backend>>
       Precond;
 
@@ -231,7 +231,7 @@ class DistributedPreconditioner
       typedef Alina::mpi::DistributedAMG<Backend,
                                          Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
                                          Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
-                                         Alina::runtime::mpi::direct::solver<value_type>,
+                                         Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<value_type>,
                                          Alina::runtime::mpi::partition::wrapper<Backend>>
       Precond;
 
@@ -264,7 +264,7 @@ class DistributedPreconditioner
       typedef Alina::mpi::DistributedAMG<Backend,
                                          Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
                                          Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
-                                         Alina::runtime::mpi::direct::solver<value_type>,
+                                         Alina::runtime::mpi::direct::DistributedDirectSolverRuntime<value_type>,
                                          Alina::runtime::mpi::partition::wrapper<Backend>>
       Precond;
 
