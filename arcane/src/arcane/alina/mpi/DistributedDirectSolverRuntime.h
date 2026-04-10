@@ -25,7 +25,7 @@
 
 #include <arcane/alina/mpi/DistributedSkylineLUDirectSolver.h>
 #ifdef ARCANE_ALINA_HAVE_EIGEN
-#include <arcane/alina/mpi/mp_direct_solve_eigen_splu.h>
+#include <arcane/alina/mpi/DistributedEigenSparseLUDirectSolver.h>
 #endif
 
 /*---------------------------------------------------------------------------*/

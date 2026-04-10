@@ -72,6 +72,7 @@ set(ARCANE_SOURCES
   mpi/DistributedCPRPreconditioner.h
   mpi/DistributedDirectSolverBase.h
   mpi/DistributedDirectSolverRuntime.h
+  mpi/DistributedEigenSparseLUDirectSolver.h
   mpi/DistributedSkylineLUDirectSolver.h
   mpi/DistributedMatrix.h
   mpi/DistributedInnerProduct.h
@@ -82,7 +83,6 @@ set(ARCANE_SOURCES
   mpi/DistributedSchurPressureCorrection.h
   mpi/DistributedSolver.h
   mpi/DistributedSolverRuntime.h
-  mpi/mp_direct_solve_eigen_splu.h
   mpi/mp_partition_merge.h
   mpi/mp_partition_parmetis.h
   mpi/mp_partition_runtime.h
