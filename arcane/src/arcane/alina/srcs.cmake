@@ -83,10 +83,10 @@ set(ARCANE_SOURCES
   mpi/DistributedSchurPressureCorrection.h
   mpi/DistributedSolver.h
   mpi/DistributedSolverRuntime.h
-  mpi/mp_partition_merge.h
+  mpi/DistributedSubDomainDeflation.h
+  mpi/SimpleMatrixPartitioner.h
   mpi/mp_partition_parmetis.h
   mpi/mp_partition_runtime.h
   mpi/mp_partition_util.h
-        mpi/DistributedSubDomainDeflation.h
   mpi/mp_util.h
 )

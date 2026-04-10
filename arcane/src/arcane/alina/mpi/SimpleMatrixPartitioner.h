@@ -49,15 +49,11 @@ struct SimpleMatrixPartitioner
 
   struct params
   {
-    bool enable;
-    ptrdiff_t min_per_proc;
-    int shrink_ratio;
+    bool enable = false;
+    ptrdiff_t min_per_proc = 10000;
+    int shrink_ratio = 8;
 
-    params()
-    : enable(false)
-    , min_per_proc(10000)
-    , shrink_ratio(8)
-    {}
+    params() = default;
 
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, enable)
@@ -76,7 +72,7 @@ struct SimpleMatrixPartitioner
 
   } prm;
 
-  SimpleMatrixPartitioner(const params& prm = params())
+  explicit SimpleMatrixPartitioner(const params& prm = params())
   : prm(prm)
   {}
 

@@ -27,7 +27,7 @@
 #include <memory>
 
 #include <arcane/alina/util.h>
-#include <arcane/alina/mpi/mp_partition_merge.h>
+#include <arcane/alina/mpi/SimpleMatrixPartitioner.h>
 #if defined(ARCANE_ALINA_HAVE_PARMETIS)
 #include <arcane/alina/mpi/mp_partition_parmetis.h>
 #endif
