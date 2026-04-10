@@ -262,12 +262,12 @@ int main(int argc, char *argv[]) {
                 Alina::mpi::DistributedAMG<
                     Backend,
                     Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
-                    Alina::runtime::mpi::relaxation::RuntimeDistributedRelaxation<Backend>,
+                    Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
                     Alina::runtime::mpi::direct::solver<double>,
                     Alina::runtime::mpi::partition::wrapper<Backend>
                     >,
                 Alina::mpi::relaxation::as_preconditioner<
-                    Alina::runtime::mpi::relaxation::RuntimeDistributedRelaxation<Backend>
+                    Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>
                     >
                 >,
             Alina::runtime::mpi::solver::wrapper<Backend>
