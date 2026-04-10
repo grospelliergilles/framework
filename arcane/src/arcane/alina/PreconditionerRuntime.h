@@ -29,7 +29,7 @@
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/Relaxation.h>
 #include <arcane/alina/DummyPreconditioner.h>
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/AMG.h>
 
 /*---------------------------------------------------------------------------*/
@@ -138,7 +138,7 @@ class PreconditionerRuntime
       handle = static_cast<void*>(new Precond(A, prm, bprm));
     } break;
     case precond_class::nested: {
-      typedef make_solver<
+      typedef PreconditionedSolver<
       PreconditionerRuntime,
       runtime::solver::SolverRuntime<Backend>>
       Precond;
@@ -172,7 +172,7 @@ class PreconditionerRuntime
       delete static_cast<Precond*>(handle);
     } break;
     case precond_class::nested: {
-      typedef make_solver<
+      typedef PreconditionedSolver<
       PreconditionerRuntime,
       runtime::solver::SolverRuntime<Backend>>
       Precond;
@@ -225,7 +225,7 @@ class PreconditionerRuntime
       static_cast<Precond*>(handle)->apply(rhs, x);
     } break;
     case precond_class::nested: {
-      typedef make_solver<
+      typedef PreconditionedSolver<
       PreconditionerRuntime,
       runtime::solver::SolverRuntime<Backend>>
       Precond;
@@ -259,7 +259,7 @@ class PreconditionerRuntime
       return static_cast<Precond*>(handle)->system_matrix_ptr();
     }
     case precond_class::nested: {
-      typedef make_solver<
+      typedef PreconditionedSolver<
       PreconditionerRuntime,
       runtime::solver::SolverRuntime<Backend>>
       Precond;
@@ -303,7 +303,7 @@ class PreconditionerRuntime
       return backend::bytes(*static_cast<Precond*>(handle));
     }
     case precond_class::nested: {
-      typedef make_solver<
+      typedef PreconditionedSolver<
       PreconditionerRuntime,
       runtime::solver::SolverRuntime<Backend>>
       Precond;
@@ -337,7 +337,7 @@ class PreconditionerRuntime
       return os << *static_cast<Precond*>(p.handle);
     }
     case precond_class::nested: {
-      typedef make_solver<
+      typedef PreconditionedSolver<
       PreconditionerRuntime,
       runtime::solver::SolverRuntime<Backend>>
       Precond;

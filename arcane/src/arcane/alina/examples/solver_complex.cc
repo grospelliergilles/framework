@@ -14,7 +14,7 @@
 #include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/PreconditionerRuntime.h>
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/IO.h>
 
@@ -36,7 +36,7 @@ using Alina::prof;
 
 //---------------------------------------------------------------------------
 template <class Precond, class Matrix>
-std::tuple<size_t, double>
+Alina::SolverResult
 solve(const Matrix& A,
       const Alina::PropertyTree& prm,
       std::vector<std::complex<double>> const& f,
@@ -52,10 +52,7 @@ solve(const Matrix& A,
   Alina::iterator_range<rhs_type const*> frng(fptr, fptr + n);
   Alina::iterator_range<rhs_type*> xrng(xptr, xptr + n);
 
-  typedef Alina::make_solver<
-  Precond,
-  Alina::runtime::solver::SolverRuntime<Backend>>
-  Solver;
+  using Solver = Alina::PreconditionedSolver<Precond, Alina::runtime::solver::SolverRuntime<Backend>>;
 
   prof.tic("setup");
   Solver solve(A, prm);

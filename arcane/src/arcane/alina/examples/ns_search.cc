@@ -195,7 +195,7 @@ int main(int argc, char *argv[]) {
     }
 
     typedef Alina::backend::BuiltinBackend<double> Backend;
-    typedef Alina::make_solver<
+    typedef Alina::PreconditionedSolver<
         Alina::AMG<
             Backend,
             Alina::runtime::coarsening::CoarseningRuntime,

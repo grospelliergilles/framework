@@ -31,7 +31,7 @@ set(ARCANE_SOURCES
   IO.h
   ios_saver.h
   make_block_solver.h
-  make_solver.h
+  PreconditionedSolver.h
   perf_counter_clock.h
   CPRDynamicRowSumPreconditioner.h
   CPRPreconditioner.h

@@ -6,7 +6,7 @@
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 
 #include <arcane/alina/AMG.h>
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/adapter_ublas.h>
 #include <arcane/alina/coarsening.h>
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
     prof.toc("assemble");
 
     prof.tic("build");
-    Alina::make_solver<
+    Alina::PreconditionedSolver<
         Alina::AMG<
             Alina::backend::BuiltinBackend<double>,
             Alina::coarsening::smoothed_aggregation,

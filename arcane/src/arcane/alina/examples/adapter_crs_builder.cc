@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #include <arcane/alina/AMG.h>
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/coarsening.h>
@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
   // The use of make_matrix() from crs_builder.hpp allows to construct the
   // system matrix on demand row by row.
   prof.tic("build");
-  typedef Alina::make_solver<
+  typedef Alina::PreconditionedSolver<
   Alina::AMG<
   Alina::backend::BuiltinBackend<double>,
   Alina::coarsening::smoothed_aggregation,

@@ -4,7 +4,7 @@
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/AMG.h>
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/Relaxation.h>
@@ -44,7 +44,7 @@ TEST(alina_test_complex, complex_matrix_adapter)
   Alina::PropertyTree prm;
   prm.put("precond.coarsening.aggr.block_size", 2);
 
-  Alina::make_solver<Alina::AMG<Backend,
+  Alina::PreconditionedSolver<Alina::AMG<Backend,
                                 Alina::coarsening::smoothed_aggregation,
                                 Alina::relaxation::SPAI0Relaxation>,
                      Alina::solver::BiCGStabSolver<Backend>>

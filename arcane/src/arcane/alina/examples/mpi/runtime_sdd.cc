@@ -38,7 +38,7 @@ typedef Arcane::Alina::backend::cuda<double> Backend;
 typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #endif
 
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/RelaxationRuntime.h>
@@ -390,7 +390,7 @@ struct harmonic_deflation
       }
     }
 
-    Alina::make_solver<Alina::AMG<Alina::backend::BuiltinBackend<double>,
+    Alina::PreconditionedSolver<Alina::AMG<Alina::backend::BuiltinBackend<double>,
                                   Alina::coarsening::smoothed_aggregation,
                                   Alina::relaxation::GaussSeidelRelaxation>,
                        Alina::solver::GMRESSolver<

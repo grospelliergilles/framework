@@ -36,7 +36,7 @@ THE SOFTWARE.
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/value_type_static_matrix.h>
 #include <arcane/alina/SchurPressureCorrectionPreconditioner.h>
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/make_block_solver.h>
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/BiCGStabSolver.h>
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
     typedef Alina::backend::BuiltinBackend<
         Alina::static_matrix<float,4,4>> UBackend;    // the USolver backend
 
-    typedef Alina::make_solver<
+    typedef Alina::PreconditionedSolver<
         Alina::preconditioner::SchurPressureCorrectionPreconditioner<
             Alina::make_block_solver<
                 Alina::AMG<
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
                     >,
                 Alina::solver::PreconditionerOnlySolver<UBackend>
                 >,
-            Alina::make_solver<
+            Alina::PreconditionedSolver<
                 Alina::relaxation::as_preconditioner<
                     PBackend,
                     Alina::relaxation::SPAI0Relaxation

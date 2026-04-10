@@ -4,7 +4,7 @@
 #include <arcane/alina/BackendInterface.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/value_type_static_matrix.h>
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/util.h>
 
 namespace Arcane::Alina
@@ -24,7 +24,7 @@ class make_block_solver
   typedef typename backend_type::vector vector;
   typedef typename math::scalar_of<value_type>::type scalar_type;
 
-  typedef typename make_solver<Precond, IterativeSolver>::params params;
+  typedef typename PreconditionedSolver<Precond, IterativeSolver>::params params;
 
   template <class Matrix>
   make_block_solver(const Matrix& A,
@@ -74,7 +74,7 @@ class make_block_solver
 
  private:
 
-  typedef make_solver<Precond, IterativeSolver> Solver;
+  typedef PreconditionedSolver<Precond, IterativeSolver> Solver;
   std::shared_ptr<Solver> S;
 };
 

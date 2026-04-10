@@ -6,7 +6,7 @@
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/value_type_static_matrix.h>
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/SolverRuntime.h>
 #include <arcane/alina/CoarseningRuntime.h>
@@ -34,7 +34,7 @@ void solve_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::PropertyT
   using SPrecond = Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>;
 
   prof.tic("setup");
-  Alina::make_solver<Alina::preconditioner::CPRPreconditioner<PPrecond, SPrecond>,
+  Alina::PreconditionedSolver<Alina::preconditioner::CPRPreconditioner<PPrecond, SPrecond>,
                      Alina::runtime::solver::SolverRuntime<Backend>>
   solve(K, prm);
   prof.toc("setup");
@@ -74,7 +74,7 @@ void solve_block_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::Pro
   SPrecond;
 
   prof.tic("setup");
-  Alina::make_solver<
+  Alina::PreconditionedSolver<
   Alina::preconditioner::CPRPreconditioner<PPrecond, SPrecond>,
   Alina::runtime::solver::SolverRuntime<SBackend>>
   solve(Alina::adapter::block_matrix<val_type>(K), prm);

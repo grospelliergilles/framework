@@ -31,7 +31,7 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/SolverRuntime.h>
 #include <arcane/alina/PreconditionerRuntime.h>
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/IO.h>
@@ -68,7 +68,7 @@ std::tuple<size_t, double> block_solve(
     typedef Alina::static_matrix<double, B, 1> rhs_type;
     typedef Alina::backend::BuiltinBackend<value_type> BBackend;
 
-    typedef Alina::make_solver<
+    typedef Alina::PreconditionedSolver<
         Alina::runtime::PreconditionerRuntime<BBackend>,
         Alina::runtime::solver::SolverRuntime<BBackend>
         > Solver;
@@ -142,7 +142,7 @@ std::tuple<size_t, double> block_solve(
     typedef Alina::static_matrix<double, B, 1> rhs_type;
     typedef Alina::backend::vexcl<value_type> BBackend;
 
-    typedef Alina::make_solver<
+    typedef Alina::PreconditionedSolver<
         Alina::runtime::PreconditionerRuntime<BBackend>,
         Alina::runtime::solver::SolverRuntime<BBackend>
         > Solver;
@@ -248,7 +248,7 @@ std::tuple<size_t, double> scalar_solve(
     }
 #endif
 
-    typedef Alina::make_solver<
+    typedef Alina::PreconditionedSolver<
         Alina::runtime::PreconditionerRuntime<Backend>,
         Alina::runtime::solver::SolverRuntime<Backend>
         > Solver;

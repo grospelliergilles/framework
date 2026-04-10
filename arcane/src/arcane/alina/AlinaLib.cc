@@ -7,7 +7,7 @@
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/SolverRuntime.h>
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
@@ -28,7 +28,7 @@ using namespace Arcane;
 typedef Alina::backend::BuiltinBackend<double> Backend;
 typedef Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation> AMG;
 typedef Alina::runtime::solver::SolverRuntime<Backend>  ISolver;
-typedef Alina::make_solver<AMG, ISolver> Solver;
+typedef Alina::PreconditionedSolver<AMG, ISolver> Solver;
 typedef Alina::PropertyTree Params;
 
 conv_info _toConvInfo(const Alina::SolverResult& r)

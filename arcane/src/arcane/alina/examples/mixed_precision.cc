@@ -2,7 +2,7 @@
 #include <tuple>
 
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/coarsening.h>
 #include <arcane/alina/Relaxation.h>
@@ -30,7 +30,7 @@ int main()
 {
   // Combine single-precision preconditioner with a
   // double-precision Krylov solver.
-  typedef Alina::make_solver<Alina::AMG<fBackend,
+  typedef Alina::PreconditionedSolver<Alina::AMG<fBackend,
                                         Alina::coarsening::smoothed_aggregation,
                                         Alina::relaxation::SPAI0Relaxation>,
                              Alina::solver::ConjugateGradientSolver<dBackend>>

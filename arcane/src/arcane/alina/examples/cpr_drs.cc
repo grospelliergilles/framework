@@ -21,7 +21,7 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #include <arcane/alina/Adapters.h>
 #endif
 
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/SolverRuntime.h>
 #include <arcane/alina/CoarseningRuntime.h>
@@ -75,7 +75,7 @@ void solve_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::PropertyT
   SPrecond;
 
   prof.tic("setup");
-  Alina::make_solver<
+  Alina::PreconditionedSolver<
   Alina::preconditioner::CPRDynamicRowSumPreconditioner<PPrecond, SPrecond>,
   Alina::runtime::solver::SolverRuntime<Backend>>
   solve(K, prm, bprm);
@@ -124,7 +124,7 @@ void solve_block_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::Pro
   typename SBackend::params bprm;
 
   prof.tic("setup");
-  Alina::make_solver<
+  Alina::PreconditionedSolver<
   Alina::preconditioner::CPRDynamicRowSumPreconditioner<PPrecond, SPrecond>,
   Alina::runtime::solver::SolverRuntime<SBackend>>
   solve(Alina::adapter::block_matrix<val_type>(K), prm, bprm);

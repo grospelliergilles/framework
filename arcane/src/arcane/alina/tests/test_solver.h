@@ -6,7 +6,7 @@
 #include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/Relaxation.h>
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/profiler.h>
 
@@ -52,7 +52,7 @@ void test_solver(const Matrix& A,
     prm.put("precond.coarsening.nullspace.B", &null[0]);
   }
 
-  Alina::make_solver<Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
+  Alina::PreconditionedSolver<Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
                      Alina::runtime::solver::SolverRuntime<Backend>>
   solve(A, prm, bprm);
 
@@ -82,7 +82,7 @@ void test_rap(const Matrix& A,
   prm.put("precond.type", relaxation);
   prm.put("solver.type", solver);
 
-  Alina::make_solver<
+  Alina::PreconditionedSolver<
   Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>,
   Alina::runtime::solver::SolverRuntime<Backend>>
   solve(A, prm, bprm);

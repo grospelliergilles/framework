@@ -5,14 +5,14 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* make_solver.h                                               (C) 2000-2026 */
+/* PreconditionedSolver.h                                      (C) 2000-2026 */
 /*                                                                           */
+/* Tie an iterative solver and a preconditioner in a single class.           */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MAKE_SOLVER_H
-#define ARCANE_ALINA_MAKE_SOLVER_H
+#ifndef ARCANE_ALINA_PRECONDITIONEDSOLVER_H
+#define ARCANE_ALINA_PRECONDITIONEDSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
 /*
  * This file is based on the work on AMGCL library (version march 2026)
  * which can be found at https://github.com/ddemidov/amgcl.
@@ -20,16 +20,9 @@
  * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
  * SPDX-License-Identifier: MIT
  */
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-/**
- * \file   make_solver.h
- * \brief  Tie an iterative solver and a preconditioner in a single class.
- */
-
-#include <type_traits>
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/util.h>
 
@@ -41,10 +34,11 @@ namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-/// Convenience class that bundles together a preconditioner and an iterative solver.
+/*!
+ * \brief Convenience class that bundles together a preconditioner and an iterative solver.
+ */
 template <class Precond, class IterativeSolver>
-class make_solver
+class PreconditionedSolver
 : public Alina::detail::non_copyable
 {
   static_assert(backend::backends_compatible<
@@ -65,8 +59,8 @@ class make_solver
 
   typedef typename math::scalar_of<value_type>::type scalar_type;
 
-  /** Combined parameters of the bundled preconditioner and the iterative
-   * solver.
+  /*!
+   * \brief Combined parameters of the bundled preconditioner and the iterative solver.
    */
   struct params
   {
@@ -89,11 +83,13 @@ class make_solver
     }
   } prm;
 
-  /** Sets up the preconditioner and creates the iterative solver. */
+  /*!
+   * \brief Sets up the preconditioner and creates the iterative solver.
+   */
   template <class Matrix>
-  make_solver(const Matrix& A,
-              const params& prm = params(),
-              const backend_params& bprm = backend_params())
+  PreconditionedSolver(const Matrix& A,
+                       const params& prm = params(),
+                       const backend_params& bprm = backend_params())
   : prm(prm)
   , n(backend::rows(A))
   , P(A, prm.precond, bprm)
@@ -102,9 +98,9 @@ class make_solver
 
   // Constructs the preconditioner and creates iterative solver.
   // Takes shared pointer to the matrix in internal format.
-  make_solver(std::shared_ptr<build_matrix> A,
-              const params& prm = params(),
-              const backend_params& bprm = backend_params())
+  PreconditionedSolver(std::shared_ptr<build_matrix> A,
+                       const params& prm = params(),
+                       const backend_params& bprm = backend_params())
   : prm(prm)
   , n(backend::rows(*A))
   , P(A, prm.precond, bprm)
@@ -142,7 +138,8 @@ class make_solver
     return S(P, rhs, x);
   }
 
-  /** Acts as a preconditioner. That is, applies the solver to the
+  /*!
+   * Acts as a preconditioner. That is, applies the solver to the
    * right-hand side \p rhs to get the solution \p x with zero initial
    * approximation.  Iterative methods usually use estimated residual for
    * exit condition.  For some problems the value of the estimated
@@ -155,9 +152,9 @@ class make_solver
    * \rst
    * .. code-block:: cpp
    *
-   *   typedef ::Arcane::Alina::make_solver<
-   *     ::Arcane::Alina::make_solver<
-   *       ::Arcane::Alina::amg<
+   *   typedef ::Arcane::Alina::PreconditionedSolver<
+   *     ::Arcane::Alina::PreconditionedSolver<
+   *       ::Arcane::Alina::AMG<
    *         Backend, ::Arcane::Alina::coarsening::smoothed_aggregation, ::Arcane::Alina::relaxation::spai0
    *         >,
    *       ::Arcane::Alina::solver::cg<Backend>
@@ -225,7 +222,7 @@ class make_solver
     return backend::bytes(S) + backend::bytes(P);
   }
 
-  friend std::ostream& operator<<(std::ostream& os, const make_solver& p)
+  friend std::ostream& operator<<(std::ostream& os, const PreconditionedSolver& p)
   {
     return os << "Solver\n======\n"
               << p.S << std::endl

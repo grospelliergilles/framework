@@ -16,7 +16,7 @@
 template <class T> using Backend = Arcane::Alina::backend::BuiltinBackend<T>;
 #endif
 
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/make_block_solver.h>
 #include <arcane/alina/value_type_static_matrix.h>
 #include <arcane/alina/Adapters.h>
@@ -63,7 +63,7 @@ void solve_schur(const Matrix &K, const std::vector<double> &rhs, Alina::Propert
     auto t1 = prof.scoped_tic("schur_complement");
 
     prof.tic("setup");
-    Alina::make_solver<
+    Alina::PreconditionedSolver<
         Alina::preconditioner::SchurPressureCorrectionPreconditioner<USolver, PSolver>,
         Alina::runtime::solver::SolverRuntime<Backend<double>>
         > solve(K, prm, bprm);
@@ -99,7 +99,7 @@ void solve_schur(int pb, const Matrix& K, const std::vector<double>& rhs, Alina:
 {
   switch (pb) {
   case 1: {
-    typedef Alina::make_solver<
+    typedef Alina::PreconditionedSolver<
     Alina::runtime::PreconditionerRuntime<Backend<double>>,
     Alina::runtime::solver::SolverRuntime<Backend<double>>>
     PSolver;
@@ -129,7 +129,7 @@ void solve_schur(int ub, int pb, const Matrix& K, const std::vector<double>& rhs
 {
   switch (ub) {
   case 1: {
-    using USolver = Alina::make_solver<Alina::runtime::PreconditionerRuntime<Backend<double>>,
+    using USolver = Alina::PreconditionedSolver<Alina::runtime::PreconditionerRuntime<Backend<double>>,
                                        Alina::runtime::solver::SolverRuntime<Backend<double>>>;
     solve_schur<USolver>(pb, K, rhs, prm);
   } break;
