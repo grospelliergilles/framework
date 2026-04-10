@@ -24,7 +24,7 @@ TEST(alina_test_skyline_lu, skyline_lu)
 
   auto A = Alina::adapter::zero_copy(n, ptr.data(), col.data(), val.data());
 
-  Alina::solver::skyline_lu<double> solve(*A);
+  Alina::solver::SkylineLUSolver<double> solve(*A);
 
   std::vector<double> x(n);
   std::vector<double> r(n);

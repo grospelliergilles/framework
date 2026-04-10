@@ -57,7 +57,7 @@ struct BlockCSRBackend
   typedef BlockCSRMatrix<real, index_type, index_type> matrix;
   typedef typename BuiltinBackend<real>::vector vector;
   typedef typename BuiltinBackend<real>::vector matrix_diagonal;
-  typedef solver::skyline_lu<value_type> direct_solver;
+  typedef solver::SkylineLUSolver<value_type> direct_solver;
 
   struct provides_row_iterator : std::false_type
   {};

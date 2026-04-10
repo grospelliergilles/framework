@@ -52,7 +52,7 @@ namespace direct {
 template <typename value_type>
 class skyline_lu : public solver_base< value_type, skyline_lu<value_type> > {
     public:
-        typedef Alina::solver::skyline_lu<value_type> Solver;
+        typedef Alina::solver::SkylineLUSolver<value_type> Solver;
         typedef typename Solver::params params;
         typedef backend::CSRMatrix<value_type> build_matrix;
 

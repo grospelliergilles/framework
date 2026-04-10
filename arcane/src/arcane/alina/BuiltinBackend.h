@@ -723,7 +723,7 @@ struct BuiltinBackend
   typedef CSRMatrix<value_type, col_type, ptr_type> matrix;
   typedef numa_vector<rhs_type> vector;
   typedef numa_vector<value_type> matrix_diagonal;
-  typedef solver::skyline_lu<value_type> direct_solver;
+  typedef solver::SkylineLUSolver<value_type> direct_solver;
 
   /// The backend has no parameters.
   typedef Alina::detail::empty_params params;
