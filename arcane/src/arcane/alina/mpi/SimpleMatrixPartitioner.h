@@ -28,7 +28,7 @@
 #include <arcane/alina/BackendInterface.h>
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/DistributedMatrix.h>
-#include <arcane/alina/mpi/mp_partition_util.h>
+#include <arcane/alina/mpi/MatrixPartitionUtils.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

@@ -29,7 +29,7 @@
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/mpi/mp_util.h>
 #include <arcane/alina/mpi/DistributedMatrix.h>
-#include <arcane/alina/mpi/mp_partition_util.h>
+#include <arcane/alina/mpi/MatrixPartitionUtils.h>
 
 #include <parmetis.h>
 
