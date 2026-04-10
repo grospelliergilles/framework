@@ -5,12 +5,12 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* DistributedSolverRuntime.h                                  (C) 2000-2026 */
+/* DistributedInnerProduct.h                                   (C) 2026-2026 */
 /*                                                                           */
-/* Runtime-configurable MPI wrapper around iterative solvers.                */
+/* Distributed inner products of two vectors.                                */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_DISTRIBUTEDSOLVERRUNTIME_H
-#define ARCANE_ALINA_DISTRIBUTEDSOLVERRUNTIME_H
+#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDINNERPRODUCT_H
+#define ARCANE_ALINA_MPI_DISTRIBUTEDINNERPRODUCT_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -23,30 +23,53 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/SolverRuntime.h>
-#include <arcane/alina/mpi/DistributedInnerProduct.h>
+#include <arcane/alina/BuiltinBackend.h>
+#include <arcane/alina/value_type_backend_interface.h>
+#include <arcane/alina/mp_util.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::runtime::mpi::solver
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-template <class Backend, class InnerProduct = DistributedInnerProduct>
-struct DistributedSolverRuntime
-: public Alina::runtime::solver::SolverRuntime<Backend, InnerProduct>
+/*!
+ * \brief Inner product for distributed vectors.
+ */
+struct DistributedInnerProduct
 {
-  typedef Alina::runtime::solver::SolverRuntime<Backend, InnerProduct> Base;
-  using Base::Base;
+  mpi_communicator comm;
+
+  explicit DistributedInnerProduct(mpi_communicator comm)
+  : comm(comm)
+  {}
+
+  template <class Vec1, class Vec2>
+  typename math::inner_product_impl<typename backend::value_type<Vec1>::type>::return_type
+  operator()(const Vec1& x, const Vec2& y) const
+  {
+    typedef typename backend::value_type<Vec1>::type value_type;
+    typedef typename math::inner_product_impl<value_type>::return_type coef_type;
+
+    ARCANE_ALINA_TIC("inner product");
+    coef_type sum = comm.reduce(MPI_SUM, backend::inner_product(x, y));
+    ARCANE_ALINA_TOC("inner product");
+
+    return sum;
+  }
+
+  int rank() const
+  {
+    return comm.rank;
+  }
 };
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::runtime::mpi::solver
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

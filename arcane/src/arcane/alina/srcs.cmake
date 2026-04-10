@@ -66,27 +66,28 @@ set(ARCANE_SOURCES
   value_type_complex.h
   value_type_eigen.h
   value_type_static_matrix.h
-  mpi/DistributedAMG.h
-  mpi/DistributedCoarsening.h
-  mpi/DistributedCoarseningRuntime.h
-  mpi/DistributedCPRPreconditioner.h
-  mpi/DistributedDirectSolverBase.h
-  mpi/DistributedDirectSolverRuntime.h
-  mpi/DistributedEigenSparseLUDirectSolver.h
-  mpi/DistributedSkylineLUDirectSolver.h
-  mpi/DistributedMatrix.h
-  mpi/DistributedInnerProduct.h
-  mpi/DistributedPreconditioner.h
-  mpi/DistributedPreconditionedSolver.h
-  mpi/DistributedRelaxation.h
-  mpi/DistributedRelaxationRuntime.h
-  mpi/DistributedSchurPressureCorrection.h
-  mpi/DistributedSolver.h
-  mpi/DistributedSolverRuntime.h
-  mpi/DistributedSubDomainDeflation.h
-  mpi/SimpleMatrixPartitioner.h
-  mpi/ParmetisMatrixPartitioner.h
-  mpi/MatrixPartitionerRuntime.h
-  mpi/MatrixPartitionUtils.h
-  mpi/mp_util.h
+
+  DistributedAMG.h
+  DistributedCoarsening.h
+  DistributedCoarseningRuntime.h
+  DistributedCPRPreconditioner.h
+  DistributedDirectSolverBase.h
+  DistributedDirectSolverRuntime.h
+  DistributedEigenSparseLUDirectSolver.h
+  DistributedSkylineLUDirectSolver.h
+  DistributedMatrix.h
+  DistributedInnerProduct.h
+  DistributedPreconditioner.h
+  DistributedPreconditionedSolver.h
+  DistributedRelaxation.h
+  DistributedRelaxationRuntime.h
+  DistributedSchurPressureCorrection.h
+  DistributedSolver.h
+  DistributedSolverRuntime.h
+  DistributedSubDomainDeflation.h
+  SimpleMatrixPartitioner.h
+  ParmetisMatrixPartitioner.h
+  MatrixPartitionerRuntime.h
+  MatrixPartitionUtils.h
+  mp_util.h
 )

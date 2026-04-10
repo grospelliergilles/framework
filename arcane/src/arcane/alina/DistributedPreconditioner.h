@@ -26,15 +26,14 @@
 #include <iostream>
 
 #include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/mpi/DistributedAMG.h>
-#include <arcane/alina/mpi/DistributedInnerProduct.h>
-#include <arcane/alina/mpi/DistributedCoarseningRuntime.h>
-#include <arcane/alina/mpi/DistributedRelaxationRuntime.h>
-#include <arcane/alina/mpi/DistributedDirectSolverRuntime.h>
-#include <arcane/alina/mpi/MatrixPartitionerRuntime.h>
-#include <arcane/alina/mpi/DistributedRelaxation.h>
-#include <arcane/alina/mpi/DistributedMatrix.h>
-#include <arcane/alina/mpi/mp_util.h>
+#include <arcane/alina/DistributedAMG.h>
+#include <arcane/alina/DistributedInnerProduct.h>
+#include <arcane/alina/DistributedCoarseningRuntime.h>
+#include <arcane/alina/DistributedRelaxationRuntime.h>
+#include <arcane/alina/DistributedDirectSolverRuntime.h>
+#include <arcane/alina/MatrixPartitionerRuntime.h>
+#include <arcane/alina/DistributedRelaxation.h>
+#include <arcane/alina/DistributedMatrix.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

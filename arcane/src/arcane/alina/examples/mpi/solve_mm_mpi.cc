@@ -18,9 +18,9 @@
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/RelaxationRuntime.h>
-#include <arcane/alina/mpi/DistributedSubDomainDeflation.h>
-#include <arcane/alina/mpi/DistributedSolverRuntime.h>
-#include <arcane/alina/mpi/DistributedDirectSolverRuntime.h>
+#include <arcane/alina/DistributedSubDomainDeflation.h>
+#include <arcane/alina/DistributedSolverRuntime.h>
+#include <arcane/alina/DistributedDirectSolverRuntime.h>
 #include <arcane/alina/profiler.h>
 
 namespace Arcane::Alina {

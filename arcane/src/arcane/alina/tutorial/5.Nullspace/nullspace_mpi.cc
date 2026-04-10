@@ -36,18 +36,18 @@ THE SOFTWARE.
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/coarsening.h>
 
-#include <arcane/alina/mpi/DistributedMatrix.h>
-#include <arcane/alina/mpi/DistributedPreconditionedSolver.h>
-#include <arcane/alina/mpi/DistributedAMG.h>
-#include <arcane/alina/mpi/DistributedCoarsening.h>
-#include <arcane/alina/mpi/DistributedRelaxation.h>
-#include <arcane/alina/mpi/DistributedSolver.h>
+#include <arcane/alina/DistributedMatrix.h>
+#include <arcane/alina/DistributedPreconditionedSolver.h>
+#include <arcane/alina/DistributedAMG.h>
+#include <arcane/alina/DistributedCoarsening.h>
+#include <arcane/alina/DistributedRelaxation.h>
+#include <arcane/alina/DistributedSolver.h>
 
 #include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
 #if defined(ARCANE_ALINA_HAVE_PARMETIS)
-#include <arcane/alina/mpi/ParmetisMatrixPartitioner.h>
+#include <arcane/alina/ParmetisMatrixPartitioner.h>
 #endif
 
 using namespace Arcane;

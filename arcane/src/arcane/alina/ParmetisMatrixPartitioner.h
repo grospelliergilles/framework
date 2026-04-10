@@ -27,9 +27,9 @@
 
 #include <arcane/alina/BackendInterface.h>
 #include <arcane/alina/value_type_backend_interface.h>
-#include <arcane/alina/mpi/mp_util.h>
-#include <arcane/alina/mpi/DistributedMatrix.h>
-#include <arcane/alina/mpi/MatrixPartitionUtils.h>
+#include <arcane/alina/mp_util.h>
+#include <arcane/alina/DistributedMatrix.h>
+#include <arcane/alina/MatrixPartitionUtils.h>
 
 #include <parmetis.h>
 

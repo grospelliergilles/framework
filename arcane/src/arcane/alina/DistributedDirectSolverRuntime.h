@@ -23,9 +23,9 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/mpi/DistributedSkylineLUDirectSolver.h>
+#include <arcane/alina/DistributedSkylineLUDirectSolver.h>
 #ifdef ARCANE_ALINA_HAVE_EIGEN
-#include <arcane/alina/mpi/DistributedEigenSparseLUDirectSolver.h>
+#include <arcane/alina/DistributedEigenSparseLUDirectSolver.h>
 #endif
 
 /*---------------------------------------------------------------------------*/

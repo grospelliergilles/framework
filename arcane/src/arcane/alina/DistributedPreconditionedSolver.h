@@ -26,8 +26,8 @@
 #include <iostream>
 
 #include <arcane/alina/util.h>
-#include <arcane/alina/mpi/DistributedInnerProduct.h>
-#include <arcane/alina/mpi/DistributedMatrix.h>
+#include <arcane/alina/DistributedInnerProduct.h>
+#include <arcane/alina/DistributedMatrix.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

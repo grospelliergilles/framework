@@ -23,8 +23,8 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/mpi/DistributedMatrix.h>
-#include <arcane/alina/mpi/DistributedCoarsening.h>
+#include <arcane/alina/DistributedMatrix.h>
+#include <arcane/alina/DistributedCoarsening.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

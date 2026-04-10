@@ -6,7 +6,7 @@
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/value_type_static_matrix.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/mpi/DistributedMatrix.h>
+#include <arcane/alina/DistributedMatrix.h>
 #include <arcane/alina/IO.h>
 
 #include <arcane/alina/profiler.h>

@@ -47,7 +47,7 @@
 #include <arcane/alina/util.h>
 
 #ifdef MPI_VERSION
-#include <arcane/alina/mpi/mp_util.h>
+#include <arcane/alina/mp_util.h>
 #endif
 
 #ifdef _OPENMP

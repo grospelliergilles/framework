@@ -9,14 +9,14 @@
 #include <arcane/alina/IO.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/mpi/DistributedPreconditionedSolver.h>
-#include <arcane/alina/mpi/DistributedCPRPreconditioner.h>
-#include <arcane/alina/mpi/DistributedAMG.h>
-#include <arcane/alina/mpi/DistributedCoarseningRuntime.h>
-#include <arcane/alina/mpi/DistributedRelaxationRuntime.h>
-#include <arcane/alina/mpi/DistributedSolverRuntime.h>
-#include <arcane/alina/mpi/DistributedDirectSolverRuntime.h>
-#include <arcane/alina/mpi/MatrixPartitionerRuntime.h>
+#include <arcane/alina/DistributedPreconditionedSolver.h>
+#include <arcane/alina/DistributedCPRPreconditioner.h>
+#include <arcane/alina/DistributedAMG.h>
+#include <arcane/alina/DistributedCoarseningRuntime.h>
+#include <arcane/alina/DistributedRelaxationRuntime.h>
+#include <arcane/alina/DistributedSolverRuntime.h>
+#include <arcane/alina/DistributedDirectSolverRuntime.h>
+#include <arcane/alina/MatrixPartitionerRuntime.h>
 #include <arcane/alina/profiler.h>
 #include <arcane/alina/util.h>
 

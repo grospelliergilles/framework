@@ -43,9 +43,9 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/PreconditionerRuntime.h>
-#include <arcane/alina/mpi/DistributedDirectSolverRuntime.h>
-#include <arcane/alina/mpi/DistributedSolverRuntime.h>
-#include <arcane/alina/mpi/DistributedSubDomainDeflation.h>
+#include <arcane/alina/DistributedDirectSolverRuntime.h>
+#include <arcane/alina/DistributedSolverRuntime.h>
+#include <arcane/alina/DistributedSubDomainDeflation.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/profiler.h>
 

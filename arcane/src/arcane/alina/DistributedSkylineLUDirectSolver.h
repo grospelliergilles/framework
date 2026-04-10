@@ -5,12 +5,12 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* DistributedEigenSparseLUDirectSolver.h                      (C) 2026-2026 */
+/* DistributedSkylineLUDirectSolver.h                          (C) 2026-2026 */
 /*                                                                           */
-/* Distributed wrapper for Eigen::SparseLU solver.                           */
+/* Distributed direct solver that uses Skyline LU factorization.             */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_DISTRIBUTEDEIGENSPARSELUDIRECTSOLVER_H
-#define ARCANE_ALINA_DISTRIBUTEDEIGENSPARSELUDIRECTSOLVER_H
+#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDSKYLINELUDIRECTSOLVER_H
+#define ARCANE_ALINA_MPI_DISTRIBUTEDSKYLINELUDIRECTSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -24,41 +24,38 @@
 /*---------------------------------------------------------------------------*/
 
 #include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/solver_eigen.h>
-#include <arcane/alina/mpi/mp_util.h>
-#include <arcane/alina/mpi/DistributedDirectSolverBase.h>
-
-#include <Eigen/SparseLU>
+#include <arcane/alina/Adapters.h>
+#include <arcane/alina/SkylineLUSolver.h>
+#include <arcane/alina/DistributedDirectSolverBase.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::mpi::direct
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*!
- * \brief Distributed wrapper for Eigen::SparseLU solver.
+ * \brief Provides distributed direct solver interface for Skyline LU solver.
  *
- * This is a wrapper around Eigen SparseLU solver that provides a
+ * This is a wrapper around Skyline LU factorization solver that provides a
  * distributed direct solver interface but always works sequentially.
  */
 template <typename value_type>
-class DistributedEigenSparseLUDirectSolver
-: public DistributedDirectSolverBase<value_type, DistributedEigenSparseLUDirectSolver<value_type>>
+class DistributedSkylineLUDirectSolver
+: public DistributedDirectSolverBase<value_type, DistributedSkylineLUDirectSolver<value_type>>
 {
  public:
 
-  using EigenMatrix = Eigen::SparseMatrix<value_type, Eigen::ColMajor, int>;
-  using Solver = solver::EigenSolver<Eigen::SparseLU<EigenMatrix>>;
+  typedef Alina::solver::SkylineLUSolver<value_type> Solver;
   typedef typename Solver::params params;
   typedef backend::CSRMatrix<value_type> build_matrix;
 
   /// Constructor.
   template <class Matrix>
-  DistributedEigenSparseLUDirectSolver(mpi_communicator comm, const Matrix& A,
-                                       const params& prm = params())
+  DistributedSkylineLUDirectSolver(mpi_communicator comm, const Matrix& A,
+                                   const params& prm = params{})
   : prm(prm)
   {
     static_cast<Base*>(this)->init(comm, A);
@@ -66,7 +63,7 @@ class DistributedEigenSparseLUDirectSolver
 
   static size_t coarse_enough()
   {
-    return Base::coarse_enough();
+    return Solver::coarse_enough();
   }
 
   int comm_size(int /*n*/) const
@@ -93,7 +90,7 @@ class DistributedEigenSparseLUDirectSolver
 
  private:
 
-  typedef DistributedDirectSolverBase<value_type, DistributedEigenSparseLUDirectSolver<value_type>> Base;
+  typedef DistributedDirectSolverBase<value_type, DistributedSkylineLUDirectSolver<value_type>> Base;
   params prm;
   std::shared_ptr<Solver> S;
 };
@@ -101,7 +98,7 @@ class DistributedEigenSparseLUDirectSolver
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::mpi::direct
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

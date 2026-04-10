@@ -9,10 +9,9 @@
 #include <arcane/alina/value_type_complex.h>
 #include <arcane/alina/Adapters.h>
 
-#include <arcane/alina/mpi/mp_util.h>
-#include <arcane/alina/mpi/DistributedPreconditionedSolver.h>
-#include <arcane/alina/mpi/DistributedPreconditioner.h>
-#include <arcane/alina/mpi/DistributedSolverRuntime.h>
+#include <arcane/alina/DistributedPreconditionedSolver.h>
+#include <arcane/alina/DistributedPreconditioner.h>
+#include <arcane/alina/DistributedSolverRuntime.h>
 
 #include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>

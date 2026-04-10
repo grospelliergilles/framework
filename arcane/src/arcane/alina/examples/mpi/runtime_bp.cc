@@ -11,18 +11,17 @@
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/PreconditionerRuntime.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/mpi/DistributedPreconditionedSolver.h>
-#include <arcane/alina/mpi/DistributedSolverRuntime.h>
-#include <arcane/alina/mpi/DistributedPreconditioner.h>
+#include <arcane/alina/DistributedPreconditionedSolver.h>
+#include <arcane/alina/DistributedSolverRuntime.h>
+#include <arcane/alina/DistributedPreconditioner.h>
 #include <arcane/alina/profiler.h>
 #include <arcane/alina/util.h>
 
 // Pour test compilation uniquement
-#include <arcane/alina/mpi/DistributedSolver.h>
-#include <arcane/alina/mpi/DistributedSolverRuntime.h>
+#include <arcane/alina/DistributedSolver.h>
 
 // Pour test compilation uniquement
-#include <arcane/alina/mpi/DistributedRelaxationRuntime.h>
+#include <arcane/alina/DistributedRelaxationRuntime.h>
 
 #include "domain_partition.h"
 

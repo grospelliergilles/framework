@@ -32,7 +32,7 @@
 #include <arcane/alina/LooseGMRESSolver.h>
 #include <arcane/alina/PreconditionerOnlySolver.h>
 #include <arcane/alina/RichardsonSolver.h>
-#include <arcane/alina/mpi/DistributedInnerProduct.h>
+#include <arcane/alina/DistributedInnerProduct.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

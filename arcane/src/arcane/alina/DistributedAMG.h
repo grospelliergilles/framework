@@ -29,10 +29,10 @@
 #include <memory>
 
 #include <arcane/alina/BackendInterface.h>
-#include <arcane/alina/mpi/mp_util.h>
-#include <arcane/alina/mpi/DistributedMatrix.h>
-#include <arcane/alina/mpi/DistributedSkylineLUDirectSolver.h>
-#include <arcane/alina/mpi/SimpleMatrixPartitioner.h>
+#include <arcane/alina/mp_util.h>
+#include <arcane/alina/DistributedMatrix.h>
+#include <arcane/alina/DistributedSkylineLUDirectSolver.h>
+#include <arcane/alina/SimpleMatrixPartitioner.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

@@ -6,8 +6,7 @@
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/mpi/mp_util.h>
-#include <arcane/alina/mpi/DistributedMatrix.h>
+#include <arcane/alina/DistributedMatrix.h>
 #include <arcane/alina/profiler.h>
 
 #include "domain_partition.h"

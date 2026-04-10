@@ -30,12 +30,12 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/RelaxationRuntime.h>
-#include <arcane/alina/mpi/DistributedPreconditionedSolver.h>
-#include <arcane/alina/mpi/DistributedSchurPressureCorrection.h>
-#include <arcane/alina/mpi/DistributedPreconditioner.h>
-#include <arcane/alina/mpi/DistributedSubDomainDeflation.h>
-#include <arcane/alina/mpi/DistributedSolverRuntime.h>
-#include <arcane/alina/mpi/DistributedDirectSolverRuntime.h>
+#include <arcane/alina/DistributedPreconditionedSolver.h>
+#include <arcane/alina/DistributedSchurPressureCorrection.h>
+#include <arcane/alina/DistributedPreconditioner.h>
+#include <arcane/alina/DistributedSubDomainDeflation.h>
+#include <arcane/alina/DistributedSolverRuntime.h>
+#include <arcane/alina/DistributedDirectSolverRuntime.h>
 #include <arcane/alina/profiler.h>
 
 namespace Arcane::Alina {
