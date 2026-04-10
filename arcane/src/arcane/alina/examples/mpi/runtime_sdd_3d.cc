@@ -38,7 +38,7 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #endif
 
 #include <arcane/alina/mpi/mp_direct_solver_runtime.h>
-#include <arcane/alina/mpi/mp_solver_runtime.h>
+#include <arcane/alina/mpi/DistributedSolverRuntime.h>
 #include <arcane/alina/mpi/mp_subdomain_deflation.h>
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/CoarseningRuntime.h>

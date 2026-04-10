@@ -12,14 +12,14 @@
 #include <arcane/alina/PreconditionerRuntime.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/mpi/mp_make_solver.h>
-#include <arcane/alina/mpi/mp_solver_runtime.h>
+#include <arcane/alina/mpi/DistributedSolverRuntime.h>
 #include <arcane/alina/mpi/DistributedPreconditioner.h>
 #include <arcane/alina/profiler.h>
 #include <arcane/alina/util.h>
 
 // Pour test compilation uniquement
 #include <arcane/alina/mpi/DistributedSolver.h>
-#include <arcane/alina/mpi/mp_solver_runtime.h>
+#include <arcane/alina/mpi/DistributedSolverRuntime.h>
 
 // Pour test compilation uniquement
 #include <arcane/alina/mpi/DistributedRelaxationRuntime.h>

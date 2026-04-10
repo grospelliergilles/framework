@@ -44,7 +44,7 @@ set(ARCANE_SOURCES
   relaxation_detail_ilu_solve.h
   RelaxationRuntime.h
   RelaxationRuntime.cc
-        Relaxation.h
+  Relaxation.h
   reorder_cuthill_mckee.h
   BiCGStabSolver.h
   FlexibleGMRESSolver.h
@@ -75,9 +75,11 @@ set(ARCANE_SOURCES
   mpi/DistributedMatrix.h
   mpi/DistributedInnerProduct.h
   mpi/DistributedPreconditioner.h
+  mpi/DistributedRelaxation.h
   mpi/DistributedRelaxationRuntime.h
   mpi/DistributedSchurPressureCorrection.h
   mpi/DistributedSolver.h
+  mpi/DistributedSolverRuntime.h
   mpi/mp_direct_solve_eigen_splu.h
   mpi/mp_direct_solver_runtime.h
   mpi/mp_make_solver.h
@@ -85,8 +87,6 @@ set(ARCANE_SOURCES
   mpi/mp_partition_parmetis.h
   mpi/mp_partition_runtime.h
   mpi/mp_partition_util.h
-        mpi/DistributedRelaxation.h
-  mpi/mp_solver_runtime.h
   mpi/mp_subdomain_deflation.h
   mpi/mp_util.h
 )
