@@ -35,7 +35,7 @@ namespace Arcane::Alina::runtime::mpi::solver
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-template <class Backend, class InnerProduct = Alina::mpi::inner_product>
+template <class Backend, class InnerProduct = DistributedInnerProduct>
 struct DistributedSolverRuntime
 : public Alina::runtime::solver::SolverRuntime<Backend, InnerProduct>
 {

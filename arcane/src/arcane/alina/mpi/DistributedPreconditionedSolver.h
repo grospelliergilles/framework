@@ -87,7 +87,7 @@ class DistributedPreconditionedSolver
   : prm(prm)
   , n(backend::rows(A))
   , P(comm, A, prm.precond, bprm)
-  , S(backend::rows(A), prm.solver, bprm, mpi::inner_product(comm))
+  , S(backend::rows(A), prm.solver, bprm, DistributedInnerProduct(comm))
   {}
 
   DistributedPreconditionedSolver(mpi_communicator comm,
@@ -97,7 +97,7 @@ class DistributedPreconditionedSolver
   : prm(prm)
   , n(A->loc_rows())
   , P(comm, A, prm.precond, bprm)
-  , S(n, prm.solver, bprm, mpi::inner_product(comm))
+  , S(n, prm.solver, bprm, DistributedInnerProduct(comm))
   {
   }
 
@@ -109,7 +109,7 @@ class DistributedPreconditionedSolver
   : prm(prm)
   , n(A->loc_rows())
   , P(comm, std::make_shared<matrix>(*A), prm.precond, bprm)
-  , S(n, prm.solver, bprm, mpi::inner_product(comm))
+  , S(n, prm.solver, bprm, DistributedInnerProduct(comm))
   {
     A->move_to_backend(bprm);
   }
@@ -120,7 +120,7 @@ class DistributedPreconditionedSolver
   : prm(prm)
   , n(backend::rows(*A))
   , P(comm, A, prm.precond, bprm)
-  , S(backend::rows(*A), prm.solver, bprm, mpi::inner_product(comm))
+  , S(backend::rows(*A), prm.solver, bprm, DistributedInnerProduct(comm))
   {}
 
   template <class Matrix, class Vec1, class Vec2>

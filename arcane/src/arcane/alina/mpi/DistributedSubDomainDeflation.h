@@ -181,9 +181,9 @@ class DistributedSubDomainDeflation
 
   template <class Matrix>
   DistributedSubDomainDeflation(mpi_communicator comm,
-                      const Matrix& Astrip,
-                      const params& prm = params(),
-                      const backend_params& bprm = backend_params())
+                                const Matrix& Astrip,
+                                const params& prm = params(),
+                                const backend_params& bprm = backend_params())
   : comm(comm)
   , nrows(backend::rows(Astrip))
   , ndv(prm.num_def_vec)
@@ -191,16 +191,16 @@ class DistributedSubDomainDeflation
   , dv_start(comm.size + 1, 0)
   , Z(ndv)
   , q(backend_type::create_vector(nrows, bprm))
-  , S(nrows, prm.isolver, bprm, mpi::inner_product(comm))
+  , S(nrows, prm.isolver, bprm, DistributedInnerProduct(comm))
   {
     A = std::make_shared<matrix>(comm, Astrip, nrows);
     init(prm, bprm);
   }
 
   DistributedSubDomainDeflation(mpi_communicator comm,
-                      std::shared_ptr<matrix> A,
-                      const params& prm = params(),
-                      const backend_params& bprm = backend_params())
+                                std::shared_ptr<matrix> A,
+                                const params& prm = params(),
+                                const backend_params& bprm = backend_params())
   : comm(comm)
   , nrows(A->loc_rows())
   , ndv(prm.num_def_vec)
@@ -209,7 +209,7 @@ class DistributedSubDomainDeflation
   , dv_start(comm.size + 1, 0)
   , Z(ndv)
   , q(backend_type::create_vector(nrows, bprm))
-  , S(nrows, prm.isolver, bprm, mpi::inner_product(comm))
+  , S(nrows, prm.isolver, bprm, DistributedInnerProduct(comm))
   {
     init(prm, bprm);
   }

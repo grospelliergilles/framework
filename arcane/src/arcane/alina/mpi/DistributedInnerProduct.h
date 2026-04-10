@@ -30,7 +30,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::mpi
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -38,11 +38,11 @@ namespace Arcane::Alina::mpi
 /*!
  * \brief Inner product for distributed vectors.
  */
-struct inner_product
+struct DistributedInnerProduct
 {
   mpi_communicator comm;
 
-  explicit inner_product(mpi_communicator comm)
+  explicit DistributedInnerProduct(mpi_communicator comm)
   : comm(comm)
   {}
 
@@ -69,7 +69,7 @@ struct inner_product
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::mpi
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

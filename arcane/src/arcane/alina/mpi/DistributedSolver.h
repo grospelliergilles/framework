@@ -43,7 +43,7 @@ namespace Arcane::Alina::mpi::solver
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-template <class Backend, class InnerProduct = mpi::inner_product>
+template <class Backend, class InnerProduct = DistributedInnerProduct>
 class cg
 : public Alina::solver::ConjugateGradientSolver<Backend, InnerProduct>
 {
@@ -57,7 +57,7 @@ class cg
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-template <class Backend, class InnerProduct = mpi::inner_product>
+template <class Backend, class InnerProduct = DistributedInnerProduct>
 class bicgstab
 : public Alina::solver::BiCGStabSolver<Backend, InnerProduct>
 {
@@ -71,7 +71,7 @@ class bicgstab
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-template <class Backend, class InnerProduct = mpi::inner_product>
+template <class Backend, class InnerProduct = DistributedInnerProduct>
 class bicgstabl
 : public Alina::solver::BiCGStabLSolver<Backend, InnerProduct>
 {
@@ -85,7 +85,7 @@ class bicgstabl
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-template <class Backend, class InnerProduct = mpi::inner_product>
+template <class Backend, class InnerProduct = DistributedInnerProduct>
 class fgmres
 : public Alina::solver::FlexibleGMRESSolver<Backend, InnerProduct>
 {
@@ -99,7 +99,7 @@ class fgmres
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-template <class Backend, class InnerProduct = mpi::inner_product>
+template <class Backend, class InnerProduct = DistributedInnerProduct>
 class gmres
 : public Alina::solver::GMRESSolver<Backend, InnerProduct>
 {
@@ -113,7 +113,7 @@ class gmres
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-template <class Backend, class InnerProduct = mpi::inner_product>
+template <class Backend, class InnerProduct = DistributedInnerProduct>
 class idrs
 : public Alina::solver::IDRSSolver<Backend, InnerProduct>
 {
@@ -127,7 +127,7 @@ class idrs
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-template <class Backend, class InnerProduct = mpi::inner_product>
+template <class Backend, class InnerProduct = DistributedInnerProduct>
 class lgmres
 : public Alina::solver::LooseGMRESSolver<Backend, InnerProduct>
 {
@@ -141,7 +141,7 @@ class lgmres
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-template <class Backend, class InnerProduct = mpi::inner_product>
+template <class Backend, class InnerProduct = DistributedInnerProduct>
 class preonly
 : public Alina::solver::PreconditionerOnlySolver<Backend, InnerProduct>
 {
@@ -155,7 +155,7 @@ class preonly
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-template <class Backend, class InnerProduct = mpi::inner_product>
+template <class Backend, class InnerProduct = DistributedInnerProduct>
 class richardson
 : public Alina::solver::RichardsonSolver<Backend, InnerProduct>
 {

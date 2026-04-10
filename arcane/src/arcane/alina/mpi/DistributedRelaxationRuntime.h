@@ -52,7 +52,6 @@ struct DistributedRelaxationRuntime
   DistributedRelaxationRuntime(const DistributedMatrix<Backend>& A,
                                params prm, const backend_params& bprm = backend_params())
   : r(prm.get("type", runtime::relaxation::spai0))
-  , handle(0)
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");
