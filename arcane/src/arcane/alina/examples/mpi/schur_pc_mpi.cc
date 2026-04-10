@@ -284,7 +284,7 @@ int main(int argc, char* argv[])
   Alina::mpi::block_preconditioner<
   Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>>,
   Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>,
-  Alina::mpi::subdomain_deflation<
+  Alina::mpi::DistributedSubDomainDeflation<
   Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
   Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
   Alina::DistributedDirectSolverRuntime<double>>>,

@@ -21,7 +21,7 @@ using namespace Arcane;
 typedef Alina::backend::BuiltinBackend<double> Backend;
 typedef Alina::PropertyTree Params;
 
-typedef Alina::mpi::subdomain_deflation<
+typedef Alina::mpi::DistributedSubDomainDeflation<
 Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
 Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
 Alina::DistributedDirectSolverRuntime<double>>

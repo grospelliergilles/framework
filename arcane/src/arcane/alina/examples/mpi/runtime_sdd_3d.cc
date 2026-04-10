@@ -326,7 +326,7 @@ int main(int argc, char* argv[])
       prm.put("local.type", relaxation);
 
       prof.tic("setup");
-      typedef Alina::mpi::subdomain_deflation<
+      typedef Alina::mpi::DistributedSubDomainDeflation<
       Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>,
       Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
       Alina::DistributedDirectSolverRuntime<double>>
@@ -344,7 +344,7 @@ int main(int argc, char* argv[])
       prm.put("local.relax.type", relaxation);
 
       prof.tic("setup");
-      typedef Alina::mpi::subdomain_deflation<
+      typedef Alina::mpi::DistributedSubDomainDeflation<
       Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
       Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
       Alina::DistributedDirectSolverRuntime<double>>

@@ -301,7 +301,7 @@ int main(int argc, char* argv[])
   prof.toc("read problem");
 
   prof.tic("setup");
-  typedef Alina::mpi::subdomain_deflation<
+  typedef Alina::mpi::DistributedSubDomainDeflation<
   Alina::AMG<
   Alina::backend::BuiltinBackend<double>,
   Alina::runtime::coarsening::CoarseningRuntime,

@@ -735,7 +735,7 @@ int main(int argc, char* argv[])
   }
 
   prof.tic("setup");
-  typedef Alina::mpi::subdomain_deflation<
+  typedef Alina::mpi::DistributedSubDomainDeflation<
   Alina::runtime::PreconditionerRuntime<Backend>,
   Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
   Alina::DistributedDirectSolverRuntime<double>>
