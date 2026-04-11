@@ -94,7 +94,7 @@ struct BiCGStabLSolverParams
   bool convex = true;
 
   // Preconditioning kind (left/right).
-  preconditioner::side::type pside = preconditioner::side::right;
+  ePreconditionerSideType pside = ePreconditionerSideType::right;
 
   // Maximum number of iterations.
   size_t maxiter = 100;
@@ -214,8 +214,6 @@ class BiCGStabLSolver
   template <class Matrix, class Precond, class Vec1, class Vec2>
   SolverResult operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
-    namespace side = preconditioner::side;
-
     static const coef_type one = math::identity<coef_type>();
     static const coef_type zero = math::zero<coef_type>();
 
@@ -236,7 +234,7 @@ class BiCGStabLSolver
       }
     }
 
-    if (prm.pside == side::left) {
+    if (prm.pside == ePreconditionerSideType::left) {
       backend::residual(rhs, A, x, *T);
       P.apply(*T, *B);
     }
@@ -276,7 +274,7 @@ class BiCGStabLSolver
         for (int i = 0; i <= j; ++i)
           backend::axpby(one, *R[i], -beta, *U[i]);
 
-        preconditioner::spmv(prm.pside, P, A, *U[j], *U[j + 1], *T);
+        preconditioner_spmv(prm.pside, P, A, *U[j], *U[j + 1], *T);
 
         coef_type sigma = inner_product(*U[j + 1], *Rt);
         precondition(!math::is_zero(sigma), "BiCGStab(L) breakdown: diverged (zero sigma)");
@@ -287,7 +285,7 @@ class BiCGStabLSolver
         for (int i = 0; i <= j; ++i)
           backend::axpby(-alpha, *U[i + 1], one, *R[i]);
 
-        preconditioner::spmv(prm.pside, P, A, *R[j], *R[j + 1], *T);
+        preconditioner_spmv(prm.pside, P, A, *R[j], *R[j + 1], *T);
 
         zeta = norm(*R[0]);
 
@@ -396,12 +394,12 @@ class BiCGStabLSolver
         bool update_x = zeta < prm.delta * zeta0 && zeta0 <= rnmax_computed;
 
         if ((zeta < prm.delta * rnmax_true && zeta <= rnmax_true) || update_x) {
-          preconditioner::spmv(prm.pside, P, A, *X, *R[0], *T);
+          preconditioner_spmv(prm.pside, P, A, *X, *R[0], *T);
           backend::axpby(one, *B, -one, *R[0]);
           rnmax_true = zeta;
 
           if (update_x) {
-            if (prm.pside == side::left) {
+            if (prm.pside == ePreconditionerSideType::left) {
               backend::axpby(one, *X, one, x);
             }
             else {
@@ -419,7 +417,7 @@ class BiCGStabLSolver
     }
 
   done:
-    if (prm.pside == side::left) {
+    if (prm.pside == ePreconditionerSideType::left) {
       backend::axpby(one, *X, one, x);
     }
     else {

@@ -54,7 +54,7 @@ struct GMRESSolverParams
   unsigned M = 30;
 
   /// Preconditioning kind (left/right).
-  preconditioner::side::type pside = preconditioner::side::right;
+  ePreconditionerSideType pside = ePreconditionerSideType::right;
 
   /// Maximum number of iterations.
   unsigned maxiter = 100;
@@ -164,8 +164,6 @@ class GMRESSolver
   template <class Matrix, class Precond, class Vec1, class Vec2>
   SolverResult operator()(Matrix const& A, Precond const& P, Vec1 const& rhs, Vec2& x) const
   {
-    namespace side = preconditioner::side;
-
     static const scalar_type zero = math::zero<scalar_type>();
     static const scalar_type one = math::identity<scalar_type>();
 
@@ -187,7 +185,7 @@ class GMRESSolver
 
     size_t iter = 0;
     while (true) {
-      if (prm.pside == side::left) {
+      if (prm.pside == ePreconditionerSideType::left) {
         backend::residual(rhs, A, x, *v[0]);
         P.apply(*v[0], *r);
       }
@@ -214,7 +212,7 @@ class GMRESSolver
         //     A V_{i-1} = V_{i} H
         vector& v_new = *v[j + 1];
 
-        preconditioner::spmv(prm.pside, P, A, *v[j], v_new, *r);
+        preconditioner_spmv(prm.pside, P, A, *v[j], v_new, *r);
 
         for (unsigned k = 0; k <= j; ++k) {
           H(k, j) = inner_product(v_new, *v[k]);
@@ -253,7 +251,7 @@ class GMRESSolver
       vector& dx = *r;
       backend::lin_comb(j, s, v, zero, dx);
 
-      if (prm.pside == side::left) {
+      if (prm.pside == ePreconditionerSideType::left) {
         backend::axpby(one, dx, one, x);
       }
       else {

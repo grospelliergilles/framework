@@ -112,7 +112,7 @@ struct LooseGMRESSolverParams
   bool always_reset = true;
 
   /// Preconditioning kind (left/right).
-  preconditioner::side::type pside = preconditioner::side::right;
+  ePreconditionerSideType pside = ePreconditionerSideType::right;
 
   /// Maximum number of iterations.
   size_t maxiter = 100;
@@ -233,8 +233,6 @@ class LooseGMRESSolver
   template <class Matrix, class Precond, class Vec1, class Vec2>
   SolverResult operator()(Matrix const& A, Precond const& P, Vec1 const& rhs, Vec2& x) const
   {
-    namespace side = preconditioner::side;
-
     static const scalar_type zero = math::zero<scalar_type>();
     static const scalar_type one = math::identity<scalar_type>();
 
@@ -260,7 +258,7 @@ class LooseGMRESSolver
 
     unsigned iter = 0, n_outer = 0;
     while (true) {
-      if (prm.pside == side::left) {
+      if (prm.pside == ePreconditionerSideType::left) {
         backend::residual(rhs, A, x, *vs[0]);
         P.apply(*vs[0], *r);
       }
@@ -323,7 +321,7 @@ class LooseGMRESSolver
 
         ws[j] = z;
 
-        preconditioner::spmv(prm.pside, P, A, *z, v_new, *r);
+        preconditioner_spmv(prm.pside, P, A, *z, v_new, *r);
 
         for (unsigned k = 0; k <= j; ++k) {
           H0(k, j) = H(k, j) = inner_product(v_new, *vs[k]);
@@ -362,7 +360,7 @@ class LooseGMRESSolver
       backend::lin_comb(j, s, ws, zero, dx);
 
       // -- Apply step
-      if (prm.pside == side::left) {
+      if (prm.pside == ePreconditionerSideType::left) {
         backend::axpby(one, dx, one, x);
       }
       else {

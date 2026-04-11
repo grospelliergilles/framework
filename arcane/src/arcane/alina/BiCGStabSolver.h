@@ -47,7 +47,7 @@ struct BiCGStabSolverParams
   using params = BiCGStabSolverParams;
 
   /// Preconditioning kind (left/right).
-  preconditioner::side::type pside = preconditioner::side::right;
+  ePreconditionerSideType pside = ePreconditionerSideType::right;
 
   /// Maximum number of iterations.
   size_t maxiter = 100;
@@ -154,8 +154,6 @@ class BiCGStabSolver
   template <class Matrix, class Precond, class Vec1, class Vec2>
   SolverResult operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
-    namespace side = preconditioner::side;
-
     static const coef_type one = math::identity<coef_type>();
     static const coef_type zero = math::zero<coef_type>();
 
@@ -172,7 +170,7 @@ class BiCGStabSolver
       }
     }
 
-    if (prm.pside == side::left) {
+    if (prm.pside == ePreconditionerSideType::left) {
       backend::residual(rhs, A, x, *rh);
       P.apply(*rh, *r);
     }
@@ -205,11 +203,11 @@ class BiCGStabSolver
         backend::axpbypcz(one, *r, -beta * omega, *v, beta, *p);
       }
 
-      preconditioner::spmv(prm.pside, P, A, *p, *v, *T);
+      preconditioner_spmv(prm.pside, P, A, *p, *v, *T);
 
       alpha = rho1 / inner_product(*rh, *v);
 
-      if (prm.pside == side::left) {
+      if (prm.pside == ePreconditionerSideType::left) {
         backend::axpby(alpha, *p, one, x);
       }
       else {
@@ -219,13 +217,13 @@ class BiCGStabSolver
       backend::axpbypcz(one, *r, -alpha, *v, zero, *s);
 
       if ((res = norm(*s)) > eps) {
-        preconditioner::spmv(prm.pside, P, A, *s, *t, *T);
+        preconditioner_spmv(prm.pside, P, A, *s, *t, *T);
 
         omega = inner_product(*t, *s) / inner_product(*t, *t);
 
         precondition(!math::is_zero(omega), "Zero omega in BiCGStab");
 
-        if (prm.pside == side::left) {
+        if (prm.pside == ePreconditionerSideType::left) {
           backend::axpby(omega, *s, one, x);
         }
         else {
