@@ -25,8 +25,7 @@ set(ARCANE_SOURCES
   SparseMatrixMatrixProduct.h
   EigenAdapter.h
   EigenBackend.h
-  EpetraAdapter.h
-  IO.h
+        IO.h
   ios_saver.h
   make_block_solver.h
   PreconditionedSolver.h
