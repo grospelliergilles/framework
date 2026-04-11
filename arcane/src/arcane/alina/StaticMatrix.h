@@ -1,35 +1,27 @@
-#ifndef ARCANE_ALINA_VALUE_TYPE_STATIC_MATRIX_HPP
-#define ARCANE_ALINA_VALUE_TYPE_STATIC_MATRIX_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* ValueTypeInterface.h                                        (C) 2026-2026 */
+/*                                                                           */
+/* Enable statically sized matrices as value types.                          */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_STATICMATRIX_H
+#define ARCANE_ALINA_STATICMATRIX_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   alina/value_type/static_matrix.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Enable statically sized matrices as value types.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <array>
 #include <type_traits>
@@ -37,306 +29,349 @@ THE SOFTWARE.
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/ValueTypeInterface.h>
 
-namespace Arcane::Alina {
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+namespace Arcane::Alina
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 template <typename T, int N, int M>
-struct static_matrix {
-    std::array<T, N * M> buf;
+struct StaticMatrix
+{
+  std::array<T, N * M> buf;
 
-    T operator()(int i, int j) const {
-        return buf[i * M + j];
+  T operator()(int i, int j) const
+  {
+    return buf[i * M + j];
+  }
+
+  T& operator()(int i, int j)
+  {
+    return buf[i * M + j];
+  }
+
+  T operator()(int i) const
+  {
+    return buf[i];
+  }
+
+  T& operator()(int i)
+  {
+    return buf[i];
+  }
+
+  const T* data() const
+  {
+    return buf.data();
+  }
+
+  T* data()
+  {
+    return buf.data();
+  }
+
+  template <typename U>
+  const StaticMatrix& operator=(const StaticMatrix<U, N, M>& y)
+  {
+    for (int i = 0; i < N * M; ++i)
+      buf[i] = y.buf[i];
+    return *this;
+  }
+
+  template <typename U>
+  const StaticMatrix& operator+=(const StaticMatrix<U, N, M>& y)
+  {
+    for (int i = 0; i < N * M; ++i)
+      buf[i] += y.buf[i];
+    return *this;
+  }
+
+  template <typename U>
+  const StaticMatrix& operator-=(const StaticMatrix<U, N, M>& y)
+  {
+    for (int i = 0; i < N * M; ++i)
+      buf[i] -= y.buf[i];
+    return *this;
+  }
+
+  const StaticMatrix& operator*=(T c)
+  {
+    for (int i = 0; i < N * M; ++i)
+      buf[i] *= c;
+    return *this;
+  }
+
+  friend StaticMatrix operator*(T a, StaticMatrix x)
+  {
+    return x *= a;
+  }
+
+  friend StaticMatrix operator-(StaticMatrix x)
+  {
+    for (int i = 0; i < N * M; ++i)
+      x.buf[i] = -x.buf[i];
+    return x;
+  }
+
+  friend bool operator<(const StaticMatrix& x, const StaticMatrix& y)
+  {
+    T xtrace = math::zero<T>();
+    T ytrace = math::zero<T>();
+
+    const int K = N < M ? N : M;
+
+    for (int i = 0; i < K; ++i) {
+      xtrace += x(i, i);
+      ytrace += y(i, i);
     }
 
-    T& operator()(int i, int j) {
-        return buf[i * M + j];
+    return xtrace < ytrace;
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const StaticMatrix& a)
+  {
+    for (int i = 0; i < N; ++i) {
+      for (int j = 0; j < M; ++j) {
+        os << " " << a(i, j);
+      }
+      os << std::endl;
     }
-
-    T operator()(int i) const {
-        return buf[i];
-    }
-
-    T& operator()(int i) {
-        return buf[i];
-    }
-
-    const T* data() const {
-        return buf.data();
-    }
-
-    T* data() {
-        return buf.data();
-    }
-
-    template <typename U>
-    const static_matrix& operator=(const static_matrix<U,N,M> &y) {
-        for(int i = 0; i < N * M; ++i)
-            buf[i] = y.buf[i];
-        return *this;
-    }
-
-    template <typename U>
-    const static_matrix& operator+=(const static_matrix<U,N,M> &y) {
-        for(int i = 0; i < N * M; ++i)
-            buf[i] += y.buf[i];
-        return *this;
-    }
-
-    template <typename U>
-    const static_matrix& operator-=(const static_matrix<U,N,M> &y) {
-        for(int i = 0; i < N * M; ++i)
-            buf[i] -= y.buf[i];
-        return *this;
-    }
-
-    const static_matrix& operator*=(T c) {
-        for(int i = 0; i < N * M; ++i)
-            buf[i] *= c;
-        return *this;
-    }
-
-
-    friend static_matrix operator*(T a, static_matrix x)
-    {
-        return x *= a;
-    }
-
-    friend static_matrix operator-(static_matrix x)
-    {
-        for(int i = 0; i < N * M; ++i)
-            x.buf[i] = -x.buf[i];
-        return x;
-    }
-
-    friend bool operator<(const static_matrix &x, const static_matrix &y)
-    {
-        T xtrace = math::zero<T>();
-        T ytrace = math::zero<T>();
-
-        const int K = N < M ? N : M;
-
-        for(int i = 0; i < K; ++i) {
-            xtrace += x(i,i);
-            ytrace += y(i,i);
-        }
-
-        return xtrace < ytrace;
-    }
-
-    friend std::ostream& operator<<(std::ostream &os, const static_matrix &a) {
-        for(int i = 0; i < N; ++i) {
-            for(int j = 0; j < M; ++j) {
-                os << " " << a(i,j);
-            }
-            os << std::endl;
-        }
-        return os;
-    }
+    return os;
+  }
 };
 
 template <typename T, typename U, int N, int M>
-static_matrix<T, N, M> operator+(static_matrix<T, N, M> a, const static_matrix<U, N, M> &b)
+StaticMatrix<T, N, M> operator+(StaticMatrix<T, N, M> a, const StaticMatrix<U, N, M>& b)
 {
-    return a += b;
+  return a += b;
 }
 
 template <typename T, typename U, int N, int M>
-static_matrix<T, N, M> operator-(static_matrix<T, N, M> a, const static_matrix<U, N, M> &b)
+StaticMatrix<T, N, M> operator-(StaticMatrix<T, N, M> a, const StaticMatrix<U, N, M>& b)
 {
-    return a -= b;
+  return a -= b;
 }
 
 template <typename T, typename U, int N, int K, int M>
-static_matrix<T, N, M> operator*(
-        const static_matrix<T, N, K> &a,
-        const static_matrix<U, K, M> &b
-        )
+StaticMatrix<T, N, M> operator*(const StaticMatrix<T, N, K>& a, const StaticMatrix<U, K, M>& b)
 {
-    static_matrix<T, N, M> c;
-    for(int i = 0; i < N; ++i) {
-        for(int j = 0; j < M; ++j)
-            c(i,j) = math::zero<T>();
-        for(int k = 0; k < K; ++k) {
-            T aik = a(i,k);
-            for(int j = 0; j < M; ++j)
-                c(i,j) += aik * b(k,j);
-        }
+  StaticMatrix<T, N, M> c;
+  for (int i = 0; i < N; ++i) {
+    for (int j = 0; j < M; ++j)
+      c(i, j) = math::zero<T>();
+    for (int k = 0; k < K; ++k) {
+      T aik = a(i, k);
+      for (int j = 0; j < M; ++j)
+        c(i, j) += aik * b(k, j);
     }
-    return c;
+  }
+  return c;
 }
 
-template <class T> struct is_static_matrix : std::false_type {};
+template <class T> struct is_static_matrix : std::false_type
+{};
 
 template <class T, int N, int M>
-struct is_static_matrix< static_matrix<T, N, M> > : std::true_type {};
+struct is_static_matrix<StaticMatrix<T, N, M>> : std::true_type
+{};
 
-namespace backend {
+} // namespace Arcane::Alina
+
+namespace Arcane::Alina::backend
+{
 
 /// Enable static matrix as a value-type.
 template <typename T, int N, int M>
-struct is_builtin_vector< std::vector<static_matrix<T, N, M> > > : std::true_type {};
+struct is_builtin_vector<std::vector<StaticMatrix<T, N, M>>> : std::true_type
+{};
 
-} // namespace backend
+} // namespace Arcane::Alina::backend
 
-namespace math {
+namespace Arcane::Alina::math
+{
 
 /// Scalar type of a non-scalar type.
 template <class T, int N, int M>
-struct scalar_of< static_matrix<T, N, M> > {
-    typedef typename scalar_of<T>::type type;
+struct scalar_of<StaticMatrix<T, N, M>>
+{
+  typedef typename scalar_of<T>::type type;
 };
 
 /// Replace scalar type in the static matrix.
 template <class T, int N, int M, class S>
-struct replace_scalar<static_matrix<T, N, M>, S> {
-    typedef static_matrix<S, N, M> type;
+struct replace_scalar<StaticMatrix<T, N, M>, S>
+{
+  typedef StaticMatrix<S, N, M> type;
 };
 
 /// RHS type corresponding to a non-scalar type.
 template <class T, int N>
-struct rhs_of< static_matrix<T, N, N> > {
-    typedef static_matrix<T, N, 1> type;
+struct rhs_of<StaticMatrix<T, N, N>>
+{
+  typedef StaticMatrix<T, N, 1> type;
 };
 
 /// Element type of a non-scalar type
 template <class T, int N, int M>
-struct element_of< static_matrix<T, N, M> > {
-    typedef T type;
+struct element_of<StaticMatrix<T, N, M>>
+{
+  typedef T type;
 };
 
 /// Whether the value type is a statically sized matrix.
 template <class T, int N, int M>
-struct is_static_matrix< static_matrix<T, N, M> > : std::true_type {};
+struct is_static_matrix<StaticMatrix<T, N, M>> : std::true_type
+{};
 
 /// Number of rows for statically sized matrix types.
 template <class T, int N, int M>
-struct static_rows< static_matrix<T, N, M> > : std::integral_constant<int, N> {};
+struct static_rows<StaticMatrix<T, N, M>> : std::integral_constant<int, N>
+{};
 
 /// Number of columns for statically sized matrix types.
 template <class T, int N, int M>
-struct static_cols< static_matrix<T, N, M> > : std::integral_constant<int, M> {};
+struct static_cols<StaticMatrix<T, N, M>> : std::integral_constant<int, M>
+{};
 
 /// Specialization of conjugate transpose for static matrices.
 template <typename T, int N, int M>
-struct adjoint_impl< static_matrix<T, N, M> >
+struct adjoint_impl<StaticMatrix<T, N, M>>
 {
-    typedef static_matrix<T, M, N> return_type;
+  typedef StaticMatrix<T, M, N> return_type;
 
-    static static_matrix<T, M, N> get(const static_matrix<T, N, M> &x) {
-        static_matrix<T, M, N> y;
-        for(int i = 0; i < N; ++i)
-            for(int j = 0; j < M; ++j)
-                y(j,i) = math::adjoint(x(i,j));
-        return y;
-    }
+  static StaticMatrix<T, M, N> get(const StaticMatrix<T, N, M>& x)
+  {
+    StaticMatrix<T, M, N> y;
+    for (int i = 0; i < N; ++i)
+      for (int j = 0; j < M; ++j)
+        y(j, i) = math::adjoint(x(i, j));
+    return y;
+  }
 };
 
 /// Inner-product result of two static vectors.
 template <class T, int N>
-struct inner_product_impl< static_matrix<T, N, 1> >
+struct inner_product_impl<StaticMatrix<T, N, 1>>
 {
-    typedef T return_type;
-    static T get(const static_matrix<T, N, 1> &x, const static_matrix<T, N, 1> &y) {
-        T sum = math::zero<T>();
-        for(int i = 0; i < N; ++i)
-            sum += x(i) * math::adjoint(y(i));
-        return sum;
-    }
+  typedef T return_type;
+  static T get(const StaticMatrix<T, N, 1>& x, const StaticMatrix<T, N, 1>& y)
+  {
+    T sum = math::zero<T>();
+    for (int i = 0; i < N; ++i)
+      sum += x(i) * math::adjoint(y(i));
+    return sum;
+  }
 };
 
 /// Inner-product result of two static matrices.
 template <class T, int N, int M>
-struct inner_product_impl< static_matrix<T, N, M> >
+struct inner_product_impl<StaticMatrix<T, N, M>>
 {
-    typedef static_matrix<T, M, M> return_type;
+  typedef StaticMatrix<T, M, M> return_type;
 
-    static return_type get(const static_matrix<T, N, M> &x, const static_matrix<T, N, M> &y) {
-        static_matrix<T, M, M> p;
-        for(int i = 0; i < M; ++i) {
-            for(int j = 0; j < M; ++j) {
-                T sum = math::zero<T>();
-                for(int k = 0; k < N; ++k)
-                    sum += x(k,i) * math::adjoint(y(k,j));
-                p(i,j) = sum;
-            }
-        }
-        return p;
+  static return_type get(const StaticMatrix<T, N, M>& x, const StaticMatrix<T, N, M>& y)
+  {
+    StaticMatrix<T, M, M> p;
+    for (int i = 0; i < M; ++i) {
+      for (int j = 0; j < M; ++j) {
+        T sum = math::zero<T>();
+        for (int k = 0; k < N; ++k)
+          sum += x(k, i) * math::adjoint(y(k, j));
+        p(i, j) = sum;
+      }
     }
+    return p;
+  }
 };
 
 /// Implementation of Frobenius norm for static matrices.
 template <typename T, int N, int M>
-struct norm_impl< static_matrix<T, N, M> >
+struct norm_impl<StaticMatrix<T, N, M>>
 {
-    static typename math::scalar_of<T>::type get(const static_matrix<T, N, M> &x) {
-        T s = math::zero<T>();
-        for(int i = 0; i < N * M; ++i)
-            s += x(i) * math::adjoint(x(i));
-        return sqrt(math::norm(s));
-    }
+  static typename math::scalar_of<T>::type get(const StaticMatrix<T, N, M>& x)
+  {
+    T s = math::zero<T>();
+    for (int i = 0; i < N * M; ++i)
+      s += x(i) * math::adjoint(x(i));
+    return sqrt(math::norm(s));
+  }
 };
 
 /// Specialization of zero element for static matrices.
 template <typename T, int N, int M>
-struct zero_impl< static_matrix<T, N, M> >
+struct zero_impl<StaticMatrix<T, N, M>>
 {
-    static static_matrix<T, N, M> get() {
-        static_matrix<T, N, M> z;
-        for(int i = 0; i < N * M; ++i)
-            z(i) = math::zero<T>();
-        return z;
-    }
+  static StaticMatrix<T, N, M> get()
+  {
+    StaticMatrix<T, N, M> z;
+    for (int i = 0; i < N * M; ++i)
+      z(i) = math::zero<T>();
+    return z;
+  }
 };
 
 /// Specialization of zero element for static matrices.
 template <typename T, int N, int M>
-struct is_zero_impl< static_matrix<T, N, M> >
+struct is_zero_impl<StaticMatrix<T, N, M>>
 {
-    static bool get(const static_matrix<T, N, M> &x) {
-        for(int i = 0; i < N * M; ++i)
-            if (!math::is_zero(x(i))) return false;
-        return true;
-    }
+  static bool get(const StaticMatrix<T, N, M>& x)
+  {
+    for (int i = 0; i < N * M; ++i)
+      if (!math::is_zero(x(i)))
+        return false;
+    return true;
+  }
 };
 
 /// Specialization of identity for static matrices.
 template <typename T, int N>
-struct identity_impl< static_matrix<T, N, N> >
+struct identity_impl<StaticMatrix<T, N, N>>
 {
-    static static_matrix<T, N, N> get() {
-        static_matrix<T, N, N> I;
-        for(int i = 0; i < N; ++i)
-            for(int j = 0; j < N; ++j)
-                I(i,j) = static_cast<T>(i == j);
-        return I;
-    }
+  static StaticMatrix<T, N, N> get()
+  {
+    StaticMatrix<T, N, N> I;
+    for (int i = 0; i < N; ++i)
+      for (int j = 0; j < N; ++j)
+        I(i, j) = static_cast<T>(i == j);
+    return I;
+  }
 };
 
 /// Specialization of constant for static matrices.
 template <typename T, int N, int M>
-struct constant_impl< static_matrix<T, N, M> >
+struct constant_impl<StaticMatrix<T, N, M>>
 {
-    static static_matrix<T, N, M> get(T c) {
-        static_matrix<T, N, M> C;
-        for(int i = 0; i < N * M; ++i)
-            C(i) = c;
-        return C;
-    }
+  static StaticMatrix<T, N, M> get(T c)
+  {
+    StaticMatrix<T, N, M> C;
+    for (int i = 0; i < N * M; ++i)
+      C(i) = c;
+    return C;
+  }
 };
 
 /// Specialization of inversion for static matrices.
 template <typename T, int N>
-struct inverse_impl< static_matrix<T, N, N> >
+struct inverse_impl<StaticMatrix<T, N, N>>
 {
-    static static_matrix<T, N, N> get(static_matrix<T, N, N> A) {
-        std::array<T, N * N> buf;
-        std::array<int, N> p;
-        detail::inverse(N, A.data(), buf.data(), p.data());
-        return A;
-    }
+  static StaticMatrix<T, N, N> get(StaticMatrix<T, N, N> A)
+  {
+    std::array<T, N * N> buf;
+    std::array<int, N> p;
+    detail::inverse(N, A.data(), buf.data(), p.data());
+    return A;
+  }
 };
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
-} // namespace math
-} // namespace amgcl
+} // namespace Arcane::Alina::math
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif

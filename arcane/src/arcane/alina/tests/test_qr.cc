@@ -39,9 +39,9 @@ struct make_random<std::complex<T>>
 };
 
 template <class T, int N, int M>
-struct make_random<Alina::static_matrix<T, N, M>>
+struct make_random<Alina::StaticMatrix<T, N, M>>
 {
-  typedef Alina::static_matrix<T, N, M> matrix;
+  typedef Alina::StaticMatrix<T, N, M> matrix;
   static matrix get()
   {
     matrix A = Alina::math::zero<matrix>();
@@ -161,8 +161,8 @@ TEST(alina_test_qr, test_qr_factorize)
     qr_factorize<double, Alina::detail::col_major>(shape[i][0], shape[i][1]);
     qr_factorize<std::complex<double>, Alina::detail::row_major>(shape[i][0], shape[i][1]);
     qr_factorize<std::complex<double>, Alina::detail::col_major>(shape[i][0], shape[i][1]);
-    qr_factorize<Alina::static_matrix<double, 2, 2>, Alina::detail::row_major>(shape[i][0], shape[i][1]);
-    qr_factorize<Alina::static_matrix<double, 2, 2>, Alina::detail::col_major>(shape[i][0], shape[i][1]);
+    qr_factorize<Alina::StaticMatrix<double, 2, 2>, Alina::detail::row_major>(shape[i][0], shape[i][1]);
+    qr_factorize<Alina::StaticMatrix<double, 2, 2>, Alina::detail::col_major>(shape[i][0], shape[i][1]);
   }
 }
 
@@ -182,8 +182,8 @@ TEST(alina_test_qr, test_qr_solve)
     qr_solve<double, Alina::detail::col_major>(shape[i][0], shape[i][1]);
     qr_solve<std::complex<double>, Alina::detail::row_major>(shape[i][0], shape[i][1]);
     qr_solve<std::complex<double>, Alina::detail::col_major>(shape[i][0], shape[i][1]);
-    qr_solve<Alina::static_matrix<double, 2, 2>, Alina::detail::row_major>(shape[i][0], shape[i][1]);
-    qr_solve<Alina::static_matrix<double, 2, 2>, Alina::detail::col_major>(shape[i][0], shape[i][1]);
+    qr_solve<Alina::StaticMatrix<double, 2, 2>, Alina::detail::row_major>(shape[i][0], shape[i][1]);
+    qr_solve<Alina::StaticMatrix<double, 2, 2>, Alina::detail::col_major>(shape[i][0], shape[i][1]);
   }
 }
 

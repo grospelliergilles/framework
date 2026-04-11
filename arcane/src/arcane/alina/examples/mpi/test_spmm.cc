@@ -121,5 +121,5 @@ int main(int argc, char *argv[]) {
     } BOOST_SCOPE_EXIT_END
 
     test< double >();
-    test< Alina::static_matrix<double,2,2> >();
+    test< Alina::StaticMatrix<double,2,2> >();
 }

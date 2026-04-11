@@ -239,8 +239,8 @@ void solve_block(Alina::mpi_communicator comm,
                  const std::vector<double>& f,
                  Alina::eMatrixPartitionerType ptype)
 {
-  typedef Alina::static_matrix<double, B, B> val_type;
-  typedef Alina::static_matrix<double, B, 1> rhs_type;
+  typedef Alina::StaticMatrix<double, B, B> val_type;
+  typedef Alina::StaticMatrix<double, B, 1> rhs_type;
 
   typedef Alina::backend::BuiltinBackend<val_type> Backend;
 

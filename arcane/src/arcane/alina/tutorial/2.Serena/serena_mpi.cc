@@ -97,9 +97,9 @@ int main(int argc, char* argv[])
     << "Matrix " << argv[1] << ": " << rows << "x" << rows << std::endl;
 
   // Declare the backend and the solver types
-  typedef Alina::static_matrix<double, B, B> dmat_type;
-  typedef Alina::static_matrix<double, B, 1> dvec_type;
-  typedef Alina::static_matrix<float, B, B> fmat_type;
+  typedef Alina::StaticMatrix<double, B, B> dmat_type;
+  typedef Alina::StaticMatrix<double, B, 1> dvec_type;
+  typedef Alina::StaticMatrix<float, B, B> fmat_type;
   typedef Alina::backend::BuiltinBackend<dmat_type> DBackend;
   typedef Alina::backend::BuiltinBackend<fmat_type> FBackend;
 

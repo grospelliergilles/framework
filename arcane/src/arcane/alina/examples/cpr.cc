@@ -57,8 +57,8 @@ void solve_block_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::Pro
 {
   auto t1 = prof.scoped_tic("CPR");
 
-  typedef Alina::static_matrix<double, B, B> val_type;
-  typedef Alina::static_matrix<double, B, 1> rhs_type;
+  typedef Alina::StaticMatrix<double, B, B> val_type;
+  typedef Alina::StaticMatrix<double, B, 1> rhs_type;
   typedef Alina::backend::BuiltinBackend<val_type> SBackend;
   typedef Alina::backend::BuiltinBackend<double> PBackend;
 

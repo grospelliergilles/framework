@@ -32,6 +32,7 @@ template <class T> using Backend = Arcane::Alina::backend::BuiltinBackend<T>;
 #include <arcane/alina/profiler.h>
 
 using namespace Arcane;
+using namespace Arcane::Alina;
 
 #ifndef ARCANE_ALINA_BLOCK_SIZES
 #  define ARCANE_ALINA_BLOCK_SIZES (3)(4)
@@ -63,9 +64,9 @@ void solve_schur(const Matrix &K, const std::vector<double> &rhs, Alina::Propert
     auto t1 = prof.scoped_tic("schur_complement");
 
     prof.tic("setup");
-    Alina::PreconditionedSolver<
-        Alina::preconditioner::SchurPressureCorrectionPreconditioner<USolver, PSolver>,
-        Alina::SolverRuntime<Backend<double>>
+    PreconditionedSolver<
+        preconditioner::SchurPressureCorrectionPreconditioner<USolver, PSolver>,
+        SolverRuntime<Backend<double>>
         > solve(K, prm, bprm);
     prof.toc("setup");
 
@@ -85,11 +86,9 @@ void solve_schur(const Matrix &K, const std::vector<double> &rhs, Alina::Propert
 
 #define ARCANE_ALINA_BLOCK_PSOLVER(z, data, B) \
   case B: { \
-    typedef Backend<::Arcane::Alina::static_matrix<double, B, B>> BBackend; \
+    typedef Backend<StaticMatrix<double, B, B>> BBackend; \
     typedef ::Arcane::Alina::make_block_solver< \
-    ::Arcane::Alina::PreconditionerRuntime<BBackend>, \
-    ::Arcane::Alina::SolverRuntime<BBackend>> \
-    PSolver; \
+    PreconditionerRuntime<BBackend>, SolverRuntime<BBackend>> PSolver; \
     solve_schur<USolver, PSolver>(K, rhs, prm); \
   } break;
 
@@ -99,10 +98,7 @@ solve_schur(int pb, const Matrix& K, const std::vector<double>& rhs, Alina::Prop
 {
   switch (pb) {
   case 1: {
-    typedef Alina::PreconditionedSolver<
-    Alina::PreconditionerRuntime<Backend<double>>,
-    Alina::SolverRuntime<Backend<double>>>
-    PSolver;
+    typedef PreconditionedSolver<PreconditionerRuntime<Backend<double>>,SolverRuntime<Backend<double>>> PSolver;
     solve_schur<USolver, PSolver>(K, rhs, prm);
   } break;
 #if defined(SOLVER_BACKEND_BUILTIN)
@@ -115,11 +111,8 @@ solve_schur(int pb, const Matrix& K, const std::vector<double>& rhs, Alina::Prop
 
 #define ARCANE_ALINA_BLOCK_USOLVER(z, data, B) \
   case B: { \
-    typedef Backend<::Arcane::Alina::static_matrix<double, B, B>> BBackend; \
-    typedef ::Arcane::Alina::make_block_solver< \
-    ::Arcane::Alina::PreconditionerRuntime<BBackend>, \
-    ::Arcane::Alina::SolverRuntime<BBackend>> \
-    USolver; \
+    typedef Backend<StaticMatrix<double, B, B>> BBackend; \
+    typedef make_block_solver< PreconditionerRuntime<BBackend>, SolverRuntime<BBackend>> USolver; \
     solve_schur<USolver>(pb, K, rhs, prm); \
   } break;
 
@@ -129,8 +122,7 @@ void solve_schur(int ub, int pb, const Matrix& K, const std::vector<double>& rhs
 {
   switch (ub) {
   case 1: {
-    using USolver = Alina::PreconditionedSolver<Alina::PreconditionerRuntime<Backend<double>>,
-                                                Alina::SolverRuntime<Backend<double>>>;
+    using USolver = PreconditionedSolver<PreconditionerRuntime<Backend<double>>,SolverRuntime<Backend<double>>>;
     solve_schur<USolver>(pb, K, rhs, prm);
   } break;
 #if defined(SOLVER_BACKEND_BUILTIN)

@@ -96,9 +96,9 @@ int main(int argc, char *argv[]) {
     auto A = std::tie(rows, ptr, col, val);
 
     // Compose the solver type
-    typedef Alina::static_matrix<double, 3, 3> dmat_type; // matrix value type in double precision
-    typedef Alina::static_matrix<double, 3, 1> dvec_type; // the corresponding vector value type
-    typedef Alina::static_matrix<float,  3, 3> smat_type; // matrix value type in single precision
+    typedef Alina::StaticMatrix<double, 3, 3> dmat_type; // matrix value type in double precision
+    typedef Alina::StaticMatrix<double, 3, 1> dvec_type; // the corresponding vector value type
+    typedef Alina::StaticMatrix<float,  3, 3> smat_type; // matrix value type in single precision
 
     typedef Alina::backend::BuiltinBackend<dmat_type> SBackend; // the solver backend
     typedef Alina::backend::BuiltinBackend<smat_type> PBackend; // the preconditioner backend

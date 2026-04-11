@@ -75,8 +75,8 @@ int main(int argc, char *argv[]) {
     std::cout << "Coords " << argv[3] << ": " << ncoo << "x" << ndim << std::endl;
 
     // Declare the solver type
-    typedef Alina::static_matrix<double, 3, 3> DBlock;
-    typedef Alina::static_matrix<float, 3, 3> FBlock;
+    typedef Alina::StaticMatrix<double, 3, 3> DBlock;
+    typedef Alina::StaticMatrix<float, 3, 3> FBlock;
     typedef Alina::backend::BuiltinBackend<DBlock> SBackend; // the solver backend
     typedef Alina::backend::BuiltinBackend<FBlock> PBackend; // the preconditioner backend
 

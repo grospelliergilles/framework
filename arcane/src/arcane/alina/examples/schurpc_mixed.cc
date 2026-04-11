@@ -28,7 +28,7 @@ template <class T, int N, int M>
 using BlockMatrix = Eigen::Matrix<T, N, M>;
 #  else
      template <class T, int N, int M>
-     using BlockMatrix = Arcane::Alina::static_matrix<T, N, M>;
+     using BlockMatrix = Arcane::Alina::StaticMatrix<T, N, M>;
 #endif
 template <class T> using Backend = Arcane::Alina::backend::BuiltinBackend<T>;
 #endif

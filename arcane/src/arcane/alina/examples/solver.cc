@@ -64,8 +64,8 @@ std::tuple<size_t, double> block_solve(
         bool reorder
         )
 {
-    typedef Alina::static_matrix<double, B, B> value_type;
-    typedef Alina::static_matrix<double, B, 1> rhs_type;
+    typedef Alina::StaticMatrix<double, B, B> value_type;
+    typedef Alina::StaticMatrix<double, B, 1> rhs_type;
     typedef Alina::backend::BuiltinBackend<value_type> BBackend;
 
     typedef Alina::PreconditionedSolver<
@@ -138,8 +138,8 @@ std::tuple<size_t, double> block_solve(
         bool reorder
         )
 {
-    typedef Alina::static_matrix<double, B, B> value_type;
-    typedef Alina::static_matrix<double, B, 1> rhs_type;
+    typedef Alina::StaticMatrix<double, B, B> value_type;
+    typedef Alina::StaticMatrix<double, B, 1> rhs_type;
     typedef Alina::backend::vexcl<value_type> BBackend;
 
     typedef Alina::PreconditionedSolver<
