@@ -69,6 +69,17 @@ std::ostream& operator<<(std::ostream& os, eRelaxationType r);
 extern "C++" ARCANE_ALINA_EXPORT
 std::istream& operator>>(std::istream& in, eRelaxationType& r);
 
+#define ARCANE_ALINA_ALL_RUNTIME_RELAXATION() \
+      ARCANE_ALINA_RUNTIME_RELAXATION(GaussSeidelRelaxation);\
+      ARCANE_ALINA_RUNTIME_RELAXATION(ILU0Relaxation);\
+      ARCANE_ALINA_RUNTIME_RELAXATION(ILUKRelaxation);\
+      ARCANE_ALINA_RUNTIME_RELAXATION(ILUPRelaxation);\
+      ARCANE_ALINA_RUNTIME_RELAXATION(ILUTRelaxation);\
+      ARCANE_ALINA_RUNTIME_RELAXATION(DampedJacobiRelaxation);\
+      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI0Relaxation);\
+      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI1Relaxation);\
+      ARCANE_ALINA_RUNTIME_RELAXATION(ChebyshevRelaxation)
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -95,15 +106,7 @@ struct RuntimeRelaxation
     handle = call_constructor<::Arcane::Alina::relaxation::type>(A, prm, bprm); \
     break
 
-      ARCANE_ALINA_RUNTIME_RELAXATION(GaussSeidelRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILU0Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUKRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUPRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUTRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(DampedJacobiRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI0Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI1Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ChebyshevRelaxation);
+      ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
 
 #undef ARCANE_ALINA_RUNTIME_RELAXATION
 
@@ -121,15 +124,7 @@ struct RuntimeRelaxation
     delete static_cast<::Arcane::Alina::relaxation::type<Backend>*>(handle); \
     break
 
-      ARCANE_ALINA_RUNTIME_RELAXATION(GaussSeidelRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILU0Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUKRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUPRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUTRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(DampedJacobiRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI0Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI1Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ChebyshevRelaxation);
+      ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
 
 #undef ARCANE_ALINA_RUNTIME_RELAXATION
     }
@@ -148,15 +143,7 @@ struct RuntimeRelaxation
     call_apply_pre<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break
 
-      ARCANE_ALINA_RUNTIME_RELAXATION(GaussSeidelRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILU0Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUKRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUPRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUTRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(DampedJacobiRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI0Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI1Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ChebyshevRelaxation);
+      ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
 
 #undef ARCANE_ALINA_RUNTIME_RELAXATION
 
@@ -177,15 +164,7 @@ struct RuntimeRelaxation
     call_apply_post<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break
 
-      ARCANE_ALINA_RUNTIME_RELAXATION(GaussSeidelRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILU0Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUKRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUPRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUTRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(DampedJacobiRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI0Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI1Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ChebyshevRelaxation);
+      ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
 
 #undef ARCANE_ALINA_RUNTIME_RELAXATION
 
@@ -206,15 +185,7 @@ struct RuntimeRelaxation
     call_apply<Arcane::Alina::relaxation::type>(A, rhs, x); \
     break
 
-      ARCANE_ALINA_RUNTIME_RELAXATION(GaussSeidelRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILU0Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUKRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUPRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUTRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(DampedJacobiRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI0Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI1Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ChebyshevRelaxation);
+      ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
 
 #undef ARCANE_ALINA_RUNTIME_RELAXATION
 
@@ -231,15 +202,7 @@ struct RuntimeRelaxation
   case type: \
     return backend::bytes(*static_cast<::Arcane::Alina::relaxation::type<Backend>*>(handle))
 
-      ARCANE_ALINA_RUNTIME_RELAXATION(GaussSeidelRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILU0Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUKRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUPRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUTRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(DampedJacobiRelaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI0Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI1Relaxation);
-      ARCANE_ALINA_RUNTIME_RELAXATION(ChebyshevRelaxation);
+      ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
 
 #undef ARCANE_ALINA_RUNTIME_RELAXATION
 
