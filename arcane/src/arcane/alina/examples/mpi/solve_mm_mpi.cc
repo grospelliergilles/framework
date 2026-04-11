@@ -220,8 +220,8 @@ int main(int argc, char* argv[])
 
   // Read configuration from command line
   auto coarsening = Alina::eCoarserningType::smoothed_aggregation;
-  Alina::runtime::relaxation::type relaxation = Alina::runtime::relaxation::spai0;
-  Alina::runtime::solver::type iterative_solver = Alina::runtime::solver::bicgstabl;
+  Alina::runtime::relaxation::eRelaxationType relaxation = Alina::runtime::relaxation::spai0;
+  Alina::runtime::solver::eSolverType iterative_solver = Alina::runtime::solver::bicgstabl;
   auto direct_solver = Alina::eDistributedDirectSolverType::skyline_lu;
   std::string parameter_file;
   std::string A_file = "A.mtx";
@@ -237,10 +237,10 @@ int main(int argc, char* argv[])
   po::value<Alina::eCoarserningType>(&coarsening)->default_value(coarsening),
   "ruge_stuben, aggregation, smoothed_aggregation, smoothed_aggr_emin")(
   "relaxation,r",
-  po::value<Alina::runtime::relaxation::type>(&relaxation)->default_value(relaxation),
+  po::value<Alina::runtime::relaxation::eRelaxationType>(&relaxation)->default_value(relaxation),
   "gauss_seidel, ilu0, damped_jacobi, spai0, chebyshev")(
   "iter_solver,i",
-  po::value<Alina::runtime::solver::type>(&iterative_solver)->default_value(iterative_solver),
+  po::value<Alina::runtime::solver::eSolverType>(&iterative_solver)->default_value(iterative_solver),
   "cg, bicgstab, bicgstabl, gmres")(
   "dir_solver,d",
   po::value<Alina::eDistributedDirectSolverType>(&direct_solver)->default_value(direct_solver),

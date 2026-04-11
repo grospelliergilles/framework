@@ -41,7 +41,7 @@ namespace Arcane::Alina::runtime::relaxation
 /*---------------------------------------------------------------------------*/
 
 /// Relaxation schemes.
-enum type
+enum eRelaxationType
 {
   gauss_seidel, ///< Gauss-Seidel smoothing
   GaussSeidelRelaxation = gauss_seidel,
@@ -64,10 +64,10 @@ enum type
 };
 
 extern "C++" ARCANE_ALINA_EXPORT
-std::ostream& operator<<(std::ostream& os, type r);
+std::ostream& operator<<(std::ostream& os, eRelaxationType r);
 
 extern "C++" ARCANE_ALINA_EXPORT
-std::istream& operator>>(std::istream& in, type& r);
+std::istream& operator>>(std::istream& in, eRelaxationType& r);
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -77,7 +77,7 @@ struct RuntimeRelaxation
 {
   typedef Alina::PropertyTree params;
   typedef typename Backend::params backend_params;
-  type r;
+  eRelaxationType r;
   void* handle;
 
   template <class Matrix>

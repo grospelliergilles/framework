@@ -33,7 +33,7 @@ namespace Arcane::Alina::runtime::relaxation
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-std::ostream& operator<<(std::ostream& os, type r)
+std::ostream& operator<<(std::ostream& os, eRelaxationType r)
 {
   switch (r) {
   case gauss_seidel:
@@ -62,7 +62,7 @@ std::ostream& operator<<(std::ostream& os, type r)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-std::istream& operator>>(std::istream& in, type& r)
+std::istream& operator>>(std::istream& in, eRelaxationType& r)
 {
   std::string val;
   in >> val;

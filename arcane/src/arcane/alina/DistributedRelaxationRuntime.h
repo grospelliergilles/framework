@@ -46,7 +46,7 @@ struct DistributedRelaxationRuntime
   typedef typename Backend::params backend_params;
   typedef Alina::PropertyTree params;
 
-  runtime::relaxation::type r;
+  runtime::relaxation::eRelaxationType r;
   void* handle = nullptr;
 
   DistributedRelaxationRuntime(const DistributedMatrix<Backend>& A,

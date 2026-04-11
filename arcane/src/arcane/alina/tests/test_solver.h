@@ -28,8 +28,8 @@ template <class Backend, class Matrix>
 void test_solver(const Matrix& A,
                  std::shared_ptr<typename Backend::vector> const& f,
                  std::shared_ptr<typename Backend::vector>& x,
-                 Alina::runtime::solver::type solver,
-                 Alina::runtime::relaxation::type relaxation,
+                 Alina::runtime::solver::eSolverType solver,
+                 Alina::runtime::relaxation::eRelaxationType relaxation,
                  Alina::eCoarserningType coarsening,
                  typename Backend::params const& bprm,
                  bool test_null_space = false)
@@ -74,8 +74,8 @@ template <class Backend, class Matrix>
 void test_rap(const Matrix& A,
               std::shared_ptr<typename Backend::vector> const& f,
               std::shared_ptr<typename Backend::vector>& x,
-              Alina::runtime::solver::type solver,
-              Alina::runtime::relaxation::type relaxation,
+              Alina::runtime::solver::eSolverType solver,
+              Alina::runtime::relaxation::eRelaxationType relaxation,
               typename Backend::params const& bprm)
 {
   Alina::PropertyTree prm;
@@ -114,7 +114,7 @@ void test_problem(size_t n,
     Alina::eCoarserningType::ruge_stuben
   };
 
-  Alina::runtime::relaxation::type relaxation[] = {
+  Alina::runtime::relaxation::eRelaxationType relaxation[] = {
     Alina::runtime::relaxation::spai0,
     Alina::runtime::relaxation::spai1,
     Alina::runtime::relaxation::damped_jacobi,
@@ -126,7 +126,7 @@ void test_problem(size_t n,
     Alina::runtime::relaxation::chebyshev
   };
 
-  Alina::runtime::solver::type solver[] = {
+  Alina::runtime::solver::eSolverType solver[] = {
     Alina::runtime::solver::cg,
     Alina::runtime::solver::bicgstab,
     Alina::runtime::solver::bicgstabl,
@@ -142,7 +142,7 @@ void test_problem(size_t n,
   auto x = Backend::create_vector(n, prm);
 
   // Test solvers
-  for (Alina::runtime::solver::type s : solver) {
+  for (Alina::runtime::solver::eSolverType s : solver) {
     std::cout << "Solver: " << s << std::endl;
     try {
       test_solver<Backend>(Alina::adapter::zero_copy_direct(n, ptr.data(), col.data(), val.data()),
@@ -153,7 +153,7 @@ void test_problem(size_t n,
   }
 
   // Test smoothers
-  for (Alina::runtime::relaxation::type r : relaxation) {
+  for (Alina::runtime::relaxation::eRelaxationType r : relaxation) {
     std::cout << "Relaxation: " << r << std::endl;
     try {
       test_solver<Backend>(Alina::adapter::zero_copy_direct(n, ptr.data(), col.data(), val.data()),

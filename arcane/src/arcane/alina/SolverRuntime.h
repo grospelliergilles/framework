@@ -48,7 +48,7 @@ namespace Arcane::Alina::runtime::solver
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-enum type
+enum eSolverType
 {
   cg, ///< Conjugate gradients method
   ConjugateGradientSolver = cg, ///< Conjugate gradients method
@@ -70,7 +70,7 @@ enum type
   PreconditionerOnlySolver = preonly
 };
 
-inline std::ostream& operator<<(std::ostream& os, type s)
+inline std::ostream& operator<<(std::ostream& os, eSolverType s)
 {
   switch (s) {
   case cg:
@@ -96,7 +96,7 @@ inline std::ostream& operator<<(std::ostream& os, type s)
   }
 }
 
-inline std::istream& operator>>(std::istream& in, type& s)
+inline std::istream& operator>>(std::istream& in, eSolverType& s)
 {
   std::string val;
   in >> val;
@@ -152,7 +152,7 @@ struct SolverRuntime
   typedef typename math::scalar_of<value_type>::type scalar_type;
   typedef Backend backend_type;
 
-  type s;
+  eSolverType s;
   void* handle = nullptr;
 
   explicit SolverRuntime(size_t n, params prm = params(),
