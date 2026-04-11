@@ -5,11 +5,11 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* RuntimeCoarsening.h                                         (C) 2000-2026 */
+/* CoarseningRuntime.h                                         (C) 2000-2026 */
 /*                                                                           */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_RUNTIMECOARSENING_H
-#define ARCANE_ALINA_RUNTIMECOARSENING_H
+#ifndef ARCANE_ALINA_COARSENINGRUNTIME_H
+#define ARCANE_ALINA_COARSENINGRUNTIME_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -39,7 +39,7 @@ namespace Arcane::Alina::runtime::coarsening
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-enum type
+enum class eCoarserningType
 {
   ruge_stuben, ///< Ruge-Stueben coarsening
   RugeStubenCoarsening = ruge_stuben,
@@ -51,16 +51,16 @@ enum type
   SmoothedAggregationEnergyMinCoarsening = smoothed_aggr_emin
 };
 
-inline std::ostream& operator<<(std::ostream& os, type c)
+inline std::ostream& operator<<(std::ostream& os, eCoarserningType c)
 {
   switch (c) {
-  case ruge_stuben:
+  case eCoarserningType::ruge_stuben:
     return os << "ruge_stuben";
-  case aggregation:
+  case eCoarserningType::aggregation:
     return os << "aggregation";
-  case smoothed_aggregation:
+  case eCoarserningType::smoothed_aggregation:
     return os << "smoothed_aggregation";
-  case smoothed_aggr_emin:
+  case eCoarserningType::smoothed_aggr_emin:
     return os << "smoothed_aggr_emin";
   default:
     return os << "???";
@@ -70,19 +70,19 @@ inline std::ostream& operator<<(std::ostream& os, type c)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-inline std::istream& operator>>(std::istream& in, type& c)
+inline std::istream& operator>>(std::istream& in, eCoarserningType& c)
 {
   std::string val;
   in >> val;
 
   if (val == "ruge_stuben")
-    c = ruge_stuben;
+    c = eCoarserningType::ruge_stuben;
   else if (val == "aggregation")
-    c = aggregation;
+    c = eCoarserningType::aggregation;
   else if (val == "smoothed_aggregation")
-    c = smoothed_aggregation;
+    c = eCoarserningType::smoothed_aggregation;
   else if (val == "smoothed_aggr_emin")
-    c = smoothed_aggr_emin;
+    c = eCoarserningType::smoothed_aggr_emin;
   else
     throw std::invalid_argument("Invalid coarsening value. Valid choices are: "
                                 "ruge_stuben, aggregation, smoothed_aggregation, smoothed_aggr_emin.");
@@ -97,12 +97,12 @@ template <class Backend>
 struct CoarseningRuntime
 {
   typedef Alina::PropertyTree params;
-  type c;
+  eCoarserningType c;
   bool as_scalar;
   void* handle = nullptr;
 
   explicit CoarseningRuntime(params prm = params())
-  : c(prm.get("type", runtime::coarsening::smoothed_aggregation))
+  : c(prm.get("type", runtime::coarsening::eCoarserningType::smoothed_aggregation))
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");
@@ -111,13 +111,13 @@ struct CoarseningRuntime
     const bool block_value_type = math::static_rows<value_type>::value > 1;
 
     as_scalar = (block_value_type &&
-                 c != ruge_stuben &&
+                 c != eCoarserningType::ruge_stuben &&
                  prm.get("nullspace.cols", 0) > 0);
     std::cout << "PreconditionerCoarseningType=" << c << "\n";
     switch (c) {
 
 #define ARCANE_ALINA_RUNTIME_COARSENING(t) \
-  case t: \
+  case eCoarserningType::t: \
     if (as_scalar) { \
       handle = call_constructor<Arcane::Alina::coarsening::as_scalar<Arcane::Alina::coarsening::t>::type>(prm); \
     } \
@@ -143,7 +143,7 @@ struct CoarseningRuntime
     switch (c) {
 
 #define ARCANE_ALINA_RUNTIME_COARSENING(t) \
-  case t: \
+  case eCoarserningType::t: \
     if (as_scalar) { \
       call_destructor<Arcane::Alina::coarsening::as_scalar<::Arcane::Alina::coarsening::t>::type>(); \
     } \
@@ -168,7 +168,7 @@ struct CoarseningRuntime
     switch (c) {
 
 #define ARCANE_ALINA_RUNTIME_COARSENING(t) \
-  case t: \
+  case eCoarserningType::t: \
     if (as_scalar) { \
       return make_operators<::Arcane::Alina::coarsening::as_scalar<::Arcane::Alina::coarsening::t>::type>(A); \
     } \
@@ -192,7 +192,7 @@ struct CoarseningRuntime
     switch (c) {
 
 #define ARCANE_ALINA_RUNTIME_COARSENING(t) \
-  case t: \
+      case eCoarserningType::t:            \
     if (as_scalar) { \
       return make_coarse<::Arcane::Alina::coarsening::as_scalar<::Arcane::Alina::coarsening::t>::type>(A, P, R); \
     } \

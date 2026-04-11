@@ -112,20 +112,17 @@ struct nullspace_params
       size_t rows = 0;
       rows = p.get("rows", rows);
 
-      precondition(cols > 0,
-                   "Error in nullspace parameters: "
-                   "B is set, but cols is not");
+      precondition(cols > 0, "Error in nullspace parameters: "
+                             "B is set, but cols is not");
 
-      precondition(rows > 0,
-                   "Error in nullspace parameters: "
-                   "B is set, but rows is not");
+      precondition(rows > 0, "Error in nullspace parameters: "
+                             "B is set, but rows is not");
 
       B.assign(b, b + rows * cols);
     }
     else {
-      precondition(cols == 0,
-                   "Error in nullspace parameters: "
-                   "cols > 0, but B is empty");
+      precondition(cols == 0, "Error in nullspace parameters: "
+                              "cols > 0, but B is empty");
     }
 
     check_params(p, { "cols", "rows", "B" });
@@ -623,7 +620,7 @@ class pointwise_aggregates
  * \defgroup coarsening Coarsening strategies
  * \brief Coarsening strategies for AMG hirarchy construction.
  *
- * A coarsener in AMGCL is a class that takes a system matrix and returns three
+ * A coarsener is a class that takes a system matrix and returns three
  * operators:
  *
  * 1. Restriction operator R that downsamples the residual error to a
@@ -930,7 +927,7 @@ struct RugeStubenCoarsening
      * fixed} \quad 0 < \varepsilon_{str} < 1.\f] In practice, a value of
      * \f$\varepsilon_{str}=0.25\f$ is usually taken.
      */
-    float eps_strong;
+    float eps_strong = 0.25f;
 
     /*!
      * \brief Truncate prolongation operator?
@@ -943,16 +940,12 @@ struct RugeStubenCoarsening
      * so that the total sum remains unchanged. In practice, a value of
      * \f$\varepsilon_{tr}=0.2\f$ is usually taken.
      */
-    bool do_trunc;
+    bool do_trunc = true;
 
     /// Truncation parameter \f$\varepsilon_{tr}\f$.
-    float eps_trunc;
+    float eps_trunc = 0.2f;
 
-    params()
-    : eps_strong(0.25f)
-    , do_trunc(true)
-    , eps_trunc(0.2f)
-    {}
+    params() = default;
 
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_strong)
