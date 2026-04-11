@@ -129,7 +129,7 @@ class DistributedPreconditioner
       delete static_cast<AMGPrecondType*>(handle);
     } break;
     case eDistributedPreconditionerType::relaxation: {
-      typedef Alina::as_preconditioner<DistributedRelaxationRuntime<Backend>>
+      typedef Alina::AsDistributedPreconditioner<DistributedRelaxationRuntime<Backend>>
       Precond;
 
       delete static_cast<Precond*>(handle);
@@ -161,7 +161,7 @@ class DistributedPreconditioner
       static_cast<AMGPrecondType*>(handle)->apply(rhs, x);
     } break;
     case eDistributedPreconditionerType::relaxation: {
-      typedef Alina::as_preconditioner<DistributedRelaxationRuntime<Backend>> Precond;
+      typedef Alina::AsDistributedPreconditioner<DistributedRelaxationRuntime<Backend>> Precond;
 
       static_cast<Precond*>(handle)->apply(rhs, x);
     } break;
@@ -178,7 +178,7 @@ class DistributedPreconditioner
       return static_cast<AMGPrecondType*>(handle)->system_matrix_ptr();
     }
     case eDistributedPreconditionerType::relaxation: {
-      typedef as_preconditioner<DistributedRelaxationRuntime<Backend>> Precond;
+      typedef AsDistributedPreconditioner<DistributedRelaxationRuntime<Backend>> Precond;
 
       return static_cast<Precond*>(handle)->system_matrix_ptr();
     }
@@ -199,7 +199,7 @@ class DistributedPreconditioner
       return os << *static_cast<AMGPrecondType*>(p.handle);
     }
     case eDistributedPreconditionerType::relaxation: {
-      typedef as_preconditioner<DistributedRelaxationRuntime<Backend>> Precond;
+      typedef AsDistributedPreconditioner<DistributedRelaxationRuntime<Backend>> Precond;
 
       return os << *static_cast<Precond*>(p.handle);
     }
@@ -223,7 +223,7 @@ class DistributedPreconditioner
       handle = static_cast<void*>(new AMGPrecondType(A->comm(), A, prm, bprm));
     } break;
     case eDistributedPreconditionerType::relaxation: {
-      typedef as_preconditioner<DistributedRelaxationRuntime<Backend>> Precond;
+      typedef AsDistributedPreconditioner<DistributedRelaxationRuntime<Backend>> Precond;
 
       handle = static_cast<void*>(new Precond(A->comm(), A, prm, bprm));
     } break;

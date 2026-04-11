@@ -246,15 +246,15 @@ int main(int argc, char* argv[])
                               block_size);
 
   prof.tic("setup");
-  typedef Alina::DistributedPreconditionedSolver<
+  typedef DistributedPreconditionedSolver<
   Alina::mpi::DistributedCPRPreconditioner<
   DistributedAMG<Backend,
                  DistributedCoarseningRuntime<Backend>,
                  DistributedRelaxationRuntime<Backend>,
                  DistributedDirectSolverRuntime<double>,
                  MatrixPartitionerRuntime<Backend>>,
-  Alina::as_preconditioner<Alina::DistributedRelaxationRuntime<Backend>>>,
-  Alina::DistributedSolverRuntime<Backend>>
+    AsDistributedPreconditioner<DistributedRelaxationRuntime<Backend>>>,
+    DistributedSolverRuntime<Backend>>
   Solver;
 
   Solver solve(comm, A, prm);

@@ -285,9 +285,11 @@ struct DistributedSPAI1Relaxation
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
+/*!
+ * \brief Use a relaxation as a distributed preconditioner.
+ */
 template <class Relaxation>
-struct as_preconditioner
+struct AsDistributedPreconditioner
 {
   typedef typename Relaxation::params params;
   typedef typename Relaxation::backend_type backend_type;
@@ -298,20 +300,20 @@ struct as_preconditioner
   typedef typename backend_type::vector vector;
 
   template <class Matrix>
-  as_preconditioner(mpi_communicator comm,
-                    const Matrix& A,
-                    const params& prm = params(),
-                    const backend_params& bprm = backend_params())
+  AsDistributedPreconditioner(mpi_communicator comm,
+                              const Matrix& A,
+                              const params& prm = params(),
+                              const backend_params& bprm = backend_params())
   : A(std::make_shared<matrix>(comm, A, backend::rows(A)))
   , S(A, prm, bprm)
   {
     this->A->move_to_backend(bprm);
   }
 
-  as_preconditioner(mpi_communicator,
-                    std::shared_ptr<matrix> A,
-                    const params& prm = params(),
-                    const backend_params& bprm = backend_params())
+  AsDistributedPreconditioner(mpi_communicator,
+                              std::shared_ptr<matrix> A,
+                              const params& prm = params(),
+                              const backend_params& bprm = backend_params())
   : A(A)
   , S(*A, prm, bprm)
   {
@@ -339,7 +341,7 @@ struct as_preconditioner
   std::shared_ptr<matrix> A;
   Relaxation S;
 
-  friend std::ostream& operator<<(std::ostream& os, const as_preconditioner& p)
+  friend std::ostream& operator<<(std::ostream& os, const AsDistributedPreconditioner& p)
   {
     os << "Relaxation as preconditioner" << std::endl;
     os << "  unknowns: " << p.system_matrix().glob_rows() << std::endl;
