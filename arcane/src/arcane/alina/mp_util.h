@@ -25,7 +25,7 @@
 
 #include <arccore/message_passing_mpi/StandaloneMpiMessagePassingMng.h>
 
-#include <arcane/alina/value_type_backend_interface.h>
+#include <arcane/alina/ValueTypeInterface.h>
 
 #include <vector>
 #include <numeric>

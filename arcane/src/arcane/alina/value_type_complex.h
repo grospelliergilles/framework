@@ -32,7 +32,7 @@ THE SOFTWARE.
  */
 
 #include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/value_type_backend_interface.h>
+#include <arcane/alina/ValueTypeInterface.h>
 
 namespace Arcane::Alina {
 namespace backend {

@@ -33,7 +33,7 @@ THE SOFTWARE.
  * Falls through to backend::inner_product().
  */
 
-#include <arcane/alina/value_type_backend_interface.h>
+#include <arcane/alina/ValueTypeInterface.h>
 
 namespace Arcane::Alina {
 namespace detail {

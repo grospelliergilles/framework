@@ -84,7 +84,7 @@
 #include <cmath>
 
 #include <arcane/alina/util.h>
-#include <arcane/alina/value_type_backend_interface.h>
+#include <arcane/alina/ValueTypeInterface.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

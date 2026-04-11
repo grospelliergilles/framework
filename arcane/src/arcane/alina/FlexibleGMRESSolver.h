@@ -29,7 +29,7 @@
 #include <tuple>
 #include <iostream>
 
-#include <arcane/alina/value_type_backend_interface.h>
+#include <arcane/alina/ValueTypeInterface.h>
 #include <arcane/alina/solver_detail_default_inner_product.h>
 #include <arcane/alina/solver_detail_givens_rotations.h>
 #include <arcane/alina/util.h>

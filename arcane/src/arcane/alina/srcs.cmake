@@ -59,7 +59,7 @@ set(ARCANE_SOURCES
   SolverRuntime.h
   SkylineLUSolver.h
   util.h
-  value_type_backend_interface.h
+        ValueTypeInterface.h
   value_type_complex.h
   value_type_eigen.h
   value_type_static_matrix.h

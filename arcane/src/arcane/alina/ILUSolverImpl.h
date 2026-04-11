@@ -23,7 +23,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/value_type_backend_interface.h>
+#include <arcane/alina/ValueTypeInterface.h>
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/HybridBuiltinBackend.h>
 #include <arcane/alina/util.h>

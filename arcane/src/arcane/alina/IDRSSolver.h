@@ -42,7 +42,7 @@
 #include <tuple>
 #include <random>
 
-#include <arcane/alina/value_type_backend_interface.h>
+#include <arcane/alina/ValueTypeInterface.h>
 #include <arcane/alina/solver_detail_default_inner_product.h>
 #include <arcane/alina/util.h>
 #include <arcane/alina/mp_util.h>
