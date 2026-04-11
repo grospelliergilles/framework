@@ -36,7 +36,7 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/IO.h>
 
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 #include "sample_problem.h"
 
@@ -46,7 +46,7 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 
 using namespace Arcane;
 
-namespace Arcane::Alina { profiler<> prof; }
+namespace Arcane::Alina { Profiler prof; }
 using Alina::prof;
 using Alina::precondition;
 

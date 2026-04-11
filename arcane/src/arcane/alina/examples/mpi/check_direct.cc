@@ -14,11 +14,11 @@
 #include <boost/program_options.hpp>
 
 #include <arcane/alina/DistributedDirectSolverRuntime.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 namespace Arcane::Alina
 {
-profiler<> prof;
+Profiler prof;
 }
 
 using namespace Arcane;

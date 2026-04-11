@@ -8,7 +8,7 @@
 #include <arcane/alina/Coarsening.h>
 #include <arcane/alina/Relaxation.h>
 #include <arcane/alina/ConjugateGradientSolver.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 using namespace Arcane;
 
@@ -101,8 +101,7 @@ template<> struct row_begin_impl<sparse_matrix> {
 
 } // namespace backend
 
-
-profiler<> prof;
+Profiler prof;
 } // namespace amgcl
 
 using Alina::prof;

@@ -8,7 +8,7 @@
 #include <arcane/alina/Relaxation.h>
 #include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 #include <boost/assign/std/vector.hpp>
 using namespace boost::assign;
@@ -19,7 +19,7 @@ using namespace Arcane;
 
 namespace
 {
-Arcane::Alina::profiler<> prof;
+Arcane::Alina::Profiler prof;
 }
 
 //---------------------------------------------------------------------------

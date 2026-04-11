@@ -14,7 +14,7 @@
 #include <arcane/alina/GMRESSolver.h>
 
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 #include "sample_problem.h"
 
@@ -23,7 +23,7 @@ using namespace Arcane::Alina;
 
 namespace
 {
-profiler<> prof;
+Profiler prof;
 }
 
 TEST(alina_test_complex, complex_matrix_adapter)

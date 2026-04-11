@@ -9,7 +9,7 @@
 #include <arcane/alina/Coarsening.h>
 #include <arcane/alina/Relaxation.h>
 #include <arcane/alina/ConjugateGradientSolver.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 #include "sample_problem.h"
 
@@ -18,7 +18,7 @@ using namespace Arcane::Alina;
 
 namespace
 {
-profiler<> prof;
+Profiler prof;
 }
 
 //---------------------------------------------------------------------------

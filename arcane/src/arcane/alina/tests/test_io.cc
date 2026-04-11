@@ -2,14 +2,14 @@
 
 #include <arcane/alina/IO.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 #include "sample_problem.h"
 
 using namespace Arcane;
 
 namespace
 {
-Arcane::Alina::profiler<> prof;
+Arcane::Alina::Profiler prof;
 }
 
 TEST(alina_test_io, io_mm)

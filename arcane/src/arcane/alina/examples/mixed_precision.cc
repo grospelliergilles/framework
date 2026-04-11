@@ -7,7 +7,7 @@
 #include <arcane/alina/Coarsening.h>
 #include <arcane/alina/Relaxation.h>
 #include <arcane/alina/ConjugateGradientSolver.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 #ifndef SOLVER_BACKEND_BUILTIN
 #define SOLVER_BACKEND_BUILTIN
@@ -23,7 +23,7 @@ using namespace Arcane::Alina;
 
 namespace
 {
-profiler<> prof;
+Profiler prof;
 }
 
 int main()

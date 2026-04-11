@@ -24,7 +24,7 @@
 #include <arcane/alina/DistributedSolverRuntime.h>
 
 #include <arcane/alina/IO.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 #ifndef ARCANE_ALINA_BLOCK_SIZES
 #  define ARCANE_ALINA_BLOCK_SIZES (3)(4)
@@ -33,7 +33,7 @@
 using namespace Arcane;
 
 namespace Arcane::Alina {
-    profiler<> prof;
+    Profiler prof;
 }
 
 namespace math = Alina::math;

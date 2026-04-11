@@ -7,7 +7,7 @@
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/DistributedMatrix.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 #include "domain_partition.h"
 
@@ -15,7 +15,7 @@ using namespace Arcane;
 
 namespace Arcane::Alina
 {
-profiler<> prof;
+Profiler prof;
 }
 
 struct renumbering

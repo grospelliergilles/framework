@@ -10,11 +10,11 @@
 #include <arcane/alina/Coarsening.h>
 #include <arcane/alina/Relaxation.h>
 #include <arcane/alina/BiCGStabSolver.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 namespace Arcane::Alina
 {
-profiler<> prof("v2");
+Profiler prof("v2");
 }
 using namespace Arcane;
 

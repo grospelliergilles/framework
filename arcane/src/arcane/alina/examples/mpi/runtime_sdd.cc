@@ -47,13 +47,13 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #include <arcane/alina/DistributedSolverRuntime.h>
 #include <arcane/alina/DistributedSubDomainDeflation.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 using namespace Arcane;
 
 namespace Arcane::Alina
 {
-profiler<> prof;
+Profiler prof;
 }
 
 struct partitioned_deflation

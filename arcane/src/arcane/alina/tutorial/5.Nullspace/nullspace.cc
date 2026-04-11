@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include <arcane/alina/ConjugateGradientSolver.h>
 
 #include <arcane/alina/IO.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 using namespace Arcane;
 using namespace Arcane::Alina;
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
   }
 
   // The profiler:
-  Alina::profiler<> prof("Nullspace");
+  Alina::Profiler prof("Nullspace");
 
   // Read the system matrix, the RHS, and the coordinates:
   ptrdiff_t rows, cols, ndim, ncoo;

@@ -29,16 +29,16 @@ template <class T> using Backend = Arcane::Alina::backend::BuiltinBackend<T>;
 #include <arcane/alina/Adapters.h>
 
 #include <arcane/alina/IO.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
-using namespace Arcane;
+   using namespace Arcane;
 using namespace Arcane::Alina;
 
 #ifndef ARCANE_ALINA_BLOCK_SIZES
 #  define ARCANE_ALINA_BLOCK_SIZES (3)(4)
 #endif
 
-namespace Arcane::Alina { profiler<> prof; }
+namespace Arcane::Alina { Profiler prof; }
 using Alina::prof;
 using Alina::precondition;
 

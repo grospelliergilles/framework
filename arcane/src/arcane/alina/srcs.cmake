@@ -6,7 +6,7 @@ set(ARCANE_SOURCES
   AlinaLib.cc
   AlinaLibMPI.h
   AlinaLibMPI.cc
-        AMG.h
+  AMG.h
   BlockCSRBackend.h
   BuiltinBackend.h
   HybridBuiltinBackend.h
@@ -20,10 +20,10 @@ set(ARCANE_SOURCES
   DeflatedSolver.h
   DenseMatrixInverseImpl.h
   QRFactorizationImpl.h
-        SparseMatrixMatrixProduct.h
+  SparseMatrixMatrixProduct.h
   EigenAdapter.h
   EigenBackend.h
-        IO.h
+  IO.h
   ios_saver.h
   make_block_solver.h
   PreconditionedSolver.h
@@ -33,31 +33,32 @@ set(ARCANE_SOURCES
   DummyPreconditioner.h
   PreconditionerRuntime.h
   SchurPressureCorrectionPreconditioner.h
-  profiler.h
+  Profiler.h
+  Profiler.cc
   relaxation_cusparse_ilu0.h
   ILUSolverImpl.h
   RelaxationRuntime.h
   RelaxationRuntime.cc
   Relaxation.h
-        CuthillMcKeeReorderer.h
+  CuthillMcKeeReorderer.h
   BiCGStabSolver.h
   FlexibleGMRESSolver.h
   ConjugateGradientSolver.h
-        EigenSolver.h
+  EigenSolver.h
   FlexibleGMRESSolver.h
   GMRESSolver.h
   IDRSSolver.h
   LooseGMRESSolver.h
-        SolverUtils.h
+  SolverUtils.h
   PreconditionerOnlySolver.h
   RichardsonSolver.h
   SolverRuntime.h
   SkylineLUSolver.h
   util.h
-        ValueTypeInterface.h
-        ValueTypeComplex.h
-        ValueTypeEigen.h
-        StaticMatrix.h
+  ValueTypeInterface.h
+  ValueTypeComplex.h
+  ValueTypeEigen.h
+  StaticMatrix.h
 
   DistributedAMG.h
   DistributedCoarsening.h

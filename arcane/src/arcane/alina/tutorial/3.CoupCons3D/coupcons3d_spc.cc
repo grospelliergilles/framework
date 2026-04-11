@@ -45,7 +45,7 @@ THE SOFTWARE.
 #include <arcane/alina/Relaxation.h>
 
 #include <arcane/alina/IO.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 using namespace Arcane;
 
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
     }
 
     // The profiler:
-    Alina::profiler<> prof("CoupCons3D");
+    Alina::Profiler prof("CoupCons3D");
 
     // Read the system matrix:
     ptrdiff_t rows, cols;

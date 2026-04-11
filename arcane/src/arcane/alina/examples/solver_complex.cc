@@ -18,7 +18,7 @@
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/IO.h>
 
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 #include "sample_problem.h"
 
@@ -30,7 +30,7 @@ using namespace Arcane::Alina;
 
 namespace Arcane::Alina
 {
-profiler<> prof;
+Profiler prof;
 }
 using Alina::precondition;
 using Alina::prof;

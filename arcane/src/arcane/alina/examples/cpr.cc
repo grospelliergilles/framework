@@ -15,11 +15,11 @@
 #include <arcane/alina/CPRPreconditioner.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/IO.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 using namespace Arcane;
 
-namespace Arcane::Alina { profiler<> prof; }
+namespace Arcane::Alina { Profiler prof; }
 using Alina::prof;
 using Alina::precondition;
 

@@ -17,7 +17,7 @@
 #include <arcane/alina/DistributedSolverRuntime.h>
 #include <arcane/alina/DistributedDirectSolverRuntime.h>
 #include <arcane/alina/MatrixPartitionerRuntime.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 #include <arcane/alina/util.h>
 
 using namespace Arcane;
@@ -25,7 +25,7 @@ using namespace Arcane::Alina;
 
 namespace Arcane::Alina
 {
-profiler<> prof;
+Profiler prof;
 }
 
 using Alina::prof;

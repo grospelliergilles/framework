@@ -3,12 +3,12 @@
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/SkylineLUSolver.h>
 #include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 #include "sample_problem.h"
 
 namespace
 {
-Arcane::Alina::profiler<> prof;
+Arcane::Alina::Profiler prof;
 }
 
 using namespace Arcane;

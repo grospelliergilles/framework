@@ -43,16 +43,16 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/RelaxationRuntime.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
-using namespace Arcane;
+   using namespace Arcane;
 using namespace Arcane::Alina;
 
 #include "domain_partition.h"
 
 namespace Arcane::Alina
 {
-profiler<> prof;
+Profiler prof;
 }
 
 struct deflation_vectors

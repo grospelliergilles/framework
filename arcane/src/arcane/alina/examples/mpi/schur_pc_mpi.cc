@@ -36,10 +36,10 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #include <arcane/alina/DistributedSubDomainDeflation.h>
 #include <arcane/alina/DistributedSolverRuntime.h>
 #include <arcane/alina/DistributedDirectSolverRuntime.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 namespace Arcane::Alina {
-    profiler<> prof;
+    Profiler prof;
 }
 
 using namespace Arcane;

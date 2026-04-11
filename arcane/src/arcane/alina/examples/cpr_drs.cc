@@ -30,11 +30,11 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #include <arcane/alina/CPRDynamicRowSumPreconditioner.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/IO.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
-using namespace Arcane;
+   using namespace Arcane;
 
-namespace Arcane::Alina { profiler<> prof; }
+namespace Arcane::Alina { Profiler prof; }
 using Alina::prof;
 using Alina::precondition;
 

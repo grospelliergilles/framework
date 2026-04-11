@@ -43,7 +43,7 @@ THE SOFTWARE.
 #include <arcane/alina/Adapters.h>
 
 #include <arcane/alina/IO.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 using namespace Arcane;
 
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
     }
 
     // The profiler:
-    Alina::profiler<> prof("Serena");
+    Alina::Profiler prof("Serena");
 
     // Read the system matrix:
     ptrdiff_t rows, cols;

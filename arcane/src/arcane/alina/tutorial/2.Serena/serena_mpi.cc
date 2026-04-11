@@ -44,7 +44,7 @@ THE SOFTWARE.
 #include <arcane/alina/DistributedSolver.h>
 
 #include <arcane/alina/IO.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 #if defined(ARCANE_ALINA_HAVE_PARMETIS)
 #include <arcane/alina/ParmetisMatrixPartitioner.h>
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
   Alina::mpi_communicator world(MPI_COMM_WORLD);
 
   // The profiler:
-  Alina::profiler<> prof("Serena MPI");
+  Alina::Profiler prof("Serena MPI");
 
   prof.tic("read");
   // Get the global size of the matrix:

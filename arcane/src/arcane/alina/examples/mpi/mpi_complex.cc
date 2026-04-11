@@ -14,14 +14,14 @@
 #include <arcane/alina/DistributedSolverRuntime.h>
 
 #include <arcane/alina/IO.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 using namespace Arcane;
 using namespace Arcane::Alina;
 
 namespace Arcane::Alina
 {
-profiler<> prof;
+Profiler prof;
 }
 
 namespace math = Alina::math;

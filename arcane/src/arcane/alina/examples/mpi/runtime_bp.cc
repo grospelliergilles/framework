@@ -14,7 +14,7 @@
 #include <arcane/alina/DistributedPreconditionedSolver.h>
 #include <arcane/alina/DistributedSolverRuntime.h>
 #include <arcane/alina/DistributedPreconditioner.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 #include <arcane/alina/util.h>
 
 // Pour test compilation uniquement
@@ -30,7 +30,7 @@ using namespace Arcane::Alina;
 
 namespace Arcane::Alina
 {
-profiler<> prof;
+Profiler prof;
 }
 using Alina::precondition;
 using Alina::prof;

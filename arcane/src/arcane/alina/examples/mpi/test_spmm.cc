@@ -9,12 +9,12 @@
 #include <arcane/alina/DistributedMatrix.h>
 #include <arcane/alina/IO.h>
 
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 using namespace Arcane;
 
 namespace Arcane::Alina {
-    profiler<> prof;
+    Profiler prof;
 }
 
 namespace math = Alina::math;
