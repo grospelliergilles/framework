@@ -735,17 +735,19 @@ struct AggregationCoarsening
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-// Takes a block matrix as input,
-// converts it to the scalar format,
-// applies the base coarsening,
-// converts the results back to block format.
+/*!
+ * \brief Apply a scalar coarsening on a block matrix.
+ *
+ * Takes a block matrix as input, converts it to the scalar format,
+ * applies the base coarsening, converts the results back to block format.
+ */
 template <template <class> class Coarsening>
-struct as_scalar
+struct AsScalarCoarsening
 {
   template <class Backend>
   struct type
   {
-    typedef typename math::element_of<typename Backend::value_type>::type Scalar;
+    typedef math::element_of<typename Backend::value_type>::type Scalar;
     typedef backend::BuiltinBackend<Scalar, typename Backend::col_type, typename Backend::ptr_type> BaseBackend;
     typedef Coarsening<BaseBackend> Base;
 
@@ -758,9 +760,7 @@ struct as_scalar
     template <class Matrix>
     typename std::enable_if<backend::coarsening_is_supported<BaseBackend, Coarsening>::value &&
                             (math::static_rows<typename backend::value_type<Matrix>::type>::value > 1),
-                            std::tuple<
-                            std::shared_ptr<Matrix>,
-                            std::shared_ptr<Matrix>>>::type
+                            std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>>::type
     transfer_operators(const Matrix& B)
     {
       typedef typename backend::value_type<Matrix>::type Block;
@@ -780,9 +780,7 @@ struct as_scalar
     template <class Matrix>
     typename std::enable_if<backend::coarsening_is_supported<BaseBackend, Coarsening>::value &&
                             (math::static_rows<typename backend::value_type<Matrix>::type>::value == 1),
-                            std::tuple<
-                            std::shared_ptr<Matrix>,
-                            std::shared_ptr<Matrix>>>::type
+                            std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>>::type
     transfer_operators(const Matrix& A)
     {
       return base.transfer_operators(A);
@@ -790,9 +788,7 @@ struct as_scalar
 
     template <class Matrix>
     typename std::enable_if<!backend::coarsening_is_supported<BaseBackend, Coarsening>::value,
-                            std::tuple<
-                            std::shared_ptr<Matrix>,
-                            std::shared_ptr<Matrix>>>::type
+                            std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>>::type
     transfer_operators(const Matrix&)
     {
       throw std::logic_error("The coarsening is not supported by the backend");
@@ -1853,7 +1849,7 @@ namespace Arcane::Alina::backend
 
 template <class Backend>
 struct coarsening_is_supported<Backend, RugeStubenCoarsening,
-                               typename std::enable_if<                               !std::is_arithmetic<typename backend::value_type<Backend>::type>::value>::type> : std::false_type
+                               typename std::enable_if<!std::is_arithmetic<typename backend::value_type<Backend>::type>::value>::type> : std::false_type
 {};
 
 /*---------------------------------------------------------------------------*/
