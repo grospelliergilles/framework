@@ -36,23 +36,23 @@ namespace Arcane::Alina::runtime::relaxation
 std::ostream& operator<<(std::ostream& os, eRelaxationType r)
 {
   switch (r) {
-  case gauss_seidel:
+  case eRelaxationType::gauss_seidel:
     return os << "gauss_seidel";
-  case ilu0:
+  case eRelaxationType::ilu0:
     return os << "ilu0";
-  case iluk:
+  case eRelaxationType::iluk:
     return os << "iluk";
-  case ilup:
+  case eRelaxationType::ilup:
     return os << "ilup";
-  case ilut:
+  case eRelaxationType::ilut:
     return os << "ilut";
-  case damped_jacobi:
+  case eRelaxationType::damped_jacobi:
     return os << "damped_jacobi";
-  case spai0:
+  case eRelaxationType::spai0:
     return os << "spai0";
-  case spai1:
+  case eRelaxationType::spai1:
     return os << "spai1";
-  case chebyshev:
+  case eRelaxationType::chebyshev:
     return os << "chebyshev";
   default:
     return os << "???";
@@ -68,23 +68,23 @@ std::istream& operator>>(std::istream& in, eRelaxationType& r)
   in >> val;
 
   if (val == "gauss_seidel")
-    r = gauss_seidel;
+    r = eRelaxationType::gauss_seidel;
   else if (val == "ilu0")
-    r = ilu0;
+    r = eRelaxationType::ilu0;
   else if (val == "iluk")
-    r = iluk;
+    r = eRelaxationType::iluk;
   else if (val == "ilup")
-    r = ilup;
+    r = eRelaxationType::ilup;
   else if (val == "ilut")
-    r = ilut;
+    r = eRelaxationType::ilut;
   else if (val == "damped_jacobi")
-    r = damped_jacobi;
+    r = eRelaxationType::damped_jacobi;
   else if (val == "spai0")
-    r = spai0;
+    r = eRelaxationType::spai0;
   else if (val == "spai1")
-    r = spai1;
+    r = eRelaxationType::spai1;
   else if (val == "chebyshev")
-    r = chebyshev;
+    r = eRelaxationType::chebyshev;
   else
     throw std::invalid_argument("Invalid relaxation value. Valid choices are:"
                                 "gauss_seidel, ilu0, iluk, ilup, ilut, damped_jacobi, spai0, spai1, chebyshev.");

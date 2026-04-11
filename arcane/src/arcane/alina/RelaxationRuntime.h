@@ -41,7 +41,7 @@ namespace Arcane::Alina::runtime::relaxation
 /*---------------------------------------------------------------------------*/
 
 /// Relaxation schemes.
-enum eRelaxationType
+enum class eRelaxationType
 {
   gauss_seidel, ///< Gauss-Seidel smoothing
   GaussSeidelRelaxation = gauss_seidel,
@@ -94,7 +94,7 @@ struct RuntimeRelaxation
   template <class Matrix>
   RuntimeRelaxation(const Matrix& A, params prm = params(),
           const backend_params& bprm = backend_params())
-  : r(prm.get("type", runtime::relaxation::spai0))
+  : r(prm.get("type", runtime::relaxation::eRelaxationType::spai0))
   , handle(0)
   {
     if (!prm.erase("type"))
@@ -102,7 +102,7 @@ struct RuntimeRelaxation
     switch (r) {
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
-  case type: \
+  case eRelaxationType::type: \
     handle = call_constructor<::Arcane::Alina::relaxation::type>(A, prm, bprm); \
     break
 
@@ -120,7 +120,7 @@ struct RuntimeRelaxation
     switch (r) {
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
-  case type: \
+  case eRelaxationType::type: \
     delete static_cast<::Arcane::Alina::relaxation::type<Backend>*>(handle); \
     break
 
@@ -131,15 +131,14 @@ struct RuntimeRelaxation
   }
 
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
-  void apply_pre(
-  const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
+  void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
     std::cout << "PreconditionerPreRelaxationType=" << r << "\n";
 
     switch (r) {
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
-  case type: \
+  case eRelaxationType::type: \
     call_apply_pre<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break
 
@@ -153,14 +152,13 @@ struct RuntimeRelaxation
   }
 
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
-  void apply_post(
-  const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
+  void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
     std::cout << "PreconditionerPostRelaxationType=" << r << "\n";
     switch (r) {
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
-  case type: \
+  case eRelaxationType::type: \
     call_apply_post<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break
 
@@ -181,7 +179,7 @@ struct RuntimeRelaxation
     switch (r) {
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
-  case type: \
+  case eRelaxationType::type: \
     call_apply<Arcane::Alina::relaxation::type>(A, rhs, x); \
     break
 
@@ -199,7 +197,7 @@ struct RuntimeRelaxation
     switch (r) {
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
-  case type: \
+  case eRelaxationType::type: \
     return backend::bytes(*static_cast<::Arcane::Alina::relaxation::type<Backend>*>(handle))
 
       ARCANE_ALINA_ALL_RUNTIME_RELAXATION();

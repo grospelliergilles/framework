@@ -51,7 +51,7 @@ struct DistributedRelaxationRuntime
 
   DistributedRelaxationRuntime(const DistributedMatrix<Backend>& A,
                                params prm, const backend_params& bprm = backend_params())
-  : r(prm.get("type", runtime::relaxation::spai0))
+  : r(prm.get("type", runtime::relaxation::eRelaxationType::spai0))
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");
@@ -59,17 +59,17 @@ struct DistributedRelaxationRuntime
     switch (r) {
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     handle = static_cast<void*>(new ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>(A, prm, bprm)); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     handle = call_constructor<::Arcane::Alina::relaxation::type>(A, prm, bprm); \
     break;
 
 #define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     handle = call_constructor<::Arcane::Alina::relaxation::type>(*A.local(), prm, bprm); \
     break;
 
@@ -96,12 +96,12 @@ struct DistributedRelaxationRuntime
   {
     switch (r) {
 #define ARCANE_ALINA_RELAX_DISTR(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     delete static_cast<::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     delete static_cast<::Arcane::Alina::relaxation::type<Backend>*>(handle); \
     break;
 
@@ -129,17 +129,17 @@ struct DistributedRelaxationRuntime
     switch (r) {
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     static_cast<const ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle)->apply_pre(A, rhs, x, tmp); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     call_apply_pre<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break;
 
 #define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     call_apply_pre<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x, tmp); \
     break;
 
@@ -168,17 +168,17 @@ struct DistributedRelaxationRuntime
     switch (r) {
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     static_cast<const ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle)->apply_post(A, rhs, x, tmp); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     call_apply_post<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break;
 
 #define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     call_apply_post<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x, tmp); \
     break;
 
@@ -207,17 +207,17 @@ struct DistributedRelaxationRuntime
     switch (r) {
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     static_cast<const ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle)->apply(A, rhs, x); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     call_apply<::Arcane::Alina::relaxation::type>(A, rhs, x); \
     break;
 
 #define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
-  case runtime::relaxation::type: \
+  case runtime::relaxation::eRelaxationType::type: \
     call_apply<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x); \
     break;
 
@@ -241,65 +241,56 @@ struct DistributedRelaxationRuntime
   }
 
   template <template <class> class Relaxation, class Matrix>
-  typename std::enable_if<backend::relaxation_is_supported<Backend, Relaxation>::value,
-                          void*>::type
+  typename std::enable_if<backend::relaxation_is_supported<Backend, Relaxation>::value, void*>::type
   call_constructor(const Matrix& A, const params& prm, const backend_params& bprm)
   {
     return static_cast<void*>(new Relaxation<Backend>(A, prm, bprm));
   }
 
   template <template <class> class Relaxation, class Matrix>
-  typename std::enable_if<!backend::relaxation_is_supported<Backend, Relaxation>::value,
-                          void*>::type
+  typename std::enable_if<!backend::relaxation_is_supported<Backend, Relaxation>::value, void*>::type
   call_constructor(const Matrix&, const params&, const backend_params&)
   {
     throw std::logic_error("The relaxation is not supported by the backend");
   }
 
   template <template <class> class Relaxation, class Matrix, class VectorRHS, class VectorX, class VectorTMP>
-  typename std::enable_if<backend::relaxation_is_supported<Backend, Relaxation>::value,
-                          void>::type
+  typename std::enable_if<backend::relaxation_is_supported<Backend, Relaxation>::value, void>::type
   call_apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
     static_cast<Relaxation<Backend>*>(handle)->apply_pre(A, rhs, x, tmp);
   }
 
   template <template <class> class Relaxation, class Matrix, class VectorRHS, class VectorX, class VectorTMP>
-  typename std::enable_if<!backend::relaxation_is_supported<Backend, Relaxation>::value,
-                          void>::type
+  typename std::enable_if<!backend::relaxation_is_supported<Backend, Relaxation>::value, void>::type
   call_apply_pre(const Matrix&, const VectorRHS&, VectorX&, VectorTMP&) const
   {
     throw std::logic_error("The relaxation is not supported by the backend");
   }
 
   template <template <class> class Relaxation, class Matrix, class VectorRHS, class VectorX, class VectorTMP>
-  typename std::enable_if<backend::relaxation_is_supported<Backend, Relaxation>::value,
-                          void>::type
-  call_apply_post(
-  const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
+  typename std::enable_if<backend::relaxation_is_supported<Backend, Relaxation>::value, void>::type
+  call_apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
     static_cast<Relaxation<Backend>*>(handle)->apply_post(A, rhs, x, tmp);
   }
 
   template <template <class> class Relaxation, class Matrix, class VectorRHS, class VectorX, class VectorTMP>
-  typename std::enable_if<!backend::relaxation_is_supported<Backend, Relaxation>::value,
-                          void>::type
+  typename std::enable_if<!backend::relaxation_is_supported<Backend, Relaxation>::value, void>::type
   call_apply_post(const Matrix&, const VectorRHS&, VectorX&, VectorTMP&) const
   {
     throw std::logic_error("The relaxation is not supported by the backend");
   }
 
   template <template <class> class Relaxation, class Matrix, class VectorRHS, class VectorX>
-  typename std::enable_if<backend::relaxation_is_supported<Backend, Relaxation>::value,
-                          void>::type
+  typename std::enable_if<backend::relaxation_is_supported<Backend, Relaxation>::value, void>::type
   call_apply(const Matrix& A, const VectorRHS& rhs, VectorX& x) const
   {
     static_cast<Relaxation<Backend>*>(handle)->apply(A, rhs, x);
   }
 
   template <template <class> class Relaxation, class Matrix, class VectorRHS, class VectorX>
-  typename std::enable_if<!backend::relaxation_is_supported<Backend, Relaxation>::value,
-                          void>::type
+  typename std::enable_if<!backend::relaxation_is_supported<Backend, Relaxation>::value, void>::type
   call_apply(const Matrix&, const VectorRHS&, VectorX&) const
   {
     throw std::logic_error("The relaxation is not supported by the backend");

@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
   bool constant_deflation = false;
 
   auto coarsening = Alina::eCoarserningType::smoothed_aggregation;
-  Alina::runtime::relaxation::eRelaxationType relaxation = Alina::runtime::relaxation::spai0;
+  auto relaxation = Alina::runtime::relaxation::eRelaxationType::spai0;
   Alina::runtime::solver::eSolverType iterative_solver = Alina::runtime::solver::bicgstabl;
   auto direct_solver = Alina::eDistributedDirectSolverType::skyline_lu;
 

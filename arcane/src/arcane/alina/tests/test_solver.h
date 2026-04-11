@@ -115,15 +115,15 @@ void test_problem(size_t n,
   };
 
   Alina::runtime::relaxation::eRelaxationType relaxation[] = {
-    Alina::runtime::relaxation::spai0,
-    Alina::runtime::relaxation::spai1,
-    Alina::runtime::relaxation::damped_jacobi,
-    Alina::runtime::relaxation::gauss_seidel,
-    Alina::runtime::relaxation::ilu0,
-    Alina::runtime::relaxation::iluk,
-    Alina::runtime::relaxation::ilup,
-    Alina::runtime::relaxation::ilut,
-    Alina::runtime::relaxation::chebyshev
+    Alina::runtime::relaxation::eRelaxationType::spai0,
+    Alina::runtime::relaxation::eRelaxationType::spai1,
+    Alina::runtime::relaxation::eRelaxationType::damped_jacobi,
+    Alina::runtime::relaxation::eRelaxationType::gauss_seidel,
+    Alina::runtime::relaxation::eRelaxationType::ilu0,
+    Alina::runtime::relaxation::eRelaxationType::iluk,
+    Alina::runtime::relaxation::eRelaxationType::ilup,
+    Alina::runtime::relaxation::eRelaxationType::ilut,
+    Alina::runtime::relaxation::eRelaxationType::chebyshev
   };
 
   Alina::runtime::solver::eSolverType solver[] = {
