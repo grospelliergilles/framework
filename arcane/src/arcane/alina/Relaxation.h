@@ -58,7 +58,7 @@ namespace Arcane::Alina::relaxation
 
 /// Converts input matrix to block format before constructing an amgcl smoother.
 template <class BlockBackend, template <class> class Relax>
-struct as_block
+struct RelaxationAsBlock
 {
   typedef typename BlockBackend::value_type BlockType;
 
@@ -148,7 +148,7 @@ struct as_block
 
 /// Allows to use an amgcl smoother as standalone preconditioner.
 template <class Backend, template <class> class Relax>
-class as_preconditioner
+class RelaxationAsPreconditioner
 {
  public:
 
@@ -167,7 +167,7 @@ class as_preconditioner
   typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
 
   template <class Matrix>
-  as_preconditioner(const Matrix& M,
+  RelaxationAsPreconditioner(const Matrix& M,
                     const params& prm = params(),
                     const backend_params& bprm = backend_params())
   : prm(prm)
@@ -175,7 +175,7 @@ class as_preconditioner
     init(std::make_shared<build_matrix>(M), bprm);
   }
 
-  as_preconditioner(std::shared_ptr<build_matrix> M,
+  RelaxationAsPreconditioner(std::shared_ptr<build_matrix> M,
                     const params& prm = params(),
                     const backend_params& bprm = backend_params())
   : prm(prm)
@@ -224,7 +224,7 @@ class as_preconditioner
     S = std::make_shared<smoother>(*M, prm, bprm);
   }
 
-  friend std::ostream& operator<<(std::ostream& os, const as_preconditioner& p)
+  friend std::ostream& operator<<(std::ostream& os, const RelaxationAsPreconditioner& p)
   {
     os << "Relaxation as preconditioner" << std::endl;
     os << "  Unknowns: " << backend::rows(p.system_matrix()) << std::endl;

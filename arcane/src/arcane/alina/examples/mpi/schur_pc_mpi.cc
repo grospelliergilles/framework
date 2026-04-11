@@ -283,7 +283,7 @@ int main(int argc, char* argv[])
     Alina::DistributedSchurPressureCorrection<
       Alina::DistributedPreconditionedSolver<
         Alina::DistributedBlockPreconditioner<
-          Alina::relaxation::as_preconditioner<Backend, Alina::RelaxationRuntime>>,
+          Alina::relaxation::RelaxationAsPreconditioner<Backend, Alina::RelaxationRuntime>>,
         Alina::DistributedSolverRuntime<Backend>>,
       Alina::DistributedSubDomainDeflation<
         Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::RelaxationRuntime>,

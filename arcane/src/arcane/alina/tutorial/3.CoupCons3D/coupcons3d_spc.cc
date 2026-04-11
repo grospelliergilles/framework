@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
                 Alina::PreconditionerOnlySolver<UBackend>
                 >,
             Alina::PreconditionedSolver<
-                Alina::relaxation::as_preconditioner<
+                Alina::relaxation::RelaxationAsPreconditioner<
                     PBackend,
                     Alina::relaxation::SPAI0Relaxation
                     >,
