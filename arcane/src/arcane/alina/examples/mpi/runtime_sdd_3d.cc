@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
   ptrdiff_t n = 128;
   bool constant_deflation = false;
 
-  auto coarsening = Alina::runtime::coarsening::eCoarserningType::smoothed_aggregation;
+  auto coarsening = Alina::eCoarserningType::smoothed_aggregation;
   Alina::runtime::relaxation::type relaxation = Alina::runtime::relaxation::spai0;
   Alina::runtime::solver::type iterative_solver = Alina::runtime::solver::bicgstabl;
   auto direct_solver = Alina::eDistributedDirectSolverType::skyline_lu;
@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
   po::value<ptrdiff_t>(&n)->default_value(n),
   "domain size")(
   "coarsening,c",
-  po::value<Alina::runtime::coarsening::eCoarserningType>(&coarsening)->default_value(coarsening),
+  po::value<Alina::eCoarserningType>(&coarsening)->default_value(coarsening),
   "ruge_stuben, aggregation, smoothed_aggregation, smoothed_aggr_emin")(
   "relaxation,r",
   po::value<Alina::runtime::relaxation::type>(&relaxation)->default_value(relaxation),
@@ -345,7 +345,7 @@ int main(int argc, char* argv[])
 
       prof.tic("setup");
       typedef Alina::mpi::DistributedSubDomainDeflation<
-      Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
+      Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
       Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
       Alina::DistributedDirectSolverRuntime<double>>
       SDD;

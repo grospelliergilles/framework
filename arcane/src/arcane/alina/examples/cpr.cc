@@ -30,7 +30,7 @@ void solve_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::PropertyT
   auto t1 = prof.scoped_tic("CPR");
 
   using Backend = Alina::backend::BuiltinBackend<double>;
-  using PPrecond = Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>;
+  using PPrecond = Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>;
   using SPrecond = Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>;
 
   prof.tic("setup");
@@ -62,16 +62,8 @@ void solve_block_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::Pro
   typedef Alina::backend::BuiltinBackend<val_type> SBackend;
   typedef Alina::backend::BuiltinBackend<double> PBackend;
 
-  typedef Alina::AMG<
-  PBackend,
-  Alina::runtime::coarsening::CoarseningRuntime,
-  Alina::runtime::relaxation::RuntimeRelaxation>
-  PPrecond;
-
-  typedef Alina::relaxation::as_preconditioner<
-  SBackend,
-  Alina::runtime::relaxation::RuntimeRelaxation>
-  SPrecond;
+  using PPrecond = Alina::AMG<PBackend, Alina::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>;
+  using SPrecond = Alina::relaxation::as_preconditioner<SBackend, Alina::runtime::relaxation::RuntimeRelaxation>;
 
   prof.tic("setup");
   Alina::PreconditionedSolver<

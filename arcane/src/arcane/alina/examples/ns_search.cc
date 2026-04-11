@@ -198,7 +198,7 @@ int main(int argc, char *argv[]) {
     typedef Alina::PreconditionedSolver<
         Alina::AMG<
             Backend,
-            Alina::runtime::coarsening::CoarseningRuntime,
+            Alina::CoarseningRuntime,
             Alina::runtime::relaxation::RuntimeRelaxation
             >,
         Alina::runtime::solver::SolverRuntime<Backend>

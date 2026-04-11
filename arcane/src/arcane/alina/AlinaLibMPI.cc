@@ -22,7 +22,7 @@ typedef Alina::backend::BuiltinBackend<double> Backend;
 typedef Alina::PropertyTree Params;
 
 typedef Alina::mpi::DistributedSubDomainDeflation<
-Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
+Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
 Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
 Alina::DistributedDirectSolverRuntime<double>>
 Solver;

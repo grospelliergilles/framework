@@ -120,7 +120,7 @@ class PreconditionerRuntime
     std::cout << "PreconditionerClass=" << _class << "\n";
     switch (_class) {
     case precond_class::amg: {
-      typedef Alina::AMG<Backend, runtime::coarsening::CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
+      typedef Alina::AMG<Backend, CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
       Precond;
 
       handle = static_cast<void*>(new Precond(A, prm, bprm));
@@ -154,7 +154,7 @@ class PreconditionerRuntime
   {
     switch (_class) {
     case precond_class::amg: {
-      typedef Alina::AMG<Backend, runtime::coarsening::CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
+      typedef Alina::AMG<Backend, CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
       Precond;
 
       delete static_cast<Precond*>(handle);
@@ -190,7 +190,7 @@ class PreconditionerRuntime
   {
     switch (_class) {
     case precond_class::amg: {
-      typedef Alina::AMG<Backend, runtime::coarsening::CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
+      typedef Alina::AMG<Backend, CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
       Precond;
 
       static_cast<Precond*>(handle)->rebuild(A, bprm);
@@ -207,7 +207,7 @@ class PreconditionerRuntime
     std::cout << "ApplyPrecond class=" << _class << "\n";
     switch (_class) {
     case precond_class::amg: {
-      typedef Alina::AMG<Backend, runtime::coarsening::CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
+      typedef Alina::AMG<Backend, CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
       Precond;
 
       static_cast<Precond*>(handle)->apply(rhs, x);
@@ -241,7 +241,7 @@ class PreconditionerRuntime
   {
     switch (_class) {
     case precond_class::amg: {
-      typedef Alina::AMG<Backend, runtime::coarsening::CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
+      typedef Alina::AMG<Backend, CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
       Precond;
 
       return static_cast<Precond*>(handle)->system_matrix_ptr();
@@ -285,7 +285,7 @@ class PreconditionerRuntime
   {
     switch (_class) {
     case precond_class::amg: {
-      typedef Alina::AMG<Backend, runtime::coarsening::CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
+      typedef Alina::AMG<Backend, CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
       Precond;
 
       return backend::bytes(*static_cast<Precond*>(handle));
@@ -319,7 +319,7 @@ class PreconditionerRuntime
   {
     switch (p._class) {
     case precond_class::amg: {
-      typedef Alina::AMG<Backend, runtime::coarsening::CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
+      typedef Alina::AMG<Backend, CoarseningRuntime, runtime::relaxation::RuntimeRelaxation>
       Precond;
 
       return os << *static_cast<Precond*>(p.handle);

@@ -279,16 +279,16 @@ int main(int argc, char* argv[])
 
   prof.tic("setup");
   typedef Alina::mpi::DistributedPreconditionedSolver<
-  Alina::mpi::DistributedSchurPressureCorrection<
-  Alina::mpi::DistributedPreconditionedSolver<
-  Alina::mpi::block_preconditioner<
-  Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>>,
-  Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>,
-  Alina::mpi::DistributedSubDomainDeflation<
-  Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
-  Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
-  Alina::DistributedDirectSolverRuntime<double>>>,
-  Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>
+    Alina::mpi::DistributedSchurPressureCorrection<
+      Alina::mpi::DistributedPreconditionedSolver<
+        Alina::mpi::block_preconditioner<
+          Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>>,
+        Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>,
+      Alina::mpi::DistributedSubDomainDeflation<
+        Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
+        Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
+        Alina::DistributedDirectSolverRuntime<double>>>,
+    Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>
   Solver;
 
   Solver solve(world, std::tie(chunk, ptr, col, val), prm, bprm);

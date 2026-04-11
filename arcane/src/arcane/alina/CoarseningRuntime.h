@@ -33,7 +33,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::runtime::coarsening
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ struct CoarseningRuntime
   void* handle = nullptr;
 
   explicit CoarseningRuntime(params prm = params())
-  : c(prm.get("type", runtime::coarsening::eCoarserningType::smoothed_aggregation))
+  : c(prm.get("type", eCoarserningType::smoothed_aggregation))
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");
@@ -275,7 +275,7 @@ struct CoarseningRuntime
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::runtime::coarsening
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

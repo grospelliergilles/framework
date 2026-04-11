@@ -30,7 +30,7 @@ void test_solver(const Matrix& A,
                  std::shared_ptr<typename Backend::vector>& x,
                  Alina::runtime::solver::type solver,
                  Alina::runtime::relaxation::type relaxation,
-                 Alina::runtime::coarsening::eCoarserningType coarsening,
+                 Alina::eCoarserningType coarsening,
                  typename Backend::params const& bprm,
                  bool test_null_space = false)
 {
@@ -52,8 +52,8 @@ void test_solver(const Matrix& A,
     prm.put("precond.coarsening.nullspace.B", &null[0]);
   }
 
-  Alina::PreconditionedSolver<Alina::AMG<Backend, Alina::runtime::coarsening::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
-                     Alina::runtime::solver::SolverRuntime<Backend>>
+  Alina::PreconditionedSolver<Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
+                              Alina::runtime::solver::SolverRuntime<Backend>>
   solve(A, prm, bprm);
 
   std::cout << solve.precond() << std::endl;
@@ -107,11 +107,11 @@ void test_problem(size_t n,
                   std::vector<rhs_type> rhs,
                   typename Backend::params const& bprm)
 {
-  Alina::runtime::coarsening::eCoarserningType coarsening[] = {
-    Alina::runtime::coarsening::eCoarserningType::aggregation,
-    Alina::runtime::coarsening::eCoarserningType::smoothed_aggregation,
-    Alina::runtime::coarsening::eCoarserningType::smoothed_aggr_emin,
-    Alina::runtime::coarsening::eCoarserningType::ruge_stuben
+  Alina::eCoarserningType coarsening[] = {
+    Alina::eCoarserningType::aggregation,
+    Alina::eCoarserningType::smoothed_aggregation,
+    Alina::eCoarserningType::smoothed_aggr_emin,
+    Alina::eCoarserningType::ruge_stuben
   };
 
   Alina::runtime::relaxation::type relaxation[] = {
@@ -173,7 +173,7 @@ void test_problem(size_t n,
   }
 
   // Test coarsening
-  for (Alina::runtime::coarsening::eCoarserningType c : coarsening) {
+  for (Alina::eCoarserningType c : coarsening) {
     std::cout << "Coarsening: " << c << std::endl;
 
     try {
@@ -185,9 +185,9 @@ void test_problem(size_t n,
     }
 
     switch (c) {
-    case Alina::runtime::coarsening::eCoarserningType::aggregation:
-    case Alina::runtime::coarsening::eCoarserningType::smoothed_aggregation:
-    case Alina::runtime::coarsening::eCoarserningType::smoothed_aggr_emin:
+    case Alina::eCoarserningType::aggregation:
+    case Alina::eCoarserningType::smoothed_aggregation:
+    case Alina::eCoarserningType::smoothed_aggr_emin:
       test_solver<Backend>(Alina::adapter::zero_copy_direct(n, ptr.data(), col.data(), val.data()),
                            y, x, solver[0], relaxation[0], c, bprm, /*test_null_space*/ true);
       break;
