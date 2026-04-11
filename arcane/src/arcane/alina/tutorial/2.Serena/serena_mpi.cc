@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
       FBackend,
       Alina::DistributedSmoothedAggregationCoarsening<FBackend>,
       Alina::DistributedSPAI0Relaxation<FBackend>>,
-    Alina::bicgstab<DBackend>>
+    Alina::DistributedBiCGStabSolver<DBackend>>
   Solver;
 
   // Solver parameters
