@@ -27,7 +27,7 @@
 #include <memory>
 
 #include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/solver_skyline_lu.h>
+#include <arcane/alina/SkylineLUSolver.h>
 #include <arcane/alina/util.h>
 
 #include <thrust/device_vector.h>
@@ -49,9 +49,9 @@ namespace Arcane::Alina::solver
  * then copies the solution back to the compute device(s).
  */
 template <class T>
-struct cuda_skyline_lu : solver::skyline_lu<T>
+struct cuda_skyline_lu : SkylineLUSolver<T>
 {
-  typedef solver::skyline_lu<T> Base;
+  typedef SkylineLUSolver<T> Base;
 
   mutable std::vector<T> _rhs, _x;
 

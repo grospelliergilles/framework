@@ -34,16 +34,17 @@ THE SOFTWARE.
 
 #include <arcane/alina/CudaBackend.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/make_solver.h>
+#include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/AMG.h>
-#include <arcane/alina/coarsening.h>
-#include <arcane/alina/relaxation.h>
+#include <arcane/alina/Coarsening.h>
+#include <arcane/alina/Relaxation.h>
 #include <arcane/alina/BiCGStabSolver.h>
 
 #include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>
 
 using namespace Arcane;
+using namespace Arcane::Alina;
 
 int main(int argc, char* argv[])
 {
@@ -83,12 +84,7 @@ int main(int argc, char* argv[])
 
   // Compose the solver type
   using Backend = Alina::backend::cuda<double>;
-  typedef Alina::make_solver<Alina::AMG<
-                             Backend,
-                             Alina::coarsening::smoothed_aggregation,
-                             Alina::relaxation::spai0>,
-                             Alina::solver::BiCGStabSolver<Backend>>
-  Solver;
+  typedef PreconditionedSolver<AMG<Backend, SmoothedAggregationCoarserning, SPAI0Relaxation>, BiCGStabSolver<Backend>> Solver;
 
   // We need to initialize the CUSPARSE library and pass the handle to AMGCL
   // in backend parameters:
