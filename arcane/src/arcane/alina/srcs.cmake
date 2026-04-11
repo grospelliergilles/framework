@@ -20,8 +20,7 @@ set(ARCANE_SOURCES
   DeflatedSolver.h
   DenseMatrixInverseImpl.h
   QRFactorizationImpl.h
-  detail_sort_row.h
-  SparseMatrixMatrixProduct.h
+        SparseMatrixMatrixProduct.h
   EigenAdapter.h
   EigenBackend.h
         IO.h

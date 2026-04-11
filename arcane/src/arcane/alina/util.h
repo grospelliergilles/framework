@@ -193,19 +193,17 @@ namespace detail
 {
 
   template <typename T>
-  inline void params_export_child(
-  boost::property_tree::ptree& p,
-  const std::string& path,
-  const char* name, const T& obj)
+  inline void params_export_child(boost::property_tree::ptree& p,
+                                  const std::string& path,
+                                  const char* name, const T& obj)
   {
     obj.get(p, std::string(path) + name + ".");
   }
 
   template <>
-  inline void params_export_child(
-  boost::property_tree::ptree& p,
-  const std::string& path, const char* name,
-  const boost::property_tree::ptree& obj)
+  inline void params_export_child(boost::property_tree::ptree& p,
+                                  const std::string& path, const char* name,
+                                  const boost::property_tree::ptree& obj)
   {
     p.add_child(std::string(path) + name, obj);
   }
@@ -226,9 +224,8 @@ namespace detail
   std::cerr << "AMGCL WARNING: unknown parameter " << name << std::endl
 #endif
 
-inline void check_params(
-const boost::property_tree::ptree& p,
-const std::set<std::string>& names)
+inline void check_params(const boost::property_tree::ptree& p,
+                         const std::set<std::string>& names)
 {
   for (const auto& n : names) {
     if (!p.count(n)) {
@@ -242,10 +239,9 @@ const std::set<std::string>& names)
   }
 }
 
-inline void check_params(
-const boost::property_tree::ptree& p,
-const std::set<std::string>& names,
-const std::set<std::string>& opt_names)
+inline void check_params(const boost::property_tree::ptree& p,
+                         const std::set<std::string>& names,
+                         const std::set<std::string>& opt_names)
 {
   for (const auto& n : names) {
     if (!p.count(n)) {
@@ -522,6 +518,29 @@ namespace detail
     non_copyable(non_copyable const&) = delete;
     void operator=(non_copyable const& x) = delete;
   };
+
+  /*!
+   * \brief  Sort row of CRS matrix by columns.
+   */
+  template <typename Col, typename Val>
+  void sort_row(Col* col, Val* val, int n)
+  {
+    for (int j = 1; j < n; ++j) {
+      Col c = col[j];
+      Val v = val[j];
+
+      int i = j - 1;
+
+      while (i >= 0 && col[i] > c) {
+        col[i + 1] = col[i];
+        val[i + 1] = val[i];
+        i--;
+      }
+
+      col[i + 1] = c;
+      val[i + 1] = v;
+    }
+  }
 
 } // namespace detail
 

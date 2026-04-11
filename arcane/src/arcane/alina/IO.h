@@ -37,7 +37,6 @@
 
 #include <arcane/alina/util.h>
 #include <arcane/alina/BackendInterface.h>
-#include <arcane/alina/detail_sort_row.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

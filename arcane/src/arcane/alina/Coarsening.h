@@ -40,7 +40,6 @@
 #include "arcane/alina/QRFactorizationImpl.h"
 #include "arcane/alina/Adapters.h"
 #include "arcane/alina/ValueTypeInterface.h"
-#include "arcane/alina/detail_sort_row.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

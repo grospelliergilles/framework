@@ -46,7 +46,6 @@
 #endif
 
 #include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/detail_sort_row.h>
 
 namespace Arcane::Alina::backend
 {
