@@ -137,8 +137,6 @@ struct RelaxationRuntime
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
-    std::cout << "PreconditionerPreRelaxationType=" << r << "\n";
-
     switch (r) {
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
@@ -158,7 +156,6 @@ struct RelaxationRuntime
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
-    std::cout << "PreconditionerPostRelaxationType=" << r << "\n";
     switch (r) {
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
@@ -178,8 +175,6 @@ struct RelaxationRuntime
   template <class Matrix, class VectorRHS, class VectorX>
   void apply(const Matrix& A, const VectorRHS& rhs, VectorX& x) const
   {
-    std::cout << "PreconditionerRelaxationType=" << r << "\n";
-
     switch (r) {
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
