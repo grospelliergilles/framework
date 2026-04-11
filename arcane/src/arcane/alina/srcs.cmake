@@ -62,7 +62,7 @@ set(ARCANE_SOURCES
         ValueTypeInterface.h
   value_type_complex.h
   value_type_eigen.h
-  value_type_static_matrix.h
+        StaticMatrix.h
 
   DistributedAMG.h
   DistributedCoarsening.h

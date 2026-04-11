@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <arcane/alina/value_type_static_matrix.h>
+#include <arcane/alina/StaticMatrix.h>
 
 using namespace Arcane;
 

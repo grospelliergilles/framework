@@ -6,7 +6,7 @@
 
 #include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/make_block_solver.h>
-#include <arcane/alina/value_type_static_matrix.h>
+#include <arcane/alina/StaticMatrix.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/AMG.h>
 #include <arcane/alina/SolverRuntime.h>

@@ -6,7 +6,7 @@
 #include <boost/preprocessor/seq/for_each.hpp>
 
 #include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/value_type_static_matrix.h>
+#include <arcane/alina/StaticMatrix.h>
 #include <arcane/alina/Adapters.h>
 
 #if defined(SOLVER_BACKEND_CUDA)

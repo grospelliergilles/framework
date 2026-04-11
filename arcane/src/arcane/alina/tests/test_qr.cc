@@ -7,7 +7,7 @@
 #include <arcane/alina/QRFactorizationImpl.h>
 #include <arcane/alina/ValueTypeInterface.h>
 #include <arcane/alina/value_type_complex.h>
-#include <arcane/alina/value_type_static_matrix.h>
+#include <arcane/alina/StaticMatrix.h>
 
 using namespace Arcane;
 

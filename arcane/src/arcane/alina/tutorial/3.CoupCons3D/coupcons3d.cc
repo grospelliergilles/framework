@@ -39,7 +39,7 @@ THE SOFTWARE.
 #include <arcane/alina/Coarsening.h>
 #include <arcane/alina/Relaxation.h>
 #include <arcane/alina/BiCGStabSolver.h>
-#include <arcane/alina/value_type_static_matrix.h>
+#include <arcane/alina/StaticMatrix.h>
 
 #include <arcane/alina/IO.h>
 #include <arcane/alina/profiler.h>

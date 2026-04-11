@@ -34,7 +34,7 @@ THE SOFTWARE.
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/value_type_static_matrix.h>
+#include <arcane/alina/StaticMatrix.h>
 #include <arcane/alina/SchurPressureCorrectionPreconditioner.h>
 #include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/make_block_solver.h>

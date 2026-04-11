@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/value_type_static_matrix.h>
+#include <arcane/alina/StaticMatrix.h>
 
 #include "test_solver.h"
 

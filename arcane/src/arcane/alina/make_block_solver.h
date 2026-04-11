@@ -3,7 +3,7 @@
 
 #include <arcane/alina/BackendInterface.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/value_type_static_matrix.h>
+#include <arcane/alina/StaticMatrix.h>
 #include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/util.h>
 
