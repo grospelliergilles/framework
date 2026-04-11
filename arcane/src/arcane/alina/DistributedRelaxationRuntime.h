@@ -60,7 +60,7 @@ struct DistributedRelaxationRuntime
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
   case eRelaxationType::type: \
-    handle = static_cast<void*>(new ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>(A, prm, bprm)); \
+    handle = static_cast<void*>(new ::Arcane::Alina::Distributed##type<Backend>(A, prm, bprm)); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
@@ -97,7 +97,7 @@ struct DistributedRelaxationRuntime
     switch (r) {
 #define ARCANE_ALINA_RELAX_DISTR(type) \
   case eRelaxationType::type: \
-    delete static_cast<::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle); \
+    delete static_cast<::Arcane::Alina::Distributed##type<Backend>*>(handle); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL(type) \
@@ -130,7 +130,7 @@ struct DistributedRelaxationRuntime
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
   case eRelaxationType::type: \
-    static_cast<const ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle)->apply_pre(A, rhs, x, tmp); \
+    static_cast<const ::Arcane::Alina::Distributed##type<Backend>*>(handle)->apply_pre(A, rhs, x, tmp); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
@@ -169,7 +169,7 @@ struct DistributedRelaxationRuntime
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
   case eRelaxationType::type: \
-    static_cast<const ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle)->apply_post(A, rhs, x, tmp); \
+    static_cast<const ::Arcane::Alina::Distributed##type<Backend>*>(handle)->apply_post(A, rhs, x, tmp); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
@@ -208,7 +208,7 @@ struct DistributedRelaxationRuntime
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
   case eRelaxationType::type: \
-    static_cast<const ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle)->apply(A, rhs, x); \
+    static_cast<const ::Arcane::Alina::Distributed##type<Backend>*>(handle)->apply(A, rhs, x); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \

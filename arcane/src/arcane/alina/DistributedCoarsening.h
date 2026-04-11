@@ -37,7 +37,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::mpi::coarsening
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -1166,7 +1166,7 @@ struct DistributedPMISAggregation
  * \brief Distributed non-smoothed aggregation coarsening scheme.
  */
 template <class Backend>
-struct aggregation
+struct DistributedAggregationCoarsening
 {
   typedef typename Backend::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
@@ -1196,7 +1196,7 @@ struct aggregation
 
     params() = default;
 
-    params(const Alina::PropertyTree& p)
+    params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, over_interp)
     {
@@ -1210,7 +1210,7 @@ struct aggregation
     }
   } prm;
 
-  aggregation(const params& prm = params())
+  DistributedAggregationCoarsening(const params& prm = params())
   : prm(prm)
   {}
 
@@ -1235,7 +1235,7 @@ struct aggregation
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-unsigned block_size(const aggregation<Backend>& c)
+unsigned block_size(const DistributedAggregationCoarsening<Backend>& c)
 {
   return c.prm.aggr.block_size;
 }
@@ -1246,7 +1246,7 @@ unsigned block_size(const aggregation<Backend>& c)
  * \brief Distributed smoothed aggregation coarsening scheme.
  */
 template <class Backend>
-struct smoothed_aggregation
+struct DistributedSmoothedAggregationCoarsening
 {
   typedef typename Backend::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
@@ -1294,7 +1294,7 @@ struct smoothed_aggregation
     }
   } prm;
 
-  smoothed_aggregation(const params& prm = params())
+  DistributedSmoothedAggregationCoarsening(const params& prm = params())
   : prm(prm)
   {}
 
@@ -1410,7 +1410,7 @@ struct smoothed_aggregation
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-unsigned block_size(const smoothed_aggregation<Backend>& c)
+unsigned block_size(const DistributedSmoothedAggregationCoarsening<Backend>& c)
 {
   return c.prm.aggr.block_size;
 }
@@ -1418,7 +1418,7 @@ unsigned block_size(const smoothed_aggregation<Backend>& c)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::mpi::coarsening
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

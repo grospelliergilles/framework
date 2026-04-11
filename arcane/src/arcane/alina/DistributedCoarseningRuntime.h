@@ -86,11 +86,11 @@ struct DistributedCoarseningRuntime
 
     switch (c) {
     case eDistributedCoarseningType::aggregation: {
-      typedef Alina::mpi::coarsening::aggregation<Backend> C;
+      typedef DistributedAggregationCoarsening<Backend> C;
       handle = static_cast<void*>(new C(prm));
     } break;
     case eDistributedCoarseningType::smoothed_aggregation: {
-      typedef Alina::mpi::coarsening::smoothed_aggregation<Backend> C;
+      typedef DistributedSmoothedAggregationCoarsening<Backend> C;
       handle = static_cast<void*>(new C(prm));
     } break;
     default:
@@ -102,11 +102,11 @@ struct DistributedCoarseningRuntime
   {
     switch (c) {
     case eDistributedCoarseningType::aggregation: {
-      typedef Alina::mpi::coarsening::aggregation<Backend> C;
+      typedef DistributedAggregationCoarsening<Backend> C;
       delete static_cast<C*>(handle);
     } break;
     case eDistributedCoarseningType::smoothed_aggregation: {
-      typedef Alina::mpi::coarsening::smoothed_aggregation<Backend> C;
+      typedef DistributedSmoothedAggregationCoarsening<Backend> C;
       delete static_cast<C*>(handle);
     } break;
     default:
@@ -119,11 +119,11 @@ struct DistributedCoarseningRuntime
   {
     switch (c) {
     case eDistributedCoarseningType::aggregation: {
-      typedef Alina::mpi::coarsening::aggregation<Backend> C;
+      typedef DistributedAggregationCoarsening<Backend> C;
       return static_cast<C*>(handle)->transfer_operators(A);
     }
     case eDistributedCoarseningType::smoothed_aggregation: {
-      typedef Alina::mpi::coarsening::smoothed_aggregation<Backend> C;
+      typedef DistributedSmoothedAggregationCoarsening<Backend> C;
       return static_cast<C*>(handle)->transfer_operators(A);
     }
     default:
@@ -136,11 +136,11 @@ struct DistributedCoarseningRuntime
   {
     switch (c) {
     case eDistributedCoarseningType::aggregation: {
-      typedef Alina::mpi::coarsening::aggregation<Backend> C;
+      typedef DistributedAggregationCoarsening<Backend> C;
       return static_cast<C*>(handle)->coarse_operator(A, P, R);
     }
     case eDistributedCoarseningType::smoothed_aggregation: {
-      typedef Alina::mpi::coarsening::smoothed_aggregation<Backend> C;
+      typedef DistributedSmoothedAggregationCoarsening<Backend> C;
       return static_cast<C*>(handle)->coarse_operator(A, P, R);
     }
     default:
@@ -154,11 +154,11 @@ unsigned block_size(const DistributedCoarseningRuntime<Backend>& w)
 {
   switch (w.c) {
   case eDistributedCoarseningType::aggregation: {
-    typedef Alina::mpi::coarsening::aggregation<Backend> C;
+    typedef DistributedAggregationCoarsening<Backend> C;
     return block_size(*static_cast<const C*>(w.handle));
   }
   case eDistributedCoarseningType::smoothed_aggregation: {
-    typedef Alina::mpi::coarsening::smoothed_aggregation<Backend> C;
+    typedef DistributedSmoothedAggregationCoarsening<Backend> C;
     return block_size(*static_cast<const C*>(w.handle));
   }
   default:

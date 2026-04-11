@@ -26,10 +26,14 @@
 #include "domain_partition.h"
 
 using namespace Arcane;
+using namespace Arcane::Alina;
 
-namespace Arcane::Alina { profiler<> prof; }
-using Alina::prof;
+namespace Arcane::Alina
+{
+profiler<> prof;
+}
 using Alina::precondition;
+using Alina::prof;
 
 //---------------------------------------------------------------------------
 struct renumbering
@@ -61,9 +65,7 @@ solve(const Alina::mpi_communicator& comm,
 {
   typedef Alina::backend::BuiltinBackend<double> Backend;
 
-  using Solver = Alina::mpi::DistributedPreconditionedSolver<
-    Alina::mpi::DistributedBlockPreconditioner<Precond<Backend>>,
-    Alina::DistributedSolverRuntime<Backend>>;
+  using Solver = DistributedPreconditionedSolver<DistributedBlockPreconditioner<Precond<Backend>>, DistributedSolverRuntime<Backend>>;
 
   const size_t n = Alina::backend::rows(A);
 

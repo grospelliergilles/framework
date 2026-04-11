@@ -246,24 +246,24 @@ void solve_block(Alina::mpi_communicator comm,
 
   typedef Alina::DistributedMatrix<Backend> DMatrix;
 
-  typedef Alina::mpi::DistributedPreconditionedSolver<
-    Alina::DistributedPreconditioner<Backend>,
-    Alina::DistributedSolverRuntime<Backend>>
+  typedef Alina::DistributedPreconditionedSolver<
+  Alina::DistributedPreconditioner<Backend>,
+  Alina::DistributedSolverRuntime<Backend>>
   Solver;
 
   using Alina::prof;
 
   typename Backend::params bprm;
 
-  Alina::backend::numa_vector<rhs_type> rhs(  reinterpret_cast<const rhs_type*>(&f[0]),
-  reinterpret_cast<const rhs_type*>(&f[0]) + chunk / B);
+  Alina::backend::numa_vector<rhs_type> rhs(reinterpret_cast<const rhs_type*>(&f[0]),
+                                            reinterpret_cast<const rhs_type*>(&f[0]) + chunk / B);
 
   auto get_distributed_matrix = [&]() {
     auto t = prof.scoped_tic("distributed matrix");
 
     std::shared_ptr<DMatrix> A;
 
-    if (ptype!=Alina::eMatrixPartitionerType::merge) {
+    if (ptype != Alina::eMatrixPartitionerType::merge) {
       A = partition<Backend>(comm,
                              Alina::adapter::block_matrix<val_type>(std::tie(chunk, ptr, col, val)),
                              rhs, bprm, ptype, prm.get("precond.coarsening.aggr.block_size", 1));
@@ -339,7 +339,7 @@ void solve_scalar(Alina::mpi_communicator comm,
 
   typedef Alina::DistributedMatrix<Backend> DMatrix;
 
-  using Solver = Alina::mpi::DistributedPreconditionedSolver<Alina::DistributedPreconditioner<Backend>, Alina::DistributedSolverRuntime<Backend>>;
+  using Solver = Alina::DistributedPreconditionedSolver<Alina::DistributedPreconditioner<Backend>, Alina::DistributedSolverRuntime<Backend>>;
 
   using Alina::prof;
 

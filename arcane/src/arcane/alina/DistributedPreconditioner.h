@@ -95,11 +95,11 @@ class DistributedPreconditioner
   typedef typename backend_type::value_type value_type;
   typedef DistributedMatrix<backend_type> matrix;
 
-  using AMGPrecondType = Alina::mpi::DistributedAMG<Backend,
-                                                    DistributedCoarseningRuntime<Backend>,
-                                                    DistributedRelaxationRuntime<Backend>,
-                                                    DistributedDirectSolverRuntime<value_type>,
-                                                    MatrixPartitionerRuntime<Backend>>;
+  using AMGPrecondType = DistributedAMG<Backend,
+                                        DistributedCoarseningRuntime<Backend>,
+                                        DistributedRelaxationRuntime<Backend>,
+                                        DistributedDirectSolverRuntime<value_type>,
+                                        MatrixPartitionerRuntime<Backend>>;
 
   template <class Matrix>
   DistributedPreconditioner(mpi_communicator comm,
@@ -129,8 +129,7 @@ class DistributedPreconditioner
       delete static_cast<AMGPrecondType*>(handle);
     } break;
     case eDistributedPreconditionerType::relaxation: {
-      typedef Alina::mpi::relaxation::as_preconditioner<
-      Alina::DistributedRelaxationRuntime<Backend>>
+      typedef Alina::as_preconditioner<DistributedRelaxationRuntime<Backend>>
       Precond;
 
       delete static_cast<Precond*>(handle);
@@ -162,7 +161,7 @@ class DistributedPreconditioner
       static_cast<AMGPrecondType*>(handle)->apply(rhs, x);
     } break;
     case eDistributedPreconditionerType::relaxation: {
-      typedef Alina::mpi::relaxation::as_preconditioner<Alina::DistributedRelaxationRuntime<Backend>> Precond;
+      typedef Alina::as_preconditioner<DistributedRelaxationRuntime<Backend>> Precond;
 
       static_cast<Precond*>(handle)->apply(rhs, x);
     } break;
@@ -179,7 +178,7 @@ class DistributedPreconditioner
       return static_cast<AMGPrecondType*>(handle)->system_matrix_ptr();
     }
     case eDistributedPreconditionerType::relaxation: {
-      typedef Alina::mpi::relaxation::as_preconditioner<Alina::DistributedRelaxationRuntime<Backend>> Precond;
+      typedef as_preconditioner<DistributedRelaxationRuntime<Backend>> Precond;
 
       return static_cast<Precond*>(handle)->system_matrix_ptr();
     }
@@ -200,7 +199,7 @@ class DistributedPreconditioner
       return os << *static_cast<AMGPrecondType*>(p.handle);
     }
     case eDistributedPreconditionerType::relaxation: {
-      typedef Alina::mpi::relaxation::as_preconditioner<Alina::DistributedRelaxationRuntime<Backend>> Precond;
+      typedef as_preconditioner<DistributedRelaxationRuntime<Backend>> Precond;
 
       return os << *static_cast<Precond*>(p.handle);
     }
@@ -224,7 +223,7 @@ class DistributedPreconditioner
       handle = static_cast<void*>(new AMGPrecondType(A->comm(), A, prm, bprm));
     } break;
     case eDistributedPreconditionerType::relaxation: {
-      typedef Alina::mpi::relaxation::as_preconditioner<Alina::DistributedRelaxationRuntime<Backend>> Precond;
+      typedef as_preconditioner<DistributedRelaxationRuntime<Backend>> Precond;
 
       handle = static_cast<void*>(new Precond(A->comm(), A, prm, bprm));
     } break;
@@ -233,17 +232,6 @@ class DistributedPreconditioner
     }
   }
 };
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-} // namespace Arcane::Alina
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-namespace Arcane::Alina::mpi
-{
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -311,7 +299,7 @@ class DistributedBlockPreconditioner
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::mpi
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

@@ -50,6 +50,7 @@ THE SOFTWARE.
 #endif
 
 using namespace Arcane;
+using namespace Arcane::Alina;
 
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
@@ -92,19 +93,16 @@ int main(int argc, char* argv[])
     << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
 
   // Compose the solver type
-  typedef Alina::backend::BuiltinBackend<double> DBackend;
-  typedef Alina::backend::BuiltinBackend<float> FBackend;
-  typedef Alina::mpi::DistributedPreconditionedSolver<
-  Alina::mpi::DistributedAMG<
-  FBackend,
-  Alina::mpi::coarsening::smoothed_aggregation<FBackend>,
-  Alina::mpi::relaxation::DistributedSPAI0Relaxation<FBackend>>,
-  Alina::mpi::solver::bicgstab<DBackend>>
-  Solver;
+  typedef backend::BuiltinBackend<double> DBackend;
+  typedef backend::BuiltinBackend<float> FBackend;
+  using Solver = DistributedPreconditionedSolver<DistributedAMG<
+                                                 FBackend,
+                                                 DistributedSmoothedAggregationCoarsening<FBackend>,
+                                                 DistributedSPAI0Relaxation<FBackend>>,
+                                                 Alina::mpi::solver::bicgstab<DBackend>>;
 
   // Create the distributed matrix from the local parts.
-  auto A = std::make_shared<Alina::DistributedMatrix<DBackend>>(
-  world, std::tie(chunk, ptr, col, val));
+  auto A = std::make_shared<DistributedMatrix<DBackend>>(world, std::tie(chunk, ptr, col, val));
 
   // Partition the matrix and the RHS vector.
   // If neither ParMETIS not PT-SCOTCH are not available,

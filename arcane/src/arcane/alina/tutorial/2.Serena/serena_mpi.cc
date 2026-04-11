@@ -54,6 +54,7 @@ THE SOFTWARE.
 const int B = 3;
 
 using namespace Arcane;
+using namespace Arcane::Alina;
 
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
@@ -102,12 +103,12 @@ int main(int argc, char* argv[])
   typedef Alina::backend::BuiltinBackend<dmat_type> DBackend;
   typedef Alina::backend::BuiltinBackend<fmat_type> FBackend;
 
-  typedef Alina::mpi::DistributedPreconditionedSolver<
-  Alina::mpi::DistributedAMG<
-  FBackend,
-  Alina::mpi::coarsening::smoothed_aggregation<FBackend>,
-  Alina::mpi::relaxation::DistributedSPAI0Relaxation<FBackend>>,
-  Alina::mpi::solver::bicgstab<DBackend>>
+  typedef DistributedPreconditionedSolver<
+    DistributedAMG<
+      FBackend,
+      Alina::DistributedSmoothedAggregationCoarsening<FBackend>,
+      Alina::DistributedSPAI0Relaxation<FBackend>>,
+    Alina::mpi::solver::bicgstab<DBackend>>
   Solver;
 
   // Solver parameters

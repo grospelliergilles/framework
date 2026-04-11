@@ -21,9 +21,11 @@
 #include <arcane/alina/util.h>
 
 using namespace Arcane;
+using namespace Arcane::Alina;
 
-namespace Arcane::Alina {
-    profiler<> prof;
+namespace Arcane::Alina
+{
+profiler<> prof;
 }
 
 using Alina::prof;
@@ -244,16 +246,14 @@ int main(int argc, char* argv[])
                               block_size);
 
   prof.tic("setup");
-  typedef Alina::mpi::DistributedPreconditionedSolver<
+  typedef Alina::DistributedPreconditionedSolver<
   Alina::mpi::DistributedCPRPreconditioner<
-  Alina::mpi::DistributedAMG<
-  Backend,
-  Alina::DistributedCoarseningRuntime<Backend>,
-  Alina::DistributedRelaxationRuntime<Backend>,
-  Alina::DistributedDirectSolverRuntime<double>,
-  Alina::MatrixPartitionerRuntime<Backend>>,
-  Alina::mpi::relaxation::as_preconditioner<
-  Alina::DistributedRelaxationRuntime<Backend>>>,
+  DistributedAMG<Backend,
+                 DistributedCoarseningRuntime<Backend>,
+                 DistributedRelaxationRuntime<Backend>,
+                 DistributedDirectSolverRuntime<double>,
+                 MatrixPartitionerRuntime<Backend>>,
+  Alina::as_preconditioner<Alina::DistributedRelaxationRuntime<Backend>>>,
   Alina::DistributedSolverRuntime<Backend>>
   Solver;
 

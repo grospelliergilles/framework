@@ -43,6 +43,7 @@ namespace Arcane::Alina {
 }
 
 using namespace Arcane;
+using namespace Arcane::Alina;
 
 using Alina::prof;
 using Alina::precondition;
@@ -278,10 +279,10 @@ int main(int argc, char* argv[])
   MPI_Barrier(world);
 
   prof.tic("setup");
-  typedef Alina::mpi::DistributedPreconditionedSolver<
+  typedef DistributedPreconditionedSolver<
     Alina::mpi::DistributedSchurPressureCorrection<
-      Alina::mpi::DistributedPreconditionedSolver<
-        Alina::mpi::DistributedBlockPreconditioner<
+      Alina::DistributedPreconditionedSolver<
+        Alina::DistributedBlockPreconditioner<
           Alina::relaxation::as_preconditioner<Backend, Alina::RelaxationRuntime>>,
         Alina::DistributedSolverRuntime<Backend>>,
       Alina::mpi::DistributedSubDomainDeflation<
