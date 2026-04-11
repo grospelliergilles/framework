@@ -45,7 +45,7 @@ TEST(alina_test_complex, complex_matrix_adapter)
   prm.put("precond.coarsening.aggr.block_size", 2);
 
   Alina::PreconditionedSolver<Alina::AMG<Backend,
-                                Alina::coarsening::SmoothedAggregationCoarserning,
+                                Alina::SmoothedAggregationCoarserning,
                                 Alina::SPAI0Relaxation>,
                      Alina::BiCGStabSolver<Backend>>
   solve(Alina::adapter::complex_matrix(std::tie(n, ptr, col, val)), prm);

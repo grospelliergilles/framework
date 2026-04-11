@@ -45,7 +45,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::coarsening::detail
+namespace Arcane::Alina::detail
 {
 
 /*---------------------------------------------------------------------------*/
@@ -75,12 +75,12 @@ std::shared_ptr<Matrix> scaled_galerkin(const Matrix& A, const Matrix& P, const 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::coarsening::detail
+} // namespace Arcane::Alina::detail
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::coarsening
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -1843,7 +1843,7 @@ struct SmoothedAggregationEnergyMinCoarsening
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::coarsening
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -1852,10 +1852,8 @@ namespace Arcane::Alina::backend
 {
 
 template <class Backend>
-struct coarsening_is_supported<Backend,
-                               coarsening::RugeStubenCoarsening,
-                               typename std::enable_if<
-                               !std::is_arithmetic<typename backend::value_type<Backend>::type>::value>::type> : std::false_type
+struct coarsening_is_supported<Backend, RugeStubenCoarsening,
+                               typename std::enable_if<                               !std::is_arithmetic<typename backend::value_type<Backend>::type>::value>::type> : std::false_type
 {};
 
 /*---------------------------------------------------------------------------*/

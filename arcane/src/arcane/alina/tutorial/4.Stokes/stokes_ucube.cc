@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
             Alina::make_block_solver<
                 Alina::AMG<
                     UBackend,
-                    Alina::coarsening::AggregationCoarsening,
+                    Alina::AggregationCoarsening,
                     Alina::ILU0Relaxation
                     >,
                 Alina::PreconditionerOnlySolver<UBackend>

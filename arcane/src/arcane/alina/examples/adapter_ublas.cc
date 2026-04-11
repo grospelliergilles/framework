@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     Alina::PreconditionedSolver<
         Alina::AMG<
             Alina::backend::BuiltinBackend<double>,
-            Alina::coarsening::SmoothedAggregationCoarserning,
+            Alina::SmoothedAggregationCoarserning,
             Alina::SPAI0Relaxation
             >,
         Alina::BiCGStabLSolver<

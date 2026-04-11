@@ -44,80 +44,77 @@ THE SOFTWARE.
 #include <arcane/alina/profiler.h>
 
 using namespace Arcane;
+using namespace Arcane::Alina;
 
-int main(int argc, char *argv[]) {
-    // The command line should contain the matrix, the RHS, and the coordinate files:
-    if (argc < 4) {
-        std::cerr << "Usage: " << argv[0] << " <A.mtx> <b.mtx> <coo.mtx>" << std::endl;
-        return 1;
-    }
+int main(int argc, char* argv[])
+{
+  // The command line should contain the matrix, the RHS, and the coordinate files:
+  if (argc < 4) {
+    std::cerr << "Usage: " << argv[0] << " <A.mtx> <b.mtx> <coo.mtx>" << std::endl;
+    return 1;
+  }
 
-    // The profiler:
-    Alina::profiler<> prof("Nullspace");
+  // The profiler:
+  Alina::profiler<> prof("Nullspace");
 
-    // Read the system matrix, the RHS, and the coordinates:
-    ptrdiff_t rows, cols, ndim, ncoo;
-    std::vector<ptrdiff_t> ptr, col;
-    std::vector<double> val, rhs, coo;
+  // Read the system matrix, the RHS, and the coordinates:
+  ptrdiff_t rows, cols, ndim, ncoo;
+  std::vector<ptrdiff_t> ptr, col;
+  std::vector<double> val, rhs, coo;
 
-    prof.tic("read");
-    std::tie(rows, rows) = Alina::IO::mm_reader(argv[1])(ptr, col, val);
-    std::tie(rows, cols) = Alina::IO::mm_reader(argv[2])(rhs);
-    std::tie(ncoo, ndim) = Alina::IO::mm_reader(argv[3])(coo);
-    prof.toc("read");
+  prof.tic("read");
+  std::tie(rows, rows) = Alina::IO::mm_reader(argv[1])(ptr, col, val);
+  std::tie(rows, cols) = Alina::IO::mm_reader(argv[2])(rhs);
+  std::tie(ncoo, ndim) = Alina::IO::mm_reader(argv[3])(coo);
+  prof.toc("read");
 
-    Alina::precondition(ncoo * ndim == rows && (ndim == 2 || ndim == 3),
-            "The coordinate file has wrong dimensions");
+  Alina::precondition(ncoo * ndim == rows && (ndim == 2 || ndim == 3),
+                      "The coordinate file has wrong dimensions");
 
-    std::cout << "Matrix " << argv[1] << ": " << rows << "x" << rows << std::endl;
-    std::cout << "RHS "    << argv[2] << ": " << rows << "x" << cols << std::endl;
-    std::cout << "Coords " << argv[3] << ": " << ncoo << "x" << ndim << std::endl;
+  std::cout << "Matrix " << argv[1] << ": " << rows << "x" << rows << std::endl;
+  std::cout << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
+  std::cout << "Coords " << argv[3] << ": " << ncoo << "x" << ndim << std::endl;
 
-    // Declare the solver type
-    typedef Alina::backend::BuiltinBackend<double> SBackend; // the solver backend
-    typedef Alina::backend::BuiltinBackend<float>  PBackend; // the preconditioner backend
+  // Declare the solver type
+  typedef Alina::backend::BuiltinBackend<double> SBackend; // the solver backend
+  typedef Alina::backend::BuiltinBackend<float> PBackend; // the preconditioner backend
 
-    typedef Alina::PreconditionedSolver<
-        Alina::AMG<
-            PBackend,
-            Alina::coarsening::SmoothedAggregationCoarserning,
-            Alina::SPAI0Relaxation
-            >,
-        Alina::ConjugateGradientSolver<SBackend>
-        > Solver;
+  typedef PreconditionedSolver<AMG<PBackend, SmoothedAggregationCoarserning, SPAI0Relaxation>,
+                               ConjugateGradientSolver<SBackend>>
 
-    // Solver parameters:
-    Solver::params prm;
-    prm.precond.coarsening.aggr.eps_strong = 0;
+  Solver;
 
-    // Convert the coordinates to the rigid body modes.
-    // The function returns the number of near null-space vectors
-    // (3 in 2D case, 6 in 3D case) and writes the vectors to the
-    // std::vector<double> specified as the last argument:
-    prm.precond.coarsening.nullspace.cols = Alina::coarsening::rigid_body_modes(
-            ndim, coo, prm.precond.coarsening.nullspace.B);
+  // Solver parameters:
+  Solver::params prm;
+  prm.precond.coarsening.aggr.eps_strong = 0;
 
-    // We use the tuple of CRS arrays to represent the system matrix.
-    auto A = std::tie(rows, ptr, col, val);
+  // Convert the coordinates to the rigid body modes.
+  // The function returns the number of near null-space vectors
+  // (3 in 2D case, 6 in 3D case) and writes the vectors to the
+  // std::vector<double> specified as the last argument:
+  prm.precond.coarsening.nullspace.cols = Alina::rigid_body_modes(ndim, coo, prm.precond.coarsening.nullspace.B);
 
-    // Initialize the solver with the system matrix.
-    prof.tic("setup");
-    Solver solve(A, prm);
-    prof.toc("setup");
+  // We use the tuple of CRS arrays to represent the system matrix.
+  auto A = std::tie(rows, ptr, col, val);
 
-    // Show the mini-report on the constructed solver:
-    std::cout << solve << std::endl;
+  // Initialize the solver with the system matrix.
+  prof.tic("setup");
+  Solver solve(A, prm);
+  prof.toc("setup");
 
-    // Solve the system with the zero initial approximation:
-    std::vector<double> x(rows, 0.0);
+  // Show the mini-report on the constructed solver:
+  std::cout << solve << std::endl;
 
-    prof.tic("solve");
-    Alina::SolverResult r = solve(A, rhs, x);
-    prof.toc("solve");
+  // Solve the system with the zero initial approximation:
+  std::vector<double> x(rows, 0.0);
 
-    // Output the number of iterations, the relative error,
-    // and the profiling data:
-    std::cout << "Iters: " << r.nbIteration() << std::endl
-              << "Error: " << r.residual() << std::endl
-              << prof << std::endl;
+  prof.tic("solve");
+  Alina::SolverResult r = solve(A, rhs, x);
+  prof.toc("solve");
+
+  // Output the number of iterations, the relative error,
+  // and the profiling data:
+  std::cout << "Iters: " << r.nbIteration() << std::endl
+            << "Error: " << r.residual() << std::endl
+            << prof << std::endl;
 }

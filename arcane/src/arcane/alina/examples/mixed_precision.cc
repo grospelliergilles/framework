@@ -31,7 +31,7 @@ int main()
   // Combine single-precision preconditioner with a
   // double-precision Krylov solver.
   typedef Alina::PreconditionedSolver<Alina::AMG<fBackend,
-                                        Alina::coarsening::SmoothedAggregationCoarserning,
+                                        Alina::SmoothedAggregationCoarserning,
                                         Alina::SPAI0Relaxation>,
                              Alina::ConjugateGradientSolver<dBackend>>
   Solver;

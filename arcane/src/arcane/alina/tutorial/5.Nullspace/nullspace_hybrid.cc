@@ -81,11 +81,7 @@ int main(int argc, char *argv[]) {
     typedef Alina::backend::HybridBuiltinBackend<FBlock> PBackend; // the preconditioner backend
 
     typedef Alina::PreconditionedSolver<
-        Alina::AMG<
-            PBackend,
-            Alina::coarsening::SmoothedAggregationCoarserning,
-            Alina::SPAI0Relaxation
-            >,
+        Alina::AMG<PBackend,Alina::SmoothedAggregationCoarserning,Alina::SPAI0Relaxation>,
         Alina::ConjugateGradientSolver<SBackend>
         > Solver;
 
@@ -97,8 +93,7 @@ int main(int argc, char *argv[]) {
     // The function returns the number of near null-space vectors
     // (3 in 2D case, 6 in 3D case) and writes the vectors to the
     // std::vector<double> specified as the last argument:
-    prm.precond.coarsening.nullspace.cols = Alina::coarsening::rigid_body_modes(
-            ndim, coo, prm.precond.coarsening.nullspace.B);
+    prm.precond.coarsening.nullspace.cols = Alina::rigid_body_modes(ndim, coo, prm.precond.coarsening.nullspace.B);
 
     // We use the tuple of CRS arrays to represent the system matrix.
     auto A = std::tie(rows, ptr, col, val);

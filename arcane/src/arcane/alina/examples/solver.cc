@@ -345,290 +345,264 @@ std::tuple<size_t, double> solve(
 }
 
 //---------------------------------------------------------------------------
-int main(int argc, char *argv[]) {
-    namespace po = boost::program_options;
-    namespace io = Alina::IO;
+int main(int argc, char* argv[])
+{
+  namespace po = boost::program_options;
+  namespace io = Alina::IO;
 
-    using Alina::prof;
-    using std::vector;
-    using std::string;
+  using Alina::prof;
+  using std::string;
+  using std::vector;
 
-    po::options_description desc("Options");
+  po::options_description desc("Options");
 
-    desc.add_options()
-        ("help,h", "Show this help.")
-        ("prm-file,P",
-         po::value<string>(),
-         "Parameter file in json format. "
-        )
-        (
-         "prm,p",
-         po::value< vector<string> >()->multitoken(),
-         "Parameters specified as name=value pairs. "
-         "May be provided multiple times. Examples:\n"
-         "  -p solver.tol=1e-3\n"
-         "  -p precond.coarse_enough=300"
-        )
-        ("matrix,A",
-         po::value<string>(),
-         "System matrix in the MatrixMarket format. "
-         "When not specified, solves a Poisson problem in 3D unit cube. "
-        )
-        (
-         "rhs,f",
-         po::value<string>(),
-         "The RHS vector in the MatrixMarket format. "
-         "When omitted, a vector of ones is used by default. "
-         "Should only be provided together with a system matrix. "
-        )
-        (
-         "f0",
-         po::bool_switch()->default_value(false),
-         "Use zero RHS vector. Implies --random-initial and solver.ns_search=true"
-        )
-        (
-         "f1",
-         po::bool_switch()->default_value(false),
-         "Set RHS = Ax where x = 1"
-        )
-        (
-         "null,N",
-         po::value<string>(),
-         "The near null-space vectors in the MatrixMarket format. "
-         "Should be a dense matrix of size N*M, where N is the number of "
-         "unknowns, and M is the number of null-space vectors. "
-         "Should only be provided together with a system matrix. "
-        )
-        (
-         "coords,C",
-         po::value<string>(),
-         "Coordinate matrix where number of rows corresponds to the number of grid nodes "
-         "and the number of columns corresponds to the problem dimensionality (2 or 3). "
-         "Will be used to construct near null-space vectors as rigid body modes. "
-         "Should only be provided together with a system matrix. "
-        )
-        (
-         "binary,B",
-         po::bool_switch()->default_value(false),
-         "When specified, treat input files as binary instead of as MatrixMarket. "
-         "It is assumed the files were converted to binary format with mm2bin utility. "
-        )
-        (
-         "scale,s",
-         po::bool_switch()->default_value(false),
-         "Scale the matrix so that the diagonal is unit. "
-        )
-        (
-         "block-size,b",
-         po::value<int>()->default_value(1),
-         "The block size of the system matrix. "
-         "When specified, the system matrix is assumed to have block-wise structure. "
-         "This usually is the case for problems in elasticity, structural mechanics, "
-         "for coupled systems of PDE (such as Navier-Stokes equations), etc. "
-        )
-        (
-         "size,n",
-         po::value<int>()->default_value(32),
-         "The size of the Poisson problem to solve when no system matrix is given. "
-         "Specified as number of grid nodes along each dimension of a unit cube. "
-         "The resulting system will have n*n*n unknowns. "
-        )
-        (
-         "anisotropy,a",
-         po::value<double>()->default_value(1.0),
-         "The anisotropy value for the generated Poisson value. "
-         "Used to determine problem scaling along X, Y, and Z axes: "
-         "hy = hx * a, hz = hy * a."
-        )
-        (
-         "single-level,1",
-         po::bool_switch()->default_value(false),
-         "When specified, the AMG hierarchy is not constructed. "
-         "Instead, the problem is solved using a single-level smoother as preconditioner. "
-        )
-        (
-         "reorder,r",
-         po::bool_switch()->default_value(false),
-         "When specified, the matrix will be reordered to improve cache-locality"
-        )
-        (
-         "initial,x",
-         po::value<double>()->default_value(0),
-         "Value to use as initial approximation. "
-        )
-        (
-         "random-initial",
-         po::bool_switch()->default_value(false),
-         "Use random initial approximation. "
-        )
-        (
-         "output,o",
-         po::value<string>(),
-         "Output file. Will be saved in the MatrixMarket format. "
-         "When omitted, the solution is not saved. "
-        )
-        ;
+  desc.add_options()("help,h", "Show this help.")("prm-file,P",
+                                                  po::value<string>(),
+                                                  "Parameter file in json format. ")(
+  "prm,p",
+  po::value<vector<string>>()->multitoken(),
+  "Parameters specified as name=value pairs. "
+  "May be provided multiple times. Examples:\n"
+  "  -p solver.tol=1e-3\n"
+  "  -p precond.coarse_enough=300")("matrix,A",
+                                    po::value<string>(),
+                                    "System matrix in the MatrixMarket format. "
+                                    "When not specified, solves a Poisson problem in 3D unit cube. ")(
+  "rhs,f",
+  po::value<string>(),
+  "The RHS vector in the MatrixMarket format. "
+  "When omitted, a vector of ones is used by default. "
+  "Should only be provided together with a system matrix. ")(
+  "f0",
+  po::bool_switch()->default_value(false),
+  "Use zero RHS vector. Implies --random-initial and solver.ns_search=true")(
+  "f1",
+  po::bool_switch()->default_value(false),
+  "Set RHS = Ax where x = 1")(
+  "null,N",
+  po::value<string>(),
+  "The near null-space vectors in the MatrixMarket format. "
+  "Should be a dense matrix of size N*M, where N is the number of "
+  "unknowns, and M is the number of null-space vectors. "
+  "Should only be provided together with a system matrix. ")(
+  "coords,C",
+  po::value<string>(),
+  "Coordinate matrix where number of rows corresponds to the number of grid nodes "
+  "and the number of columns corresponds to the problem dimensionality (2 or 3). "
+  "Will be used to construct near null-space vectors as rigid body modes. "
+  "Should only be provided together with a system matrix. ")(
+  "binary,B",
+  po::bool_switch()->default_value(false),
+  "When specified, treat input files as binary instead of as MatrixMarket. "
+  "It is assumed the files were converted to binary format with mm2bin utility. ")(
+  "scale,s",
+  po::bool_switch()->default_value(false),
+  "Scale the matrix so that the diagonal is unit. ")(
+  "block-size,b",
+  po::value<int>()->default_value(1),
+  "The block size of the system matrix. "
+  "When specified, the system matrix is assumed to have block-wise structure. "
+  "This usually is the case for problems in elasticity, structural mechanics, "
+  "for coupled systems of PDE (such as Navier-Stokes equations), etc. ")(
+  "size,n",
+  po::value<int>()->default_value(32),
+  "The size of the Poisson problem to solve when no system matrix is given. "
+  "Specified as number of grid nodes along each dimension of a unit cube. "
+  "The resulting system will have n*n*n unknowns. ")(
+  "anisotropy,a",
+  po::value<double>()->default_value(1.0),
+  "The anisotropy value for the generated Poisson value. "
+  "Used to determine problem scaling along X, Y, and Z axes: "
+  "hy = hx * a, hz = hy * a.")(
+  "single-level,1",
+  po::bool_switch()->default_value(false),
+  "When specified, the AMG hierarchy is not constructed. "
+  "Instead, the problem is solved using a single-level smoother as preconditioner. ")(
+  "reorder,r",
+  po::bool_switch()->default_value(false),
+  "When specified, the matrix will be reordered to improve cache-locality")(
+  "initial,x",
+  po::value<double>()->default_value(0),
+  "Value to use as initial approximation. ")(
+  "random-initial",
+  po::bool_switch()->default_value(false),
+  "Use random initial approximation. ")(
+  "output,o",
+  po::value<string>(),
+  "Output file. Will be saved in the MatrixMarket format. "
+  "When omitted, the solution is not saved. ");
 
-    po::positional_options_description p;
-    p.add("prm", -1);
+  po::positional_options_description p;
+  p.add("prm", -1);
 
-    po::variables_map vm;
-    po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
-    po::notify(vm);
+  po::variables_map vm;
+  po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
+  po::notify(vm);
 
-    if (vm.count("help")) {
-        std::cout << desc << std::endl;
-        return 0;
+  if (vm.count("help")) {
+    std::cout << desc << std::endl;
+    return 0;
+  }
+
+  for (int i = 0; i < argc; ++i) {
+    if (i)
+      std::cout << " ";
+    std::cout << argv[i];
+  }
+  std::cout << std::endl;
+
+  Alina::PropertyTree prm;
+  if (vm.count("prm-file")) {
+    prm.read_json(vm["prm-file"].as<string>());
+  }
+
+  if (vm.count("prm")) {
+    for (const string& v : vm["prm"].as<vector<string>>()) {
+      Alina::put(prm, v);
+    }
+  }
+
+  size_t rows, nv = 0;
+  vector<ptrdiff_t> ptr, col;
+  vector<double> val, rhs, null, x;
+
+  if (vm.count("matrix")) {
+    auto t = prof.scoped_tic("reading");
+
+    string Afile = vm["matrix"].as<string>();
+    bool binary = vm["binary"].as<bool>();
+
+    if (binary) {
+      io::read_crs(Afile, rows, ptr, col, val);
+    }
+    else {
+      size_t cols;
+      std::tie(rows, cols) = io::mm_reader(Afile)(ptr, col, val);
+      precondition(rows == cols, "Non-square system matrix");
     }
 
-    for (int i = 0; i < argc; ++i) {
-        if (i) std::cout << " ";
-        std::cout << argv[i];
-    }
-    std::cout << std::endl;
+    if (vm.count("rhs")) {
+      string bfile = vm["rhs"].as<string>();
 
-    Alina::PropertyTree prm;
-    if (vm.count("prm-file")) {
-      prm.read_json(vm["prm-file"].as<string>());
+      size_t n, m;
+
+      if (binary) {
+        io::read_dense(bfile, n, m, rhs);
+      }
+      else {
+        std::tie(n, m) = io::mm_reader(bfile)(rhs);
+      }
+
+      precondition(n == rows && m == 1, "The RHS vector has wrong size");
+    }
+    else if (vm["f1"].as<bool>()) {
+      rhs.resize(rows);
+      for (size_t i = 0; i < rows; ++i) {
+        double s = 0;
+        for (ptrdiff_t j = ptr[i], e = ptr[i + 1]; j < e; ++j)
+          s += val[j];
+        rhs[i] = s;
+      }
+    }
+    else {
+      rhs.resize(rows, vm["f0"].as<bool>() ? 0.0 : 1.0);
     }
 
-    if (vm.count("prm")) {
-        for(const string &v : vm["prm"].as<vector<string> >()) {
-            Alina::put(prm, v);
+    if (vm.count("null")) {
+      string nfile = vm["null"].as<string>();
+
+      size_t m;
+
+      if (binary) {
+        io::read_dense(nfile, m, nv, null);
+      }
+      else {
+        std::tie(m, nv) = io::mm_reader(nfile)(null);
+      }
+
+      precondition(m == rows, "Near null-space vectors have wrong size");
+    }
+    else if (vm.count("coords")) {
+      string cfile = vm["coords"].as<string>();
+      std::vector<double> coo;
+
+      size_t m, ndim;
+
+      if (binary) {
+        io::read_dense(cfile, m, ndim, coo);
+      }
+      else {
+        std::tie(m, ndim) = io::mm_reader(cfile)(coo);
+      }
+
+      precondition(m * ndim == rows && (ndim == 2 || ndim == 3), "Coordinate matrix has wrong size");
+
+      nv = Alina::rigid_body_modes(ndim, coo, null);
+    }
+
+    if (nv) {
+      prm.put("precond.coarsening.nullspace.cols", nv);
+      prm.put("precond.coarsening.nullspace.rows", rows);
+      prm.put("precond.coarsening.nullspace.B", &null[0]);
+    }
+  }
+  else {
+    auto t = prof.scoped_tic("assembling");
+    rows = sample_problem(vm["size"].as<int>(), val, col, ptr, rhs, vm["anisotropy"].as<double>());
+  }
+
+  if (vm["scale"].as<bool>()) {
+    std::vector<double> dia(rows, 1.0);
+
+    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(rows); ++i) {
+      double d = 1.0;
+      for (ptrdiff_t j = ptr[i], e = ptr[i + 1]; j < e; ++j) {
+        if (col[j] == i) {
+          d = 1 / sqrt(val[j]);
         }
+      }
+      if (!std::isnan(d))
+        dia[i] = d;
     }
 
-    size_t rows, nv = 0;
-    vector<ptrdiff_t> ptr, col;
-    vector<double> val, rhs, null, x;
-
-    if (vm.count("matrix")) {
-        auto t = prof.scoped_tic("reading");
-
-        string Afile  = vm["matrix"].as<string>();
-        bool   binary = vm["binary"].as<bool>();
-
-        if (binary) {
-            io::read_crs(Afile, rows, ptr, col, val);
-        } else {
-            size_t cols;
-            std::tie(rows, cols) = io::mm_reader(Afile)(ptr, col, val);
-            precondition(rows == cols, "Non-square system matrix");
-        }
-
-        if (vm.count("rhs")) {
-            string bfile = vm["rhs"].as<string>();
-
-            size_t n, m;
-
-            if (binary) {
-                io::read_dense(bfile, n, m, rhs);
-            } else {
-                std::tie(n, m) = io::mm_reader(bfile)(rhs);
-            }
-
-            precondition(n == rows && m == 1, "The RHS vector has wrong size");
-        } else if (vm["f1"].as<bool>()) {
-            rhs.resize(rows);
-            for(size_t i = 0; i < rows; ++i) {
-                double s = 0;
-                for(ptrdiff_t j = ptr[i], e = ptr[i+1]; j < e; ++j)
-                    s += val[j];
-                rhs[i] = s;
-            }
-        } else {
-            rhs.resize(rows, vm["f0"].as<bool>() ? 0.0 : 1.0);
-        }
-
-        if (vm.count("null")) {
-            string nfile = vm["null"].as<string>();
-
-            size_t m;
-
-            if (binary) {
-                io::read_dense(nfile, m, nv, null);
-            } else {
-                std::tie(m, nv) = io::mm_reader(nfile)(null);
-            }
-
-            precondition(m == rows, "Near null-space vectors have wrong size");
-        } else if (vm.count("coords")) {
-            string cfile = vm["coords"].as<string>();
-            std::vector<double> coo;
-
-            size_t m, ndim;
-
-            if (binary) {
-                io::read_dense(cfile, m, ndim, coo);
-            } else {
-                std::tie(m, ndim) = io::mm_reader(cfile)(coo);
-            }
-
-            precondition(m * ndim == rows && (ndim == 2 || ndim == 3), "Coordinate matrix has wrong size");
-
-            nv = Alina::coarsening::rigid_body_modes(ndim, coo, null);
-        }
-
-        if (nv) {
-            prm.put("precond.coarsening.nullspace.cols", nv);
-            prm.put("precond.coarsening.nullspace.rows", rows);
-            prm.put("precond.coarsening.nullspace.B",    &null[0]);
-        }
-    } else {
-        auto t = prof.scoped_tic("assembling");
-        rows = sample_problem(vm["size"].as<int>(), val, col, ptr, rhs, vm["anisotropy"].as<double>());
+    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(rows); ++i) {
+      rhs[i] *= dia[i];
+      for (ptrdiff_t j = ptr[i], e = ptr[i + 1]; j < e; ++j) {
+        val[j] *= dia[i] * dia[col[j]];
+      }
     }
+  }
 
-    if (vm["scale"].as<bool>()) {
-        std::vector<double> dia(rows, 1.0);
+  x.resize(rows, vm["initial"].as<double>());
+  if (vm["random-initial"].as<bool>() || vm["f0"].as<bool>()) {
+    std::mt19937 rng;
+    std::uniform_real_distribution<double> rnd(-1, 1);
+    for (auto& v : x)
+      v = rnd(rng);
+  }
 
-        for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(rows); ++i) {
-            double d = 1.0;
-            for(ptrdiff_t j = ptr[i], e = ptr[i+1]; j < e; ++j) {
-                if (col[j] == i) {
-                    d = 1 / sqrt(val[j]);
-                }
-            }
-            if (!std::isnan(d)) dia[i] = d;
-        }
+  if (vm["f0"].as<bool>()) {
+    prm.put("solver.ns_search", true);
+  }
 
-        for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(rows); ++i) {
-            rhs[i] *= dia[i];
-            for(ptrdiff_t j = ptr[i], e = ptr[i+1]; j < e; ++j) {
-                val[j] *= dia[i] * dia[col[j]];
-            }
-        }
-    }
+  size_t iters;
+  double error;
 
-    x.resize(rows, vm["initial"].as<double>());
-    if (vm["random-initial"].as<bool>() || vm["f0"].as<bool>()) {
-        std::mt19937 rng;
-        std::uniform_real_distribution<double> rnd(-1, 1);
-        for(auto &v : x) v = rnd(rng);
-    }
+  int block_size = vm["block-size"].as<int>();
 
-    if (vm["f0"].as<bool>()) {
-        prm.put("solver.ns_search", true);
-    }
+  if (vm["single-level"].as<bool>())
+    prm.put("precond.class", "relaxation");
 
-    size_t iters;
-    double error;
+  std::tie(iters, error) = solve(
+  prm, rows, ptr, col, val, rhs, x,
+  block_size, vm["reorder"].as<bool>());
 
-    int block_size = vm["block-size"].as<int>();
+  if (vm.count("output")) {
+    auto t = prof.scoped_tic("write");
+    Alina::IO::mm_write(vm["output"].as<string>(), &x[0], x.size());
+  }
 
-    if (vm["single-level"].as<bool>())
-        prm.put("precond.class", "relaxation");
-
-    std::tie(iters, error) = solve(
-            prm, rows, ptr, col, val, rhs, x,
-            block_size, vm["reorder"].as<bool>());
-
-    if (vm.count("output")) {
-        auto t = prof.scoped_tic("write");
-        Alina::IO::mm_write(vm["output"].as<string>(), &x[0], x.size());
-    }
-
-    std::cout << "Iterations: " << iters << std::endl
-              << "Error:      " << error << std::endl
-              << prof << std::endl;
+  std::cout << "Iterations: " << iters << std::endl
+            << "Error:      " << error << std::endl
+            << prof << std::endl;
 }

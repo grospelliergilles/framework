@@ -132,7 +132,7 @@ int main()
 
   Alina::PreconditionedSolver<Alina::AMG<
                               Backend,
-                              Alina::coarsening::AggregationCoarsening,
+                              Alina::AggregationCoarsening,
                               Alina::SPAI0Relaxation>,
                               Alina::ConjugateGradientSolver<Backend>>
   solve(A);

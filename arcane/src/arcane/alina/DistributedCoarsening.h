@@ -59,7 +59,7 @@ struct DistributedPMISAggregation
   struct params
   {
     /// Near nullspace parameters.
-    Alina::coarsening::nullspace_params nullspace;
+    nullspace_params nullspace;
 
     // Strong connectivity threshold
     scalar_type eps_strong;
@@ -1227,7 +1227,7 @@ struct DistributedAggregationCoarsening
                   const DistributedMatrix<Backend>& P,
                   const DistributedMatrix<Backend>& R) const
   {
-    return Alina::coarsening::detail::scaled_galerkin(A, P, R, 1 / prm.over_interp);
+    return detail::scaled_galerkin(A, P, R, 1 / prm.over_interp);
   }
 };
 
@@ -1402,7 +1402,7 @@ struct DistributedSmoothedAggregationCoarsening
                   const DistributedMatrix<Backend>& P,
                   const DistributedMatrix<Backend>& R) const
   {
-    return Alina::coarsening::detail::galerkin(A, P, R);
+    return detail::galerkin(A, P, R);
   }
 };
 

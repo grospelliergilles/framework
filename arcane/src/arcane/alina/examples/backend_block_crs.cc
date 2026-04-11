@@ -23,11 +23,7 @@ int main()
   using Alina::prof;
 
   typedef Alina::backend::BlockCSRBackend<double> Backend;
-  typedef Alina::AMG<
-  Backend,
-  Alina::coarsening::AggregationCoarsening,
-  Alina::SPAI0Relaxation>
-  AMG;
+  typedef Alina::AMG<Backend, Alina::AggregationCoarsening, Alina::SPAI0Relaxation> AMG;
 
   std::vector<ptrdiff_t> ptr;
   std::vector<ptrdiff_t> col;

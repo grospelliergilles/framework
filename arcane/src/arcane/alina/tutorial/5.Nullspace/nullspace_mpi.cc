@@ -159,8 +159,7 @@ int main(int argc, char* argv[])
   // The function returns the number of near null-space vectors
   // (3 in 2D case, 6 in 3D case) and writes the vectors to the
   // std::vector<double> specified as the last argument:
-  prm.precond.coarsening.aggr.nullspace.cols = Alina::coarsening::rigid_body_modes(
-  3, coo, prm.precond.coarsening.aggr.nullspace.B);
+  prm.precond.coarsening.aggr.nullspace.cols = Alina::rigid_body_modes(3, coo, prm.precond.coarsening.aggr.nullspace.B);
 
   // Initialize the solver with the system matrix.
   prof.tic("setup");

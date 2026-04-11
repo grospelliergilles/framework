@@ -119,10 +119,10 @@ struct CoarseningRuntime
 #define ARCANE_ALINA_RUNTIME_COARSENING(t) \
   case eCoarserningType::t: \
     if (as_scalar) { \
-      handle = call_constructor<Arcane::Alina::coarsening::as_scalar<Arcane::Alina::coarsening::t>::type>(prm); \
+      handle = call_constructor<Arcane::Alina::as_scalar<t>::type>(prm); \
     } \
     else { \
-      handle = call_constructor<Arcane::Alina::coarsening::t>(prm); \
+      handle = call_constructor<t>(prm); \
     } \
     break
 
@@ -145,10 +145,10 @@ struct CoarseningRuntime
 #define ARCANE_ALINA_RUNTIME_COARSENING(t) \
   case eCoarserningType::t: \
     if (as_scalar) { \
-      call_destructor<Arcane::Alina::coarsening::as_scalar<::Arcane::Alina::coarsening::t>::type>(); \
+      call_destructor<Arcane::Alina::as_scalar<::Arcane::Alina::t>::type>(); \
     } \
     else { \
-      call_destructor<::Arcane::Alina::coarsening::t>(); \
+      call_destructor<::Arcane::Alina::t>(); \
     } \
     break
 
@@ -170,9 +170,9 @@ struct CoarseningRuntime
 #define ARCANE_ALINA_RUNTIME_COARSENING(t) \
   case eCoarserningType::t: \
     if (as_scalar) { \
-      return make_operators<::Arcane::Alina::coarsening::as_scalar<::Arcane::Alina::coarsening::t>::type>(A); \
+      return make_operators<::Arcane::Alina::as_scalar<::Arcane::Alina::t>::type>(A); \
     } \
-    return make_operators<::Arcane::Alina::coarsening::t>(A)
+    return make_operators<::Arcane::Alina::t>(A)
 
       ARCANE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
       ARCANE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);
@@ -194,9 +194,9 @@ struct CoarseningRuntime
 #define ARCANE_ALINA_RUNTIME_COARSENING(t) \
       case eCoarserningType::t:            \
     if (as_scalar) { \
-      return make_coarse<::Arcane::Alina::coarsening::as_scalar<::Arcane::Alina::coarsening::t>::type>(A, P, R); \
+      return make_coarse<::Arcane::Alina::as_scalar<::Arcane::Alina::t>::type>(A, P, R); \
     } \
-    return make_coarse<::Arcane::Alina::coarsening::t>(A, P, R)
+    return make_coarse<::Arcane::Alina::t>(A, P, R)
 
       ARCANE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
       ARCANE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);

@@ -177,7 +177,7 @@ int main(int argc, char* argv[])
 
       precondition(m * ndim == rows && (ndim == 2 || ndim == 3), "Coordinate matrix has wrong size");
 
-      nv = Alina::coarsening::rigid_body_modes(ndim, coo, z, /*transpose = */ true);
+      nv = Alina::rigid_body_modes(ndim, coo, z, /*transpose = */ true);
     }
 
     prm.put("nvec", nv);
