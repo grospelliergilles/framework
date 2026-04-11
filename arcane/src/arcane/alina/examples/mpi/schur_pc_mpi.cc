@@ -280,16 +280,16 @@ int main(int argc, char* argv[])
 
   prof.tic("setup");
   typedef DistributedPreconditionedSolver<
-    Alina::DistributedSchurPressureCorrection<
-      Alina::DistributedPreconditionedSolver<
-        Alina::DistributedBlockPreconditioner<
-          Alina::relaxation::RelaxationAsPreconditioner<Backend, Alina::RelaxationRuntime>>,
-        Alina::DistributedSolverRuntime<Backend>>,
-      Alina::DistributedSubDomainDeflation<
-        Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::RelaxationRuntime>,
-        Alina::DistributedSolverRuntime<Backend>,
-        Alina::DistributedDirectSolverRuntime<double>>>,
-    Alina::DistributedSolverRuntime<Backend>>
+    DistributedSchurPressureCorrection<
+      DistributedPreconditionedSolver<
+        DistributedBlockPreconditioner<
+         RelaxationAsPreconditioner<Backend, RelaxationRuntime>>,
+        DistributedSolverRuntime<Backend>>,
+      DistributedSubDomainDeflation<
+        AMG<Backend, CoarseningRuntime, RelaxationRuntime>,
+        DistributedSolverRuntime<Backend>,
+        DistributedDirectSolverRuntime<double>>>,
+    DistributedSolverRuntime<Backend>>
   Solver;
 
   Solver solve(world, std::tie(chunk, ptr, col, val), prm, bprm);

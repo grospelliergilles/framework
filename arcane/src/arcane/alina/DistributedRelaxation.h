@@ -39,10 +39,10 @@ namespace Arcane::Alina
 
 template <class Backend>
 struct DistributedChebyshevRelaxation
-: public Alina::relaxation::ChebyshevRelaxation<Backend>
+: public ChebyshevRelaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::ChebyshevRelaxation<Backend> Base;
+  typedef ChebyshevRelaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -58,10 +58,10 @@ struct DistributedChebyshevRelaxation
 
 template <class Backend>
 struct DistributedDampedJacobiRelaxation
-: public Alina::relaxation::DampedJacobiRelaxation<Backend>
+: public DampedJacobiRelaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::DampedJacobiRelaxation<Backend> Base;
+  typedef DampedJacobiRelaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -77,10 +77,10 @@ struct DistributedDampedJacobiRelaxation
 
 template <class Backend>
 struct DistributedGaussSeidelRelaxation
-: public Alina::relaxation::GaussSeidelRelaxation<Backend>
+: public GaussSeidelRelaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::GaussSeidelRelaxation<Backend> Base;
+  typedef GaussSeidelRelaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -115,10 +115,10 @@ struct DistributedGaussSeidelRelaxation
 
 template <class Backend>
 struct DistributedILU0Relaxation
-: public Alina::relaxation::ILU0Relaxation<Backend>
+: public ILU0Relaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::ILU0Relaxation<Backend> Base;
+  typedef ILU0Relaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -134,10 +134,10 @@ struct DistributedILU0Relaxation
 
 template <class Backend>
 struct DistributedILUKRelaxation
-: public Alina::relaxation::ILUKRelaxation<Backend>
+: public ILUKRelaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::ILUKRelaxation<Backend> Base;
+  typedef ILUKRelaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -153,10 +153,10 @@ struct DistributedILUKRelaxation
 
 template <class Backend>
 struct DistributedILUPRelaxation
-: public Alina::relaxation::ILUPRelaxation<Backend>
+: public ILUPRelaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::ILUPRelaxation<Backend> Base;
+  typedef ILUPRelaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -171,10 +171,11 @@ struct DistributedILUPRelaxation
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-struct DistributedILUTRelaxation : public Alina::relaxation::ILUTRelaxation<Backend>
+struct DistributedILUTRelaxation
+: public ILUTRelaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::ILUTRelaxation<Backend> Base;
+  typedef ILUTRelaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 
@@ -269,10 +270,10 @@ struct DistributedSPAI0Relaxation
 
 template <class Backend>
 struct DistributedSPAI1Relaxation
-: public Alina::relaxation::SPAI1Relaxation<Backend>
+: public SPAI1Relaxation<Backend>
 {
   typedef Backend backend_type;
-  typedef Alina::relaxation::SPAI1Relaxation<Backend> Base;
+  typedef SPAI1Relaxation<Backend> Base;
   typedef typename Backend::params backend_params;
   typedef typename Base::params params;
 

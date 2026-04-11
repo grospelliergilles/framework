@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
         Alina::AMG<
             PBackend,
             Alina::coarsening::as_scalar<Alina::coarsening::SmoothedAggregationCoarserning>::type,
-            Alina::relaxation::ILU0Relaxation
+            Alina::ILU0Relaxation
             >,
         Alina::ConjugateGradientSolver<SBackend>
         > Solver;

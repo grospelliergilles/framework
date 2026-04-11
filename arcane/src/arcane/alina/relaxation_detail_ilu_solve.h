@@ -38,7 +38,6 @@ THE SOFTWARE.
 #include <arcane/alina/util.h>
 
 namespace Arcane::Alina {
-namespace relaxation {
 namespace detail {
 
 template <class Backend>
@@ -462,7 +461,6 @@ class ilu_solve< backend::HybridBuiltinBackend<Block, Col, Ptr> >
 };
 
 } // namespace detail
-} // namespace relaxation
 } // namespace amgcl
 
 #endif

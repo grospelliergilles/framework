@@ -50,7 +50,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::relaxation
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -237,8 +237,9 @@ class RelaxationAsPreconditioner
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-/// Chebyshev polynomial smoother.
 /*!
+ * \brief Chebyshev polynomial smoother.
+ *
  * \param Backend Backend for temporary structures allocation.
  * \ingroup relaxation
  *
@@ -246,7 +247,6 @@ class RelaxationAsPreconditioner
  * P. Ghysels, P. Kłosiewicz, and W. Vanroose.
  * "Improving the arithmetic intensity of multigrid with the help of polynomial smoothers".
  * Numer. Linear Algebra Appl. 2012;19:253-267. DOI: 10.1002/nla.1808
- *
  */
 template <class Backend>
 class ChebyshevRelaxation
@@ -311,7 +311,7 @@ class ChebyshevRelaxation
     }
   } prm;
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
+  /// \copydoc DampedJacobiRelaxation::DampedJacobiRelaxation
   template <class Matrix>
   ChebyshevRelaxation(const Matrix& A, const params& prm,
                       const typename Backend::params& backend_prm)
@@ -541,7 +541,7 @@ struct GaussSeidelRelaxation
 
   bool is_serial;
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
+  /// \copydoc DampedJacobiRelaxation::DampedJacobiRelaxation
   template <class Matrix>
   GaussSeidelRelaxation(const Matrix& A, const params& prm, const typename Backend::params&)
   : is_serial(prm.serial || num_threads() < 4)
@@ -552,7 +552,7 @@ struct GaussSeidelRelaxation
     }
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_pre
+  /// \copydoc DampedJacobiRelaxation::apply_pre
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP&) const
   {
@@ -562,7 +562,7 @@ struct GaussSeidelRelaxation
       forward->sweep(rhs, x);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_post
+  /// \copydoc DampedJacobiRelaxation::apply_post
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP&) const
   {
@@ -900,7 +900,7 @@ struct ILU0Relaxation
     }
   } prm;
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
+  /// \copydoc DampedJacobiRelaxation::DampedJacobiRelaxation
   template <class Matrix>
   ILU0Relaxation(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
@@ -1028,7 +1028,7 @@ struct ILU0Relaxation
     ilu = std::make_shared<ilu_solve>(L, U, D, prm.solve, bprm);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_pre
+  /// \copydoc DampedJacobiRelaxation::apply_pre
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -1037,7 +1037,7 @@ struct ILU0Relaxation
     backend::axpby(prm.damping, tmp, math::identity<scalar_type>(), x);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_post
+  /// \copydoc DampedJacobiRelaxation::apply_post
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -1046,7 +1046,7 @@ struct ILU0Relaxation
     backend::axpby(prm.damping, tmp, math::identity<scalar_type>(), x);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_post
+  /// \copydoc DampedJacobiRelaxation::apply_post
   template <class Matrix, class VectorRHS, class VectorX>
   void apply(const Matrix&, const VectorRHS& rhs, VectorX& x) const
   {
@@ -1115,7 +1115,7 @@ struct ILUKRelaxation
     }
   } prm;
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
+  /// \copydoc DampedJacobiRelaxation::DampedJacobiRelaxation
   template <class Matrix>
   ILUKRelaxation(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
@@ -1193,7 +1193,7 @@ struct ILUKRelaxation
     D, prm.solve, bprm);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_pre
+  /// \copydoc DampedJacobiRelaxation::apply_pre
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -1202,7 +1202,7 @@ struct ILUKRelaxation
     backend::axpby(prm.damping, tmp, math::identity<scalar_type>(), x);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_post
+  /// \copydoc DampedJacobiRelaxation::apply_post
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -1447,7 +1447,7 @@ struct ILUPRelaxation
     }
   } prm;
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
+  /// \copydoc DampedJacobiRelaxation::DampedJacobiRelaxation
   template <class Matrix>
   ILUPRelaxation(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
@@ -1486,14 +1486,14 @@ struct ILUPRelaxation
     }
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_pre
+  /// \copydoc DampedJacobiRelaxation::apply_pre
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
     base->apply_pre(A, rhs, x, tmp);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_post
+  /// \copydoc DampedJacobiRelaxation::apply_post
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -1579,7 +1579,7 @@ struct ILUTRelaxation
     }
   } prm;
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
+  /// \copydoc DampedJacobiRelaxation::DampedJacobiRelaxation
   template <class Matrix>
   ILUTRelaxation(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
@@ -1664,7 +1664,7 @@ struct ILUTRelaxation
     ilu = std::make_shared<ilu_solve>(L, U, D, prm.solve, bprm);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_pre
+  /// \copydoc DampedJacobiRelaxation::apply_pre
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -1673,7 +1673,7 @@ struct ILUTRelaxation
     backend::axpby(prm.damping, tmp, math::identity<scalar_type>(), x);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_post
+  /// \copydoc DampedJacobiRelaxation::apply_post
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -1919,7 +1919,7 @@ struct SPAI0Relaxation
   /// Relaxation parameters.
   typedef Alina::detail::empty_params params;
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
+  /// \copydoc DampedJacobiRelaxation::DampedJacobiRelaxation
   template <class Matrix>
   SPAI0Relaxation(const Matrix& A, const params&, const typename Backend::params& backend_prm)
   {
@@ -1946,7 +1946,7 @@ struct SPAI0Relaxation
     M = Backend::copy_vector(m, backend_prm);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_pre
+  /// \copydoc DampedJacobiRelaxation::apply_pre
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -1955,7 +1955,7 @@ struct SPAI0Relaxation
     backend::vmul(one, *M, tmp, one, x);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_post
+  /// \copydoc DampedJacobiRelaxation::apply_post
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -2000,7 +2000,7 @@ struct SPAI1Relaxation
   /// Relaxation parameters.
   typedef Alina::detail::empty_params params;
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
+  /// \copydoc DampedJacobiRelaxation::DampedJacobiRelaxation
   template <class Matrix>
   SPAI1Relaxation(const Matrix& A, const params&, const typename Backend::params& backend_prm)
   {
@@ -2064,7 +2064,7 @@ struct SPAI1Relaxation
     M = Backend::copy_matrix(Ainv, backend_prm);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_pre
+  /// \copydoc DampedJacobiRelaxation::apply_pre
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -2072,7 +2072,7 @@ struct SPAI1Relaxation
     backend::spmv(math::identity<scalar_type>(), *M, tmp, math::identity<scalar_type>(), x);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_post
+  /// \copydoc DampedJacobiRelaxation::apply_post
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -2097,7 +2097,7 @@ struct SPAI1Relaxation
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::relaxation
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -2106,13 +2106,12 @@ namespace Arcane::Alina::backend
 {
 
 template <class Backend>
-struct relaxation_is_supported<Backend, relaxation::SPAI1Relaxation,
+struct relaxation_is_supported<Backend, SPAI1Relaxation,
                                typename std::enable_if<(Alina::math::static_rows<typename Backend::value_type>::value > 1)>::type> : std::false_type
 {};
 
 template <class Backend>
-struct relaxation_is_supported<Backend,
-                               relaxation::GaussSeidelRelaxation,
+struct relaxation_is_supported<Backend, GaussSeidelRelaxation,
                                typename std::enable_if<
                                !Backend::provides_row_iterator::value>::type> : std::false_type
 {};

@@ -92,14 +92,14 @@ int main(int argc, char *argv[]) {
                 Alina::AMG<
                     UBackend,
                     Alina::coarsening::AggregationCoarsening,
-                    Alina::relaxation::ILU0Relaxation
+                    Alina::ILU0Relaxation
                     >,
                 Alina::PreconditionerOnlySolver<UBackend>
                 >,
             Alina::PreconditionedSolver<
-                Alina::relaxation::RelaxationAsPreconditioner<
+                Alina::RelaxationAsPreconditioner<
                     PBackend,
-                    Alina::relaxation::SPAI0Relaxation
+                    Alina::SPAI0Relaxation
                     >,
                 Alina::PreconditionerOnlySolver<PBackend>
                 >

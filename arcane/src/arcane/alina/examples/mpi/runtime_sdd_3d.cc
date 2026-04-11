@@ -46,6 +46,7 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #include <arcane/alina/profiler.h>
 
 using namespace Arcane;
+using namespace Arcane::Alina;
 
 #include "domain_partition.h"
 
@@ -326,10 +327,10 @@ int main(int argc, char* argv[])
       prm.put("local.type", relaxation);
 
       prof.tic("setup");
-      typedef Alina::DistributedSubDomainDeflation<
-        Alina::relaxation::RelaxationAsPreconditioner<Backend, Alina::RelaxationRuntime>,
-        Alina::DistributedSolverRuntime<Backend>,
-        Alina::DistributedDirectSolverRuntime<double>>
+      typedef DistributedSubDomainDeflation<
+        RelaxationAsPreconditioner<Backend, RelaxationRuntime>,
+        DistributedSolverRuntime<Backend>,
+        DistributedDirectSolverRuntime<double>>
       SDD;
 
       SDD solve(world, std::tie(chunk, ptr, col, val), prm, bprm);

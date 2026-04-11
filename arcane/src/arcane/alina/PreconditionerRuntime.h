@@ -124,7 +124,7 @@ class PreconditionerRuntime
       handle = static_cast<void*>(new Precond(A, prm, bprm));
     } break;
     case ePreconditionerType::relaxation: {
-      typedef Alina::relaxation::RelaxationAsPreconditioner<Backend, RelaxationRuntime>
+      typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime>
       Precond;
 
       handle = static_cast<void*>(new Precond(A, prm, bprm));
@@ -155,7 +155,7 @@ class PreconditionerRuntime
       delete static_cast<Precond*>(handle);
     } break;
     case ePreconditionerType::relaxation: {
-      typedef Alina::relaxation::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
+      typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
 
       delete static_cast<Precond*>(handle);
     } break;
@@ -202,7 +202,7 @@ class PreconditionerRuntime
       static_cast<Precond*>(handle)->apply(rhs, x);
     } break;
     case ePreconditionerType::relaxation: {
-      typedef Alina::relaxation::RelaxationAsPreconditioner<Backend, RelaxationRuntime>
+      typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime>
       Precond;
 
       static_cast<Precond*>(handle)->apply(rhs, x);
@@ -232,7 +232,7 @@ class PreconditionerRuntime
       return static_cast<Precond*>(handle)->system_matrix_ptr();
     }
     case ePreconditionerType::relaxation: {
-      typedef Alina::relaxation::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
+      typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
 
       return static_cast<Precond*>(handle)->system_matrix_ptr();
     }
@@ -270,7 +270,7 @@ class PreconditionerRuntime
       return backend::bytes(*static_cast<Precond*>(handle));
     }
     case ePreconditionerType::relaxation: {
-      typedef Alina::relaxation::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
+      typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
 
       return backend::bytes(*static_cast<Precond*>(handle));
     }
@@ -298,7 +298,7 @@ class PreconditionerRuntime
       return os << *static_cast<Precond*>(p.handle);
     }
     case ePreconditionerType::relaxation: {
-      typedef Alina::relaxation::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
+      typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
 
       return os << *static_cast<Precond*>(p.handle);
     }

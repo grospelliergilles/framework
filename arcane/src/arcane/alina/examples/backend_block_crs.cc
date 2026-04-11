@@ -26,7 +26,7 @@ int main()
   typedef Alina::AMG<
   Backend,
   Alina::coarsening::AggregationCoarsening,
-  Alina::relaxation::SPAI0Relaxation>
+  Alina::SPAI0Relaxation>
   AMG;
 
   std::vector<ptrdiff_t> ptr;

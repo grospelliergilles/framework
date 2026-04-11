@@ -107,7 +107,7 @@ struct RelaxationRuntime
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
-    handle = call_constructor<::Arcane::Alina::relaxation::type>(A, prm, bprm); \
+    handle = call_constructor<type>(A, prm, bprm); \
     break
 
       ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
@@ -125,7 +125,7 @@ struct RelaxationRuntime
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
-    delete static_cast<::Arcane::Alina::relaxation::type<Backend>*>(handle); \
+    delete static_cast<type<Backend>*>(handle); \
     break
 
       ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
@@ -143,7 +143,7 @@ struct RelaxationRuntime
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
-    call_apply_pre<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
+    call_apply_pre<type>(A, rhs, x, tmp); \
     break
 
       ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
@@ -163,7 +163,7 @@ struct RelaxationRuntime
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
-    call_apply_post<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
+    call_apply_post<type>(A, rhs, x, tmp); \
     break
 
       ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
@@ -184,7 +184,7 @@ struct RelaxationRuntime
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
-    call_apply<Arcane::Alina::relaxation::type>(A, rhs, x); \
+    call_apply<type>(A, rhs, x); \
     break
 
       ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
@@ -202,7 +202,7 @@ struct RelaxationRuntime
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
-    return backend::bytes(*static_cast<::Arcane::Alina::relaxation::type<Backend>*>(handle))
+    return backend::bytes(*static_cast<type<Backend>*>(handle))
 
       ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
 

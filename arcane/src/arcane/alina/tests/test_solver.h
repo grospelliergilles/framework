@@ -82,7 +82,7 @@ void test_rap(const Matrix& A,
   prm.put("precond.type", relaxation);
   prm.put("solver.type", solver);
 
-  Alina::PreconditionedSolver<Alina::relaxation::RelaxationAsPreconditioner<Backend, Alina::RelaxationRuntime>,
+  Alina::PreconditionedSolver<Alina::RelaxationAsPreconditioner<Backend, Alina::RelaxationRuntime>,
                               Alina::SolverRuntime<Backend>>
   solve(A, prm, bprm);
 
