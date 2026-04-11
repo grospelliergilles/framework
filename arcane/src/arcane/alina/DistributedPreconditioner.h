@@ -44,43 +44,40 @@ namespace Arcane::Alina::runtime::mpi
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-/// Preconditioner kinds.
-namespace precond_class
+//! Preconditioner kinds.
+enum class eDistributedPreconditionerType
 {
-  enum type
-  {
-    amg, ///< AMG
-    relaxation ///< Single-level relaxation
-  };
+  amg, ///< AMG
+  relaxation ///< Single-level relaxation
+};
 
-  inline std::ostream& operator<<(std::ostream& os, type p)
-  {
-    switch (p) {
-    case amg:
-      return os << "amg";
-    case relaxation:
-      return os << "relaxation";
-    default:
-      return os << "???";
-    }
+inline std::ostream& operator<<(std::ostream& os, eDistributedPreconditionerType p)
+{
+  switch (p) {
+  case eDistributedPreconditionerType::amg:
+    return os << "amg";
+  case eDistributedPreconditionerType::relaxation:
+    return os << "relaxation";
+  default:
+    return os << "???";
   }
+}
 
-  inline std::istream& operator>>(std::istream& in, type& p)
-  {
-    std::string val;
-    in >> val;
+inline std::istream& operator>>(std::istream& in, eDistributedPreconditionerType& p)
+{
+  std::string val;
+  in >> val;
 
-    if (val == "amg")
-      p = amg;
-    else if (val == "relaxation")
-      p = relaxation;
-    else
-      throw std::invalid_argument("Invalid preconditioner class. "
-                                  "Valid choices are: amg, relaxation");
+  if (val == "amg")
+    p = eDistributedPreconditionerType::amg;
+  else if (val == "relaxation")
+    p = eDistributedPreconditionerType::relaxation;
+  else
+    throw std::invalid_argument("Invalid preconditioner class. "
+                                "Valid choices are: amg, relaxation");
 
-    return in;
-  }
-} // namespace precond_class
+  return in;
+}
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -109,7 +106,7 @@ class DistributedPreconditioner
                             const Matrix& Astrip,
                             params prm = params(),
                             const backend_params& bprm = backend_params())
-  : _class(prm.get("class", precond_class::amg))
+  : _class(prm.get("class", eDistributedPreconditionerType::amg))
   , handle(0)
   {
     init(std::make_shared<matrix>(comm, Astrip, backend::rows(Astrip)), prm, bprm);
@@ -119,7 +116,7 @@ class DistributedPreconditioner
                             std::shared_ptr<matrix> A,
                             params prm = params(),
                             const backend_params& bprm = backend_params())
-  : _class(prm.get("class", precond_class::amg))
+  : _class(prm.get("class", eDistributedPreconditionerType::amg))
   , handle(0)
   {
     init(A, prm, bprm);
@@ -128,10 +125,10 @@ class DistributedPreconditioner
   ~DistributedPreconditioner()
   {
     switch (_class) {
-    case precond_class::amg: {
+    case eDistributedPreconditionerType::amg: {
       delete static_cast<AMGPrecondType*>(handle);
     } break;
-    case precond_class::relaxation: {
+    case eDistributedPreconditionerType::relaxation: {
       typedef Alina::mpi::relaxation::as_preconditioner<
       Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>>
       Precond;
@@ -148,7 +145,7 @@ class DistributedPreconditioner
                const backend_params& bprm = backend_params())
   {
     switch (_class) {
-    case precond_class::amg: {
+    case eDistributedPreconditionerType::amg: {
       static_cast<AMGPrecondType*>(handle)->rebuild(A, bprm);
     } break;
     default:
@@ -161,10 +158,10 @@ class DistributedPreconditioner
   void apply(const Vec1& rhs, Vec2&& x) const
   {
     switch (_class) {
-    case precond_class::amg: {
+    case eDistributedPreconditionerType::amg: {
       static_cast<AMGPrecondType*>(handle)->apply(rhs, x);
     } break;
-    case precond_class::relaxation: {
+    case eDistributedPreconditionerType::relaxation: {
       typedef Alina::mpi::relaxation::as_preconditioner<
       Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>>
       Precond;
@@ -180,10 +177,10 @@ class DistributedPreconditioner
   std::shared_ptr<matrix> system_matrix_ptr() const
   {
     switch (_class) {
-    case precond_class::amg: {
+    case eDistributedPreconditionerType::amg: {
       return static_cast<AMGPrecondType*>(handle)->system_matrix_ptr();
     }
-    case precond_class::relaxation: {
+    case eDistributedPreconditionerType::relaxation: {
       typedef Alina::mpi::relaxation::as_preconditioner<
       Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>>
       Precond;
@@ -203,10 +200,10 @@ class DistributedPreconditioner
   friend std::ostream& operator<<(std::ostream& os, const DistributedPreconditioner& p)
   {
     switch (p._class) {
-    case precond_class::amg: {
+    case eDistributedPreconditionerType::amg: {
       return os << *static_cast<AMGPrecondType*>(p.handle);
     }
-    case precond_class::relaxation: {
+    case eDistributedPreconditionerType::relaxation: {
       typedef Alina::mpi::relaxation::as_preconditioner<
       Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>>
       Precond;
@@ -220,7 +217,7 @@ class DistributedPreconditioner
 
  private:
 
-  precond_class::type _class;
+  eDistributedPreconditionerType _class;
   void* handle;
 
   void init(std::shared_ptr<matrix> A, params& prm, const backend_params& bprm)
@@ -229,10 +226,10 @@ class DistributedPreconditioner
       ARCANE_ALINA_PARAM_MISSING("class");
 
     switch (_class) {
-    case precond_class::amg: {
+    case eDistributedPreconditionerType::amg: {
       handle = static_cast<void*>(new AMGPrecondType(A->comm(), A, prm, bprm));
     } break;
-    case precond_class::relaxation: {
+    case eDistributedPreconditionerType::relaxation: {
       typedef Alina::mpi::relaxation::as_preconditioner<
       Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>>
       Precond;
