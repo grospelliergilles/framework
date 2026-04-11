@@ -247,7 +247,7 @@ void solve_block(Alina::mpi_communicator comm,
   typedef Alina::DistributedMatrix<Backend> DMatrix;
 
   typedef Alina::mpi::DistributedPreconditionedSolver<
-    Alina::runtime::mpi::DistributedPreconditioner<Backend>,
+    Alina::DistributedPreconditioner<Backend>,
     Alina::DistributedSolverRuntime<Backend>>
   Solver;
 
@@ -339,10 +339,7 @@ void solve_scalar(Alina::mpi_communicator comm,
 
   typedef Alina::DistributedMatrix<Backend> DMatrix;
 
-  typedef Alina::mpi::DistributedPreconditionedSolver<
-  Alina::runtime::mpi::DistributedPreconditioner<Backend>,
-  Alina::DistributedSolverRuntime<Backend>>
-  Solver;
+  using Solver = Alina::mpi::DistributedPreconditionedSolver<Alina::DistributedPreconditioner<Backend>, Alina::DistributedSolverRuntime<Backend>>;
 
   using Alina::prof;
 

@@ -38,7 +38,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::runtime::mpi
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -97,7 +97,7 @@ class DistributedPreconditioner
 
   using AMGPrecondType = Alina::mpi::DistributedAMG<Backend,
                                                     Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
-                                                    Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>,
+                                                    Alina::DistributedRelaxationRuntime<Backend>,
                                                     DistributedDirectSolverRuntime<value_type>,
                                                     MatrixPartitionerRuntime<Backend>>;
 
@@ -130,7 +130,7 @@ class DistributedPreconditioner
     } break;
     case eDistributedPreconditionerType::relaxation: {
       typedef Alina::mpi::relaxation::as_preconditioner<
-      Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>>
+      Alina::DistributedRelaxationRuntime<Backend>>
       Precond;
 
       delete static_cast<Precond*>(handle);
@@ -162,9 +162,7 @@ class DistributedPreconditioner
       static_cast<AMGPrecondType*>(handle)->apply(rhs, x);
     } break;
     case eDistributedPreconditionerType::relaxation: {
-      typedef Alina::mpi::relaxation::as_preconditioner<
-      Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>>
-      Precond;
+      typedef Alina::mpi::relaxation::as_preconditioner<Alina::DistributedRelaxationRuntime<Backend>> Precond;
 
       static_cast<Precond*>(handle)->apply(rhs, x);
     } break;
@@ -181,9 +179,7 @@ class DistributedPreconditioner
       return static_cast<AMGPrecondType*>(handle)->system_matrix_ptr();
     }
     case eDistributedPreconditionerType::relaxation: {
-      typedef Alina::mpi::relaxation::as_preconditioner<
-      Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>>
-      Precond;
+      typedef Alina::mpi::relaxation::as_preconditioner<Alina::DistributedRelaxationRuntime<Backend>> Precond;
 
       return static_cast<Precond*>(handle)->system_matrix_ptr();
     }
@@ -204,9 +200,7 @@ class DistributedPreconditioner
       return os << *static_cast<AMGPrecondType*>(p.handle);
     }
     case eDistributedPreconditionerType::relaxation: {
-      typedef Alina::mpi::relaxation::as_preconditioner<
-      Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>>
-      Precond;
+      typedef Alina::mpi::relaxation::as_preconditioner<Alina::DistributedRelaxationRuntime<Backend>> Precond;
 
       return os << *static_cast<Precond*>(p.handle);
     }
@@ -230,9 +224,7 @@ class DistributedPreconditioner
       handle = static_cast<void*>(new AMGPrecondType(A->comm(), A, prm, bprm));
     } break;
     case eDistributedPreconditionerType::relaxation: {
-      typedef Alina::mpi::relaxation::as_preconditioner<
-      Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>>
-      Precond;
+      typedef Alina::mpi::relaxation::as_preconditioner<Alina::DistributedRelaxationRuntime<Backend>> Precond;
 
       handle = static_cast<void*>(new Precond(A->comm(), A, prm, bprm));
     } break;
@@ -245,7 +237,7 @@ class DistributedPreconditioner
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::runtime::mpi
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -253,6 +245,8 @@ class DistributedPreconditioner
 namespace Arcane::Alina::mpi
 {
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*!
  * \brief Distributed block preconditioner.
  */

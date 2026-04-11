@@ -68,7 +68,10 @@ std::ostream& operator<<(std::ostream& os, eRelaxationType r);
 extern "C++" ARCANE_ALINA_EXPORT
 std::istream& operator>>(std::istream& in, eRelaxationType& r);
 
-#define ARCANE_ALINA_ALL_RUNTIME_RELAXATION() \
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+#define ARCANE_ALINA_ALL_RUNTIME_RELAXATION()                 \
       ARCANE_ALINA_RUNTIME_RELAXATION(GaussSeidelRelaxation);\
       ARCANE_ALINA_RUNTIME_RELAXATION(ILU0Relaxation);\
       ARCANE_ALINA_RUNTIME_RELAXATION(ILUKRelaxation);\
