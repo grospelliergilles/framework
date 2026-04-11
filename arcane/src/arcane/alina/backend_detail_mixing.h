@@ -36,45 +36,27 @@ THE SOFTWARE.
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/BackendInterface.h>
 
-namespace Arcane::Alina {
-namespace backend {
-namespace detail {
+namespace Arcane::Alina::detail
+{
 
 // Backend with scalar value_type of highest precision.
 
-template <class B1, class B2, class Enable = void>
-struct common_scalar_backend;
-
 template <class B>
-struct common_scalar_backend<B, B,
-    typename std::enable_if<
-        math::static_rows<typename B::value_type>::value == 1
-        >::type >
+struct common_scalar_backend<B, B, typename std::enable_if<math::static_rows<typename B::value_type>::value == 1>::type>
 {
-    typedef B type;
+  typedef B type;
 };
 
 template <class V1, class V2>
-struct common_scalar_backend< backend::BuiltinBackend<V1>, backend::BuiltinBackend<V2>,
-    typename std::enable_if<
-        math::static_rows<V1>::value != 1 ||
-        math::static_rows<V2>::value != 1
-        >::type>
+struct common_scalar_backend<backend::BuiltinBackend<V1>, backend::BuiltinBackend<V2>,
+                             typename std::enable_if<math::static_rows<V1>::value != 1 || math::static_rows<V2>::value != 1>::type>
 {
-    typedef typename math::scalar_of<V1>::type S1;
-    typedef typename math::scalar_of<V2>::type S2;
+  typedef typename math::scalar_of<V1>::type S1;
+  typedef typename math::scalar_of<V2>::type S2;
 
-    typedef
-        typename std::conditional<
-            (sizeof(S1) > sizeof(S2)), backend::BuiltinBackend<S1>, backend::BuiltinBackend<S2>
-            >::type
-        type;
+  typedef typename std::conditional<(sizeof(S1) > sizeof(S2)), backend::BuiltinBackend<S1>, backend::BuiltinBackend<S2>>::type type;
 };
 
-} // namespace detail
-} // namespace backend
-} // namespace amgcl
-
-
+} // namespace Arcane::Alina
 
 #endif

@@ -47,16 +47,15 @@ namespace Arcane::Alina
 template <class USolver, class PSolver>
 class DistributedSchurPressureCorrection
 {
-  static_assert(std::is_same<
-                typename USolver::backend_type,
-                typename PSolver::backend_type>::value,
+  using USolverBackendType = typename USolver::backend_type;
+  using PSolverBackendType = typename PSolver::backend_type;
+
+  static_assert(std::is_same<USolverBackendType, PSolverBackendType>::value,
                 "Backends for pressure and flow preconditioners should coincide!");
 
  public:
 
-  typedef
-  typename backend::detail::common_scalar_backend<typename USolver::backend_type,
-                                                  typename PSolver::backend_type>::type backend_type;
+  using backend_type = detail::common_scalar_backend<USolverBackendType, PSolverBackendType>::type;
   using BackendType = backend_type;
 
   typedef typename backend_type::value_type value_type;

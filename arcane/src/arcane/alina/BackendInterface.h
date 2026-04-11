@@ -23,11 +23,6 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-/**
- * \file   alina/BackendInterface.h
- * \brief  Backend interface required for AMG.
- */
-
 #include <cmath>
 
 #include <type_traits>

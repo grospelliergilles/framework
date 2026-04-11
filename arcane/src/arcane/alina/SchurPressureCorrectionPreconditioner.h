@@ -66,8 +66,8 @@ class SchurPressureCorrectionPreconditioner
 
  public:
 
-  typedef typename backend::detail::common_scalar_backend<typename USolver::backend_type,
-                                                          typename PSolver::backend_type>::type backend_type;
+  typedef typename detail::common_scalar_backend<typename USolver::backend_type,
+                                                 typename PSolver::backend_type>::type backend_type;
 
   typedef typename backend_type::value_type value_type;
   typedef typename backend_type::col_type col_type;
