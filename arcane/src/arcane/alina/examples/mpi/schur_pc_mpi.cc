@@ -282,13 +282,13 @@ int main(int argc, char* argv[])
     Alina::mpi::DistributedSchurPressureCorrection<
       Alina::mpi::DistributedPreconditionedSolver<
         Alina::mpi::block_preconditioner<
-          Alina::relaxation::as_preconditioner<Backend, Alina::runtime::relaxation::RuntimeRelaxation>>,
-        Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>,
+          Alina::relaxation::as_preconditioner<Backend, Alina::RuntimeRelaxation>>,
+        Alina::DistributedSolverRuntime<Backend>>,
       Alina::mpi::DistributedSubDomainDeflation<
-        Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::runtime::relaxation::RuntimeRelaxation>,
-        Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
+        Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::RuntimeRelaxation>,
+        Alina::DistributedSolverRuntime<Backend>,
         Alina::DistributedDirectSolverRuntime<double>>>,
-    Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>
+    Alina::DistributedSolverRuntime<Backend>>
   Solver;
 
   Solver solve(world, std::tie(chunk, ptr, col, val), prm, bprm);

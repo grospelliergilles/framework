@@ -52,7 +52,7 @@ solve(const Matrix& A,
   Alina::iterator_range<rhs_type const*> frng(fptr, fptr + n);
   Alina::iterator_range<rhs_type*> xrng(xptr, xptr + n);
 
-  using Solver = Alina::PreconditionedSolver<Precond, Alina::runtime::solver::SolverRuntime<Backend>>;
+  using Solver = Alina::PreconditionedSolver<Precond, Alina::SolverRuntime<Backend>>;
 
   prof.tic("setup");
   Solver solve(A, prm);
@@ -219,7 +219,7 @@ int main(int argc, char* argv[])
   case B: { \
     typedef ::Arcane::Alina::static_matrix<std::complex<double>, B, B> value_type; \
     typedef ::Arcane::Alina::backend::BuiltinBackend<value_type> Backend; \
-    r = solve<::Arcane::Alina::runtime::PreconditionerRuntime<Backend>>( \
+    r = solve<::Arcane::Alina::PreconditionerRuntime<Backend>>( \
     ::Arcane::Alina::adapter::block_matrix<value_type>( \
     std::tie(rows, ptr, col, val)), \
     prm, rhs, x); \
@@ -228,7 +228,7 @@ int main(int argc, char* argv[])
   switch (block_size) {
   case 1: {
     typedef Alina::backend::BuiltinBackend<std::complex<double>> Backend;
-    r = solve<Alina::runtime::PreconditionerRuntime<Backend>>(
+    r = solve<Alina::PreconditionerRuntime<Backend>>(
     std::tie(rows, ptr, col, val), prm, rhs, x);
   } break;
     BOOST_PP_SEQ_FOR_EACH(CALL_BLOCK_SOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)

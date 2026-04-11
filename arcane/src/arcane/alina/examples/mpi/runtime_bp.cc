@@ -61,10 +61,9 @@ solve(const Alina::mpi_communicator& comm,
 {
   typedef Alina::backend::BuiltinBackend<double> Backend;
 
-  typedef Alina::mpi::DistributedPreconditionedSolver<
-  Alina::mpi::block_preconditioner<Precond<Backend>>,
-  Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>
-  Solver;
+  using Solver = Alina::mpi::DistributedPreconditionedSolver<
+    Alina::mpi::block_preconditioner<Precond<Backend>>,
+    Alina::DistributedSolverRuntime<Backend>>;
 
   const size_t n = Alina::backend::rows(A);
 
@@ -214,7 +213,7 @@ int main(int argc, char* argv[])
   if (single_level)
     prm.put("precond.class", "relaxation");
 
-  Alina::SolverResult r = solve<Alina::runtime::PreconditionerRuntime>(world, prm, std::tie(chunk, ptr, col, val));
+  Alina::SolverResult r = solve<Alina::PreconditionerRuntime>(world, prm, std::tie(chunk, ptr, col, val));
 
   if (world.rank == 0) {
     std::cout << "Iterations: " << r.nbIteration() << std::endl

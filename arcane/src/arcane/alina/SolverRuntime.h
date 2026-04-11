@@ -42,7 +42,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::runtime::solver
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -157,7 +157,7 @@ struct SolverRuntime
   explicit SolverRuntime(size_t n, params prm = params(),
                          const backend_params& bprm = backend_params(),
                          const InnerProduct& inner_product = InnerProduct())
-  : s(prm.get("type", runtime::solver::eSolverType::bicgstab))
+  : s(prm.get("type", eSolverType::bicgstab))
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");
@@ -254,6 +254,6 @@ struct SolverRuntime
 
 #undef ARCANE_ALINA_ALL_RUNTIME_SOLVER
 
-} // namespace Arcane::Alina::runtime::solver
+} // namespace Arcane::Alina
 
 #endif

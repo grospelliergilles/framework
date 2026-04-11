@@ -46,12 +46,12 @@ struct DistributedRelaxationRuntime
   typedef typename Backend::params backend_params;
   typedef Alina::PropertyTree params;
 
-  runtime::relaxation::eRelaxationType r;
+  eRelaxationType r;
   void* handle = nullptr;
 
   DistributedRelaxationRuntime(const DistributedMatrix<Backend>& A,
                                params prm, const backend_params& bprm = backend_params())
-  : r(prm.get("type", runtime::relaxation::eRelaxationType::spai0))
+  : r(prm.get("type", eRelaxationType::spai0))
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");
@@ -59,17 +59,17 @@ struct DistributedRelaxationRuntime
     switch (r) {
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     handle = static_cast<void*>(new ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>(A, prm, bprm)); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     handle = call_constructor<::Arcane::Alina::relaxation::type>(A, prm, bprm); \
     break;
 
 #define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     handle = call_constructor<::Arcane::Alina::relaxation::type>(*A.local(), prm, bprm); \
     break;
 
@@ -96,12 +96,12 @@ struct DistributedRelaxationRuntime
   {
     switch (r) {
 #define ARCANE_ALINA_RELAX_DISTR(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     delete static_cast<::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     delete static_cast<::Arcane::Alina::relaxation::type<Backend>*>(handle); \
     break;
 
@@ -129,17 +129,17 @@ struct DistributedRelaxationRuntime
     switch (r) {
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     static_cast<const ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle)->apply_pre(A, rhs, x, tmp); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     call_apply_pre<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break;
 
 #define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     call_apply_pre<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x, tmp); \
     break;
 
@@ -168,17 +168,17 @@ struct DistributedRelaxationRuntime
     switch (r) {
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     static_cast<const ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle)->apply_post(A, rhs, x, tmp); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     call_apply_post<::Arcane::Alina::relaxation::type>(A, rhs, x, tmp); \
     break;
 
 #define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     call_apply_post<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x, tmp); \
     break;
 
@@ -207,17 +207,17 @@ struct DistributedRelaxationRuntime
     switch (r) {
 
 #define ARCANE_ALINA_RELAX_DISTR(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     static_cast<const ::Arcane::Alina::mpi::relaxation::Distributed##type<Backend>*>(handle)->apply(A, rhs, x); \
     break
 
 #define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     call_apply<::Arcane::Alina::relaxation::type>(A, rhs, x); \
     break;
 
 #define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
-  case runtime::relaxation::eRelaxationType::type: \
+  case eRelaxationType::type: \
     call_apply<::Arcane::Alina::relaxation::type>(*A.local_backend(), rhs, x); \
     break;
 

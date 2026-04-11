@@ -254,7 +254,7 @@ int main(int argc, char* argv[])
   Alina::MatrixPartitionerRuntime<Backend>>,
   Alina::mpi::relaxation::as_preconditioner<
   Alina::runtime::mpi::relaxation::DistributedRelaxationRuntime<Backend>>>,
-  Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>>
+  Alina::DistributedSolverRuntime<Backend>>
   Solver;
 
   Solver solve(comm, A, prm);

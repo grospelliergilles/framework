@@ -29,7 +29,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::runtime::mpi::solver
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -37,16 +37,16 @@ namespace Arcane::Alina::runtime::mpi::solver
 
 template <class Backend, class InnerProduct = DistributedInnerProduct>
 struct DistributedSolverRuntime
-: public Alina::runtime::solver::SolverRuntime<Backend, InnerProduct>
+: public SolverRuntime<Backend, InnerProduct>
 {
-  typedef Alina::runtime::solver::SolverRuntime<Backend, InnerProduct> Base;
+  typedef SolverRuntime<Backend, InnerProduct> Base;
   using Base::Base;
 };
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::runtime::mpi::solver
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

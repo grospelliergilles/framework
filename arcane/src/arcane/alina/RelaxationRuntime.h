@@ -34,7 +34,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::runtime::relaxation
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -94,7 +94,7 @@ struct RuntimeRelaxation
   template <class Matrix>
   RuntimeRelaxation(const Matrix& A, params prm = params(),
           const backend_params& bprm = backend_params())
-  : r(prm.get("type", runtime::relaxation::eRelaxationType::spai0))
+  : r(prm.get("type", eRelaxationType::spai0))
   , handle(0)
   {
     if (!prm.erase("type"))
@@ -269,7 +269,7 @@ struct RuntimeRelaxation
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::runtime::relaxation
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

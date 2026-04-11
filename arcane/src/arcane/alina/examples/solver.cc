@@ -69,8 +69,8 @@ std::tuple<size_t, double> block_solve(
     typedef Alina::backend::BuiltinBackend<value_type> BBackend;
 
     typedef Alina::PreconditionedSolver<
-        Alina::runtime::PreconditionerRuntime<BBackend>,
-        Alina::runtime::solver::SolverRuntime<BBackend>
+        Alina::PreconditionerRuntime<BBackend>,
+        Alina::SolverRuntime<BBackend>
         > Solver;
 
     auto As = std::tie(rows, ptr, col, val);
@@ -216,105 +216,103 @@ std::tuple<size_t, double> block_solve(
 
 //---------------------------------------------------------------------------
 std::tuple<size_t, double> scalar_solve(
-        const Alina::PropertyTree &prm,
-        size_t rows,
-        std::vector<ptrdiff_t> const &ptr,
-        std::vector<ptrdiff_t> const &col,
-        std::vector<double>    const &val,
-        std::vector<double>    const &rhs,
-        std::vector<double>          &x,
-        bool reorder
-        )
+const Alina::PropertyTree& prm,
+size_t rows,
+std::vector<ptrdiff_t> const& ptr,
+std::vector<ptrdiff_t> const& col,
+std::vector<double> const& val,
+std::vector<double> const& rhs,
+std::vector<double>& x,
+bool reorder)
 {
-    Backend::params bprm;
+  Backend::params bprm;
 
 #if defined(SOLVER_BACKEND_VEXCL)
-    vex::Context ctx(vex::Filter::Env);
-    std::cout << ctx << std::endl;
-    bprm.q = ctx;
+  vex::Context ctx(vex::Filter::Env);
+  std::cout << ctx << std::endl;
+  bprm.q = ctx;
 #elif defined(SOLVER_BACKEND_VIENNACL)
-    std::cout
-        << viennacl::ocl::current_device().name()
-        << " (" << viennacl::ocl::current_device().vendor() << ")\n\n";
+  std::cout
+  << viennacl::ocl::current_device().name()
+  << " (" << viennacl::ocl::current_device().vendor() << ")\n\n";
 #elif defined(SOLVER_BACKEND_CUDA)
-    cusparseCreate(&bprm.cusparse_handle);
-    {
-        int dev;
-        cudaGetDevice(&dev);
+  cusparseCreate(&bprm.cusparse_handle);
+  {
+    int dev;
+    cudaGetDevice(&dev);
 
-        cudaDeviceProp prop;
-        cudaGetDeviceProperties(&prop, dev);
-        std::cout << prop.name << std::endl << std::endl;
-    }
+    cudaDeviceProp prop;
+    cudaGetDeviceProperties(&prop, dev);
+    std::cout << prop.name << std::endl
+              << std::endl;
+  }
 #endif
 
-    typedef Alina::PreconditionedSolver<
-        Alina::runtime::PreconditionerRuntime<Backend>,
-        Alina::runtime::solver::SolverRuntime<Backend>
-        > Solver;
+  using Solver = Alina::PreconditionedSolver<Alina::PreconditionerRuntime<Backend>, Alina::SolverRuntime<Backend>>;
 
-    std::tuple<size_t, double> info;
+  std::tuple<size_t, double> info;
 
-    if (reorder) {
-        prof.tic("reorder");
-        Alina::adapter::reorder<> perm(std::tie(rows, ptr, col, val));
-        prof.toc("reorder");
+  if (reorder) {
+    prof.tic("reorder");
+    Alina::adapter::reorder<> perm(std::tie(rows, ptr, col, val));
+    prof.toc("reorder");
 
-        prof.tic("setup");
-        Solver solve(perm(std::tie(rows, ptr, col, val)), prm, bprm);
-        prof.toc("setup");
+    prof.tic("setup");
+    Solver solve(perm(std::tie(rows, ptr, col, val)), prm, bprm);
+    prof.toc("setup");
 
-        std::cout << solve << std::endl;
+    std::cout << solve << std::endl;
 
-        std::vector<double> tmp(rows);
+    std::vector<double> tmp(rows);
 
-        perm.forward(rhs, tmp);
-        auto f_b = Backend::copy_vector(tmp, bprm);
+    perm.forward(rhs, tmp);
+    auto f_b = Backend::copy_vector(tmp, bprm);
 
-        perm.forward(x, tmp);
-        auto x_b = Backend::copy_vector(tmp, bprm);
+    perm.forward(x, tmp);
+    auto x_b = Backend::copy_vector(tmp, bprm);
 
-        prof.tic("solve");
-        info = solve(*f_b, *x_b);
-        prof.toc("solve");
+    prof.tic("solve");
+    info = solve(*f_b, *x_b);
+    prof.toc("solve");
 
 #if defined(SOLVER_BACKEND_VEXCL)
-        vex::copy(*x_b, tmp);
+    vex::copy(*x_b, tmp);
 #elif defined(SOLVER_BACKEND_VIENNACL)
-        viennacl::fast_copy(*x_b, tmp);
+    viennacl::fast_copy(*x_b, tmp);
 #elif defined(SOLVER_BACKEND_CUDA)
-        thrust::copy(x_b->begin(), x_b->end(), tmp.begin());
+    thrust::copy(x_b->begin(), x_b->end(), tmp.begin());
 #else
-        std::copy(&(*x_b)[0], &(*x_b)[0] + rows, &tmp[0]);
+    std::copy(&(*x_b)[0], &(*x_b)[0] + rows, &tmp[0]);
 #endif
 
-        perm.inverse(tmp, x);
-    } else {
-        prof.tic("setup");
-        Solver solve(std::tie(rows, ptr, col, val), prm, bprm);
-        prof.toc("setup");
+    perm.inverse(tmp, x);
+  }
+  else {
+    prof.tic("setup");
+    Solver solve(std::tie(rows, ptr, col, val), prm, bprm);
+    prof.toc("setup");
 
-        std::cout << solve << std::endl;
+    std::cout << solve << std::endl;
 
-        auto f_b = Backend::copy_vector(rhs, bprm);
-        auto x_b = Backend::copy_vector(x,   bprm);
+    auto f_b = Backend::copy_vector(rhs, bprm);
+    auto x_b = Backend::copy_vector(x, bprm);
 
-        prof.tic("solve");
-        info = solve(*f_b, *x_b);
-        prof.toc("solve");
+    prof.tic("solve");
+    info = solve(*f_b, *x_b);
+    prof.toc("solve");
 
 #if defined(SOLVER_BACKEND_VEXCL)
-        vex::copy(*x_b, x);
+    vex::copy(*x_b, x);
 #elif defined(SOLVER_BACKEND_VIENNACL)
-        viennacl::fast_copy(*x_b, x);
+    viennacl::fast_copy(*x_b, x);
 #elif defined(SOLVER_BACKEND_CUDA)
-        thrust::copy(x_b->begin(), x_b->end(), x.begin());
+    thrust::copy(x_b->begin(), x_b->end(), x.begin());
 #else
-        std::copy(&(*x_b)[0], &(*x_b)[0] + rows, &x[0]);
+    std::copy(&(*x_b)[0], &(*x_b)[0] + rows, &x[0]);
 #endif
-    }
+  }
 
-    return info;
+  return info;
 }
 
 #define ARCANE_ALINA_CALL_BLOCK_SOLVER(z, data, B)                                    \

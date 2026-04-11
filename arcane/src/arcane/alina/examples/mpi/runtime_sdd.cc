@@ -462,8 +462,8 @@ int main(int argc, char* argv[])
   std::string deflation_type = "bilinear";
 
   auto coarsening = Alina::eCoarserningType::smoothed_aggregation;
-  auto relaxation = Alina::runtime::relaxation::eRelaxationType::spai0;
-  auto iterative_solver = Alina::runtime::solver::eSolverType::bicgstabl;
+  auto relaxation = Alina::eRelaxationType::spai0;
+  auto iterative_solver = Alina::eSolverType::bicgstabl;
   auto direct_solver = Alina::eDistributedDirectSolverType::skyline_lu;
 
   bool just_relax = false;
@@ -489,10 +489,10 @@ int main(int argc, char* argv[])
   po::value<Alina::eCoarserningType>(&coarsening)->default_value(coarsening),
   "ruge_stuben, aggregation, smoothed_aggregation, smoothed_aggr_emin")(
   "relaxation,r",
-  po::value<Alina::runtime::relaxation::eRelaxationType>(&relaxation)->default_value(relaxation),
+  po::value<Alina::eRelaxationType>(&relaxation)->default_value(relaxation),
   "gauss_seidel, ilu0, iluk, ilut, damped_jacobi, spai0, spai1, chebyshev")(
   "iter_solver,i",
-  po::value<Alina::runtime::solver::eSolverType>(&iterative_solver)->default_value(iterative_solver),
+  po::value<Alina::eSolverType>(&iterative_solver)->default_value(iterative_solver),
   "cg, bicgstab, bicgstabl, gmres")(
   "dir_solver,d",
   po::value<Alina::eDistributedDirectSolverType>(&direct_solver)->default_value(direct_solver),
@@ -736,8 +736,8 @@ int main(int argc, char* argv[])
 
   prof.tic("setup");
   typedef Alina::mpi::DistributedSubDomainDeflation<
-  Alina::runtime::PreconditionerRuntime<Backend>,
-  Alina::runtime::mpi::solver::DistributedSolverRuntime<Backend>,
+  Alina::PreconditionerRuntime<Backend>,
+  Alina::DistributedSolverRuntime<Backend>,
   Alina::DistributedDirectSolverRuntime<double>>
   SDD;
 
