@@ -39,7 +39,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::mpi
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -602,7 +602,7 @@ class DistributedSubDomainDeflation
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::mpi
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -612,9 +612,9 @@ namespace Arcane::Alina::backend
 
 template <class SDD, class Matrix,
           class Alpha, class Beta, class Vec1, class Vec2>
-struct spmv_impl<Alpha, mpi::sdd_projected_matrix<SDD, Matrix>, Vec1, Beta, Vec2>
+struct spmv_impl<Alpha, sdd_projected_matrix<SDD, Matrix>, Vec1, Beta, Vec2>
 {
-  typedef mpi::sdd_projected_matrix<SDD, Matrix> M;
+  typedef sdd_projected_matrix<SDD, Matrix> M;
 
   static void apply(Alpha alpha, const M& A, const Vec1& x, Beta beta, Vec2& y)
   {
@@ -623,9 +623,9 @@ struct spmv_impl<Alpha, mpi::sdd_projected_matrix<SDD, Matrix>, Vec1, Beta, Vec2
 };
 
 template <class SDD, class Matrix, class Vec1, class Vec2, class Vec3>
-struct residual_impl<mpi::sdd_projected_matrix<SDD, Matrix>, Vec1, Vec2, Vec3>
+struct residual_impl<sdd_projected_matrix<SDD, Matrix>, Vec1, Vec2, Vec3>
 {
-  typedef mpi::sdd_projected_matrix<SDD, Matrix> M;
+  typedef sdd_projected_matrix<SDD, Matrix> M;
 
   static void apply(const Vec1& rhs, const M& A, const Vec2& x, Vec3& r)
   {

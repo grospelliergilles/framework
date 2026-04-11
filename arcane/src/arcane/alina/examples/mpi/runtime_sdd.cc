@@ -575,7 +575,7 @@ int main(int argc, char* argv[])
   unsigned ndv = 1;
 
   if (deflation_type == "constant") {
-    dv = Alina::mpi::constant_deflation(1);
+    dv = Alina::constant_deflation(1);
   }
   else if (deflation_type == "partitioned") {
     ndv = vm["subparts"].as<int>();
@@ -735,10 +735,10 @@ int main(int argc, char* argv[])
   }
 
   prof.tic("setup");
-  typedef Alina::mpi::DistributedSubDomainDeflation<
-  Alina::PreconditionerRuntime<Backend>,
-  Alina::DistributedSolverRuntime<Backend>,
-  Alina::DistributedDirectSolverRuntime<double>>
+  typedef Alina::DistributedSubDomainDeflation<
+    Alina::PreconditionerRuntime<Backend>,
+    Alina::DistributedSolverRuntime<Backend>,
+    Alina::DistributedDirectSolverRuntime<double>>
   SDD;
 
   SDD solve(world, std::tie(chunk, ptr, col, val), prm, bprm);

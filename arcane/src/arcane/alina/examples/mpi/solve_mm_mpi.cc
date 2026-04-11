@@ -28,6 +28,7 @@ namespace Arcane::Alina {
 }
 
 using namespace Arcane;
+using namespace Arcane::Alina;
 
 using Alina::precondition;
 
@@ -301,16 +302,16 @@ int main(int argc, char* argv[])
   prof.toc("read problem");
 
   prof.tic("setup");
-  typedef Alina::mpi::DistributedSubDomainDeflation<
-  Alina::AMG<
-    Alina::backend::BuiltinBackend<double>,
-    Alina::CoarseningRuntime,
-    Alina::RelaxationRuntime>,
-    Alina::DistributedSolverRuntime<Alina::backend::BuiltinBackend<double>>,
-    Alina::DistributedDirectSolverRuntime<double>>
+  typedef DistributedSubDomainDeflation<
+    AMG<
+      backend::BuiltinBackend<double>,
+      CoarseningRuntime,
+      RelaxationRuntime>,
+    DistributedSolverRuntime<backend::BuiltinBackend<double>>,
+    DistributedDirectSolverRuntime<double>>
   SDD;
 
-  std::function<double(ptrdiff_t, unsigned)> dv = Alina::mpi::constant_deflation(block_size);
+  std::function<double(ptrdiff_t, unsigned)> dv = Alina::constant_deflation(block_size);
   prm.put("num_def_vec", block_size);
   prm.put("def_vec", &dv);
 

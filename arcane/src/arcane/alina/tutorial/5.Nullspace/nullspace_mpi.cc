@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
                                                  PBackend,
                                                  DistributedSmoothedAggregationCoarsening<PBackend>,
                                                  DistributedSPAI0Relaxation<PBackend>>,
-                                                 Alina::mpi::solver::cg<PBackend>>;
+                                                 cg<PBackend>>;
 
   // The distributed matrix
   auto A = std::make_shared<Alina::DistributedMatrix<SBackend>>(

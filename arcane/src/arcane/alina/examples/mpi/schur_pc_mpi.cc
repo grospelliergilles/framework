@@ -257,7 +257,7 @@ int main(int argc, char* argv[])
     }
   }
 
-  std::function<double(ptrdiff_t, unsigned)> dv = Alina::mpi::constant_deflation(1);
+  std::function<double(ptrdiff_t, unsigned)> dv = Alina::constant_deflation(1);
   prm.put("precond.psolver.num_def_vec", 1);
   prm.put("precond.psolver.def_vec", &dv);
 
@@ -280,12 +280,12 @@ int main(int argc, char* argv[])
 
   prof.tic("setup");
   typedef DistributedPreconditionedSolver<
-    Alina::mpi::DistributedSchurPressureCorrection<
+    Alina::DistributedSchurPressureCorrection<
       Alina::DistributedPreconditionedSolver<
         Alina::DistributedBlockPreconditioner<
           Alina::relaxation::as_preconditioner<Backend, Alina::RelaxationRuntime>>,
         Alina::DistributedSolverRuntime<Backend>>,
-      Alina::mpi::DistributedSubDomainDeflation<
+      Alina::DistributedSubDomainDeflation<
         Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::RelaxationRuntime>,
         Alina::DistributedSolverRuntime<Backend>,
         Alina::DistributedDirectSolverRuntime<double>>>,

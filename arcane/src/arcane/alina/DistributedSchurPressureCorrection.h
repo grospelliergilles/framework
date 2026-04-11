@@ -36,7 +36,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::mpi
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -663,7 +663,7 @@ class DistributedSchurPressureCorrection
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::mpi
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -675,18 +675,18 @@ namespace Arcane::Alina::backend
 /*---------------------------------------------------------------------------*/
 
 template <class US, class PS, class Alpha, class Beta, class Vec1, class Vec2>
-struct spmv_impl<Alpha, mpi::DistributedSchurPressureCorrection<US, PS>, Vec1, Beta, Vec2>
+struct spmv_impl<Alpha, DistributedSchurPressureCorrection<US, PS>, Vec1, Beta, Vec2>
 {
-  static void apply(Alpha alpha, const mpi::DistributedSchurPressureCorrection<US, PS>& A, const Vec1& x, Beta beta, Vec2& y)
+  static void apply(Alpha alpha, const DistributedSchurPressureCorrection<US, PS>& A, const Vec1& x, Beta beta, Vec2& y)
   {
     A.spmv(alpha, x, beta, y);
   }
 };
 
 template <class US, class PS, class Vec1, class Vec2, class Vec3>
-struct residual_impl<mpi::DistributedSchurPressureCorrection<US, PS>, Vec1, Vec2, Vec3>
+struct residual_impl<DistributedSchurPressureCorrection<US, PS>, Vec1, Vec2, Vec3>
 {
-  static void apply(const Vec1& rhs, const mpi::DistributedSchurPressureCorrection<US, PS>& A, const Vec2& x, Vec3& r)
+  static void apply(const Vec1& rhs, const DistributedSchurPressureCorrection<US, PS>& A, const Vec2& x, Vec3& r)
   {
     backend::copy(rhs, r);
     A.spmv(-1, x, 1, r);

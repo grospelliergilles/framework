@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
                                                  FBackend,
                                                  DistributedSmoothedAggregationCoarsening<FBackend>,
                                                  DistributedSPAI0Relaxation<FBackend>>,
-                                                 Alina::mpi::solver::bicgstab<DBackend>>;
+                                                 bicgstab<DBackend>>;
 
   // Create the distributed matrix from the local parts.
   auto A = std::make_shared<DistributedMatrix<DBackend>>(world, std::tie(chunk, ptr, col, val));
