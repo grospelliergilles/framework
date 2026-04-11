@@ -33,7 +33,7 @@ int main()
   typedef Alina::PreconditionedSolver<Alina::AMG<fBackend,
                                         Alina::coarsening::SmoothedAggregationCoarserning,
                                         Alina::relaxation::SPAI0Relaxation>,
-                             Alina::solver::ConjugateGradientSolver<dBackend>>
+                             Alina::ConjugateGradientSolver<dBackend>>
   Solver;
 
   std::vector<ptrdiff_t> ptr, col;

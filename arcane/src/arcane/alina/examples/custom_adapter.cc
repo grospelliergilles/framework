@@ -107,40 +107,41 @@ profiler<> prof;
 
 using Alina::prof;
 
-int main() {
-    // Discretize a 1D Poisson problem
-    const int n = 15000;
+int main()
+{
+  // Discretize a 1D Poisson problem
+  const int n = 15000;
 
-    auto t_total = prof.scoped_tic("total");
-    sparse_matrix A(n, n);
-    for(int i = 0; i < n; ++i) {
-        if (i == 0 || i == n - 1) {
-            // Dirichlet boundary condition
-            A(i,i) = 1.0;
-        } else {
-            // Internal point.
-            A(i, i-1) = -1.0;
-            A(i, i)   =  2.0;
-            A(i, i+1) = -1.0;
-        }
+  auto t_total = prof.scoped_tic("total");
+  sparse_matrix A(n, n);
+  for (int i = 0; i < n; ++i) {
+    if (i == 0 || i == n - 1) {
+      // Dirichlet boundary condition
+      A(i, i) = 1.0;
     }
+    else {
+      // Internal point.
+      A(i, i - 1) = -1.0;
+      A(i, i) = 2.0;
+      A(i, i + 1) = -1.0;
+    }
+  }
 
-    // Create an AMGCL solver for the problem.
-    typedef Alina::backend::BuiltinBackend<double> Backend;
-    Alina::PreconditionedSolver<
-        Alina::AMG<
-            Backend,
-            Alina::coarsening::AggregationCoarsening,
-            Alina::relaxation::SPAI0Relaxation
-            >,
-        Alina::solver::ConjugateGradientSolver<Backend>
-        > solve( A );
+  // Create an AMGCL solver for the problem.
+  typedef Alina::backend::BuiltinBackend<double> Backend;
 
-    std::cout << solve.precond() << std::endl;
+  Alina::PreconditionedSolver<Alina::AMG<
+                              Backend,
+                              Alina::coarsening::AggregationCoarsening,
+                              Alina::relaxation::SPAI0Relaxation>,
+                              Alina::ConjugateGradientSolver<Backend>>
+  solve(A);
 
-    auto t_solve = prof.scoped_tic("solve");
-    std::vector<double> f(n, 1.0), x(n, 0.0);
-    solve(f, x);
+  std::cout << solve.precond() << std::endl;
 
-    std::cout << prof << std::endl;
+  auto t_solve = prof.scoped_tic("solve");
+  std::vector<double> f(n, 1.0), x(n, 0.0);
+  solve(f, x);
+
+  std::cout << prof << std::endl;
 }

@@ -142,7 +142,7 @@ inline std::istream& operator>>(std::istream& in, eSolverType& s)
 /*!
  * \brief Runtime-configurable wrappers around iterative solvers.
  */
-template <class Backend, class InnerProduct = Alina::solver::detail::default_inner_product>
+template <class Backend, class InnerProduct = detail::default_inner_product>
 struct SolverRuntime
 {
   typedef PropertyTree params;
@@ -167,7 +167,7 @@ struct SolverRuntime
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case eSolverType::type: \
-    handle = static_cast<void*>(new ::Arcane::Alina::solver::type<Backend, InnerProduct>(n, prm, bprm, inner_product)); \
+    handle = static_cast<void*>(new type<Backend, InnerProduct>(n, prm, bprm, inner_product)); \
     break
 
       ARCANE_ALINA_ALL_RUNTIME_SOLVER();
@@ -185,7 +185,7 @@ struct SolverRuntime
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case eSolverType::type: \
-    delete static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle); \
+    delete static_cast<type<Backend, InnerProduct>*>(handle); \
     break
 
       ARCANE_ALINA_ALL_RUNTIME_SOLVER();
@@ -201,7 +201,7 @@ struct SolverRuntime
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case eSolverType::type: \
-    return static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle)->operator()(A, P, rhs, x)
+    return static_cast<type<Backend, InnerProduct>*>(handle)->operator()(A, P, rhs, x)
 
       ARCANE_ALINA_ALL_RUNTIME_SOLVER();
 
@@ -224,7 +224,7 @@ struct SolverRuntime
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case eSolverType::type: \
-    return os << *static_cast<Alina::solver::type<Backend, InnerProduct>*>(w.handle)
+    return os << *static_cast<type<Backend, InnerProduct>*>(w.handle)
 
       ARCANE_ALINA_ALL_RUNTIME_SOLVER();
 
@@ -241,7 +241,7 @@ struct SolverRuntime
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case eSolverType::type: \
-    return backend::bytes(*static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle))
+    return backend::bytes(*static_cast<type<Backend, InnerProduct>*>(handle))
 
       ARCANE_ALINA_ALL_RUNTIME_SOLVER();
 

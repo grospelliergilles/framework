@@ -79,7 +79,7 @@ int main()
 
   std::vector<double> x(n, 0);
 
-  Alina::solver::BiCGStabSolver<AMG::backend_type> solve(n);
+  Alina::BiCGStabSolver<AMG::backend_type> solve(n);
 
   prof.tic("solve");
   Alina::SolverResult r = solve(amg, rhs, x);

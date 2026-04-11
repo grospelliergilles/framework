@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
             Alina::coarsening::SmoothedAggregationCoarserning,
             Alina::relaxation::ILU0Relaxation
             >,
-        Alina::solver::BiCGStabSolver<SBackend>
+        Alina::BiCGStabSolver<SBackend>
         > Solver;
 
     // Initialize the solver with the system matrix.

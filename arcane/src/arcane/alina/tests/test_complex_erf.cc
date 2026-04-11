@@ -47,7 +47,7 @@ TEST(alina_test_complex, complex_matrix_adapter)
   Alina::PreconditionedSolver<Alina::AMG<Backend,
                                 Alina::coarsening::SmoothedAggregationCoarserning,
                                 Alina::relaxation::SPAI0Relaxation>,
-                     Alina::solver::BiCGStabSolver<Backend>>
+                     Alina::BiCGStabSolver<Backend>>
   solve(Alina::adapter::complex_matrix(std::tie(n, ptr, col, val)), prm);
 
   std::cout << solve.precond() << std::endl;

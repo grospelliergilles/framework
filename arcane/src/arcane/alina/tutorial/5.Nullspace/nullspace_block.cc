@@ -83,12 +83,10 @@ int main(int argc, char *argv[]) {
     typedef Alina::PreconditionedSolver<
         Alina::AMG<
             PBackend,
-            Alina::coarsening::as_scalar<
-                Alina::coarsening::SmoothedAggregationCoarserning
-                >::type,
+            Alina::coarsening::as_scalar<Alina::coarsening::SmoothedAggregationCoarserning>::type,
             Alina::relaxation::ILU0Relaxation
             >,
-        Alina::solver::ConjugateGradientSolver<SBackend>
+        Alina::ConjugateGradientSolver<SBackend>
         > Solver;
 
     // Solver parameters:

@@ -45,9 +45,9 @@ namespace Arcane::Alina
 
 template <class Backend, class InnerProduct = DistributedInnerProduct>
 class DistributedConjugateGradientSolver
-: public Alina::solver::ConjugateGradientSolver<Backend, InnerProduct>
+: public ConjugateGradientSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::ConjugateGradientSolver<Backend, InnerProduct> Base;
+  typedef ConjugateGradientSolver<Backend, InnerProduct> Base;
 
  public:
 
@@ -59,9 +59,9 @@ class DistributedConjugateGradientSolver
 
 template <class Backend, class InnerProduct = DistributedInnerProduct>
 class DistributedBiCGStabSolver
-: public Alina::solver::BiCGStabSolver<Backend, InnerProduct>
+: public BiCGStabSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::BiCGStabSolver<Backend, InnerProduct> Base;
+  typedef BiCGStabSolver<Backend, InnerProduct> Base;
 
  public:
 
@@ -73,9 +73,9 @@ class DistributedBiCGStabSolver
 
 template <class Backend, class InnerProduct = DistributedInnerProduct>
 class DistributedBiCGStabLSolver
-: public Alina::solver::BiCGStabLSolver<Backend, InnerProduct>
+: public BiCGStabLSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::BiCGStabLSolver<Backend, InnerProduct> Base;
+  typedef BiCGStabLSolver<Backend, InnerProduct> Base;
 
  public:
 
@@ -87,9 +87,9 @@ class DistributedBiCGStabLSolver
 
 template <class Backend, class InnerProduct = DistributedInnerProduct>
 class DistributedFlexibleGMRESSolver
-: public Alina::solver::FlexibleGMRESSolver<Backend, InnerProduct>
+: public FlexibleGMRESSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::FlexibleGMRESSolver<Backend, InnerProduct> Base;
+  typedef FlexibleGMRESSolver<Backend, InnerProduct> Base;
 
  public:
 
@@ -101,9 +101,9 @@ class DistributedFlexibleGMRESSolver
 
 template <class Backend, class InnerProduct = DistributedInnerProduct>
 class DistributedGMRESSolver
-: public Alina::solver::GMRESSolver<Backend, InnerProduct>
+: public GMRESSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::GMRESSolver<Backend, InnerProduct> Base;
+  typedef GMRESSolver<Backend, InnerProduct> Base;
 
  public:
 
@@ -115,9 +115,9 @@ class DistributedGMRESSolver
 
 template <class Backend, class InnerProduct = DistributedInnerProduct>
 class DistributedIDRSSolver
-: public Alina::solver::IDRSSolver<Backend, InnerProduct>
+: public IDRSSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::IDRSSolver<Backend, InnerProduct> Base;
+  typedef IDRSSolver<Backend, InnerProduct> Base;
 
  public:
 
@@ -129,9 +129,9 @@ class DistributedIDRSSolver
 
 template <class Backend, class InnerProduct = DistributedInnerProduct>
 class DistributedLooseGMRESSolver
-: public Alina::solver::LooseGMRESSolver<Backend, InnerProduct>
+: public LooseGMRESSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::LooseGMRESSolver<Backend, InnerProduct> Base;
+  typedef LooseGMRESSolver<Backend, InnerProduct> Base;
 
  public:
 
@@ -143,9 +143,9 @@ class DistributedLooseGMRESSolver
 
 template <class Backend, class InnerProduct = DistributedInnerProduct>
 class DistributedPreconditionerOnlySolver
-: public Alina::solver::PreconditionerOnlySolver<Backend, InnerProduct>
+: public PreconditionerOnlySolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::PreconditionerOnlySolver<Backend, InnerProduct> Base;
+  typedef PreconditionerOnlySolver<Backend, InnerProduct> Base;
 
  public:
 
@@ -157,9 +157,9 @@ class DistributedPreconditionerOnlySolver
 
 template <class Backend, class InnerProduct = DistributedInnerProduct>
 class RichardsonSolve
-: public Alina::solver::RichardsonSolver<Backend, InnerProduct>
+: public RichardsonSolver<Backend, InnerProduct>
 {
-  typedef Alina::solver::RichardsonSolver<Backend, InnerProduct> Base;
+  typedef RichardsonSolver<Backend, InnerProduct> Base;
 
  public:
 

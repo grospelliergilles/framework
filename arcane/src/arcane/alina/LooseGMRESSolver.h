@@ -75,7 +75,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::solver
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -170,8 +170,7 @@ struct LooseGMRESSolverParams
  * iterations.
  * \endrst
  */
-template <class Backend,
-          class InnerProduct = detail::default_inner_product>
+template <class Backend, class InnerProduct = detail::default_inner_product>
 class LooseGMRESSolver
 {
  public:
@@ -461,7 +460,7 @@ class LooseGMRESSolver
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::solver
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

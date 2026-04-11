@@ -84,8 +84,7 @@ int main(int argc, char *argv[]) {
     // Compose the solver type
     typedef Alina::backend::BuiltinBackend<double> SBackend; // the outer iterative solver backend
     typedef Alina::backend::BuiltinBackend<float> PBackend;  // the PSolver backend
-    typedef Alina::backend::BuiltinBackend<
-        Alina::static_matrix<float,4,4>> UBackend;    // the USolver backend
+    typedef Alina::backend::BuiltinBackend<Alina::static_matrix<float,4,4>> UBackend;    // the USolver backend
 
     typedef Alina::PreconditionedSolver<
         Alina::preconditioner::SchurPressureCorrectionPreconditioner<
@@ -95,17 +94,17 @@ int main(int argc, char *argv[]) {
                     Alina::coarsening::AggregationCoarsening,
                     Alina::relaxation::ILU0Relaxation
                     >,
-                Alina::solver::PreconditionerOnlySolver<UBackend>
+                Alina::PreconditionerOnlySolver<UBackend>
                 >,
             Alina::PreconditionedSolver<
                 Alina::relaxation::as_preconditioner<
                     PBackend,
                     Alina::relaxation::SPAI0Relaxation
                     >,
-                Alina::solver::PreconditionerOnlySolver<PBackend>
+                Alina::PreconditionerOnlySolver<PBackend>
                 >
             >,
-        Alina::solver::BiCGStabSolver<SBackend>
+        Alina::BiCGStabSolver<SBackend>
         > Solver;
 
     // Solver parameters

@@ -36,7 +36,6 @@ THE SOFTWARE.
 #include <arcane/alina/value_type_backend_interface.h>
 
 namespace Arcane::Alina {
-namespace solver {
 namespace detail {
 
 struct default_inner_product {
@@ -54,7 +53,6 @@ struct default_inner_product {
 };
 
 } // namespace detail
-} // namespace solver
 } // namespace amgcl
 
 

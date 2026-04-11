@@ -45,10 +45,7 @@
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/solver_detail_default_inner_product.h>
 #include <arcane/alina/util.h>
-
-#ifdef MPI_VERSION
 #include <arcane/alina/mp_util.h>
-#endif
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -57,7 +54,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::solver
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -510,7 +507,7 @@ class IDRSSolver
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::solver
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

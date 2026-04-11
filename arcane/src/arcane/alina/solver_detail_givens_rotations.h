@@ -34,7 +34,6 @@ THE SOFTWARE.
 #include <arcane/alina/value_type_backend_interface.h>
 
 namespace Arcane::Alina {
-namespace solver {
 namespace detail {
 
 template <class T>
@@ -61,7 +60,6 @@ void apply_plane_rotation(T &dx, T &dy, T cs, T sn) {
 }
 
 } // namespace detail
-} // namespace solver
 } // namespace amgcl
 
 #endif

@@ -393,7 +393,7 @@ struct harmonic_deflation
     Alina::PreconditionedSolver<Alina::AMG<Alina::backend::BuiltinBackend<double>,
                                   Alina::coarsening::SmoothedAggregationCoarserning,
                                   Alina::relaxation::GaussSeidelRelaxation>,
-                       Alina::solver::GMRESSolver<
+                       Alina::GMRESSolver<
                        Alina::backend::BuiltinBackend<double>>>
     solve(Alina::adapter::zero_copy(chunk, ptr.data(), col.data(), val.data()));
 

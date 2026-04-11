@@ -30,7 +30,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::solver
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -38,8 +38,7 @@ namespace Arcane::Alina::solver
 /*!
  * \brief Solver which only apply preconditioner once.
  */
-template <class Backend,
-          class InnerProduct = detail::default_inner_product>
+template <class Backend, class InnerProduct = detail::default_inner_product>
 class PreconditionerOnlySolver
 {
  public:
@@ -60,9 +59,9 @@ class PreconditionerOnlySolver
 
   /// Preallocates necessary data structures for the system of size \p n.
   PreconditionerOnlySolver(size_t n,
-          const params& = params(),
-          const backend_params& = backend_params(),
-          const InnerProduct& inner_product = InnerProduct())
+                           const params& = params(),
+                           const backend_params& = backend_params(),
+                           const InnerProduct& inner_product = InnerProduct())
   : n(n)
   , inner_product(inner_product)
   {}
@@ -135,7 +134,7 @@ class PreconditionerOnlySolver
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::solver
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
