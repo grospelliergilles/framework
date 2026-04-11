@@ -1,51 +1,48 @@
-#ifndef ARCANE_ALINA_BACKEND_EIGEN_HPP
-#define ARCANE_ALINA_BACKEND_EIGEN_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* EigenBackend.h                                              (C) 2026-2026 */
+/*                                                                           */
+/* Backend to use types defines in the Eigen library.                        */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_EIGENBACKEND_H
+#define ARCANE_ALINA_EIGENBACKEND_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   amgcl/EigenBackend.h
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Sparse matrix in CRS format.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
-#include <memory>
 #include <arcane/alina/EigenAdapter.h>
 #include <arcane/alina/SkylineLUSolver.h>
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 namespace Arcane::Alina::backend
 {
 
-/// Eigen backend.
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /**
-   * This is a backend that uses types defined in the Eigen library
-   * (http://eigen.tuxfamily.org).
-   *
-   * \param real Value type.
-   * \ingroup backends
-   */
+ * \brief Eigen backend.
+ *
+ * This is a backend that uses types defined in the Eigen library
+ * (http://eigen.tuxfamily.org).
+ *
+ * \param real Value type.
+ * \ingroup backends
+ */
 template <typename real>
 struct EigenBackend
 {
@@ -54,8 +51,7 @@ struct EigenBackend
   typedef ptrdiff_t col_type;
   typedef ptrdiff_t ptr_type;
 
-  typedef Eigen::Map<Eigen::SparseMatrix<value_type, Eigen::RowMajor, index_type>>
-  matrix;
+  typedef Eigen::Map<Eigen::SparseMatrix<value_type, Eigen::RowMajor, index_type>> matrix;
 
   typedef Eigen::Matrix<value_type, Eigen::Dynamic, 1> vector;
   typedef Eigen::Matrix<value_type, Eigen::Dynamic, 1> matrix_diagonal;
@@ -200,19 +196,15 @@ struct axpby_impl<A, V1, B, V2,
 };
 
 template <class A, class V1, class B, class V2, class C, class V3>
-struct axpbypcz_impl<
-A, V1, B, V2, C, V3,
-typename std::enable_if<
-is_eigen_type<V1>::value &&
-is_eigen_type<V2>::value &&
-is_eigen_type<V3>::value>::type>
+struct axpbypcz_impl<A, V1, B, V2, C, V3,
+                     typename std::enable_if<
+                     is_eigen_type<V1>::value &&
+                     is_eigen_type<V2>::value &&
+                     is_eigen_type<V3>::value>::type>
 {
   typedef typename value_type<V1>::type real;
 
-  static void apply(
-  real a, const V1& x,
-  real b, const V2& y,
-  real c, V3& z)
+  static void apply(real a, const V1& x, real b, const V2& y, real c, V3& z)
   {
     if (!math::is_zero(c))
       z = a * x + b * y + c * z;
@@ -222,12 +214,10 @@ is_eigen_type<V3>::value>::type>
 };
 
 template <class Alpha, class V1, class V2, class Beta, class V3>
-struct vmul_impl<
-Alpha, V1, V2, Beta, V3,
-typename std::enable_if<
-is_eigen_type<V1>::value &&
-is_eigen_type<V2>::value &&
-is_eigen_type<V3>::value>::type>
+struct vmul_impl<Alpha, V1, V2, Beta, V3,
+                 typename std::enable_if<is_eigen_type<V1>::value &&
+                                         is_eigen_type<V2>::value &&
+                                         is_eigen_type<V3>::value>::type>
 {
   static void apply(Alpha a, const V1& x, const V2& y, Beta b, V3& z)
   {
@@ -239,11 +229,10 @@ is_eigen_type<V3>::value>::type>
 };
 
 template <class V1, class V2>
-struct copy_impl<
-V1, V2,
-typename std::enable_if<
-is_eigen_type<V1>::value &&
-is_eigen_type<V2>::value>::type>
+struct copy_impl<V1, V2,
+                 typename std::enable_if<
+                 is_eigen_type<V1>::value &&
+                 is_eigen_type<V2>::value>::type>
 {
   static void apply(const V1& x, V2& y)
   {
@@ -251,6 +240,6 @@ is_eigen_type<V2>::value>::type>
   }
 };
 
-} // namespace amgcl::backend
+} // namespace Arcane::Alina::backend
 
 #endif
