@@ -43,14 +43,12 @@ set(ARCANE_SOURCES
   BiCGStabSolver.h
   FlexibleGMRESSolver.h
   ConjugateGradientSolver.h
-  solver_detail_default_inner_product.h
-  solver_detail_givens_rotations.h
         EigenSolver.h
   FlexibleGMRESSolver.h
   GMRESSolver.h
   IDRSSolver.h
   LooseGMRESSolver.h
-  solver_precond_side.h
+        SolverUtils.h
   PreconditionerOnlySolver.h
   RichardsonSolver.h
   SolverRuntime.h

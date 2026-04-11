@@ -37,7 +37,6 @@
 #include <arcane/alina/IDRSSolver.h>
 #include <arcane/alina/RichardsonSolver.h>
 #include <arcane/alina/PreconditionerOnlySolver.h>
-#include <arcane/alina/solver_detail_default_inner_product.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

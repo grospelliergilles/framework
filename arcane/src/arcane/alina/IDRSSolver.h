@@ -35,21 +35,14 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <vector>
-#include <algorithm>
-#include <iostream>
-
-#include <tuple>
-#include <random>
-
-#include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/solver_detail_default_inner_product.h>
+#include <arcane/alina/SolverUtils.h>
 #include <arcane/alina/util.h>
-#include <arcane/alina/mp_util.h>
 
 #ifdef _OPENMP
 #include <omp.h>
 #endif
+
+#include <random>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

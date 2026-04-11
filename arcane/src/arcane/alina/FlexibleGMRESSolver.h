@@ -23,15 +23,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <vector>
-#include <algorithm>
-#include <cmath>
-#include <tuple>
-#include <iostream>
-
-#include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/solver_detail_default_inner_product.h>
-#include <arcane/alina/solver_detail_givens_rotations.h>
+#include <arcane/alina/SolverUtils.h>
 #include <arcane/alina/util.h>
 
 /*---------------------------------------------------------------------------*/
