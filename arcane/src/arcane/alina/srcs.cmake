@@ -18,7 +18,7 @@ set(ARCANE_SOURCES
   BackendInterface.h
   BlockCSRMatrix.h
   CSRMatrix.h
-  coarsening.h
+        Coarsening.h
   CoarseningRuntime.h
   DeflatedSolver.h
   DenseMatrixInverseImpl.h

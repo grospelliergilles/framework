@@ -34,7 +34,7 @@ THE SOFTWARE.
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/coarsening.h>
+#include <arcane/alina/Coarsening.h>
 
 #include <arcane/alina/DistributedMatrix.h>
 #include <arcane/alina/DistributedPreconditionedSolver.h>

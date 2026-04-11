@@ -6,7 +6,7 @@
 #include <arcane/alina/PreconditionedSolver.h>
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/coarsening.h>
+#include <arcane/alina/Coarsening.h>
 #include <arcane/alina/Relaxation.h>
 #include <arcane/alina/ConjugateGradientSolver.h>
 #include <arcane/alina/profiler.h>
