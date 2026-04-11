@@ -6,7 +6,7 @@
 #include <boost/preprocessor/seq/for_each.hpp>
 
 #include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/value_type_complex.h>
+#include <arcane/alina/ValueTypeComplex.h>
 #include <arcane/alina/StaticMatrix.h>
 #include <arcane/alina/Adapters.h>
 

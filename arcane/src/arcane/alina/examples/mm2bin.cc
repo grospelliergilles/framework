@@ -4,7 +4,7 @@
 
 #include <boost/program_options.hpp>
 #include <arcane/alina/util.h>
-#include <arcane/alina/value_type_complex.h>
+#include <arcane/alina/ValueTypeComplex.h>
 #include <arcane/alina/IO.h>
 
 using namespace Arcane;
