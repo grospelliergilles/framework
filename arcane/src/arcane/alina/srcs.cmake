@@ -46,7 +46,7 @@ set(ARCANE_SOURCES
   ConjugateGradientSolver.h
   solver_detail_default_inner_product.h
   solver_detail_givens_rotations.h
-  solver_eigen.h
+        EigenSolver.h
   FlexibleGMRESSolver.h
   GMRESSolver.h
   IDRSSolver.h

@@ -5,7 +5,7 @@
 #pragma GCC diagnostic ignored "-Wint-in-bool-context"
 
 #include <Eigen/SparseLU>
-#include <arcane/alina/solver_eigen.h>
+#include <arcane/alina/EigenSolver.h>
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/profiler.h>
@@ -28,8 +28,7 @@ TEST(alina_test_solvers, eigen_solver)
   size_t n = sample_problem(16, val, col, ptr, rhs);
   Alina::backend::CSRMatrix<double> A(std::tie(n, ptr, col, val));
 
-  typedef Alina::solver::EigenSolver<Eigen::SparseLU<Eigen::SparseMatrix<double, Eigen::ColMajor, int>>>
-  Solver;
+  using Solver = Alina::EigenSolver<Eigen::SparseLU<Eigen::SparseMatrix<double, Eigen::ColMajor, int>>>;
 
   Solver solve(A);
 

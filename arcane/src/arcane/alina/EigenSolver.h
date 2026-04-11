@@ -5,12 +5,12 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* DistributedEigenSparseLUDirectSolver.h                      (C) 2026-2026 */
+/* EigenAdapter.h                                              (C) 2026-2026 */
 /*                                                                           */
-/* Distributed wrapper for Eigen::SparseLU solver.                           */
+/* Wrapper around eigen direct solvers.                                      */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_DISTRIBUTEDEIGENSPARSELUDIRECTSOLVER_H
-#define ARCANE_ALINA_DISTRIBUTEDEIGENSPARSELUDIRECTSOLVER_H
+#ifndef ARCANE_ALINA_EIGENSOLVER_H
+#define ARCANE_ALINA_EIGENSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -23,12 +23,13 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/EigenSolver.h>
-#include <arcane/alina/mp_util.h>
-#include <arcane/alina/DistributedDirectSolverBase.h>
+#include <Eigen/Dense>
+#include <Eigen/SparseCore>
 
-#include <Eigen/SparseLU>
+#include <type_traits>
+
+#include <arcane/alina/BuiltinBackend.h>
+#include <arcane/alina/util.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -39,63 +40,55 @@ namespace Arcane::Alina
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*!
- * \brief Distributed wrapper for Eigen::SparseLU solver.
- *
- * This is a wrapper around Eigen SparseLU solver that provides a
- * distributed direct solver interface but always works sequentially.
+ * \brief Wrapper around eigen direct solvers.
  */
-template <typename value_type>
-class DistributedEigenSparseLUDirectSolver
-: public DistributedDirectSolverBase<value_type, DistributedEigenSparseLUDirectSolver<value_type>>
+template <class Solver>
+class EigenSolver
 {
  public:
 
-  using EigenMatrix = Eigen::SparseMatrix<value_type, Eigen::ColMajor, int>;
-  using Solver = EigenSolver<Eigen::SparseLU<EigenMatrix>>;
-  typedef typename Solver::params params;
-  typedef backend::CSRMatrix<value_type> build_matrix;
+  typedef typename Solver::MatrixType MatrixType;
+  typedef typename Solver::Scalar value_type;
 
-  /// Constructor.
-  template <class Matrix>
-  DistributedEigenSparseLUDirectSolver(mpi_communicator comm, const Matrix& A,
-                                       const params& prm = params())
-  : prm(prm)
-  {
-    static_cast<Base*>(this)->init(comm, A);
-  }
+  typedef Alina::detail::empty_params params;
 
   static size_t coarse_enough()
   {
-    return Base::coarse_enough();
+    return 3000 / math::static_rows<value_type>::value;
   }
 
-  int comm_size(int /*n*/) const
+  template <class Matrix>
+  EigenSolver(const Matrix& A, const params& = params())
+  : n(backend::rows(A))
   {
-    return 1;
+    typedef typename std::remove_const<typename std::remove_pointer<typename backend::col_data_impl<Matrix>::type>::type>::type col_type;
+    typedef typename std::remove_const<typename std::remove_pointer<typename backend::ptr_data_impl<Matrix>::type>::type>::type ptr_type;
+
+    S.compute(MatrixType(Eigen::Map<Eigen::SparseMatrix<value_type, Eigen::RowMajor, ptrdiff_t>>(
+    backend::rows(A), backend::cols(A), backend::nonzeros(A),
+    const_cast<ptr_type*>(backend::ptr_data(A)),
+    const_cast<col_type*>(backend::col_data(A)),
+    const_cast<value_type*>(backend::val_data(A)))));
   }
 
-  void init(mpi_communicator, const build_matrix& A)
-  {
-    S = std::make_shared<Solver>(A, prm);
-  }
-
-  /*!
-   * \brief Solves the problem for the given right-hand side.
-   *
-   * \param rhs The right-hand side.
-   * \param x   The solution.
-   */
   template <class Vec1, class Vec2>
-  void solve(const Vec1& rhs, Vec2& x) const
+  void operator()(const Vec1& rhs, Vec2& x) const
   {
-    (*S)(rhs, x);
+    Eigen::Map<Eigen::Matrix<value_type, Eigen::Dynamic, 1>>
+    RHS(const_cast<value_type*>(&rhs[0]), n), X(&x[0], n);
+
+    X = S.solve(RHS);
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const EigenSolver& s)
+  {
+    return os << "eigen: " << s.n << " unknowns";
   }
 
  private:
 
-  typedef DistributedDirectSolverBase<value_type, DistributedEigenSparseLUDirectSolver<value_type>> Base;
-  params prm;
-  std::shared_ptr<Solver> S;
+  ptrdiff_t n;
+  Solver S;
 };
 
 /*---------------------------------------------------------------------------*/
