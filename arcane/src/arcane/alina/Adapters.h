@@ -26,7 +26,6 @@
 
 #include <type_traits>
 #include <vector>
-#include <numeric>
 #include <tuple>
 
 #include <boost/range/iterator_range.hpp>
@@ -37,7 +36,7 @@
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/ValueTypeInterface.h>
 #include <arcane/alina/backend_detail_matrix_ops.h>
-#include <arcane/alina/reorder_cuthill_mckee.h>
+#include <arcane/alina/CuthillMcKeeReorderer.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -51,7 +50,7 @@ namespace Arcane::Alina::backend
 template <typename N, typename PRng, typename CRng, typename VRng>
 struct value_type<std::tuple<N, PRng, CRng, VRng>>
 {
-  typedef typename std::decay<decltype(std::declval<VRng>()[0])>::type type;
+  typedef std::decay_t<decltype(std::declval<VRng>()[0])> type;
 };
 
 template <typename N, typename PRng, typename CRng, typename VRng>
@@ -88,15 +87,15 @@ struct row_iterator<std::tuple<N, PRng, CRng, VRng>>
   {
    public:
 
-    typedef typename std::decay<decltype(std::declval<CRng>()[0])>::type col_type;
-    typedef typename std::decay<decltype(std::declval<VRng>()[0])>::type val_type;
+    typedef std::decay_t<decltype(std::declval<CRng>()[0])> col_type;
+    typedef std::decay_t<decltype(std::declval<VRng>()[0])> val_type;
 
     type(const std::tuple<N, PRng, CRng, VRng>& A, size_t row)
     : m_col(std::begin(std::get<2>(A)))
     , m_end(std::begin(std::get<2>(A)))
     , m_val(std::begin(std::get<3>(A)))
     {
-      typedef typename std::decay<decltype(std::declval<PRng>()[0])>::type ptr_type;
+      typedef std::decay_t<decltype(std::declval<PRng>()[0])> ptr_type;
 
       ptr_type row_begin = std::get<1>(A)[row];
       ptr_type row_end = std::get<1>(A)[row + 1];
@@ -165,7 +164,7 @@ template <typename N, typename PRng, typename CRng, typename VRng>
 struct ptr_data_impl<std::tuple<N, PRng, CRng, VRng>>
 {
   typedef std::tuple<N, PRng, CRng, VRng> Matrix;
-  typedef typename std::decay<decltype(std::declval<PRng>()[0])>::type ptr_type;
+  typedef std::decay_t<decltype(std::declval<PRng>()[0])> ptr_type;
   typedef const ptr_type* type;
   static type get(const Matrix& A)
   {
@@ -177,7 +176,7 @@ template <typename N, typename PRng, typename CRng, typename VRng>
 struct col_data_impl<std::tuple<N, PRng, CRng, VRng>>
 {
   typedef std::tuple<N, PRng, CRng, VRng> Matrix;
-  typedef typename std::decay<decltype(std::declval<CRng>()[0])>::type col_type;
+  typedef std::decay_t<decltype(std::declval<CRng>()[0])> col_type;
   typedef const col_type* type;
   static type get(const Matrix& A)
   {
@@ -189,7 +188,7 @@ template <typename N, typename PRng, typename CRng, typename VRng>
 struct val_data_impl<std::tuple<N, PRng, CRng, VRng>>
 {
   typedef std::tuple<N, PRng, CRng, VRng> Matrix;
-  typedef typename std::decay<decltype(std::declval<VRng>()[0])>::type val_type;
+  typedef std::decay_t<decltype(std::declval<VRng>()[0])> val_type;
   typedef const val_type* type;
   static type get(const Matrix& A)
   {
@@ -433,7 +432,7 @@ struct complex_adapter
   static_assert(is_complex<typename backend::value_type<Matrix>::type>::value,
                 "value type should be complex");
 
-  typedef typename backend::value_type<Matrix>::type::value_type value_type;
+  typedef backend::value_type<Matrix>::type::value_type value_type;
 
   const Matrix& A;
 
@@ -525,25 +524,22 @@ complex_adapter<Matrix> complex_matrix(const Matrix& A)
 }
 
 template <class Range>
-boost::iterator_range<typename std::add_pointer<
-typename std::conditional<std::is_const<Range>::value,
-                          typename std::add_const<
+auto complex_range(Range& rng) -> boost::iterator_range<std::add_pointer_t<
+std::conditional_t<std::is_const_v<Range>,
+                          std::add_const_t<
                           typename boost::range_value<
-                          typename std::decay<Range>::type>::type::value_type>::type,
+                          std::decay_t<Range>>::type::value_type>,
                           typename boost::range_value<
-                          typename std::decay<Range>::type>::type::value_type>::type>::type>
-complex_range(Range& rng)
+                          std::decay_t<Range>>::type::value_type>>>
 {
-  typedef
-  typename std::add_pointer<
-  typename std::conditional<
-  std::is_const<Range>::value,
-  typename std::add_const<
+  using pointer_type = std::add_pointer_t<
+  std::conditional_t<
+  std::is_const_v<Range>,
+  std::add_const_t<
   typename boost::range_value<
-  typename std::decay<Range>::type>::type::value_type>::type,
+  std::decay_t<Range>>::type::value_type>,
   typename boost::range_value<
-  typename std::decay<Range>::type>::type::value_type>::type>::type
-  pointer_type;
+  std::decay_t<Range>>::type::value_type>>;
 
   pointer_type b = reinterpret_cast<pointer_type>(&rng[0]);
   pointer_type e = b + 2 * boost::size(rng);
@@ -576,11 +572,11 @@ struct matrix_builder
 
   struct row_iterator
   {
-    typedef typename RowBuilder::col_type col_type;
-    typedef typename RowBuilder::val_type val_type;
+    typedef RowBuilder::col_type col_type;
+    typedef RowBuilder::val_type val_type;
 
-    typedef typename std::vector<col_type>::const_iterator col_iterator;
-    typedef typename std::vector<val_type>::const_iterator val_iterator;
+    typedef std::vector<col_type>::const_iterator col_iterator;
+    typedef std::vector<val_type>::const_iterator val_iterator;
 
     row_iterator(const RowBuilder& build_row, size_t i)
     : ptr(0)
@@ -638,8 +634,8 @@ matrix_builder<RowBuilder> make_matrix(const RowBuilder& row_builder)
 template <class Matrix>
 struct reordered_matrix
 {
-  typedef typename backend::value_type<Matrix>::type value_type;
-  typedef typename backend::row_iterator<Matrix>::type base_iterator;
+  typedef backend::value_type<Matrix>::type value_type;
+  typedef backend::row_iterator<Matrix>::type base_iterator;
 
   const Matrix& A;
   const ptrdiff_t* perm;
@@ -710,10 +706,8 @@ struct reordered_matrix
 template <class Vector>
 struct reordered_vector
 {
-  typedef typename backend::value_type<typename std::decay<Vector>::type>::type raw_value_type;
-  typedef typename std::conditional<std::is_const<Vector>::value,
-                                    const raw_value_type,
-                                    raw_value_type>::type value_type;
+  typedef backend::value_type<std::decay_t<Vector>>::type raw_value_type;
+  typedef std::conditional_t<std::is_const_v<Vector>, const raw_value_type, raw_value_type> value_type;
 
   Vector& x;
   const ptrdiff_t* perm;
@@ -733,28 +727,28 @@ struct reordered_vector
     return x[perm[i]];
   }
 
-  boost::permutation_iterator<typename std::decay<Vector>::type::iterator,
+  boost::permutation_iterator<typename std::decay_t<Vector>::iterator,
                               const ptrdiff_t*>
   begin()
   {
     return boost::make_permutation_iterator(boost::begin(x), perm);
   }
 
-  boost::permutation_iterator<typename std::decay<Vector>::type::const_iterator,
+  boost::permutation_iterator<typename std::decay_t<Vector>::const_iterator,
                               const ptrdiff_t*>
   begin() const
   {
     return boost::make_permutation_iterator(boost::begin(x), perm);
   }
 
-  boost::permutation_iterator<typename std::decay<Vector>::type::iterator,
+  boost::permutation_iterator<typename std::decay_t<Vector>::iterator,
                               const ptrdiff_t*>
   end()
   {
     return boost::make_permutation_iterator(boost::end(x), perm + size());
   }
 
-  boost::permutation_iterator<typename std::decay<Vector>::type::const_iterator,
+  boost::permutation_iterator<typename std::decay_t<Vector>::const_iterator,
                               const ptrdiff_t*>
   end() const
   {
@@ -765,13 +759,13 @@ struct reordered_vector
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-template <class ordering = Alina::reorder::cuthill_mckee<false>>
+template <class ordering = CuthillMcKeeReorderer<false>>
 class reorder
 {
  public:
 
   template <class Matrix>
-  reorder(const Matrix& A)
+  explicit reorder(const Matrix& A)
   : n(backend::rows(A))
   , perm(n)
   , iperm(n)
@@ -783,24 +777,24 @@ class reorder
   }
 
   template <class Matrix>
-  typename std::enable_if<!backend::is_builtin_vector<Matrix>::value,
-                          reordered_matrix<Matrix>>::type
+  std::enable_if_t<!backend::is_builtin_vector<Matrix>::value,
+                          reordered_matrix<Matrix>>
   operator()(const Matrix& A) const
   {
     return reordered_matrix<Matrix>(A, perm.data(), iperm.data());
   }
 
   template <class Vector>
-  typename std::enable_if<backend::is_builtin_vector<Vector>::value,
-                          reordered_vector<Vector>>::type
+  std::enable_if_t<backend::is_builtin_vector<Vector>::value,
+                          reordered_vector<Vector>>
   operator()(Vector& x) const
   {
     return reordered_vector<Vector>(x, perm.data());
   }
 
   template <class Vector>
-  typename std::enable_if<backend::is_builtin_vector<Vector>::value,
-                          reordered_vector<const Vector>>::type
+  std::enable_if_t<backend::is_builtin_vector<Vector>::value,
+                          reordered_vector<const Vector>>
   operator()(const Vector& x) const
   {
     return reordered_vector<const Vector>(x, perm.data());
@@ -960,8 +954,8 @@ std::shared_ptr<backend::CSRMatrix<Val>>
 zero_copy(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, const Val* val)
 {
   // Check that Ptr and Col types are binary-compatible with ptrdiff_t:
-  static_assert(std::is_integral<Ptr>::value, "Unsupported Ptr type");
-  static_assert(std::is_integral<Col>::value, "Unsupported Col type");
+  static_assert(std::is_integral_v<Ptr>, "Unsupported Ptr type");
+  static_assert(std::is_integral_v<Col>, "Unsupported Col type");
   static_assert(sizeof(Ptr) == sizeof(ptrdiff_t), "Unsupported Ptr type");
   static_assert(sizeof(Col) == sizeof(ptrdiff_t), "Unsupported Col type");
 

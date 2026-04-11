@@ -67,7 +67,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <algorithm>
 
 #include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/reorder_cuthill_mckee.h>
+#include <arcane/alina/CuthillMcKeeReorderer.h>
 #include <arcane/alina/util.h>
 
 /*---------------------------------------------------------------------------*/
@@ -81,8 +81,7 @@ namespace Arcane::Alina::solver
 /*!
  * \brief Direct solver that uses Skyline LU factorization.
  */
-template <typename ValueType,
-          class ordering = reorder::cuthill_mckee<false>>
+template <typename ValueType, class ordering = CuthillMcKeeReorderer<false>>
 class SkylineLUSolver
 {
  public:

@@ -40,7 +40,7 @@ set(ARCANE_SOURCES
   RelaxationRuntime.h
   RelaxationRuntime.cc
   Relaxation.h
-  reorder_cuthill_mckee.h
+        CuthillMcKeeReorderer.h
   BiCGStabSolver.h
   FlexibleGMRESSolver.h
   ConjugateGradientSolver.h
