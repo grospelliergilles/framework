@@ -585,6 +585,18 @@ void lin_comb(size_t n, const Coefs& c, const Vecs& v, const Coef& alpha, Vec& y
 
 } // namespace Arcane::Alina::backend
 
+namespace Arcane::Alina::detail
+{
+
+// Backend with scalar value_type of highest precision.
+template <class B>
+struct common_scalar_backend<B, B, typename std::enable_if<math::static_rows<typename B::value_type>::value == 1>::type>
+{
+  typedef B type;
+};
+
+}
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 

@@ -1165,10 +1165,10 @@ typename std::enable_if<is_builtin_vector<Vector>::value>::type>
 namespace detail
 {
 
-  template <typename V, typename C, typename P>
-  struct use_builtin_matrix_ops<Alina::backend::CSRMatrix<V, C, P>>
-  : std::true_type
-  {};
+template <typename V, typename C, typename P>
+struct use_builtin_matrix_ops<CSRMatrix<V, C, P>>
+: std::true_type
+{};
 
 } // namespace detail
 
@@ -1188,5 +1188,21 @@ namespace Arcane::Alina::backend
   template <class Iterator>
   struct is_builtin_vector< boost::iterator_range<Iterator> > : std::true_type {};
 }
+
+namespace Arcane::Alina::detail
+{
+
+// Backend with scalar value_type of highest precision.
+template <class V1, class V2>
+struct common_scalar_backend<backend::BuiltinBackend<V1>, backend::BuiltinBackend<V2>,
+                             typename std::enable_if<math::static_rows<V1>::value != 1 || math::static_rows<V2>::value != 1>::type>
+{
+  typedef typename math::scalar_of<V1>::type S1;
+  typedef typename math::scalar_of<V2>::type S2;
+
+  typedef typename std::conditional<(sizeof(S1) > sizeof(S2)), backend::BuiltinBackend<S1>, backend::BuiltinBackend<S2>>::type type;
+};
+
+} // namespace detail
 
 #endif

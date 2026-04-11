@@ -13,7 +13,6 @@ set(ARCANE_SOURCES
   HybridBuiltinBackend.h
   CudaBackend.h
   backend_detail_matrix_ops.h
-  backend_detail_mixing.h
   BackendInterface.h
   BlockCSRMatrix.h
   CSRMatrix.h
