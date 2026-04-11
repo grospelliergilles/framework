@@ -32,7 +32,6 @@ add_arcane_alina_example(solver_complex solver_complex.cc)
 add_arcane_alina_example(crs_builder adapter_crs_builder.cc)
 add_arcane_alina_example(custom_adapter custom_adapter.cc)
 add_arcane_alina_example(mixed_precision mixed_precision.cc)
-add_arcane_alina_example(ublas adapter_ublas.cc)
 
 set(SAMPLE_MATRIX_ARGS "--matrix" "${CMAKE_CURRENT_SOURCE_DIR}/../tests/bcsstk02.mtx")
 
@@ -43,8 +42,6 @@ add_arcane_alina_example(ns_search ns_search.cc ${SAMPLE_MATRIX_ARGS})
 add_arcane_alina_example_no_test(schur_pressure_correction schur_pressure_correction.cc)
 add_arcane_alina_example_no_test(schurpc_mixed schurpc_mixed.cc)
 add_arcane_alina_example_no_test(deflated_solver DeflatedSolver.cc)
-
-target_link_libraries(ublas PUBLIC ${Boost_SERIALIZATION_LIBRARY})
 
 if (TARGET eigen_target)
   add_arcane_alina_example(solver_eigen solver.cc)
