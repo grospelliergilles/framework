@@ -281,7 +281,7 @@ int main(int argc, char* argv[])
   typedef Alina::mpi::DistributedPreconditionedSolver<
     Alina::mpi::DistributedSchurPressureCorrection<
       Alina::mpi::DistributedPreconditionedSolver<
-        Alina::mpi::block_preconditioner<
+        Alina::mpi::DistributedBlockPreconditioner<
           Alina::relaxation::as_preconditioner<Backend, Alina::RuntimeRelaxation>>,
         Alina::DistributedSolverRuntime<Backend>>,
       Alina::mpi::DistributedSubDomainDeflation<

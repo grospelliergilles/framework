@@ -257,7 +257,7 @@ namespace Arcane::Alina::mpi
  * \brief Distributed block preconditioner.
  */
 template <class Precond>
-class block_preconditioner
+class DistributedBlockPreconditioner
 {
  public:
 
@@ -270,10 +270,10 @@ class block_preconditioner
   typedef DistributedMatrix<backend_type> matrix;
 
   template <class Matrix>
-  block_preconditioner(mpi_communicator comm,
-                       const Matrix& Astrip,
-                       const params& prm = params(),
-                       const backend_params& bprm = backend_params())
+  DistributedBlockPreconditioner(mpi_communicator comm,
+                                 const Matrix& Astrip,
+                                 const params& prm = params(),
+                                 const backend_params& bprm = backend_params())
   {
     A = std::make_shared<matrix>(comm, Astrip, backend::rows(Astrip));
     P = std::make_shared<Precond>(A->local(), prm, bprm);
@@ -281,10 +281,10 @@ class block_preconditioner
     A->move_to_backend(bprm);
   }
 
-  block_preconditioner(mpi_communicator,
-                       std::shared_ptr<matrix> A,
-                       const params& prm = params(),
-                       const backend_params& bprm = backend_params())
+  DistributedBlockPreconditioner(mpi_communicator,
+                                 std::shared_ptr<matrix> A,
+                                 const params& prm = params(),
+                                 const backend_params& bprm = backend_params())
   : A(A)
   {
     P = std::make_shared<Precond>(A->local(), prm, bprm);
