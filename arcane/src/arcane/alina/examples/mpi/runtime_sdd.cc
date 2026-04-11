@@ -462,8 +462,8 @@ int main(int argc, char* argv[])
   std::string deflation_type = "bilinear";
 
   auto coarsening = Alina::eCoarserningType::smoothed_aggregation;
-  Alina::runtime::relaxation::eRelaxationType relaxation = Alina::runtime::relaxation::eRelaxationType::spai0;
-  Alina::runtime::solver::eSolverType iterative_solver = Alina::runtime::solver::bicgstabl;
+  auto relaxation = Alina::runtime::relaxation::eRelaxationType::spai0;
+  auto iterative_solver = Alina::runtime::solver::eSolverType::bicgstabl;
   auto direct_solver = Alina::eDistributedDirectSolverType::skyline_lu;
 
   bool just_relax = false;

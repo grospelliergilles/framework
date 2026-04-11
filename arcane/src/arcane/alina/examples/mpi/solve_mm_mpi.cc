@@ -221,7 +221,7 @@ int main(int argc, char* argv[])
   // Read configuration from command line
   auto coarsening = Alina::eCoarserningType::smoothed_aggregation;
   auto relaxation = Alina::runtime::relaxation::eRelaxationType::spai0;
-  Alina::runtime::solver::eSolverType iterative_solver = Alina::runtime::solver::bicgstabl;
+  auto iterative_solver = Alina::runtime::solver::eSolverType::bicgstabl;
   auto direct_solver = Alina::eDistributedDirectSolverType::skyline_lu;
   std::string parameter_file;
   std::string A_file = "A.mtx";

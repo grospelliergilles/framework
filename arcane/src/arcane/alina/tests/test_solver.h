@@ -127,13 +127,13 @@ void test_problem(size_t n,
   };
 
   Alina::runtime::solver::eSolverType solver[] = {
-    Alina::runtime::solver::cg,
-    Alina::runtime::solver::bicgstab,
-    Alina::runtime::solver::bicgstabl,
-    Alina::runtime::solver::gmres,
-    Alina::runtime::solver::lgmres,
-    Alina::runtime::solver::fgmres,
-    Alina::runtime::solver::idrs
+    Alina::runtime::solver::eSolverType::cg,
+    Alina::runtime::solver::eSolverType::bicgstab,
+    Alina::runtime::solver::eSolverType::bicgstabl,
+    Alina::runtime::solver::eSolverType::gmres,
+    Alina::runtime::solver::eSolverType::lgmres,
+    Alina::runtime::solver::eSolverType::fgmres,
+    Alina::runtime::solver::eSolverType::idrs
   };
 
   typename Backend::params prm;
@@ -177,9 +177,8 @@ void test_problem(size_t n,
     std::cout << "Coarsening: " << c << std::endl;
 
     try {
-      test_solver<Backend>(
-      Alina::adapter::zero_copy_direct(n, ptr.data(), col.data(), val.data()),
-      y, x, solver[0], relaxation[0], c, bprm);
+      test_solver<Backend>(Alina::adapter::zero_copy_direct(n, ptr.data(), col.data(), val.data()),
+                           y, x, solver[0], relaxation[0], c, bprm);
     }
     catch (const std::logic_error&) {
     }

@@ -48,7 +48,7 @@ namespace Arcane::Alina::runtime::solver
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-enum eSolverType
+enum class eSolverType
 {
   cg, ///< Conjugate gradients method
   ConjugateGradientSolver = cg, ///< Conjugate gradients method
@@ -73,23 +73,23 @@ enum eSolverType
 inline std::ostream& operator<<(std::ostream& os, eSolverType s)
 {
   switch (s) {
-  case cg:
+  case eSolverType::cg:
     return os << "cg";
-  case bicgstab:
+  case eSolverType::bicgstab:
     return os << "bicgstab";
-  case bicgstabl:
+  case eSolverType::bicgstabl:
     return os << "bicgstabl";
-  case gmres:
+  case eSolverType::gmres:
     return os << "gmres";
-  case lgmres:
+  case eSolverType::lgmres:
     return os << "lgmres";
-  case fgmres:
+  case eSolverType::fgmres:
     return os << "fgmres";
-  case idrs:
+  case eSolverType::idrs:
     return os << "idrs";
-  case richardson:
+  case eSolverType::richardson:
     return os << "richardson";
-  case preonly:
+  case eSolverType::preonly:
     return os << "preonly";
   default:
     return os << "???";
@@ -102,23 +102,23 @@ inline std::istream& operator>>(std::istream& in, eSolverType& s)
   in >> val;
 
   if (val == "cg")
-    s = cg;
+    s = eSolverType::cg;
   else if (val == "bicgstab")
-    s = bicgstab;
+    s = eSolverType::bicgstab;
   else if (val == "bicgstabl")
-    s = bicgstabl;
+    s = eSolverType::bicgstabl;
   else if (val == "gmres")
-    s = gmres;
+    s = eSolverType::gmres;
   else if (val == "lgmres")
-    s = lgmres;
+    s = eSolverType::lgmres;
   else if (val == "fgmres")
-    s = fgmres;
+    s = eSolverType::fgmres;
   else if (val == "idrs")
-    s = idrs;
+    s = eSolverType::idrs;
   else if (val == "richardson")
-    s = richardson;
+    s = eSolverType::richardson;
   else if (val == "preonly")
-    s = preonly;
+    s = eSolverType::preonly;
   else
     throw std::invalid_argument("Invalid solver value. Valid choices are: "
                                 "cg, bicgstab, bicgstabl, gmres, lgmres, fgmres, idrs, richardson, preonly.");
@@ -142,8 +142,7 @@ inline std::istream& operator>>(std::istream& in, eSolverType& s)
 /*!
  * \brief Runtime-configurable wrappers around iterative solvers.
  */
-template <class Backend,
-          class InnerProduct = Alina::solver::detail::default_inner_product>
+template <class Backend, class InnerProduct = Alina::solver::detail::default_inner_product>
 struct SolverRuntime
 {
   typedef PropertyTree params;
@@ -156,9 +155,9 @@ struct SolverRuntime
   void* handle = nullptr;
 
   explicit SolverRuntime(size_t n, params prm = params(),
-                   const backend_params& bprm = backend_params(),
-                   const InnerProduct& inner_product = InnerProduct())
-  : s(prm.get("type", runtime::solver::bicgstab))
+                         const backend_params& bprm = backend_params(),
+                         const InnerProduct& inner_product = InnerProduct())
+  : s(prm.get("type", runtime::solver::eSolverType::bicgstab))
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");
@@ -166,7 +165,7 @@ struct SolverRuntime
     switch (s) {
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
-  case type: \
+  case eSolverType::type: \
     handle = static_cast<void*>(new ::Arcane::Alina::solver::type<Backend, InnerProduct>(n, prm, bprm, inner_product)); \
     break
 
@@ -184,7 +183,7 @@ struct SolverRuntime
     switch (s) {
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
-  case type: \
+  case eSolverType::type: \
     delete static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle); \
     break
 
@@ -200,7 +199,7 @@ struct SolverRuntime
     switch (s) {
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
-  case type: \
+  case eSolverType::type: \
     return static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle)->operator()(A, P, rhs, x)
 
       ARCANE_ALINA_ALL_RUNTIME_SOLVER();
@@ -223,7 +222,7 @@ struct SolverRuntime
     switch (w.s) {
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
-  case type: \
+  case eSolverType::type: \
     return os << *static_cast<Alina::solver::type<Backend, InnerProduct>*>(w.handle)
 
       ARCANE_ALINA_ALL_RUNTIME_SOLVER();
@@ -240,7 +239,7 @@ struct SolverRuntime
     switch (s) {
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
-  case type: \
+  case eSolverType::type: \
     return backend::bytes(*static_cast<Alina::solver::type<Backend, InnerProduct>*>(handle))
 
       ARCANE_ALINA_ALL_RUNTIME_SOLVER();
