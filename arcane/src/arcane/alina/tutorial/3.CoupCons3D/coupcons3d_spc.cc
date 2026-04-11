@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
             Alina::make_block_solver<
                 Alina::AMG<
                     UBackend,
-                    Alina::coarsening::aggregation,
+                    Alina::coarsening::AggregationCoarsening,
                     Alina::relaxation::ILU0Relaxation
                     >,
                 Alina::solver::PreconditionerOnlySolver<UBackend>

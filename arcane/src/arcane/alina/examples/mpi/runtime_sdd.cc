@@ -391,7 +391,7 @@ struct harmonic_deflation
     }
 
     Alina::PreconditionedSolver<Alina::AMG<Alina::backend::BuiltinBackend<double>,
-                                  Alina::coarsening::smoothed_aggregation,
+                                  Alina::coarsening::SmoothedAggregationCoarserning,
                                   Alina::relaxation::GaussSeidelRelaxation>,
                        Alina::solver::GMRESSolver<
                        Alina::backend::BuiltinBackend<double>>>

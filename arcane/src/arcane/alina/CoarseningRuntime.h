@@ -12,7 +12,6 @@
 #define ARCANE_ALINA_RUNTIMECOARSENING_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
 /*
  * This file is based on the work on AMGCL library (version march 2026)
  * which can be found at https://github.com/ddemidov/amgcl.
@@ -20,6 +19,8 @@
  * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
  * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <iostream>
 #include <stdexcept>
@@ -41,9 +42,13 @@ namespace Arcane::Alina::runtime::coarsening
 enum type
 {
   ruge_stuben, ///< Ruge-Stueben coarsening
+  RugeStubenCoarsening = ruge_stuben,
   aggregation, ///< Aggregation
+  AggregationCoarsening = aggregation,
   smoothed_aggregation, ///< Smoothed aggregation
-  smoothed_aggr_emin ///< Smoothed aggregation with energy minimization
+  SmoothedAggregationCoarserning = smoothed_aggregation,
+  smoothed_aggr_emin, ///< Smoothed aggregation with energy minimization
+  SmoothedAggregationEnergyMinCoarsening = smoothed_aggr_emin
 };
 
 inline std::ostream& operator<<(std::ostream& os, type c)
@@ -121,10 +126,10 @@ struct CoarseningRuntime
     } \
     break
 
-      ARCANE_ALINA_RUNTIME_COARSENING(ruge_stuben);
-      ARCANE_ALINA_RUNTIME_COARSENING(aggregation);
-      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggregation);
-      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggr_emin);
+      ARCANE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
+      ARCANE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);
+      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationCoarserning);
+      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationEnergyMinCoarsening);
 
 #undef ARCANE_ALINA_RUNTIME_COARSENING
 
@@ -147,10 +152,10 @@ struct CoarseningRuntime
     } \
     break
 
-      ARCANE_ALINA_RUNTIME_COARSENING(ruge_stuben);
-      ARCANE_ALINA_RUNTIME_COARSENING(aggregation);
-      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggregation);
-      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggr_emin);
+      ARCANE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
+      ARCANE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);
+      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationCoarserning);
+      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationEnergyMinCoarsening);
 
 #undef ARCANE_ALINA_RUNTIME_COARSENING
     }
@@ -169,10 +174,10 @@ struct CoarseningRuntime
     } \
     return make_operators<::Arcane::Alina::coarsening::t>(A)
 
-      ARCANE_ALINA_RUNTIME_COARSENING(ruge_stuben);
-      ARCANE_ALINA_RUNTIME_COARSENING(aggregation);
-      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggregation);
-      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggr_emin);
+      ARCANE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
+      ARCANE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);
+      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationCoarserning);
+      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationEnergyMinCoarsening);
 
 #undef ARCANE_ALINA_RUNTIME_COARSENING
 
@@ -193,10 +198,10 @@ struct CoarseningRuntime
     } \
     return make_coarse<::Arcane::Alina::coarsening::t>(A, P, R)
 
-      ARCANE_ALINA_RUNTIME_COARSENING(ruge_stuben);
-      ARCANE_ALINA_RUNTIME_COARSENING(aggregation);
-      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggregation);
-      ARCANE_ALINA_RUNTIME_COARSENING(smoothed_aggr_emin);
+      ARCANE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
+      ARCANE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);
+      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationCoarserning);
+      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationEnergyMinCoarsening);
 
 #undef ARCANE_ALINA_RUNTIME_COARSENING
 
@@ -206,61 +211,61 @@ struct CoarseningRuntime
   }
 
   template <template <class> class Coarsening>
-  typename std::enable_if<backend::coarsening_is_supported<Backend, Coarsening>::value, void*>::type
+  std::enable_if_t<backend::coarsening_is_supported<Backend, Coarsening>::value, void*>
   call_constructor(const params& prm)
   {
     return static_cast<void*>(new Coarsening<Backend>(prm));
   }
 
   template <template <class> class Coarsening>
-  typename std::enable_if<!backend::coarsening_is_supported<Backend, Coarsening>::value, void*>::type
+  std::enable_if_t<!backend::coarsening_is_supported<Backend, Coarsening>::value, void*>
   call_constructor(const params&)
   {
     throw std::logic_error("The coarsening is not supported by the backend");
   }
 
   template <template <class> class Coarsening>
-  typename std::enable_if<backend::coarsening_is_supported<Backend, Coarsening>::value, void>::type
+  std::enable_if_t<backend::coarsening_is_supported<Backend, Coarsening>::value, void>
   call_destructor()
   {
     delete static_cast<Coarsening<Backend>*>(handle);
   }
 
   template <template <class> class Coarsening>
-  typename std::enable_if<!backend::coarsening_is_supported<Backend, Coarsening>::value, void>::type
+  std::enable_if_t<!backend::coarsening_is_supported<Backend, Coarsening>::value, void>
   call_destructor()
   {
   }
 
   template <template <class> class Coarsening, class Matrix>
-  typename std::enable_if<backend::coarsening_is_supported<Backend, Coarsening>::value,
-                          std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>>::type
+  std::enable_if_t<backend::coarsening_is_supported<Backend, Coarsening>::value,
+                          std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>>
   make_operators(const Matrix& A) const
   {
     return static_cast<Coarsening<Backend>*>(handle)->transfer_operators(A);
   }
 
   template <template <class> class Coarsening, class Matrix>
-  typename std::enable_if<!backend::coarsening_is_supported<Backend, Coarsening>::value,
+  std::enable_if_t<!backend::coarsening_is_supported<Backend, Coarsening>::value,
                           std::tuple<
                           std::shared_ptr<Matrix>,
-                          std::shared_ptr<Matrix>>>::type
+                          std::shared_ptr<Matrix>>>
   make_operators(const Matrix&)
   {
     throw std::logic_error("The coarsening is not supported by the backend");
   }
 
   template <template <class> class Coarsening, class Matrix>
-  typename std::enable_if<backend::coarsening_is_supported<Backend, Coarsening>::value,
-                          std::shared_ptr<Matrix>>::type
+  std::enable_if_t<backend::coarsening_is_supported<Backend, Coarsening>::value,
+                          std::shared_ptr<Matrix>>
   make_coarse(const Matrix& A, const Matrix& P, const Matrix& R) const
   {
     return static_cast<Coarsening<Backend>*>(handle)->coarse_operator(A, P, R);
   }
 
   template <template <class> class Coarsening, class Matrix>
-  typename std::enable_if<!backend::coarsening_is_supported<Backend, Coarsening>::value,
-                          std::shared_ptr<Matrix>>::type
+  std::enable_if_t<!backend::coarsening_is_supported<Backend, Coarsening>::value,
+                          std::shared_ptr<Matrix>>
   make_coarse(const Matrix&, const Matrix&, const Matrix&) const
   {
     throw std::logic_error("The coarsening is not supported by the backend");

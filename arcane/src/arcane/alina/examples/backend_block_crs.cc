@@ -25,7 +25,7 @@ int main()
   typedef Alina::backend::BlockCSRBackend<double> Backend;
   typedef Alina::AMG<
   Backend,
-  Alina::coarsening::aggregation,
+  Alina::coarsening::AggregationCoarsening,
   Alina::relaxation::SPAI0Relaxation>
   AMG;
 

@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
     typedef Alina::PreconditionedSolver<
         Alina::AMG<
             PBackend,
-            Alina::coarsening::smoothed_aggregation,
+            Alina::coarsening::SmoothedAggregationCoarserning,
             Alina::relaxation::SPAI0Relaxation
             >,
         Alina::solver::ConjugateGradientSolver<SBackend>

@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
         Alina::AMG<
             PBackend,
             Alina::coarsening::as_scalar<
-                Alina::coarsening::smoothed_aggregation
+                Alina::coarsening::SmoothedAggregationCoarserning
                 >::type,
             Alina::relaxation::ILU0Relaxation
             >,

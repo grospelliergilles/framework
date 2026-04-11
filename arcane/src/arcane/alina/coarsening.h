@@ -642,7 +642,7 @@ class pointwise_aggregates
  * \ingroup coarsening
  */
 template <class Backend>
-struct aggregation
+struct AggregationCoarsening
 {
   typedef pointwise_aggregates Aggregates;
 
@@ -691,7 +691,7 @@ struct aggregation
     }
   } prm;
 
-  aggregation(const params& prm = params())
+  explicit AggregationCoarsening(const params& prm = params())
   : prm(prm)
   {}
 
@@ -703,8 +703,7 @@ struct aggregation
    * \returns   A tuple of prolongation and restriction operators.
    */
   template <class Matrix>
-  std::tuple<std::shared_ptr<Matrix>,
-             std::shared_ptr<Matrix>>
+  std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>
   transfer_operators(const Matrix& A)
   {
     const size_t n = rows(A);
@@ -917,7 +916,7 @@ int rigid_body_modes(int ndim, const Vector& coo, std::vector<double>& B, bool t
  * \sa \cite Stuben1999
  */
 template <class Backend>
-struct ruge_stuben
+struct RugeStubenCoarsening
 {
   /// Coarsening parameters.
   struct params
@@ -933,7 +932,7 @@ struct ruge_stuben
      */
     float eps_strong;
 
-    /**
+    /*!
      * \brief Truncate prolongation operator?
      *
      * Interpolation operators, and, hence coarse operators may increase
@@ -971,7 +970,7 @@ struct ruge_stuben
     }
   } prm;
 
-  ruge_stuben(const params& prm = params())
+  explicit RugeStubenCoarsening(const params& prm = params())
   : prm(prm)
   {}
 
@@ -1341,7 +1340,7 @@ struct ruge_stuben
  * \sa \cite Vanek1996
  */
 template <class Backend>
-struct smoothed_aggregation
+struct SmoothedAggregationCoarserning
 {
   typedef pointwise_aggregates Aggregates;
 
@@ -1418,7 +1417,7 @@ struct smoothed_aggregation
     }
   } prm;
 
-  smoothed_aggregation(const params& prm = params())
+  SmoothedAggregationCoarserning(const params& prm = params())
   : prm(prm)
   {}
 
@@ -1552,7 +1551,7 @@ struct smoothed_aggregation
  * \sa \cite Sala2008
  */
 template <class Backend>
-struct smoothed_aggr_emin
+struct SmoothedAggregationEnergyMinCoarsening
 {
   typedef pointwise_aggregates Aggregates;
 
@@ -1581,7 +1580,7 @@ struct smoothed_aggr_emin
     }
   } prm;
 
-  smoothed_aggr_emin(const params& prm = params())
+  SmoothedAggregationEnergyMinCoarsening(const params& prm = params())
   : prm(prm)
   {}
 
@@ -1861,7 +1860,7 @@ namespace Arcane::Alina::backend
 
 template <class Backend>
 struct coarsening_is_supported<Backend,
-                               coarsening::ruge_stuben,
+                               coarsening::RugeStubenCoarsening,
                                typename std::enable_if<
                                !std::is_arithmetic<typename backend::value_type<Backend>::type>::value>::type> : std::false_type
 {};
