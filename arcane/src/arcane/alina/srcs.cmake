@@ -38,7 +38,6 @@ set(ARCANE_SOURCES
   DummyPreconditioner.h
   PreconditionerRuntime.h
   SchurPressureCorrectionPreconditioner.h
-  perf_counter_mpi_aggregator.h
   profiler.h
   relaxation_cusparse_ilu0.h
   relaxation_detail_ilu_solve.h
