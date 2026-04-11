@@ -29,7 +29,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::runtime::mpi::coarsening
+namespace Arcane::Alina
 {
 
 enum class eDistributedCoarseningType
@@ -85,7 +85,7 @@ struct DistributedCoarseningRuntime
       ARCANE_ALINA_PARAM_MISSING("type");
 
     switch (c) {
-    case eDistributedCoarseningType:: aggregation: {
+    case eDistributedCoarseningType::aggregation: {
       typedef Alina::mpi::coarsening::aggregation<Backend> C;
       handle = static_cast<void*>(new C(prm));
     } break;
@@ -169,7 +169,7 @@ unsigned block_size(const DistributedCoarseningRuntime<Backend>& w)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::runtime::mpi::coarsening
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

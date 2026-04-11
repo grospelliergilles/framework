@@ -248,7 +248,7 @@ int main(int argc, char* argv[])
   Alina::mpi::DistributedCPRPreconditioner<
   Alina::mpi::DistributedAMG<
   Backend,
-  Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
+  Alina::DistributedCoarseningRuntime<Backend>,
   Alina::DistributedRelaxationRuntime<Backend>,
   Alina::DistributedDirectSolverRuntime<double>,
   Alina::MatrixPartitionerRuntime<Backend>>,

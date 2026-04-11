@@ -96,8 +96,8 @@ class DistributedPreconditioner
   typedef DistributedMatrix<backend_type> matrix;
 
   using AMGPrecondType = Alina::mpi::DistributedAMG<Backend,
-                                                    Alina::runtime::mpi::coarsening::DistributedCoarseningRuntime<Backend>,
-                                                    Alina::DistributedRelaxationRuntime<Backend>,
+                                                    DistributedCoarseningRuntime<Backend>,
+                                                    DistributedRelaxationRuntime<Backend>,
                                                     DistributedDirectSolverRuntime<value_type>,
                                                     MatrixPartitionerRuntime<Backend>>;
 
