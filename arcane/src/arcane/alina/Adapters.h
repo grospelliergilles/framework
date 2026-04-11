@@ -35,7 +35,7 @@
 #include <arcane/alina/util.h>
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/backend_detail_matrix_ops.h>
+#include <arcane/alina/MatrixOperationsImpl.h>
 #include <arcane/alina/CuthillMcKeeReorderer.h>
 
 /*---------------------------------------------------------------------------*/

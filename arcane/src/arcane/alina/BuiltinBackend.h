@@ -43,7 +43,7 @@
 #include <arcane/alina/SkylineLUSolver.h>
 #include <arcane/alina/DenseMatrixInverseImpl.h>
 #include <arcane/alina/SparseMatrixMatrixProduct.h>
-#include <arcane/alina/backend_detail_matrix_ops.h>
+#include <arcane/alina/MatrixOperationsImpl.h>
 #include <arcane/alina/CSRMatrix.h>
 
 /*---------------------------------------------------------------------------*/
