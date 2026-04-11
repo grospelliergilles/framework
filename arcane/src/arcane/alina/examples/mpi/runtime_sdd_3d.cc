@@ -327,7 +327,7 @@ int main(int argc, char* argv[])
 
       prof.tic("setup");
       typedef Alina::mpi::DistributedSubDomainDeflation<
-        Alina::relaxation::as_preconditioner<Backend, Alina::RuntimeRelaxation>,
+        Alina::relaxation::as_preconditioner<Backend, Alina::RelaxationRuntime>,
         Alina::DistributedSolverRuntime<Backend>,
         Alina::DistributedDirectSolverRuntime<double>>
       SDD;
@@ -345,7 +345,7 @@ int main(int argc, char* argv[])
 
       prof.tic("setup");
       typedef Alina::mpi::DistributedSubDomainDeflation<
-      Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::RuntimeRelaxation>,
+      Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::RelaxationRuntime>,
         Alina::DistributedSolverRuntime<Backend>,
       Alina::DistributedDirectSolverRuntime<double>>
       SDD;

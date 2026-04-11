@@ -305,7 +305,7 @@ int main(int argc, char* argv[])
   Alina::AMG<
     Alina::backend::BuiltinBackend<double>,
     Alina::CoarseningRuntime,
-    Alina::RuntimeRelaxation>,
+    Alina::RelaxationRuntime>,
     Alina::DistributedSolverRuntime<Alina::backend::BuiltinBackend<double>>,
     Alina::DistributedDirectSolverRuntime<double>>
   SDD;

@@ -182,7 +182,7 @@ int main(int argc, char* argv[])
   }
 
   using Backend = Alina::backend::BuiltinBackend<double>;
-  using Solver = Alina::PreconditionedSolver<Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::RuntimeRelaxation>,
+  using Solver = Alina::PreconditionedSolver<Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::RelaxationRuntime>,
                                              Alina::SolverRuntime<Backend>>;
 
   std::mt19937 rng;

@@ -5,14 +5,14 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* relaxation_runtime.h                                        (C) 2026-2026 */
+/* RelaxationRuntime.h                                         (C) 2026-2026 */
 /*                                                                           */
+/* Runtime configurable relaxation.                                          */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_RELAXATION_RUNTIME_H
-#define ARCANE_ALINA_RELAXATION_RUNTIME_H
+#ifndef ARCANE_ALINA_RELAXATIONRUNTIME_H
+#define ARCANE_ALINA_RELAXATIONRUNTIME_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
 /*
  * This file is based on the work on AMGCL library (version march 2026)
  * which can be found at https://github.com/ddemidov/amgcl.
@@ -20,7 +20,6 @@
  * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
  * SPDX-License-Identifier: MIT
  */
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -82,9 +81,11 @@ std::istream& operator>>(std::istream& in, eRelaxationType& r);
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
+/*!
+ * \brief Runtime configurable relaxation.
+ */
 template <class Backend>
-struct RuntimeRelaxation
+struct RelaxationRuntime
 {
   typedef Alina::PropertyTree params;
   typedef typename Backend::params backend_params;
@@ -92,7 +93,7 @@ struct RuntimeRelaxation
   void* handle;
 
   template <class Matrix>
-  RuntimeRelaxation(const Matrix& A, params prm = params(),
+  RelaxationRuntime(const Matrix& A, params prm = params(),
           const backend_params& bprm = backend_params())
   : r(prm.get("type", eRelaxationType::spai0))
   , handle(0)
@@ -115,7 +116,7 @@ struct RuntimeRelaxation
     }
   }
 
-  ~RuntimeRelaxation()
+  ~RelaxationRuntime()
   {
     switch (r) {
 
