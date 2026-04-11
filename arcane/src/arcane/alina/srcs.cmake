@@ -12,13 +12,12 @@ set(ARCANE_SOURCES
   BuiltinBackend.h
   HybridBuiltinBackend.h
   CudaBackend.h
-  backend_detail_default_direct_solver.h
   backend_detail_matrix_ops.h
   backend_detail_mixing.h
   BackendInterface.h
   BlockCSRMatrix.h
   CSRMatrix.h
-        Coarsening.h
+  Coarsening.h
   CoarseningRuntime.h
   DeflatedSolver.h
   DenseMatrixInverseImpl.h
@@ -40,7 +39,7 @@ set(ARCANE_SOURCES
   SchurPressureCorrectionPreconditioner.h
   profiler.h
   relaxation_cusparse_ilu0.h
-        ILUSolverImpl.h
+  ILUSolverImpl.h
   RelaxationRuntime.h
   RelaxationRuntime.cc
   Relaxation.h
