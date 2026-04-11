@@ -61,7 +61,7 @@ set(ARCANE_SOURCES
   util.h
         ValueTypeInterface.h
         ValueTypeComplex.h
-  value_type_eigen.h
+        ValueTypeEigen.h
         StaticMatrix.h
 
   DistributedAMG.h

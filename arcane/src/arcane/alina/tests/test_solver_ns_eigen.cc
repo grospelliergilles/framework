@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/value_type_eigen.h>
+#include <arcane/alina/ValueTypeEigen.h>
 
 #include "test_solver.h"
 

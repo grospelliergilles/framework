@@ -23,7 +23,7 @@
 #  endif
 #include <arcane/alina/BuiltinBackend.h>
 #ifdef BLOCK_TYPE_EIGEN
-#include <arcane/alina/value_type_eigen.h>
+#include <arcane/alina/ValueTypeEigen.h>
 template <class T, int N, int M>
 using BlockMatrix = Eigen::Matrix<T, N, M>;
 #  else
