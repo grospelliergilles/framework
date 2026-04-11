@@ -871,7 +871,7 @@ struct ILU0Relaxation
   typedef typename Backend::matrix_diagonal matrix_diagonal;
 
   typedef typename math::scalar_of<value_type>::type scalar_type;
-  typedef detail::ilu_solve<Backend> ilu_solve;
+  typedef Impl::ILUSolver<Backend> ilu_solve;
 
   /// Relaxation parameters.
   struct params
@@ -1080,7 +1080,7 @@ struct ILUKRelaxation
 
   typedef typename math::scalar_of<value_type>::type scalar_type;
 
-  typedef detail::ilu_solve<Backend> ilu_solve;
+  typedef Impl::ILUSolver<Backend> ilu_solve;
 
   /// Relaxation parameters.
   struct params
@@ -1538,7 +1538,7 @@ struct ILUTRelaxation
 
   typedef typename math::scalar_of<value_type>::type scalar_type;
 
-  typedef detail::ilu_solve<Backend> ilu_solve;
+  typedef Impl::ILUSolver<Backend> ilu_solve;
 
   /// Relaxation parameters.
   struct params

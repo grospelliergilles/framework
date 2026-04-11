@@ -1,466 +1,517 @@
-#ifndef ARCANE_ALINA_RELAXATION_DETAIL_ILU_SOLVE_HPP
-#define ARCANE_ALINA_RELAXATION_DETAIL_ILU_SOLVE_HPP
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* ILUSolverImpl.h                                             (C) 2026-2026 */
+/*                                                                           */
+/* Solver for obtained as a result of an incomplete LU factorization.        */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_ILUSOLVERIMPL_H
+#define ARCANE_ALINA_ILUSOLVERIMPL_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   alina/relaxation/detail/ilu_solve.hpp
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  Solver for sparse triangular systems obtained as a result of an
- *         incomplete LU factorization.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <arcane/alina/value_type_backend_interface.h>
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/HybridBuiltinBackend.h>
 #include <arcane/alina/util.h>
 
-namespace Arcane::Alina {
-namespace detail {
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
+namespace Arcane::Alina::Impl
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+/*!
+ * \brief  Solver for sparse triangular systems obtained as a result of an
+ *         incomplete LU factorization.
+ */
 template <class Backend>
-class ilu_solve {
-    public:
-        typedef typename Backend::params backend_params;
-        typedef typename Backend::value_type value_type;
-        typedef typename Backend::col_type col_type;
-        typedef typename Backend::ptr_type ptr_type;
-        typedef typename Backend::matrix matrix;
-        typedef typename Backend::vector vector;
-        typedef typename Backend::matrix_diagonal matrix_diagonal;
-        typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
-        typedef typename math::scalar_of<value_type>::type scalar_type;
+class ILUSolver
+{
+ public:
 
-        struct params {
-            /// Number of Jacobi iterations.
-            unsigned    iters;
+  typedef typename Backend::params backend_params;
+  typedef typename Backend::value_type value_type;
+  typedef typename Backend::col_type col_type;
+  typedef typename Backend::ptr_type ptr_type;
+  typedef typename Backend::matrix matrix;
+  typedef typename Backend::vector vector;
+  typedef typename Backend::matrix_diagonal matrix_diagonal;
+  typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
+  typedef typename math::scalar_of<value_type>::type scalar_type;
 
-            /// Damping factor.
-            scalar_type damping;
+  struct params
+  {
+    /// Number of Jacobi iterations.
+    unsigned iters;
 
-            params() : iters(2), damping(0.72) {}
+    /// Damping factor.
+    scalar_type damping;
 
-            params(const PropertyTree &p)
-                : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, iters)
-                , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
-            {
-                check_params(p, {"iters", "damping"});
-            }
+    params()
+    : iters(2)
+    , damping(0.72)
+    {}
 
-            void get(PropertyTree &p, const std::string &path) const {
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, iters);
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
-            }
+    params(const PropertyTree& p)
+    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, iters)
+    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
+    {
+      check_params(p, { "iters", "damping" });
+    }
 
-        } prm;
+    void get(PropertyTree& p, const std::string& path) const
+    {
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, iters);
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
+    }
 
-    public:
-        ilu_solve(
-                std::shared_ptr<build_matrix> L,
-                std::shared_ptr<build_matrix> U,
-                std::shared_ptr<backend::numa_vector<value_type> > D,
-                const params &prm = params(),
-                const backend_params &bprm = backend_params()
-                ) :
-            prm(prm),
-            L(Backend::copy_matrix(L, bprm)),
-            U(Backend::copy_matrix(U, bprm)),
-            D(Backend::copy_vector(D, bprm)),
-            t1(Backend::create_vector(backend::rows(*L), bprm)),
-            t2(Backend::create_vector(backend::rows(*L), bprm))
-        {}
+  } prm;
 
-        template <class Vector>
-        void solve(Vector &x) {
-            vector *y0 = t1.get();
-            vector *y1 = t2.get();
+ public:
 
-            backend::axpby(prm.damping, x, 0.0, *y0);
-            for(unsigned i = 0; i < prm.iters; ++i) {
-                backend::residual(x, *L, *y0, *y1);
-                backend::axpby(prm.damping, *y1, (1-prm.damping), *y0);
-            }
+  ILUSolver(std::shared_ptr<build_matrix> L,
+            std::shared_ptr<build_matrix> U,
+            std::shared_ptr<backend::numa_vector<value_type>> D,
+            const params& prm = params(),
+            const backend_params& bprm = backend_params())
+  : prm(prm)
+  , L(Backend::copy_matrix(L, bprm))
+  , U(Backend::copy_matrix(U, bprm))
+  , D(Backend::copy_vector(D, bprm))
+  , t1(Backend::create_vector(backend::rows(*L), bprm))
+  , t2(Backend::create_vector(backend::rows(*L), bprm))
+  {}
 
-            backend::vmul(prm.damping, *D, *y0, 0.0, x);
-            for(unsigned i = 0; i < prm.iters; ++i) {
-                backend::residual(*y0, *U, x, *y1);
-                backend::vmul(prm.damping, *D, *y1, (1-prm.damping), x);
-            }
-        }
+  template <class Vector>
+  void solve(Vector& x)
+  {
+    vector* y0 = t1.get();
+    vector* y1 = t2.get();
 
-        size_t bytes() const {
-            return
-                backend::bytes(*L) +
-                backend::bytes(*U) +
-                backend::bytes(*D) +
-                backend::bytes(*t1) +
-                backend::bytes(*t2);
-        }
+    backend::axpby(prm.damping, x, 0.0, *y0);
+    for (unsigned i = 0; i < prm.iters; ++i) {
+      backend::residual(x, *L, *y0, *y1);
+      backend::axpby(prm.damping, *y1, (1 - prm.damping), *y0);
+    }
 
-    private:
-        std::shared_ptr<matrix> L;
-        std::shared_ptr<matrix> U;
-        std::shared_ptr<matrix_diagonal> D;
-        std::shared_ptr<vector> t1, t2;
+    backend::vmul(prm.damping, *D, *y0, 0.0, x);
+    for (unsigned i = 0; i < prm.iters; ++i) {
+      backend::residual(*y0, *U, x, *y1);
+      backend::vmul(prm.damping, *D, *y1, (1 - prm.damping), x);
+    }
+  }
+
+  size_t bytes() const
+  {
+    return backend::bytes(*L) +
+    backend::bytes(*U) +
+    backend::bytes(*D) +
+    backend::bytes(*t1) +
+    backend::bytes(*t2);
+  }
+
+ private:
+
+  std::shared_ptr<matrix> L;
+  std::shared_ptr<matrix> U;
+  std::shared_ptr<matrix_diagonal> D;
+  std::shared_ptr<vector> t1, t2;
 };
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*!
+ * \brief  Solver for sparse triangular systems obtained as a result of an
+ *         incomplete LU factorization.
+ *
+ * Spécialisation for BuiltinBackend.
+ */
 template <class value_type, class col_type, class ptr_type>
-class ilu_solve< backend::BuiltinBackend<value_type, col_type, ptr_type> > {
-    public:
-        typedef backend::BuiltinBackend<value_type, col_type, ptr_type> Backend;
-        typedef typename Backend::params backend_params;
-        typedef typename Backend::matrix matrix;
-        typedef typename Backend::vector vector;
-        typedef typename Backend::matrix_diagonal matrix_diagonal;
-        typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
-        typedef typename Backend::rhs_type rhs_type;
-        typedef typename math::scalar_of<value_type>::type scalar_type;
+class ILUSolver<backend::BuiltinBackend<value_type, col_type, ptr_type>>
+{
+ public:
 
-        struct params {
-            /// Use serial version of the algorithm
-            bool serial;
+  typedef backend::BuiltinBackend<value_type, col_type, ptr_type> Backend;
+  typedef typename Backend::params backend_params;
+  typedef typename Backend::matrix matrix;
+  typedef typename Backend::vector vector;
+  typedef typename Backend::matrix_diagonal matrix_diagonal;
+  typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
+  typedef typename Backend::rhs_type rhs_type;
+  typedef typename math::scalar_of<value_type>::type scalar_type;
 
-            params() : serial(num_threads() < 4) {}
+  struct params
+  {
+    /// Use serial version of the algorithm
+    bool serial;
 
-            params(const PropertyTree &p)
-                : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, serial)
-            {
-                check_params(p, {"serial"});
-            }
+    params()
+    : serial(num_threads() < 4)
+    {}
 
-            void get(PropertyTree &p, const std::string &path) const {
-                ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, serial);
-            }
-        } prm;
+    params(const PropertyTree& p)
+    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, serial)
+    {
+      check_params(p, { "serial" });
+    }
 
-        ilu_solve(
-                std::shared_ptr<build_matrix> L,
-                std::shared_ptr<build_matrix> U,
-                std::shared_ptr<backend::numa_vector<value_type> > D,
-                const params &prm = params(),
-                const backend_params& = backend_params()
-                ) : prm(prm)
-        {
-            if (prm.serial)
-                serial_init(L, U, D);
-            else
-                parallel_init(L, U, D);
-        }
+    void get(PropertyTree& p, const std::string& path) const
+    {
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, serial);
+    }
+  } prm;
 
-        template <class Vector>
-        void solve(Vector &x) {
-            if (prm.serial)
-                serial_solve(x);
-            else
-                parallel_solve(x);
-        }
+  ILUSolver(std::shared_ptr<build_matrix> L,
+            std::shared_ptr<build_matrix> U,
+            std::shared_ptr<backend::numa_vector<value_type>> D,
+            const params& prm = params(),
+            const backend_params& = backend_params())
+  : prm(prm)
+  {
+    if (prm.serial)
+      serial_init(L, U, D);
+    else
+      parallel_init(L, U, D);
+  }
 
-        size_t bytes() const {
-            size_t b = 0;
+  template <class Vector>
+  void solve(Vector& x)
+  {
+    if (prm.serial)
+      serial_solve(x);
+    else
+      parallel_solve(x);
+  }
 
-            if (L) b += backend::bytes(*L);
-            if (U) b += backend::bytes(*U);
-            if (D) b += backend::bytes(*D);
+  size_t bytes() const
+  {
+    size_t b = 0;
 
-            if (lower) b += lower->bytes();
-            if (upper) b += upper->bytes();
+    if (L)
+      b += backend::bytes(*L);
+    if (U)
+      b += backend::bytes(*U);
+    if (D)
+      b += backend::bytes(*D);
 
-            return b;
-        }
+    if (lower)
+      b += lower->bytes();
+    if (upper)
+      b += upper->bytes();
 
-    private:
-        static int num_threads() {
+    return b;
+  }
+
+ private:
+
+  static int num_threads()
+  {
 #ifdef _OPENMP
-            return omp_get_max_threads();
+    return omp_get_max_threads();
 #else
-            return 1;
+    return 1;
 #endif
-        }
+  }
 
-        static int thread_id() {
+  static int thread_id()
+  {
 #ifdef _OPENMP
-            return omp_get_thread_num();
+    return omp_get_thread_num();
 #else
-            return 0;
+    return 0;
 #endif
-        }
+  }
 
-        // copies of the input matrices for the fallback (serial)
-        // implementation:
-        std::shared_ptr<matrix>          L;
-        std::shared_ptr<matrix>          U;
-        std::shared_ptr<matrix_diagonal> D;
+  // copies of the input matrices for the fallback (serial)
+  // implementation:
+  std::shared_ptr<matrix> L;
+  std::shared_ptr<matrix> U;
+  std::shared_ptr<matrix_diagonal> D;
 
-        void serial_init(
-                std::shared_ptr<build_matrix>    L,
-                std::shared_ptr<build_matrix>    U,
-                std::shared_ptr<matrix_diagonal> D
-                )
-        {
-            this->L = L;
-            this->U = U;
-            this->D = D;
-        }
+  void serial_init(std::shared_ptr<build_matrix> L,
+                   std::shared_ptr<build_matrix> U,
+                   std::shared_ptr<matrix_diagonal> D)
+  {
+    this->L = L;
+    this->U = U;
+    this->D = D;
+  }
 
-        template <class Vector>
-        void serial_solve(Vector &x) {
-            const size_t n = backend::rows(*L);
+  template <class Vector>
+  void serial_solve(Vector& x)
+  {
+    const size_t n = backend::rows(*L);
 
-            const matrix          &L = *(this->L);
-            const matrix          &U = *(this->U);
-            const matrix_diagonal &D = *(this->D);
+    const matrix& L = *(this->L);
+    const matrix& U = *(this->U);
+    const matrix_diagonal& D = *(this->D);
 
-            for(size_t i = 0; i < n; i++) {
-                for(ptrdiff_t j = L.ptr[i], e = L.ptr[i+1]; j < e; ++j)
-                    x[i] -= L.val[j] * x[L.col[j]];
-            }
+    for (size_t i = 0; i < n; i++) {
+      for (ptrdiff_t j = L.ptr[i], e = L.ptr[i + 1]; j < e; ++j)
+        x[i] -= L.val[j] * x[L.col[j]];
+    }
 
-            for(size_t i = n; i-- > 0;) {
-                for(ptrdiff_t j = U.ptr[i], e = U.ptr[i+1]; j < e; ++j)
-                    x[i] -= U.val[j] * x[U.col[j]];
-                x[i] = D[i] * x[i];
-            }
-        }
+    for (size_t i = n; i-- > 0;) {
+      for (ptrdiff_t j = U.ptr[i], e = U.ptr[i + 1]; j < e; ++j)
+        x[i] -= U.val[j] * x[U.col[j]];
+      x[i] = D[i] * x[i];
+    }
+  }
 
-        // OpenMP solver for sparse triangular systems.
-        // The solver uses level scheduling approach.
-        // Each level (a set of matrix rows that can be computed independently)
-        // is split into tasks, a task per thread, and the matrix data is
-        // distributed across threads to improve cache and NUMA locality.
-        template <bool lower>
-        struct sptr_solve {
-            // a task is a set of rows that can be computed independently by a
-            // single thread.
-            struct task {
-                ptrdiff_t beg, end; // rows to process
+  // OpenMP solver for sparse triangular systems.
+  // The solver uses level scheduling approach.
+  // Each level (a set of matrix rows that can be computed independently)
+  // is split into tasks, a task per thread, and the matrix data is
+  // distributed across threads to improve cache and NUMA locality.
+  template <bool lower>
+  struct sptr_solve
+  {
+    // a task is a set of rows that can be computed independently by a
+    // single thread.
+    struct task
+    {
+      ptrdiff_t beg, end; // rows to process
 
-                task(ptrdiff_t beg, ptrdiff_t end) : beg(beg), end(end) {}
-            };
+      task(ptrdiff_t beg, ptrdiff_t end)
+      : beg(beg)
+      , end(end)
+      {}
+    };
 
-            int nthreads;
+    int nthreads;
 
-            // thread-specific storage:
-            std::vector< std::vector<task>       > tasks;
-            std::vector< std::vector<ptrdiff_t>  > ptr;
-            std::vector< std::vector<ptrdiff_t>  > col;
-            std::vector< std::vector<value_type> > val;
-            std::vector< std::vector<ptrdiff_t>  > ord; // rows ordered by levels
-            std::vector< std::vector<value_type> > D;
+    // thread-specific storage:
+    std::vector<std::vector<task>> tasks;
+    std::vector<std::vector<ptrdiff_t>> ptr;
+    std::vector<std::vector<ptrdiff_t>> col;
+    std::vector<std::vector<value_type>> val;
+    std::vector<std::vector<ptrdiff_t>> ord; // rows ordered by levels
+    std::vector<std::vector<value_type>> D;
 
-            template <class Matrix>
-            sptr_solve(const Matrix &A, const value_type *_D = 0)
-                : nthreads(num_threads()), tasks(nthreads),
-                  ptr(nthreads), col(nthreads), val(nthreads), ord(nthreads)
-            {
-                ptrdiff_t n    = A.nrows;
-                ptrdiff_t nlev = 0;
+    template <class Matrix>
+    sptr_solve(const Matrix& A, const value_type* _D = 0)
+    : nthreads(num_threads())
+    , tasks(nthreads)
+    , ptr(nthreads)
+    , col(nthreads)
+    , val(nthreads)
+    , ord(nthreads)
+    {
+      ptrdiff_t n = A.nrows;
+      ptrdiff_t nlev = 0;
 
-                std::vector<ptrdiff_t> level(n, 0);
-                std::vector<ptrdiff_t> order(n, 0);
+      std::vector<ptrdiff_t> level(n, 0);
+      std::vector<ptrdiff_t> order(n, 0);
 
+      // 1. split rows into levels.
+      ptrdiff_t beg = lower ? 0 : n - 1;
+      ptrdiff_t end = lower ? n : -1;
+      ptrdiff_t inc = lower ? 1 : -1;
 
-                // 1. split rows into levels.
-                ptrdiff_t beg = lower ? 0 : n-1;
-                ptrdiff_t end = lower ? n :  -1;
-                ptrdiff_t inc = lower ? 1 :  -1;
+      for (ptrdiff_t i = beg; i != end; i += inc) {
+        ptrdiff_t l = level[i];
 
-                for(ptrdiff_t i = beg; i != end; i += inc) {
-                    ptrdiff_t l = level[i];
+        for (auto j = A.ptr[i]; j < A.ptr[i + 1]; ++j)
+          l = std::max(l, level[A.col[j]] + 1);
 
-                    for(auto j = A.ptr[i]; j < A.ptr[i+1]; ++j)
-                        l = std::max(l, level[A.col[j]]+1);
+        level[i] = l;
+        nlev = std::max(nlev, l + 1);
+      }
 
-                    level[i] = l;
-                    nlev = std::max(nlev, l+1);
-                }
+      // 2. reorder matrix rows.
+      std::vector<ptrdiff_t> start(nlev + 1, 0);
 
+      for (ptrdiff_t i = 0; i < n; ++i)
+        ++start[level[i] + 1];
 
-                // 2. reorder matrix rows.
-                std::vector<ptrdiff_t> start(nlev+1, 0);
+      std::partial_sum(start.begin(), start.end(), start.begin());
 
-                for(ptrdiff_t i = 0; i < n; ++i)
-                    ++start[level[i]+1];
+      for (ptrdiff_t i = 0; i < n; ++i)
+        order[start[level[i]]++] = i;
 
-                std::partial_sum(start.begin(), start.end(), start.begin());
+      std::rotate(start.begin(), start.end() - 1, start.end());
+      start[0] = 0;
 
-                for(ptrdiff_t i = 0; i < n; ++i)
-                    order[start[level[i]]++] = i;
-
-                std::rotate(start.begin(), start.end() - 1, start.end());
-                start[0] = 0;
-
-
-                // 3. Organize matrix rows into tasks.
-                //    Each level is split into nthreads tasks.
-                std::vector<ptrdiff_t> thread_rows(nthreads, 0);
-                std::vector<ptrdiff_t> thread_cols(nthreads, 0);
-
-#pragma omp parallel
-                {
-                    int tid = thread_id();
-                    tasks[tid].reserve(nlev);
-
-                    for(ptrdiff_t lev = 0; lev < nlev; ++lev) {
-                        // split each level into tasks.
-                        ptrdiff_t lev_size = start[lev+1] - start[lev];
-                        ptrdiff_t chunk_size = (lev_size + nthreads - 1) / nthreads;
-
-                        ptrdiff_t beg = std::min(tid * chunk_size, lev_size);
-                        ptrdiff_t end = std::min(beg + chunk_size, lev_size);
-
-                        beg += start[lev];
-                        end += start[lev];
-
-                        tasks[tid].push_back(task(beg, end));
-
-                        // count rows and nonzeros in the current task
-                        thread_rows[tid] += end - beg;
-                        for(ptrdiff_t i = beg; i < end; ++i) {
-                            ptrdiff_t j = order[i];
-                            thread_cols[tid] += A.ptr[j+1] - A.ptr[j];
-                        }
-                    }
-                }
-
-                // 4. reorganize matrix data for better cache and NUMA locality.
-                if (!lower) D.resize(nthreads);
+      // 3. Organize matrix rows into tasks.
+      //    Each level is split into nthreads tasks.
+      std::vector<ptrdiff_t> thread_rows(nthreads, 0);
+      std::vector<ptrdiff_t> thread_cols(nthreads, 0);
 
 #pragma omp parallel
-                {
-                    int tid = thread_id();
+      {
+        int tid = thread_id();
+        tasks[tid].reserve(nlev);
 
-                    col[tid].reserve(thread_cols[tid]);
-                    val[tid].reserve(thread_cols[tid]);
-                    ord[tid].reserve(thread_rows[tid]);
-                    ptr[tid].reserve(thread_rows[tid] + 1);
-                    ptr[tid].push_back(0);
+        for (ptrdiff_t lev = 0; lev < nlev; ++lev) {
+          // split each level into tasks.
+          ptrdiff_t lev_size = start[lev + 1] - start[lev];
+          ptrdiff_t chunk_size = (lev_size + nthreads - 1) / nthreads;
 
-                    if (!lower) D[tid].reserve(thread_rows[tid]);
+          ptrdiff_t beg = std::min(tid * chunk_size, lev_size);
+          ptrdiff_t end = std::min(beg + chunk_size, lev_size);
 
-                    for(task &t : tasks[tid]) {
-                        ptrdiff_t loc_beg = ptr[tid].size() - 1;
-                        ptrdiff_t loc_end = loc_beg;
+          beg += start[lev];
+          end += start[lev];
 
-                        for(ptrdiff_t r = t.beg; r < t.end; ++r, ++loc_end) {
-                            ptrdiff_t i = order[r];
-                            if (!lower) D[tid].push_back(_D[i]);
+          tasks[tid].push_back(task(beg, end));
 
-                            ord[tid].push_back(i);
+          // count rows and nonzeros in the current task
+          thread_rows[tid] += end - beg;
+          for (ptrdiff_t i = beg; i < end; ++i) {
+            ptrdiff_t j = order[i];
+            thread_cols[tid] += A.ptr[j + 1] - A.ptr[j];
+          }
+        }
+      }
 
-                            for(auto j = A.ptr[i]; j < A.ptr[i+1]; ++j) {
-                                col[tid].push_back(A.col[j]);
-                                val[tid].push_back(A.val[j]);
-                            }
+      // 4. reorganize matrix data for better cache and NUMA locality.
+      if (!lower)
+        D.resize(nthreads);
 
-                            ptr[tid].push_back(col[tid].size());
-                        }
+#pragma omp parallel
+      {
+        int tid = thread_id();
 
-                        t.beg = loc_beg;
-                        t.end = loc_end;
-                    }
-                }
+        col[tid].reserve(thread_cols[tid]);
+        val[tid].reserve(thread_cols[tid]);
+        ord[tid].reserve(thread_rows[tid]);
+        ptr[tid].reserve(thread_rows[tid] + 1);
+        ptr[tid].push_back(0);
+
+        if (!lower)
+          D[tid].reserve(thread_rows[tid]);
+
+        for (task& t : tasks[tid]) {
+          ptrdiff_t loc_beg = ptr[tid].size() - 1;
+          ptrdiff_t loc_end = loc_beg;
+
+          for (ptrdiff_t r = t.beg; r < t.end; ++r, ++loc_end) {
+            ptrdiff_t i = order[r];
+            if (!lower)
+              D[tid].push_back(_D[i]);
+
+            ord[tid].push_back(i);
+
+            for (auto j = A.ptr[i]; j < A.ptr[i + 1]; ++j) {
+              col[tid].push_back(A.col[j]);
+              val[tid].push_back(A.val[j]);
             }
 
-            template <class Vector>
-            void solve(Vector &x) const {
+            ptr[tid].push_back(col[tid].size());
+          }
+
+          t.beg = loc_beg;
+          t.end = loc_end;
+        }
+      }
+    }
+
+    template <class Vector>
+    void solve(Vector& x) const
+    {
 #pragma omp parallel
-                {
-                    int tid = thread_id();
+      {
+        int tid = thread_id();
 
-                    for(const task &t : tasks[tid]) {
-                        for(ptrdiff_t r = t.beg; r < t.end; ++r) {
-                            ptrdiff_t i   = ord[tid][r];
-                            ptrdiff_t beg = ptr[tid][r];
-                            ptrdiff_t end = ptr[tid][r+1];
+        for (const task& t : tasks[tid]) {
+          for (ptrdiff_t r = t.beg; r < t.end; ++r) {
+            ptrdiff_t i = ord[tid][r];
+            ptrdiff_t beg = ptr[tid][r];
+            ptrdiff_t end = ptr[tid][r + 1];
 
-                            rhs_type X = math::zero<rhs_type>();
-                            for(ptrdiff_t j = beg; j < end; ++j)
-                                X += val[tid][j] * x[col[tid][j]];
+            rhs_type X = math::zero<rhs_type>();
+            for (ptrdiff_t j = beg; j < end; ++j)
+              X += val[tid][j] * x[col[tid][j]];
 
-                            if (lower)
-                                x[i] -= X;
-                            else
-                                x[i] = D[tid][r] * (x[i] - X);
-                        }
+            if (lower)
+              x[i] -= X;
+            else
+              x[i] = D[tid][r] * (x[i] - X);
+          }
 
-                        // each task corresponds to a level, so we need
-                        // to synchronize across threads at this point:
+          // each task corresponds to a level, so we need
+          // to synchronize across threads at this point:
 #pragma omp barrier
-                        ;
-                    }
-                }
-            }
-
-            size_t bytes() const {
-                size_t b = 0;
-
-                for(int i = 0; i < nthreads; ++i) {
-                    b += sizeof(task) * tasks[i].size();
-                    b += backend::bytes(ptr[i]);
-                    b += backend::bytes(col[i]);
-                    b += backend::bytes(val[i]);
-                    b += backend::bytes(ord[i]);
-
-                    if (!lower) b += backend::bytes(D[i]);
-                }
-
-                return b;
-            }
-        };
-
-        std::shared_ptr< sptr_solve<true > > lower;
-        std::shared_ptr< sptr_solve<false> > upper;
-
-        void parallel_init(
-                std::shared_ptr<build_matrix> L,
-                std::shared_ptr<build_matrix> U,
-                std::shared_ptr<backend::numa_vector<value_type> > D
-                )
-        {
-            lower = std::make_shared< sptr_solve<true > >(*L, D->data());
-            upper = std::make_shared< sptr_solve<false> >(*U, D->data());
+          ;
         }
+      }
+    }
 
-        template <class Vector>
-        void parallel_solve(Vector &x) {
-            lower->solve(x);
-            upper->solve(x);
-        }
+    size_t bytes() const
+    {
+      size_t b = 0;
+
+      for (int i = 0; i < nthreads; ++i) {
+        b += sizeof(task) * tasks[i].size();
+        b += backend::bytes(ptr[i]);
+        b += backend::bytes(col[i]);
+        b += backend::bytes(val[i]);
+        b += backend::bytes(ord[i]);
+
+        if (!lower)
+          b += backend::bytes(D[i]);
+      }
+
+      return b;
+    }
+  };
+
+  std::shared_ptr<sptr_solve<true>> lower;
+  std::shared_ptr<sptr_solve<false>> upper;
+
+  void parallel_init(std::shared_ptr<build_matrix> L,
+                     std::shared_ptr<build_matrix> U,
+                     std::shared_ptr<backend::numa_vector<value_type>> D)
+  {
+    lower = std::make_shared<sptr_solve<true>>(*L, D->data());
+    upper = std::make_shared<sptr_solve<false>>(*U, D->data());
+  }
+
+  template <class Vector>
+  void parallel_solve(Vector& x)
+  {
+    lower->solve(x);
+    upper->solve(x);
+  }
 };
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 template <class Block, class Col, class Ptr>
-class ilu_solve< backend::HybridBuiltinBackend<Block, Col, Ptr> >
-    : public ilu_solve< backend::BuiltinBackend<typename math::scalar_of<Block>::type, Col, Ptr> >
+class ILUSolver<backend::HybridBuiltinBackend<Block, Col, Ptr>>
+: public ILUSolver<backend::BuiltinBackend<typename math::scalar_of<Block>::type, Col, Ptr>>
 {
-    typedef ilu_solve< backend::BuiltinBackend<typename math::scalar_of<Block>::type, Col, Ptr> > Base;
+  typedef ILUSolver<backend::BuiltinBackend<typename math::scalar_of<Block>::type, Col, Ptr>> Base;
 
-    public:
-        using Base::Base;
+ public:
+
+  using Base::Base;
 };
 
-} // namespace detail
-} // namespace amgcl
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::detail
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif
