@@ -13,7 +13,7 @@
 
 #include "arcane/alina/Profiler.h"
 
-#include "arcane/alina/perf_counter_clock.h"
+#include "arcane/utils/PlatformUtils.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -21,15 +21,13 @@
 namespace Arcane::Alina
 {
 
-using Counter = perf_counter::clock;
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
 void Profiler::
 tic(const std::string& name)
 {
-  stack.back()->children[name].begin = Counter::current();
+  stack.back()->children[name].begin = Platform::getRealTime();
   stack.push_back(&stack.back()->children[name]);
 }
 
@@ -42,7 +40,7 @@ toc(const std::string&)
   profile_unit* top = stack.back();
   stack.pop_back();
 
-  value_type current = Counter::current();
+  value_type current = Platform::getRealTime();
   delta_type delta = current - top->begin;
 
   top->length += delta;
@@ -62,7 +60,8 @@ reset()
   root.children.clear();
 
   stack.push_back(&root);
-  root.begin = Counter::current();
+  root.begin = Platform::getRealTime();
+  ;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -72,7 +71,7 @@ init()
 {
   stack.reserve(128);
   stack.push_back(&root);
-  root.begin = Counter::current();
+  root.begin = Platform::getRealTime();
 }
 
 /*---------------------------------------------------------------------------*/
