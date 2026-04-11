@@ -40,7 +40,7 @@ set(ARCANE_SOURCES
   SchurPressureCorrectionPreconditioner.h
   profiler.h
   relaxation_cusparse_ilu0.h
-  relaxation_detail_ilu_solve.h
+        ILUSolverImpl.h
   RelaxationRuntime.h
   RelaxationRuntime.cc
   Relaxation.h

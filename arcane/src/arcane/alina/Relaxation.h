@@ -44,7 +44,7 @@
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/DenseMatrixInverseImpl.h>
 #include <arcane/alina/BackendInterface.h>
-#include <arcane/alina/relaxation_detail_ilu_solve.h>
+#include <arcane/alina/ILUSolverImpl.h>
 #include <arcane/alina/value_type_backend_interface.h>
 
 /*---------------------------------------------------------------------------*/
