@@ -5,12 +5,12 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* mp_cpr.h                                                    (C) 2026-2026 */
+/* DistributedCPRPreconditioner.h                              (C) 2026-2026 */
 /*                                                                           */
 /* Distributed CPR preconditioner.                                           */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_MP_CPR_H
-#define ARCANE_ALINA_MPI_MP_CPR_H
+#ifndef ARCANE_ALINA_DISTRIBUTEDCPRPRECONDITIONER_H
+#define ARCANE_ALINA_DISTRIBUTEDCPRPRECONDITIONER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -32,7 +32,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::mpi
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -44,21 +44,21 @@ template <class PPrecond, class SPrecond>
 class DistributedCPRPreconditioner
 {
   static_assert(std::is_same<
-                typename PPrecond::backend_type,
-                typename SPrecond::backend_type>::value,
+                typename PPrecond::BackendType,
+                typename SPrecond::BackendType>::value,
                 "Backends for pressure and flow preconditioners should coinside!");
 
  public:
 
-  typedef typename PPrecond::backend_type backend_type;
+  using BackendType = PPrecond::BackendType;
 
-  typedef typename backend_type::value_type value_type;
-  typedef typename math::scalar_of<value_type>::type scalar_type;
-  typedef typename backend_type::matrix bmatrix;
-  typedef typename backend_type::vector vector;
-  typedef typename backend_type::params backend_params;
+  typedef BackendType::value_type value_type;
+  typedef math::scalar_of<value_type>::type scalar_type;
+  typedef BackendType::matrix bmatrix;
+  typedef BackendType::vector vector;
+  typedef BackendType::params backend_params;
 
-  typedef DistributedMatrix<backend_type> matrix;
+  typedef DistributedMatrix<BackendType> matrix;
   typedef typename backend::BuiltinBackend<value_type>::matrix build_matrix;
 
   struct params
@@ -435,12 +435,12 @@ class DistributedCPRPreconditioner
     P = std::make_shared<PPrecond>(comm, App, prm.pprecond, bprm);
     S = std::make_shared<SPrecond>(comm, K, prm.sprecond, bprm);
 
-    Fpp = backend_type::copy_matrix(fpp, bprm);
-    Scatter = backend_type::copy_matrix(scatter, bprm);
+    Fpp = BackendType::copy_matrix(fpp, bprm);
+    Scatter = BackendType::copy_matrix(scatter, bprm);
 
-    rp = backend_type::create_vector(np, bprm);
-    xp = backend_type::create_vector(np, bprm);
-    rs = backend_type::create_vector(n, bprm);
+    rp = BackendType::create_vector(np, bprm);
+    xp = BackendType::create_vector(np, bprm);
+    rs = BackendType::create_vector(n, bprm);
   }
 
   // Inverts dense matrix A;
@@ -478,27 +478,21 @@ class DistributedCPRPreconditioner
   }
 
   template <class P, class S>
-  friend std::ostream& operator<<(std::ostream& os, const DistributedCPRPreconditioner<P, S>& cpr);
+  friend std::ostream& operator<<(std::ostream& os, const DistributedCPRPreconditioner<P, S>& cpr)
+  {
+    os << "CPR (two-stage preconditioner)\n"
+          "### Pressure preconditioner:\n"
+       << *cpr.P << "\n"
+                    "### Global preconditioner:\n"
+       << *cpr.S << std::endl;
+    return os;
+  }
 };
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-template <class P, class S>
-std::ostream& operator<<(std::ostream& os, const DistributedCPRPreconditioner<P, S>& cpr)
-{
-  os << "CPR (two-stage preconditioner)\n"
-        "### Pressure preconditioner:\n"
-     << *cpr.P << "\n"
-                  "### Global preconditioner:\n"
-     << *cpr.S << std::endl;
-  return os;
-}
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-} // namespace Arcane::Alina::mpi
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

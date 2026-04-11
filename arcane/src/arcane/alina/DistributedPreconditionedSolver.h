@@ -40,20 +40,20 @@ namespace Arcane::Alina
 /*!
  * \brief Iterative solver wrapper for distributed linear systems.
  */
-template <class Precond,
-          class IterativeSolver>
+template <class Precond, class IterativeSolver>
 class DistributedPreconditionedSolver
 : public Alina::detail::non_copyable
 {
   static_assert(backend::backends_compatible<
-                typename IterativeSolver::backend_type,
-                typename Precond::backend_type>::value,
+                typename IterativeSolver::BackendType,
+                typename Precond::BackendType>::value,
                 "Backends for preconditioner and iterative solver should be compatible");
 
  public:
 
-  typedef typename IterativeSolver::backend_type backend_type;
-  typedef DistributedMatrix<typename Precond::backend_type> matrix;
+  typedef typename IterativeSolver::BackendType backend_type;
+  using BackendType = backend_type;
+  typedef DistributedMatrix<typename Precond::BackendType> matrix;
   typedef typename backend_type::value_type value_type;
   typedef typename backend_type::params backend_params;
   typedef typename backend::BuiltinBackend<value_type>::matrix build_matrix;

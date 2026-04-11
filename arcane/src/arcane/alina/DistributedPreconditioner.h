@@ -89,7 +89,8 @@ class DistributedPreconditioner
 {
  public:
 
-  typedef Backend backend_type;
+  using backend_type = Backend;
+  using BackendType = Backend;
   typedef typename backend_type::params backend_params;
   typedef PropertyTree params;
   typedef typename backend_type::value_type value_type;
@@ -245,6 +246,7 @@ class DistributedBlockPreconditioner
 
   typedef typename Precond::params params;
   typedef typename Precond::backend_type backend_type;
+  using BackendType = backend_type;
   typedef typename backend_type::params backend_params;
 
   typedef typename backend_type::value_type value_type;

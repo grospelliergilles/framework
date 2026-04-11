@@ -43,6 +43,7 @@ template <class Backend>
 struct DistributedRelaxationRuntime
 {
   typedef Backend backend_type;
+  using BackendType = backend_type;
   typedef typename Backend::params backend_params;
   typedef Alina::PropertyTree params;
 

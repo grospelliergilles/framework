@@ -154,7 +154,8 @@ class IDRSSolver
 {
  public:
 
-  typedef Backend backend_type;
+  using backend_type = Backend;
+  using BackendType = Backend;
 
   typedef typename Backend::vector vector;
   typedef typename Backend::value_type value_type;

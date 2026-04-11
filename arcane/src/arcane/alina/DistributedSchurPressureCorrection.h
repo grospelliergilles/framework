@@ -57,6 +57,7 @@ class DistributedSchurPressureCorrection
   typedef
   typename backend::detail::common_scalar_backend<typename USolver::backend_type,
                                                   typename PSolver::backend_type>::type backend_type;
+  using BackendType = backend_type;
 
   typedef typename backend_type::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;

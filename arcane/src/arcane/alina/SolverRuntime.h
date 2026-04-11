@@ -150,6 +150,7 @@ struct SolverRuntime
   typedef typename Backend::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
   typedef Backend backend_type;
+  using BackendType = backend_type;
 
   eSolverType s;
   void* handle = nullptr;

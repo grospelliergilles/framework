@@ -292,7 +292,8 @@ template <class Relaxation>
 struct AsDistributedPreconditioner
 {
   typedef typename Relaxation::params params;
-  typedef typename Relaxation::backend_type backend_type;
+  typedef typename Relaxation::BackendType backend_type;
+  using BackendType = backend_type;
   typedef typename backend_type::params backend_params;
   typedef typename backend_type::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;

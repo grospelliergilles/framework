@@ -246,14 +246,17 @@ int main(int argc, char* argv[])
                               block_size);
 
   prof.tic("setup");
+
+  using AMG = DistributedAMG<Backend,
+                             DistributedCoarseningRuntime<Backend>,
+                             DistributedRelaxationRuntime<Backend>,
+                             DistributedDirectSolverRuntime<double>,
+                             MatrixPartitionerRuntime<Backend>>;
+
   typedef DistributedPreconditionedSolver<
-  Alina::mpi::DistributedCPRPreconditioner<
-  DistributedAMG<Backend,
-                 DistributedCoarseningRuntime<Backend>,
-                 DistributedRelaxationRuntime<Backend>,
-                 DistributedDirectSolverRuntime<double>,
-                 MatrixPartitionerRuntime<Backend>>,
-    AsDistributedPreconditioner<DistributedRelaxationRuntime<Backend>>>,
+    DistributedCPRPreconditioner<
+      AMG,
+      AsDistributedPreconditioner<DistributedRelaxationRuntime<Backend>>>,
     DistributedSolverRuntime<Backend>>
   Solver;
 
