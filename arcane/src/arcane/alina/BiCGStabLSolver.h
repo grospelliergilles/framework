@@ -215,7 +215,7 @@ class BiCGStabLSolver
 
     const int L = prm.L;
 
-    ios_saver ss(std::cout);
+    ScopedStreamModifier ss(std::cout);
 
     scalar_type norm_rhs = norm(rhs);
 

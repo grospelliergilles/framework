@@ -24,7 +24,7 @@
 /*---------------------------------------------------------------------------*/
 
 #include "arcane/alina/AlinaGlobal.h"
-#include "arcane/alina/ios_saver.h"
+#include "arcane/alina/ScopedStreamModifier.h"
 
 #include <iostream>
 #include <iomanip>

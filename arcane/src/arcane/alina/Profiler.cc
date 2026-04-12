@@ -101,7 +101,7 @@ print(std::ostream& out)
 {
   if (stack.back() != &root)
     out << "Warning! Profile is incomplete." << std::endl;
-  ios_saver ss(out);
+  ScopedStreamModifier ss(out);
   root.print(out, name, 0, root.length, root.total_width(name, 0));
 }
 

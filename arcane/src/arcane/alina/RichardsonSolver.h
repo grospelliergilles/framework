@@ -142,7 +142,7 @@ class RichardsonSolver
   {
     static const coef_type one = math::identity<coef_type>();
 
-    ios_saver ss(std::cout);
+    ScopedStreamModifier ss(std::cout);
 
     scalar_type norm_rhs = norm(rhs);
     if (norm_rhs < Alina::detail::eps<scalar_type>(1)) {

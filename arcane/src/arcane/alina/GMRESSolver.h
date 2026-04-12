@@ -158,7 +158,7 @@ class GMRESSolver
     static const scalar_type zero = math::zero<scalar_type>();
     static const scalar_type one = math::identity<scalar_type>();
 
-    ios_saver ss(std::cout);
+    ScopedStreamModifier ss(std::cout);
 
     scalar_type norm_rhs = norm(rhs);
     if (norm_rhs < Alina::detail::eps<scalar_type>(1)) {

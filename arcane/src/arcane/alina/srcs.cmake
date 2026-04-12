@@ -22,7 +22,7 @@ set(ARCANE_SOURCES
   EigenAdapter.h
   EigenBackend.h
   IO.h
-  ios_saver.h
+  ScopedStreamModifier.h
   make_block_solver.h
   PreconditionedSolver.h
   CPRDynamicRowSumPreconditioner.h

@@ -576,7 +576,7 @@ template <class B, template <class> class C, template <class> class R>
 std::ostream& operator<<(std::ostream& os, const AMG<B, C, R>& a)
 {
   typedef typename AMG<B, C, R>::level level;
-  ios_saver ss(os);
+  ScopedStreamModifier ss(os);
 
   size_t sum_dof = 0;
   size_t sum_nnz = 0;

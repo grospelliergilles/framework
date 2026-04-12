@@ -154,7 +154,7 @@ class FlexibleGMRESSolver
   template <class Matrix, class Precond, class Vec1, class Vec2>
   SolverResult operator()(Matrix const& A, Precond const& P, Vec1 const& rhs, Vec2& x) const
   {
-    ios_saver ss(std::cout);
+    ScopedStreamModifier ss(std::cout);
 
     scalar_type norm_rhs = norm(rhs);
     if (norm_rhs < Alina::detail::eps<scalar_type>(1)) {

@@ -485,7 +485,7 @@ template <class B, class C, class R, class D, class I>
 std::ostream& operator<<(std::ostream& os, const DistributedAMG<B, C, R, D, I>& a)
 {
   typedef typename DistributedAMG<B, C, R, D, I>::level level;
-  ios_saver ss(os);
+  ScopedStreamModifier ss(os);
 
   size_t sum_dof = 0;
   size_t sum_nnz = 0;

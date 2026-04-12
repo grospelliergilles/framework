@@ -227,7 +227,7 @@ class LooseGMRESSolver
     static const scalar_type zero = math::zero<scalar_type>();
     static const scalar_type one = math::identity<scalar_type>();
 
-    ios_saver ss(std::cout);
+    ScopedStreamModifier ss(std::cout);
 
     if (prm.always_reset) {
       outer_v.clear();

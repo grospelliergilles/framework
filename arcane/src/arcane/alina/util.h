@@ -125,7 +125,7 @@ read_json(const std::string& filename, Arcane::Alina::PropertyTree& prm)
   /*---------------------------------------------------------------------------*/
   /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/ios_saver.h>
+#include <arcane/alina/ScopedStreamModifier.h>
 
 /*!
  * \brief Performance measurement macros.
@@ -560,7 +560,7 @@ namespace std
 template <class T>
 inline istream& operator>>(istream& is, T*& ptr)
 {
-  Arcane::Alina::ios_saver ss(is);
+  Arcane::Alina::ScopedStreamModifier ss(is);
 
   size_t val;
   is >> std::hex >> val;
