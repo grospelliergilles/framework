@@ -163,9 +163,9 @@ class DistributedAMG
 
   template <class Matrix>
   DistributedAMG(mpi_communicator comm,
-      const Matrix& A,
-      const params& prm = params(),
-      const backend_params& bprm = backend_params())
+                 const Matrix& A,
+                 const params& prm = params(),
+                 const backend_params& bprm = backend_params())
   : prm(prm)
   , comm(comm)
   , repart(prm.repart)
@@ -174,9 +174,9 @@ class DistributedAMG
   }
 
   DistributedAMG(mpi_communicator comm,
-      std::shared_ptr<matrix> A,
-      const params& prm = params(),
-      const backend_params& bprm = backend_params())
+                 std::shared_ptr<matrix> A,
+                 const params& prm = params(),
+                 const backend_params& bprm = backend_params())
   : prm(prm)
   , comm(comm)
   , repart(prm.repart)
@@ -255,7 +255,7 @@ class DistributedAMG
 
  private:
 
-  struct level
+  struct DistributedAMGLevel
   {
     ptrdiff_t nrows, nnz;
     int active_procs;
@@ -265,12 +265,12 @@ class DistributedAMG
     std::shared_ptr<Relaxation> relax;
     std::shared_ptr<DirectSolver> solve;
 
-    level() {}
+    DistributedAMGLevel() = default;
 
-    level(std::shared_ptr<matrix> a,
-          params& prm,
-          const backend_params& bprm,
-          bool direct = false)
+    DistributedAMGLevel(std::shared_ptr<matrix> a,
+                        params& prm,
+                        const backend_params& bprm,
+                        bool direct = false)
     : nrows(a->glob_rows())
     , nnz(a->glob_nonzeros())
     , f(Backend::create_vector(a->loc_rows(), bprm))
@@ -382,12 +382,12 @@ class DistributedAMG
     }
   };
 
-  typedef typename std::list<level>::const_iterator level_iterator;
+  typedef typename std::list<DistributedAMGLevel>::const_iterator level_iterator;
 
   mpi_communicator comm;
   std::shared_ptr<matrix> A;
   Repartition repart;
-  std::list<level> levels;
+  std::list<DistributedAMGLevel> levels;
 
   void init(std::shared_ptr<matrix> A, const backend_params& bprm)
   {
@@ -398,7 +398,7 @@ class DistributedAMG
     bool need_coarse = true;
 
     while (A->glob_rows() > prm.coarse_enough) {
-      levels.push_back(level(A, prm, bprm));
+      levels.push_back(DistributedAMGLevel(A, prm, bprm));
 
       if (levels.size() >= prm.max_levels) {
         levels.back().move_to_backend(bprm, prm.allow_rebuild);
@@ -423,7 +423,7 @@ class DistributedAMG
     }
 
     if (A && need_coarse) {
-      levels.push_back(level(A, prm, bprm, prm.direct_coarse));
+      levels.push_back(DistributedAMGLevel(A, prm, bprm, prm.direct_coarse));
       levels.back().move_to_backend(bprm, prm.allow_rebuild);
     }
 
@@ -484,7 +484,7 @@ class DistributedAMG
 template <class B, class C, class R, class D, class I>
 std::ostream& operator<<(std::ostream& os, const DistributedAMG<B, C, R, D, I>& a)
 {
-  typedef typename DistributedAMG<B, C, R, D, I>::level level;
+  typedef typename DistributedAMG<B, C, R, D, I>::DistributedAMGLevel level;
   ScopedStreamModifier ss(os);
 
   size_t sum_dof = 0;

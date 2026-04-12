@@ -17,6 +17,7 @@ set(ARCANE_SOURCES
   CoarseningRuntime.h
   DeflatedSolver.h
   DenseMatrixInverseImpl.h
+  ExecutionContext.h
   QRFactorizationImpl.h
   SparseMatrixMatrixProduct.h
   EigenAdapter.h

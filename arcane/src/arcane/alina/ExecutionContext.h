@@ -1,35 +1,24 @@
 ﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
 //-----------------------------------------------------------------------------
-// Copyright 2000-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// Copyright 2020-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
 // See the top-level COPYRIGHT file for details.
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* AlinaGlobal.h                                               (C) 2000-2026 */
+/* ExecutionContext.h                                          (C) 2020-2026 */
 /*                                                                           */
-/* Déclarations générales de la composante 'arcane_alina'.                   */
-/*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_ALINAGLOBAL_H
-#define ARCANE_ALINA_ALINAGLOBAL_H
+/* Execution context for linear solver operations.                           */
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-#include "arcane/utils/ArcaneGlobal.h"
-
+#ifndef ARCANE_ALINA_EXECUTIONCONTEXT_H
+#define ARCANE_ALINA_EXECUTIONCONTEXT_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#ifdef ARCANE_COMPONENT_arcane_alina
-#define ARCANE_ALINA_EXPORT ARCANE_EXPORT
-#else
-#define ARCANE_ALINA_EXPORT ARCANE_IMPORT
-#endif
+#include "arcane/alina/AlinaGlobal.h"
 
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-// Always activate profiling at the moment
-#define ARCANE_ALINA_PROFILING
+#include "arccore/base/Ref.h"
+#include "arccore/message_passing/IMessagePassingMng.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -40,20 +29,12 @@ namespace Arcane::Alina
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace detail
+class ARCANE_ALINA_EXPORT ExecutionContext
 {
-// Backend with scalar value_type of highest precision.
-template <class B1, class B2, class Enable = void>
-struct common_scalar_backend;
-}
+ public:
 
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-class ExecutionContext;
-
-template <typename val_t = double, typename col_t = ptrdiff_t, typename ptr_t = col_t>
-struct CSRMatrix;
+  Ref<IMessagePassingMng> m_message_passing_mng;
+};
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

@@ -185,7 +185,7 @@ void sort_rows(CSRMatrix<V, C, P>& A)
   for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i) {
     P beg = A.ptr[i];
     P end = A.ptr[i + 1];
-    Alina::detail::sort_row(A.col + beg, A.val + beg, end - beg);
+    detail::sort_row(A.col + beg, A.val + beg, end - beg);
   }
 }
 

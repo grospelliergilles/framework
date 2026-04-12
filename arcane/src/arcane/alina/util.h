@@ -5,11 +5,15 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
+/* Util.h                                                      (C) 2026-2026 */
+/*                                                                           */
+/* Various utilities.                                                        */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 #ifndef ARCANE_ALINA_UTIL_H
 #define ARCANE_ALINA_UTIL_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
 /*
  * This file is based on the work on AMGCL library (version march 2026)
  * which can be found at https://github.com/ddemidov/amgcl.
@@ -17,25 +21,29 @@
  * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
  * SPDX-License-Identifier: MIT
  */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #pragma GCC diagnostic ignored "-Wconversion"
 
 #include "arcane/alina/AlinaGlobal.h"
 
-#include <iostream>
-#include <iomanip>
-#include <iterator>
-#include <vector>
-#include <array>
-#include <string>
+#include "arccore/base/Ref.h"
+#include "arccore/message_passing/IMessagePassingMng.h"
+
 #include <set>
 #include <complex>
-#include <limits>
-#include <stdexcept>
 #include <cstddef>
+#include <tuple>
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 namespace Arcane::Alina
 {
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 //! Result of a solving.
 class ARCANE_ALINA_EXPORT SolverResult
 {
@@ -67,7 +75,14 @@ class ARCANE_ALINA_EXPORT SolverResult
   size_t m_nb_iteration = 0;
   double m_residual = 0.0;
 };
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 } // namespace Arcane::Alina
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 // If asked explicitly, or if boost is available, enable
 // using boost::propert_tree::ptree as parameters:

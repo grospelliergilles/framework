@@ -176,8 +176,7 @@ class AMG
       ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, pre_cycles);
       ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, allow_rebuild);
     }
-
-  } prm;
+  };
 
   /*!
    * \brief Builds the AMG hierarchy for the system matrix.
@@ -188,14 +187,14 @@ class AMG
    * \param p AMG parameters.
    */
   template <class Matrix>
-  AMG(const Matrix& M, const params& p = params(),
-      const backend_params& bprm = backend_params())
+  explicit AMG(const Matrix& M, const params& p = params(),
+               const backend_params& bprm = backend_params())
   : prm(p)
   {
     auto A = std::make_shared<build_matrix>(M);
     sort_rows(*A);
 
-    do_init(A, bprm);
+    _initialize(A, bprm);
   }
 
   /*!
@@ -210,12 +209,12 @@ class AMG
    * \param A The system matrix.
    * \param p AMG parameters.
    */
-  AMG(std::shared_ptr<build_matrix> A,
-      const params& p = params(),
-      const backend_params& bprm = backend_params())
+  explicit AMG(std::shared_ptr<build_matrix> A,
+               const params& p = params(),
+               const backend_params& bprm = backend_params())
   : prm(p)
   {
-    do_init(A, bprm);
+    _initialize(A, bprm);
   }
 
   /*!
@@ -233,7 +232,7 @@ class AMG
     rebuild(A, bprm);
   }
 
-  /**
+  /*!
    * \brief Rebuild the hierarchy using the new system matrix.
    *
    * This requires for prm.allow_rebuild to be set. The transfer
@@ -307,9 +306,13 @@ class AMG
     return b;
   }
 
+ public:
+
+  params prm;
+
  private:
 
-  struct level
+  struct AMGLevel
   {
     size_t m_rows = 0;
     size_t m_nonzeros = 0;
@@ -355,9 +358,9 @@ class AMG
       return b;
     }
 
-    level() = default;
+    AMGLevel() = default;
 
-    level(std::shared_ptr<build_matrix> A, params& prm, const backend_params& bprm)
+    AMGLevel(std::shared_ptr<build_matrix> A, params& prm, const backend_params& bprm)
     : m_rows(backend::rows(*A))
     , m_nonzeros(backend::nonzeros(*A))
     {
@@ -469,15 +472,14 @@ class AMG
     }
   };
 
-  typedef std::list<level>::const_iterator level_iterator;
+  typedef std::list<AMGLevel>::const_iterator level_iterator;
 
-  std::list<level> levels;
+  std::list<AMGLevel> levels;
 
-  void do_init(std::shared_ptr<build_matrix> A,
-               const backend_params& bprm = backend_params())
+  void _initialize(std::shared_ptr<build_matrix> A,
+                   const backend_params& bprm = backend_params())
   {
-    precondition(    backend::rows(*A) == backend::cols(*A),
-    "Matrix should be square!");
+    precondition(backend::rows(*A) == backend::cols(*A), "Matrix should be square!");
 
     bool direct_coarse_solve = true;
 
@@ -485,7 +487,7 @@ class AMG
     std::cout << "DoInit AMG coarse_enough=" << prm.coarse_enough << "\n";
     while (backend::rows(*A) > prm.coarse_enough) {
       std::cout << "DoIteration nb_row=" << backend::rows(*A) << "\n";
-      levels.push_back(level(A, prm, bprm));
+      levels.push_back(AMGLevel(A, prm, bprm));
 
       if (levels.size() >= prm.max_levels)
         break;
@@ -508,12 +510,12 @@ class AMG
     if (direct_coarse_solve) {
       ARCANE_ALINA_TIC("coarsest level");
       if (prm.direct_coarse) {
-        level l;
+        AMGLevel l;
         l.create_coarse(A, bprm, levels.empty());
         levels.push_back(l);
       }
       else {
-        levels.push_back(level(A, prm, bprm));
+        levels.push_back(AMGLevel(A, prm, bprm));
       }
       ARCANE_ALINA_TOC("coarsest level");
     }
@@ -575,7 +577,7 @@ class AMG
 template <class B, template <class> class C, template <class> class R>
 std::ostream& operator<<(std::ostream& os, const AMG<B, C, R>& a)
 {
-  typedef typename AMG<B, C, R>::level level;
+  typedef typename AMG<B, C, R>::AMGLevel level;
   ScopedStreamModifier ss(os);
 
   size_t sum_dof = 0;
