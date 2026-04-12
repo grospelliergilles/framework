@@ -70,7 +70,7 @@ class ARCANE_ALINA_EXPORT SolverResult
 } // namespace Arcane::Alina
 
 // If asked explicitly, or if boost is available, enable
-// using boost::propert_tree::ptree as amgcl parameters:
+// using boost::propert_tree::ptree as parameters:
 #ifndef ARCANE_ALINA_NO_BOOST
 #  include <boost/property_tree/ptree.hpp>
 #endif
@@ -132,27 +132,26 @@ read_json(const std::string& filename, Arcane::Alina::PropertyTree& prm)
  *
  * If ARCANE_ALINA_PROFILING macro is defined at compilation, then ARCANE_ALINA_TIC(name) and
  * ARCANE_ALINA_TOC(name) macros correspond to prof.tic(name) and prof.toc(name).
- * amgcl::prof should be an instance of amgcl::profiler<> defined in a user
+ * Arcane::Alina::prof should be an instance of Arcane::Alina::profiler defined in a user
  * code similar to:
  * \code
- * namespace amgcl { profiler<> prof; }
+ * namespace Arcane::Alina { profiler prof; }
  * \endcode
  * If ARCANE_ALINA_PROFILING is undefined, then ARCANE_ALINA_TIC and ARCANE_ALINA_TOC are noop macros.
  */
 #ifdef ARCANE_ALINA_PROFILING
 #  if !defined(ARCANE_ALINA_TIC) || !defined(ARCANE_ALINA_TOC)
-#    include <arcane/alina/profiler.h>
-#    define ARCANE_ALINA_TIC(name) amgcl::prof.tic(name);
-#    define ARCANE_ALINA_TOC(name) amgcl::prof.toc(name);
-namespace Arcane::Alina { extern profiler<> prof; }
+#    include <arcane/alina/Profiler.h>
+#    define ARCANE_ALINA_TIC(name):: Arcane::Alina::Profiler::globalTic(name);
+#    define ARCANE_ALINA_TOC(name) ::Arcane::Alina::Profiler::globalToc(name);
 #  endif
-#else
-#  ifndef ARCANE_ALINA_TIC
-#    define ARCANE_ALINA_TIC(name)
-#  endif
-#  ifndef ARCANE_ALINA_TOC
-#    define ARCANE_ALINA_TOC(name)
-#  endif
+#endif
+
+#ifndef ARCANE_ALINA_TIC
+#  define ARCANE_ALINA_TIC(name)
+#endif
+#ifndef ARCANE_ALINA_TOC
+#  define ARCANE_ALINA_TOC(name)
 #endif
 
 #define ARCANE_ALINA_DEBUG_SHOW(x)                                                    \
@@ -265,7 +264,7 @@ inline void put(boost::property_tree::ptree& p, const std::string& param)
 {
   size_t eq_pos = param.find('=');
   if (eq_pos == std::string::npos)
-    throw std::invalid_argument("param in amgcl::put() should have \"key=value\" format!");
+    throw std::invalid_argument("param in put() should have \"key=value\" format!");
   p.put(param.substr(0, eq_pos), param.substr(eq_pos + 1));
 }
 

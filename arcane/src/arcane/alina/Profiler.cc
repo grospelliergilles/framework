@@ -20,6 +20,25 @@
 
 namespace Arcane::Alina
 {
+Profiler global_alina_profiler;
+
+Profiler& Profiler::
+globalProfiler()
+{
+  return global_alina_profiler;
+}
+
+void Profiler::
+globalTic(const std::string& name)
+{
+  global_alina_profiler.tic(name);
+}
+
+Profiler::delta_type Profiler::
+globalToc(const std::string&)
+{
+  return global_alina_profiler.toc();
+}
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

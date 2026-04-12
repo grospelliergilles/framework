@@ -82,6 +82,18 @@ class ARCANE_ALINA_EXPORT Profiler
    */
   delta_type toc(const std::string& /*name*/ = "");
 
+  static Profiler& globalProfiler();
+
+  static void globalTic(const std::string& name);
+
+  /*!
+   * \brief Stops measurement.
+   *
+   * Returns delta in the measured value since the corresponding tic().
+   */
+  static delta_type globalToc(const std::string& /*name*/ = "");
+
+
   void reset();
 
   struct scoped_ticker
@@ -100,6 +112,10 @@ class ARCANE_ALINA_EXPORT Profiler
   {
     tic(name);
     return scoped_ticker(*this);
+  }
+  static scoped_ticker global_scoped_tic(const std::string& name)
+  {
+    return globalProfiler().scoped_tic(name);
   }
 
  private:
