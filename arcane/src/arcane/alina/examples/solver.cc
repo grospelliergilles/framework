@@ -49,6 +49,17 @@ using namespace Arcane;
 using Alina::precondition;
 
 #ifdef SOLVER_BACKEND_BUILTIN
+extern "C++" void
+_doHypreSolver(int nb_row,
+               std::vector<ptrdiff_t> const& ptr,
+               std::vector<ptrdiff_t> const& col,
+               std::vector<double> const& val,
+               std::vector<double> const& rhs,
+               std::vector<double>& x,
+               int argc, char* argv[]);
+#endif
+
+#ifdef SOLVER_BACKEND_BUILTIN
 //---------------------------------------------------------------------------
 template <int B> Alina::SolverResult
 block_solve(const Alina::PropertyTree& prm,
@@ -486,13 +497,24 @@ int main(int argc, char* argv[])
   if (vm["single-level"].as<bool>())
     prm.put("precond.class", "relaxation");
 
-  Alina::SolverResult r = solve(prm, rows, ptr, col, val, rhs, x, block_size, vm["reorder"].as<bool>());
-
-  if (vm.count("output")) {
-    auto t = prof.scoped_tic("write");
-    Alina::IO::mm_write(vm["output"].as<string>(), &x[0], x.size());
+  bool do_hypre = true;
+#ifndef SOLVER_BACKEND_BUILTIN
+  do_hypre = false;
+#endif
+  if (do_hypre) {
+#ifdef SOLVER_BACKEND_BUILTIN
+    _doHypreSolver(rows, ptr, col, val, rhs, x, argc, argv);
+#endif
   }
-  std::cout << "Iterations: " << r.nbIteration() << std::endl
-            << "Error:      " << r.residual() << std::endl
-            << prof << std::endl;
+  else {
+    Alina::SolverResult r = solve(prm, rows, ptr, col, val, rhs, x, block_size, vm["reorder"].as<bool>());
+
+    if (vm.count("output")) {
+      auto t = prof.scoped_tic("write");
+      Alina::IO::mm_write(vm["output"].as<string>(), &x[0], x.size());
+    }
+    std::cout << "Iterations: " << r.nbIteration() << std::endl
+              << "Error:      " << r.residual() << std::endl
+              << prof << std::endl;
+  }
 }

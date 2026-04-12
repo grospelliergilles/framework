@@ -18,7 +18,6 @@ endfunction()
 # les coeurs disponibles.
 function(add_arcane_alina_example EXAMPLE SOURCES)
   add_arcane_alina_example_no_test(${EXAMPLE} ${SOURCES})
-  #target_link_libraries(${EXAMPLE} PUBLIC arcane_alina_example)
   set(TEST_NAME "alina_sample_seq_${EXAMPLE}")
   add_test(NAME ${TEST_NAME} COMMAND ${EXAMPLE} ${ARGN})
   set_property(TEST ${TEST_NAME} APPEND PROPERTY ENVIRONMENT "OMP_NUM_THREADS=2")
@@ -28,6 +27,11 @@ add_arcane_alina_example_no_test(mm2bin mm2bin.cc)
 add_arcane_alina_example_no_test(bin2mm bin2mm.cc)
 
 add_arcane_alina_example(solver solver.cc)
+
+arcane_find_package(Hypre)
+target_sources(solver PUBLIC HypreComparer.cc)
+arcane_add_arccon_packages(solver PRIVATE Hypre)
+
 add_arcane_alina_example(solver_complex solver_complex.cc)
 add_arcane_alina_example(crs_builder adapter_crs_builder.cc)
 add_arcane_alina_example(custom_adapter custom_adapter.cc)
