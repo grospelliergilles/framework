@@ -184,11 +184,8 @@ class AMG
    *
    * The input matrix is copied here and is safe to delete afterwards.
    *
-   * \param A The system matrix. Should be convertible to
-   *          a CSRMatrix.
+   * \param A The system matrix. Should be convertible to a CSRMatrix.
    * \param p AMG parameters.
-   *
-   * \sa amgcl/adapter/crs_tuple.hpp
    */
   template <class Matrix>
   AMG(const Matrix& M, const params& p = params(),
@@ -206,14 +203,12 @@ class AMG
    *
    * The shared pointer to the input matrix is passed here. The matrix
    * will not be copied and should out-live the amg instance.
-   * The matrix should be either in amgcl::backend::crs<T> format, or
+   * The matrix should be either in CSRMatrix format, or
    * inherit from the class and override its ptr(), col(), and val()
    * virtual functions.
    *
    * \param A The system matrix.
    * \param p AMG parameters.
-   *
-   * \sa amgcl/adapter/crs_tuple.hpp
    */
   AMG(std::shared_ptr<build_matrix> A,
       const params& p = params(),

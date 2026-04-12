@@ -101,19 +101,4 @@ struct row_begin_impl<T, typename std::enable_if<is_eigen_sparse_matrix<T>::valu
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#define ARCANE_ALINA_USE_EIGEN_VECTORS_WITH_BUILTIN_BACKEND() \
-  namespace amgcl \
-  { \
-    namespace backend \
-    { \
-      template <class T> \
-      struct is_builtin_vector<Eigen::Matrix<T, Eigen::Dynamic, 1>> \
-      : std::true_type \
-      {}; \
-    } \
-  }
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
 #endif

@@ -499,16 +499,16 @@ class pointwise_aggregates
   static const ptrdiff_t undefined = -1;
   static const ptrdiff_t removed = -2;
 
-  /// \copydoc coarsening::plain_aggregates::count
+  /// \copydoc plain_aggregates::count
   size_t count;
 
-  /// \copydoc coarsening::plain_aggregates::strong_connection
+  /// \copydoc plain_aggregates::strong_connection
   std::vector<char> strong_connection;
 
-  /// \copydoc coarsening::plain_aggregates::id
+  /// \copydoc plain_aggregates::id
   std::vector<ptrdiff_t> id;
 
-  /// \copydoc coarsening::plain_aggregates::plain_aggregates
+  /// \copydoc plain_aggregates::plain_aggregates
   template <class Matrix>
   pointwise_aggregates(const Matrix& A, const params& prm, unsigned min_aggregate)
   : count(0)
@@ -962,7 +962,6 @@ struct RugeStubenCoarsening
   : prm(prm)
   {}
 
-  /// \copydoc amgcl::coarsening::aggregation::transfer_operators
   template <class Matrix>
   std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>
   transfer_operators(const Matrix& A) const
@@ -1122,7 +1121,6 @@ struct RugeStubenCoarsening
     return std::make_tuple(P, transpose(*P));
   }
 
-  /// \copydoc amgcl::coarsening::aggregation::coarse_operator
   template <class Matrix>
   std::shared_ptr<Matrix>
   coarse_operator(const Matrix& A, const Matrix& P, const Matrix& R) const
@@ -1409,7 +1407,6 @@ struct SmoothedAggregationCoarserning
   : prm(prm)
   {}
 
-  /// \copydoc amgcl::coarsening::aggregation::transfer_operators
   template <class Matrix>
   std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>
   transfer_operators(const Matrix& A)
@@ -1521,7 +1518,6 @@ struct SmoothedAggregationCoarserning
     return std::make_tuple(P, transpose(*P));
   }
 
-  /// \copydoc amgcl::coarsening::aggregation::coarse_operator
   template <class Matrix>
   std::shared_ptr<Matrix>
   coarse_operator(const Matrix& A, const Matrix& P, const Matrix& R) const
@@ -1572,7 +1568,6 @@ struct SmoothedAggregationEnergyMinCoarsening
   : prm(prm)
   {}
 
-  /// \copydoc amgcl::coarsening::aggregation::transfer_operators
   template <class Matrix>
   std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>
   transfer_operators(const Matrix& A)

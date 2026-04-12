@@ -55,8 +55,9 @@ namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-/// Converts input matrix to block format before constructing an amgcl smoother.
+/*!
+ * \brief Converts input matrix to block format before constructing an AMG smoother.
+ */
 template <class BlockBackend, template <class> class Relax>
 struct RelaxationAsBlock
 {
@@ -145,8 +146,9 @@ struct RelaxationAsBlock
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-/// Allows to use an amgcl smoother as standalone preconditioner.
+/*!
+ * \brief Allows to use an AMG smoother as standalone preconditioner.
+ */
 template <class Backend, template <class> class Relax>
 class RelaxationAsPreconditioner
 {

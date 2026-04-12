@@ -96,7 +96,6 @@ struct DistributedGaussSeidelRelaxation
     Base::apply_pre(*A.local_backend(), rhs, x, t);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_post
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& t) const
   {
@@ -236,7 +235,6 @@ struct DistributedSPAI0Relaxation
     M = Backend::copy_vector(m, bprm);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_pre
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -245,7 +243,6 @@ struct DistributedSPAI0Relaxation
     backend::vmul(one, *M, tmp, one, x);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_post
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {

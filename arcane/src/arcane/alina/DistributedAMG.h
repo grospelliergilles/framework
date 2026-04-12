@@ -309,7 +309,7 @@ class DistributedAMG
       ARCANE_ALINA_TOC("transfer operators");
 
       if (P->glob_cols() == 0) {
-        // Zero-sized coarse level in amgcl (diagonal matrix?)
+        // Zero-sized coarse level in AMG (diagonal matrix?)
         return std::shared_ptr<matrix>();
       }
 
