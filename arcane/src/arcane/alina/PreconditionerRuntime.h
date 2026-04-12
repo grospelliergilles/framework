@@ -118,27 +118,19 @@ class PreconditionerRuntime
     std::cout << "PreconditionerClass=" << _class << "\n";
     switch (_class) {
     case ePreconditionerType::amg: {
-      typedef Alina::AMG<Backend, CoarseningRuntime, RelaxationRuntime>
-      Precond;
-
+      typedef Alina::AMG<Backend, CoarseningRuntime, RelaxationRuntime> Precond;
       handle = static_cast<void*>(new Precond(A, prm, bprm));
     } break;
     case ePreconditionerType::relaxation: {
-      typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime>
-      Precond;
-
+      typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
       handle = static_cast<void*>(new Precond(A, prm, bprm));
     } break;
     case ePreconditionerType::dummy: {
-      typedef Alina::preconditioner::DummyPreconditioner<Backend>
-      Precond;
-
+      typedef Alina::preconditioner::DummyPreconditioner<Backend> Precond;
       handle = static_cast<void*>(new Precond(A, prm, bprm));
     } break;
     case ePreconditionerType::nested: {
-      typedef PreconditionedSolver<PreconditionerRuntime, SolverRuntime<Backend>>
-      Precond;
-
+      typedef PreconditionedSolver<PreconditionerRuntime, SolverRuntime<Backend>> Precond;
       handle = static_cast<void*>(new Precond(A, prm, bprm));
     } break;
     default:
@@ -151,22 +143,18 @@ class PreconditionerRuntime
     switch (_class) {
     case ePreconditionerType::amg: {
       typedef Alina::AMG<Backend, CoarseningRuntime, RelaxationRuntime> Precond;
-
       delete static_cast<Precond*>(handle);
     } break;
     case ePreconditionerType::relaxation: {
       typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
-
       delete static_cast<Precond*>(handle);
     } break;
     case ePreconditionerType::dummy: {
       typedef Alina::preconditioner::DummyPreconditioner<Backend> Precond;
-
       delete static_cast<Precond*>(handle);
     } break;
     case ePreconditionerType::nested: {
       typedef PreconditionedSolver<PreconditionerRuntime, SolverRuntime<Backend>> Precond;
-
       delete static_cast<Precond*>(handle);
     } break;
     default:
@@ -179,9 +167,7 @@ class PreconditionerRuntime
   {
     switch (_class) {
     case ePreconditionerType::amg: {
-      typedef Alina::AMG<Backend, CoarseningRuntime, RelaxationRuntime>
-      Precond;
-
+      typedef Alina::AMG<Backend, CoarseningRuntime, RelaxationRuntime> Precond;
       static_cast<Precond*>(handle)->rebuild(A, bprm);
     } break;
     default:
@@ -193,29 +179,21 @@ class PreconditionerRuntime
   template <class Vec1, class Vec2>
   void apply(const Vec1& rhs, Vec2& x) const
   {
-    std::cout << "ApplyPrecond class=" << _class << "\n";
     switch (_class) {
     case ePreconditionerType::amg: {
-      typedef Alina::AMG<Backend, CoarseningRuntime, RelaxationRuntime>
-      Precond;
-
+      typedef Alina::AMG<Backend, CoarseningRuntime, RelaxationRuntime> Precond;
       static_cast<Precond*>(handle)->apply(rhs, x);
     } break;
     case ePreconditionerType::relaxation: {
-      typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime>
-      Precond;
-
+      typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
       static_cast<Precond*>(handle)->apply(rhs, x);
     } break;
     case ePreconditionerType::dummy: {
-      typedef Alina::preconditioner::DummyPreconditioner<Backend>
-      Precond;
-
+      typedef Alina::preconditioner::DummyPreconditioner<Backend> Precond;
       static_cast<Precond*>(handle)->apply(rhs, x);
     } break;
     case ePreconditionerType::nested: {
       typedef PreconditionedSolver<PreconditionerRuntime, SolverRuntime<Backend>> Precond;
-
       static_cast<Precond*>(handle)->apply(rhs, x);
     } break;
     default:
@@ -228,22 +206,18 @@ class PreconditionerRuntime
     switch (_class) {
     case ePreconditionerType::amg: {
       typedef Alina::AMG<Backend, CoarseningRuntime, RelaxationRuntime> Precond;
-
       return static_cast<Precond*>(handle)->system_matrix_ptr();
     }
     case ePreconditionerType::relaxation: {
       typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
-
       return static_cast<Precond*>(handle)->system_matrix_ptr();
     }
     case ePreconditionerType::dummy: {
       typedef Alina::preconditioner::DummyPreconditioner<Backend> Precond;
-
       return static_cast<Precond*>(handle)->system_matrix_ptr();
     }
     case ePreconditionerType::nested: {
       typedef PreconditionedSolver<PreconditionerRuntime, SolverRuntime<Backend>> Precond;
-
       return static_cast<Precond*>(handle)->system_matrix_ptr();
     }
     default:
@@ -266,22 +240,18 @@ class PreconditionerRuntime
     switch (_class) {
     case ePreconditionerType::amg: {
       typedef Alina::AMG<Backend, CoarseningRuntime, RelaxationRuntime> Precond;
-
       return backend::bytes(*static_cast<Precond*>(handle));
     }
     case ePreconditionerType::relaxation: {
       typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
-
       return backend::bytes(*static_cast<Precond*>(handle));
     }
     case ePreconditionerType::dummy: {
       typedef Alina::preconditioner::DummyPreconditioner<Backend> Precond;
-
       return backend::bytes(*static_cast<Precond*>(handle));
     }
     case ePreconditionerType::nested: {
       typedef PreconditionedSolver<PreconditionerRuntime, SolverRuntime<Backend>> Precond;
-
       return backend::bytes(*static_cast<Precond*>(handle));
     }
     default:
@@ -294,22 +264,18 @@ class PreconditionerRuntime
     switch (p._class) {
     case ePreconditionerType::amg: {
       typedef Alina::AMG<Backend, CoarseningRuntime, RelaxationRuntime> Precond;
-
       return os << *static_cast<Precond*>(p.handle);
     }
     case ePreconditionerType::relaxation: {
       typedef Alina::RelaxationAsPreconditioner<Backend, RelaxationRuntime> Precond;
-
       return os << *static_cast<Precond*>(p.handle);
     }
     case ePreconditionerType::dummy: {
       typedef Alina::preconditioner::DummyPreconditioner<Backend> Precond;
-
       return os << *static_cast<Precond*>(p.handle);
     }
     case ePreconditionerType::nested: {
       typedef PreconditionedSolver<PreconditionerRuntime, SolverRuntime<Backend>> Precond;
-
       return os << *static_cast<Precond*>(p.handle);
     }
     default:
