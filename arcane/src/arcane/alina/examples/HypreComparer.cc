@@ -86,6 +86,12 @@ gpu_calloc(size_t num, size_t size)
 #include <vector>
 #include <iostream>
 
+#include "arcane/utils/Convert.h"
+#include "arcane/utils/FatalErrorException.h"
+#include "arcane/alina/Profiler.h"
+
+using namespace Arcane;
+
 int hypre_FlexGMRESModifyPCAMGExample(void *precond_data, int iterations,
                                       double rel_residual_norm);
 
@@ -100,6 +106,8 @@ _doHypreSolver(int nb_row,
                std::vector<double>& _x,
                int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
+
   std::cout << "DO_HYPRE nb_row=" << nb_row << "\n";
   int i;
   int myid, num_procs;
@@ -226,7 +234,7 @@ _doHypreSolver(int nb_row,
   iupper = local_size * (myid + 1);
   iupper += my_min(myid + 1, extra);
   iupper = iupper - 1;
-
+  std::cout << "LOWER=" << ilower << " UPPER=" << iupper << "\n";
   /* How many rows do I have? */
   local_size = iupper - ilower + 1;
 
@@ -241,78 +249,30 @@ _doHypreSolver(int nb_row,
   /* Initialize before setting coefficients */
   HYPRE_IJMatrixInitialize(A);
 
+  // Fill the matrix.
   {
-    /* Now go through my local rows and set the matrix entries.
-        Each row has at most 5 entries. For example, if n=3:
-
-        A = [M -I 0; -I M -I; 0 -I M]
-        M = [4 -1 0; -1 4 -1; 0 -1 4]
-
-        Note that here we are setting one row at a time, though
-        one could set all the rows together (see the User's Manual).
-     */
-    int nnz;
-    /* OK to use constant-length arrays for CPUs
-      double values[5];
-      int cols[5];
-      */
-    double* values = (double*)malloc(5 * sizeof(double));
-    int* cols = (int*)malloc(5 * sizeof(int));
     int* tmp = (int*)malloc(2 * sizeof(int));
 
     for (i = ilower; i <= iupper; i++) {
-      nnz = 0;
-
-      /* The left identity block:position i-n */
-      if ((i - n) >= 0) {
-        cols[nnz] = i - n;
-        values[nnz] = -1.0;
-        nnz++;
-      }
-
-      /* The left -1: position i-1 */
-      if (i % n) {
-        cols[nnz] = i - 1;
-        values[nnz] = -1.0;
-        nnz++;
-      }
-
-      /* Set the diagonal: position i */
-      cols[nnz] = i;
-      values[nnz] = 4.0;
-      nnz++;
-
-      /* The right -1: position i+1 */
-      if ((i + 1) % n) {
-        cols[nnz] = i + 1;
-        values[nnz] = -1.0;
-        nnz++;
-      }
-
-      /* The right identity block:position i+n */
-      if ((i + n) < N) {
-        cols[nnz] = i + n;
-        values[nnz] = -1.0;
-        nnz++;
-      }
 
       /* Set the values for row i */
-      tmp[0] = nnz;
+      int index = static_cast<HYPRE_Int>(_ptr[i]);
+      tmp[0] = static_cast<HYPRE_BigInt>(_ptr[i + 1] - _ptr[i]);
       tmp[1] = i;
-      HYPRE_IJMatrixSetValues(A, 1, &tmp[0], &tmp[1], cols, values);
+      HYPRE_IJMatrixSetValues(A, 1, &tmp[0], &tmp[1], &hypre_column_index[index], &_val[index]);
     }
 
-    free(values);
-    free(cols);
     free(tmp);
 
     for (int i = 0; i < n; ++i)
       nb_value_per_row[i] = static_cast<HYPRE_BigInt>(_ptr[i + 1] - _ptr[i]);
+#if 0
     HYPRE_IJMatrixSetValues(A, n,
                             nb_value_per_row.data(),
                             hypre_row_index.data(),
                             hypre_column_index.data(),
                             _val.data());
+#endif
   }
 
   /* Assemble after setting the coefficients */
@@ -385,11 +345,15 @@ _doHypreSolver(int nb_row,
     HYPRE_IJMatrixPrint(A, "IJ.out.A");
     HYPRE_IJVectorPrint(b, "IJ.out.b");
   }
+  solver_id = 0;
+  if (auto v = Convert::Type<Int32>::tryParseFromEnvironment("ALINA_HYPRE_SOLVER", true))
+    solver_id = v.value();
 
   /* Choose a solver and solve the system */
-
+  std::cout << "FINISH ASSEMBLING solver_id=" << solver_id << "\n";
   /* AMG */
   if (solver_id == 0) {
+    auto t = prof.scoped_tic("HypreSolver AMG");
     int num_iterations;
     double final_res_norm;
 
@@ -424,6 +388,7 @@ _doHypreSolver(int nb_row,
   }
   /* PCG */
   else if (solver_id == 50) {
+    auto t = prof.scoped_tic("HypreSolver PCG");
     int num_iterations;
     double final_res_norm;
 
@@ -456,6 +421,7 @@ _doHypreSolver(int nb_row,
   }
   /* PCG with AMG preconditioner */
   else if (solver_id == 1) {
+    auto t = prof.scoped_tic("HypreSolver PCG-AMG");
     int num_iterations;
     double final_res_norm;
 
@@ -484,8 +450,12 @@ _doHypreSolver(int nb_row,
                         (HYPRE_PtrToSolverFcn)HYPRE_BoomerAMGSetup, precond);
 
     /* Now setup and solve! */
+    prof.tic("Setup");
     HYPRE_ParCSRPCGSetup(solver, parcsr_A, par_b, par_x);
+    prof.toc("Setup");
+    prof.tic("Solve");
     HYPRE_ParCSRPCGSolve(solver, parcsr_A, par_b, par_x);
+    prof.toc("Solve");
 
     /* Run info - needed logging turned on */
     HYPRE_PCGGetNumIterations(solver, &num_iterations);
@@ -503,6 +473,7 @@ _doHypreSolver(int nb_row,
   }
   /* PCG with Parasails Preconditioner */
   else if (solver_id == 8) {
+    auto t = prof.scoped_tic("HypreSolver PCG - Parasails");
     int num_iterations;
     double final_res_norm;
 
@@ -554,6 +525,7 @@ _doHypreSolver(int nb_row,
   }
   /* Flexible GMRES with  AMG Preconditioner */
   else if (solver_id == 61) {
+    auto t = prof.scoped_tic("HypreSolver Flexible GMRES - AMG");
     int num_iterations;
     double final_res_norm;
     int restart = 30;
@@ -587,8 +559,7 @@ _doHypreSolver(int nb_row,
       /* this is an optional call  - if you don't call it, hypre_FlexGMRESModifyPCDefault
             is used - which does nothing.  Otherwise, you can define your own, similar to
             the one used here */
-      HYPRE_FlexGMRESSetModifyPC(
-      solver, (HYPRE_PtrToModifyPCFcn)hypre_FlexGMRESModifyPCAMGExample);
+      HYPRE_FlexGMRESSetModifyPC(solver, (HYPRE_PtrToModifyPCFcn)hypre_FlexGMRESModifyPCAMGExample);
     }
 
     /* Now setup and solve! */
@@ -611,7 +582,7 @@ _doHypreSolver(int nb_row,
   }
   else {
     if (myid == 0) {
-      printf("Invalid solver id specified.\n");
+      ARCANE_FATAL("Invalid solver id '{0}' specified.", solver_id);
     }
   }
 

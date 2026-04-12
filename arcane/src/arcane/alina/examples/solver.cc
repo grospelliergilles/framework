@@ -27,6 +27,10 @@ typedef Arcane::Alina::backend::EigenBackend<double> Backend;
 using Backend = Arcane::Alina::backend::BuiltinBackend<double>;
 #endif
 
+#include <arcane/utils/PlatformUtils.h>
+#include <arcane/utils/String.h>
+#include <arcane/utils/Convert.h>
+
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/SolverRuntime.h>
@@ -497,7 +501,12 @@ int main(int argc, char* argv[])
   if (vm["single-level"].as<bool>())
     prm.put("precond.class", "relaxation");
 
-  bool do_hypre = true;
+  String do_hypre_str = Platform::getEnvironmentVariable("ALINA_USE_HYPRE");
+  bool do_hypre = false;
+  if (auto v = Convert::Type<Int32>::tryParseFromEnvironment("ALINA_USE_HYPRE", true))
+    do_hypre = v.value();
+
+  Alina::SolverResult solver_result;
 #ifndef SOLVER_BACKEND_BUILTIN
   do_hypre = false;
 #endif
@@ -507,14 +516,14 @@ int main(int argc, char* argv[])
 #endif
   }
   else {
-    Alina::SolverResult r = solve(prm, rows, ptr, col, val, rhs, x, block_size, vm["reorder"].as<bool>());
+    solver_result = solve(prm, rows, ptr, col, val, rhs, x, block_size, vm["reorder"].as<bool>());
 
     if (vm.count("output")) {
       auto t = prof.scoped_tic("write");
       Alina::IO::mm_write(vm["output"].as<string>(), &x[0], x.size());
     }
-    std::cout << "Iterations: " << r.nbIteration() << std::endl
-              << "Error:      " << r.residual() << std::endl
-              << prof << std::endl;
   }
+  std::cout << "Iterations: " << solver_result.nbIteration() << std::endl
+            << "Error:      " << solver_result.residual() << std::endl
+            << prof << std::endl;
 }
