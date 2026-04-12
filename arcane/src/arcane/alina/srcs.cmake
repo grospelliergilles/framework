@@ -4,8 +4,6 @@ set(ARCANE_SOURCES
   Adapters.h
   AlinaLib.h
   AlinaLib.cc
-  AlinaLibMPI.h
-  AlinaLibMPI.cc
   AMG.h
   BlockCSRBackend.h
   BuiltinBackend.h

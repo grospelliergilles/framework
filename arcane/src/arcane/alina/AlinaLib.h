@@ -1,138 +1,141 @@
-#ifndef LIB_ARCANE_ALINA_H
-#define LIB_ARCANE_ALINA_H
-
+﻿// -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8-with-signature -*-
+//-----------------------------------------------------------------------------
+// Copyright 2026-2026 CEA (www.cea.fr) IFPEN (www.ifpenergiesnouvelles.com)
+// See the top-level COPYRIGHT file for details.
+// SPDX-License-Identifier: Apache-2.0
+//-----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------*/
+/* AlinaLib.h                                                  (C) 2026-2026 */
+/*                                                                           */
+/* Public API for Alina.                                      .              */
+/*---------------------------------------------------------------------------*/
+#ifndef ARCANE_ALINA_ALINALIB_H
+#define ARCANE_ALINA_ALINALIB_H
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*
-The MIT License
-
-Copyright (c) 2012-2015 Denis Demidov <dennis.demidov@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/**
- * \file   lib/amgcl.h
- * \author Denis Demidov <dennis.demidov@gmail.com>
- * \brief  C wrapper interface to amgcl.
+ * This file is based on the work on AMGCL library (version march 2026)
+ * which can be found at https://github.com/ddemidov/amgcl.
+ *
+ * Copyright (c) 2012-2022 Denis Demidov <dennis.demidov@gmail.com>
+ * SPDX-License-Identifier: MIT
  */
-
-#ifdef WIN32
-#define STDCALL __cdecl
-#define ARCANE_ALINA_LIB_EXPORT_MACRO __declspec(dllexport)
-#define ARCANE_ALINA_LIB_IMPORT_MACRO __declspec(dllimport)
-#else
-#  define STDCALL
-#define ARCANE_ALINA_LIB_EXPORT_MACRO __attribute__ ((visibility("default")))
-#define ARCANE_ALINA_LIB_IMPORT_MACRO __attribute__ ((visibility("default")))
-#endif
-
-#ifdef ARCANE_COMPONENT_arcane_alina_lib
-#define ARCANE_ALINA_LIB_EXPORT ARCANE_ALINA_LIB_EXPORT_MACRO
-#else
-#define ARCANE_ALINA_LIB_EXPORT ARCANE_ALINA_LIB_IMPORT_MACRO
-#endif
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include "arcane/alina/AlinaGlobal.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef void* amgclHandle;
-
-// Create parameter list.
-amgclHandle ARCANE_ALINA_LIB_EXPORT STDCALL ARCANE_ALINA_params_create();
-
-// Set integer parameter in a parameter list.
-void ARCANE_ALINA_EXPORT STDCALL ARCANE_ALINA_params_seti(amgclHandle prm, const char* name, int value);
-
-// Set floating point parameter in a parameter list.
-void ARCANE_ALINA_EXPORT STDCALL ARCANE_ALINA_params_setf(amgclHandle prm, const char* name, float value);
-
-// Set floating point parameter in a parameter list.
-void ARCANE_ALINA_EXPORT STDCALL ARCANE_ALINA_params_sets(amgclHandle prm, const char* name, const char* value);
-
-// Read parameters from a JSON file
-void ARCANE_ALINA_EXPORT STDCALL ARCANE_ALINA_params_read_json(amgclHandle prm, const char* fname);
-
-// Destroy parameter list.
-void ARCANE_ALINA_EXPORT STDCALL ARCANE_ALINA_params_destroy(amgclHandle prm);
-
-// Create AMG preconditioner.
-amgclHandle ARCANE_ALINA_EXPORT STDCALL
-ARCANE_ALINA_precond_create(int n,
-                     const int* ptr,
-                     const int* col,
-                     const double* val,
-                     amgclHandle parameters);
-
-// Apply AMG preconditioner (x = M^(-1) * rhs).
-void ARCANE_ALINA_EXPORT STDCALL
-ARCANE_ALINA_precond_apply(amgclHandle amg, const double* rhs, double* x);
-
-// Printout preconditioner structure
-void ARCANE_ALINA_EXPORT STDCALL
-ARCANE_ALINA_precond_report(amgclHandle amg);
-
-// Destroy AMG preconditioner
-void ARCANE_ALINA_EXPORT STDCALL
-ARCANE_ALINA_precond_destroy(amgclHandle amg);
-
-// Create iterative solver preconditioned by AMG.
-amgclHandle ARCANE_ALINA_EXPORT STDCALL
-ARCANE_ALINA_solver_create(int n,
-                    const int* ptr,
-                    const int* col,
-                    const double* val,
-                    amgclHandle parameters);
+#include <mpi.h>
 
 // Convergence info
-struct ARCANE_ALINA_LIB_EXPORT conv_info
+struct ARCANE_ALINA_EXPORT AlinaConvergenceInfo
 {
   int iterations;
   double residual;
 };
 
-// Solve the problem for the given right-hand side.
-conv_info ARCANE_ALINA_EXPORT STDCALL
-ARCANE_ALINA_solver_solve(amgclHandle solver,
-                   double const* rhs,
-                   double* x);
+typedef double(* AlinaDefVecFunction)(int vec, ptrdiff_t coo, void* data);
 
-// Solve the problem for the given matrix and the right-hand side.
-conv_info ARCANE_ALINA_EXPORT STDCALL
-ARCANE_ALINA_solver_solve_mtx(amgclHandle solver,
-                       int const* A_ptr,
-                       int const* A_col,
-                       double const* A_val,
-                       double const* rhs,
-                       double* x);
+//! Handle parameters.
+struct AlinaParameters;
 
-// Printout solver structure
-void ARCANE_ALINA_EXPORT STDCALL
-ARCANE_ALINA_solver_report(amgclHandle solver);
+//! Handle preconditioner
+struct AlinaPreconditioner;
 
-// Destroy iterative solver.
-void ARCANE_ALINA_EXPORT STDCALL
-ARCANE_ALINA_solver_destroy(amgclHandle solver);
+//! Sequential solver;
+struct AlinaSequentialSolver;
 
-#ifdef __cplusplus
-} // extern "C"
+//! Distributed solver;
+struct AlinaDistributedSolver;
+
+class ARCANE_ALINA_EXPORT AlinaLib
+{
+ public:
+
+  // Set integer parameter in a parameter list.
+  static void params_set_int(AlinaParameters* prm, const char* name, int value);
+
+  // Set floating point parameter in a parameter list.
+  static void params_set_float(AlinaParameters* prm, const char* name, float value);
+
+  // Set floating point parameter in a parameter list.
+  static void params_set_string(AlinaParameters* prm, const char* name, const char* value);
+
+  // Read parameters from a JSON file
+  static void params_read_json(AlinaParameters* prm, const char* fname);
+
+  // Destroy parameter list.
+  static void params_destroy(AlinaParameters* prm);
+
+  // Create parameter list.
+  static AlinaParameters* params_create();
+
+  // Create AMG preconditioner.
+  static AlinaPreconditioner* preconditioner_create(int n,
+                                                          const int* ptr,
+                                                          const int* col,
+                                                          const double* val,
+                                                          AlinaParameters* parameters);
+
+  // Apply AMG preconditioner (x = M^(-1) * rhs).
+  static void preconditioner_apply(AlinaPreconditioner* amg, const double* rhs, double* x);
+
+  // Printout preconditioner structure
+  static void preconditioner_report(AlinaPreconditioner* amg);
+
+  // Destroy AMG preconditioner
+  static void preconditioner_destroy(AlinaPreconditioner* amg);
+
+  // Create iterative solver preconditioned by AMG.
+  static AlinaSequentialSolver* solver_create(int n,
+                                              const int* ptr,
+                                              const int* col,
+                                              const double* val,
+                                              AlinaParameters* parameters);
+
+  // Solve the problem for the given right-hand side.
+  static AlinaConvergenceInfo solver_solve(AlinaSequentialSolver* solver,
+                                double const* rhs,
+                                double* x);
+
+  // Solve the problem for the given matrix and the right-hand side.
+  static AlinaConvergenceInfo solver_solve_matrix(AlinaSequentialSolver* solver,
+                                       int const* A_ptr,
+                                       int const* A_col,
+                                       double const* A_val,
+                                       double const* rhs,
+                                       double* x);
+
+  // Printout solver structure
+  static void solver_report(AlinaSequentialSolver* solver);
+
+  // Destroy iterative solver.
+  static void solver_destroy(AlinaSequentialSolver* solver);
+
+  // Create distributed solver.
+  static AlinaDistributedSolver* solver_mpi_create(MPI_Comm comm,
+                                                   ptrdiff_t n,
+                                                   const ptrdiff_t* ptr,
+                                                   const ptrdiff_t* col,
+                                                   const double* val,
+                                                   int n_def_vec,
+                                                   AlinaDefVecFunction def_vec_func,
+                                                   void* def_vec_data,
+                                                   AlinaParameters* params);
+
+  // Find solution for the given RHS.
+  static AlinaConvergenceInfo solver_mpi_solve(AlinaDistributedSolver* solver,
+                                    double const* rhs,
+                                    double* x);
+
+  // Destroy the distributed solver.
+  static void solver_mpi_destroy(AlinaDistributedSolver* solver);
+};
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 #endif
 
-#endif
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
