@@ -19,14 +19,14 @@
 
 using namespace Arcane;
 
-namespace Arcane::Alina { Profiler prof; }
-using Alina::prof;
 using Alina::precondition;
 
 //---------------------------------------------------------------------------
 template <class Matrix>
 void solve_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::PropertyTree& prm)
 {
+  auto& prof = Alina::Profiler::globalProfiler();
+
   auto t1 = prof.scoped_tic("CPR");
 
   using Backend = Alina::backend::BuiltinBackend<double>;
@@ -55,6 +55,7 @@ void solve_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::PropertyT
 template <int B, class Matrix>
 void solve_block_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::PropertyTree& prm)
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   auto t1 = prof.scoped_tic("CPR");
 
   typedef Alina::StaticMatrix<double, B, B> val_type;
@@ -90,8 +91,8 @@ void solve_block_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::Pro
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   using Alina::precondition;
-  using Alina::prof;
   using std::string;
   using std::vector;
 

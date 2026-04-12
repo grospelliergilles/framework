@@ -32,10 +32,6 @@
 
 using namespace Arcane;
 
-namespace Arcane::Alina {
-    Profiler prof;
-}
-
 namespace math = Alina::math;
 
 //---------------------------------------------------------------------------
@@ -192,11 +188,10 @@ partition(Alina::mpi_communicator comm, const Matrix& Astrip,
           typename Backend::vector& rhs, const typename Backend::params& bprm,
           Alina::eMatrixPartitionerType ptype, int block_size = 1)
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   typedef typename Backend::value_type val_type;
   typedef typename Alina::math::rhs_of<val_type>::type rhs_type;
   typedef Alina::DistributedMatrix<Backend> DMatrix;
-
-  using Alina::prof;
 
   auto A = std::make_shared<DMatrix>(comm, Astrip);
 
@@ -239,6 +234,7 @@ void solve_block(Alina::mpi_communicator comm,
                  const std::vector<double>& f,
                  Alina::eMatrixPartitionerType ptype)
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   typedef Alina::StaticMatrix<double, B, B> val_type;
   typedef Alina::StaticMatrix<double, B, 1> rhs_type;
 
@@ -250,8 +246,6 @@ void solve_block(Alina::mpi_communicator comm,
   Alina::DistributedPreconditioner<Backend>,
   Alina::DistributedSolverRuntime<Backend>>
   Solver;
-
-  using Alina::prof;
 
   typename Backend::params bprm;
 
@@ -331,6 +325,7 @@ void solve_scalar(Alina::mpi_communicator comm,
                   const std::vector<double>& f,
                   Alina::eMatrixPartitionerType ptype)
 {
+  auto& prof = Alina::Profiler::globalProfiler();
 #if defined(SOLVER_BACKEND_BUILTIN)
   typedef Alina::backend::BuiltinBackend<double> Backend;
 #elif defined(SOLVER_BACKEND_CUDA)
@@ -340,8 +335,6 @@ void solve_scalar(Alina::mpi_communicator comm,
   typedef Alina::DistributedMatrix<Backend> DMatrix;
 
   using Solver = Alina::DistributedPreconditionedSolver<Alina::DistributedPreconditioner<Backend>, Alina::DistributedSolverRuntime<Backend>>;
-
-  using Alina::prof;
 
   typename Backend::params bprm;
 
@@ -418,13 +411,13 @@ void solve_scalar(Alina::mpi_communicator comm,
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
+
   Alina::mpi_init_thread mpi(&argc, &argv);
   Alina::mpi_communicator comm(MPI_COMM_WORLD);
 
   if (comm.rank == 0)
     std::cout << "World size: " << comm.size << std::endl;
-
-  using Alina::prof;
 
   // Read configuration from command line
   namespace po = boost::program_options;

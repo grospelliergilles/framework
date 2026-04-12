@@ -23,12 +23,6 @@
 using namespace Arcane;
 using namespace Arcane::Alina;
 
-namespace Arcane::Alina
-{
-Profiler prof;
-}
-
-using Alina::prof;
 using Alina::precondition;
 
 //---------------------------------------------------------------------------
@@ -109,9 +103,8 @@ partition(Alina::mpi_communicator comm, const Matrix& Astrip,
           std::vector<double>& rhs, const typename Backend::params& bprm,
           Alina::eMatrixPartitionerType ptype, int block_size = 1)
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   typedef Alina::DistributedMatrix<Backend> DMatrix;
-
-  using Alina::prof;
 
   auto A = std::make_shared<DMatrix>(comm, Astrip);
 
@@ -142,6 +135,7 @@ partition(Alina::mpi_communicator comm, const Matrix& Astrip,
 
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   int provided;
   MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
   BOOST_SCOPE_EXIT(void)
@@ -154,8 +148,6 @@ int main(int argc, char* argv[])
 
   if (comm.rank == 0)
     std::cout << "World size: " << comm.size << std::endl;
-
-  using Alina::prof;
 
   // Read configuration from command line
   namespace po = boost::program_options;

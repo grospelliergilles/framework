@@ -68,8 +68,7 @@ int main(int argc, char* argv[])
   Alina::mpi_init mpi(&argc, &argv);
   Alina::mpi_communicator world(MPI_COMM_WORLD);
 
-  // The profiler:
-  Alina::Profiler prof("Serena MPI");
+  auto& prof = Alina::Profiler::globalProfiler();
 
   prof.tic("read");
   // Get the global size of the matrix:

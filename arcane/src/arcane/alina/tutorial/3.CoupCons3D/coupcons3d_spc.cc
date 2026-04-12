@@ -50,85 +50,82 @@ THE SOFTWARE.
 using namespace Arcane;
 
 //---------------------------------------------------------------------------
-int main(int argc, char *argv[]) {
-    // The command line should contain the matrix file name:
-    if (argc < 3) {
-        std::cerr << "Usage: " << argv[0] << " <matrix.mtx> <nu>" << std::endl;
-        return 1;
-    }
+int main(int argc, char* argv[])
+{
+  // The command line should contain the matrix file name:
+  if (argc < 3) {
+    std::cerr << "Usage: " << argv[0] << " <matrix.mtx> <nu>" << std::endl;
+    return 1;
+  }
 
-    // The profiler:
-    Alina::Profiler prof("CoupCons3D");
+  // The profiler:
+  auto& prof = Alina::Profiler::globalProfiler();
 
-    // Read the system matrix:
-    ptrdiff_t rows, cols;
-    std::vector<ptrdiff_t> ptr, col;
-    std::vector<double> val;
+  // Read the system matrix:
+  ptrdiff_t rows, cols;
+  std::vector<ptrdiff_t> ptr, col;
+  std::vector<double> val;
 
-    prof.tic("read");
-    std::tie(rows, cols) = Alina::IO::mm_reader(argv[1])(ptr, col, val);
-    std::cout << "Matrix " << argv[1] << ": " << rows << "x" << cols << std::endl;
-    prof.toc("read");
+  prof.tic("read");
+  std::tie(rows, cols) = Alina::IO::mm_reader(argv[1])(ptr, col, val);
+  std::cout << "Matrix " << argv[1] << ": " << rows << "x" << cols << std::endl;
+  prof.toc("read");
 
-    // The RHS is filled with ones:
-    std::vector<double> f(rows, 1.0);
+  // The RHS is filled with ones:
+  std::vector<double> f(rows, 1.0);
 
-    // The number of unknowns in the U subsystem
-    ptrdiff_t nu = std::stoi(argv[2]);
+  // The number of unknowns in the U subsystem
+  ptrdiff_t nu = std::stoi(argv[2]);
 
-    // We use the tuple of CRS arrays to represent the system matrix.
-    // Note that std::tie creates a tuple of references, so no data is actually
-    // copied here:
-    auto A = std::tie(rows, ptr, col, val);
+  // We use the tuple of CRS arrays to represent the system matrix.
+  // Note that std::tie creates a tuple of references, so no data is actually
+  // copied here:
+  auto A = std::tie(rows, ptr, col, val);
 
-    // Compose the solver type
-    typedef Alina::backend::BuiltinBackend<double> SBackend; // the outer iterative solver backend
-    typedef Alina::backend::BuiltinBackend<float> PBackend;  // the PSolver backend
-    typedef Alina::backend::BuiltinBackend<Alina::StaticMatrix<float,4,4>> UBackend;    // the USolver backend
+  // Compose the solver type
+  typedef Alina::backend::BuiltinBackend<double> SBackend; // the outer iterative solver backend
+  typedef Alina::backend::BuiltinBackend<float> PBackend; // the PSolver backend
+  typedef Alina::backend::BuiltinBackend<Alina::StaticMatrix<float, 4, 4>> UBackend; // the USolver backend
 
-    typedef Alina::PreconditionedSolver<
-        Alina::preconditioner::SchurPressureCorrectionPreconditioner<
-            Alina::make_block_solver<
-                Alina::AMG<
-                    UBackend,
-                    Alina::AggregationCoarsening,
-                    Alina::ILU0Relaxation
-                    >,
-                Alina::PreconditionerOnlySolver<UBackend>
-                >,
-            Alina::PreconditionedSolver<
-                Alina::RelaxationAsPreconditioner<
-                    PBackend,
-                    Alina::SPAI0Relaxation
-                    >,
-                Alina::PreconditionerOnlySolver<PBackend>
-                >
-            >,
-        Alina::BiCGStabSolver<SBackend>
-        > Solver;
+  typedef Alina::PreconditionedSolver<
+  Alina::preconditioner::SchurPressureCorrectionPreconditioner<
+  Alina::make_block_solver<
+  Alina::AMG<
+  UBackend,
+  Alina::AggregationCoarsening,
+  Alina::ILU0Relaxation>,
+  Alina::PreconditionerOnlySolver<UBackend>>,
+  Alina::PreconditionedSolver<
+  Alina::RelaxationAsPreconditioner<
+  PBackend,
+  Alina::SPAI0Relaxation>,
+  Alina::PreconditionerOnlySolver<PBackend>>>,
+  Alina::BiCGStabSolver<SBackend>>
+  Solver;
 
-    // Solver parameters
-    Solver::params prm;
-    prm.precond.pmask.resize(rows);
-    for(ptrdiff_t i = 0; i < rows; ++i) prm.precond.pmask[i] = (i >= nu);
+  // Solver parameters
+  Solver::params prm;
+  prm.precond.pmask.resize(rows);
+  for (ptrdiff_t i = 0; i < rows; ++i)
+    prm.precond.pmask[i] = (i >= nu);
 
-    // Initialize the solver with the system matrix.
-    prof.tic("setup");
-    Solver solve(A, prm);
-    prof.toc("setup");
+  // Initialize the solver with the system matrix.
+  prof.tic("setup");
+  Solver solve(A, prm);
+  prof.toc("setup");
 
-    // Show the mini-report on the constructed solver:
-    std::cout << solve << std::endl;
+  // Show the mini-report on the constructed solver:
+  std::cout << solve << std::endl;
 
-    // Solve the system with the zero initial approximation:
-    std::vector<double> x(rows, 0.0);
-    prof.tic("solve");
-    Alina::SolverResult r = solve(A, f, x);
-    prof.toc("solve");
+  // Solve the system with the zero initial approximation:
+  std::vector<double> x(rows, 0.0);
+  prof.tic("solve");
+  Alina::SolverResult r = solve(A, f, x);
+  prof.toc("solve");
 
-    // Output the number of iterations, the relative error,
-    // and the profiling data:
-    std::cout << "Iters: " << r.nbIteration() << std::endl
-              << "Error: " << r.residual() << std::endl
-              << prof << std::endl;
+  // Output the number of iterations, the relative error,
+  // and the profiling data:
+  std::cout << "Iters: " << r.nbIteration() << std::endl
+            << "Error: " << r.residual() << std::endl
+            << prof << std::endl;
 }

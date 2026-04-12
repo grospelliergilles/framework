@@ -42,14 +42,13 @@ template <class T> using Backend = Arcane::Alina::backend::BuiltinBackend<T>;
 
 using namespace Arcane;
 
-namespace Arcane::Alina { Profiler prof; }
-using Alina::prof;
 using Alina::precondition;
 
 //---------------------------------------------------------------------------
 template <class USolver, class PSolver, class Matrix>
 void solve_schur(const Matrix& K, const std::vector<double>& rhs, Alina::PropertyTree& prm)
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   typedef Backend<double> SBackend;
   SBackend::params bprm;
 
@@ -137,6 +136,7 @@ void solve_schur(int ub, int pb, const Matrix& K, const std::vector<double>& rhs
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   using std::string;
   using std::vector;
 

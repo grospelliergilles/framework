@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     }
 
     // The profiler:
-    Alina::Profiler prof("poisson3Db");
+    auto& prof = Alina::Profiler::globalProfiler();
 
     // Read the system matrix and the RHS:
     ptrdiff_t rows, cols;

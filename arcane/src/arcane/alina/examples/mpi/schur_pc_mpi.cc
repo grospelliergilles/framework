@@ -38,14 +38,9 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 #include <arcane/alina/DistributedDirectSolverRuntime.h>
 #include <arcane/alina/Profiler.h>
 
-namespace Arcane::Alina {
-    Profiler prof;
-}
-
 using namespace Arcane;
 using namespace Arcane::Alina;
 
-using Alina::prof;
 using Alina::precondition;
 
 //---------------------------------------------------------------------------
@@ -164,6 +159,8 @@ read_problem(const Alina::mpi_communicator& world,
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
+
   int provided;
   MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
   BOOST_SCOPE_EXIT(void)

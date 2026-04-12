@@ -54,8 +54,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // The profiler:
-    Alina::Profiler prof("Serena");
+    auto& prof = Alina::Profiler::globalProfiler();
 
     // Read the system matrix:
     ptrdiff_t rows, cols;

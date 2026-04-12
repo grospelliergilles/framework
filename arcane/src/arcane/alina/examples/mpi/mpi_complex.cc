@@ -19,11 +19,6 @@
 using namespace Arcane;
 using namespace Arcane::Alina;
 
-namespace Arcane::Alina
-{
-Profiler prof;
-}
-
 namespace math = Alina::math;
 
 //---------------------------------------------------------------------------
@@ -111,11 +106,10 @@ void solve_scalar(Alina::mpi_communicator comm,
                   const Alina::PropertyTree& prm,
                   const std::vector<std::complex<double>>& rhs)
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   typedef Alina::backend::BuiltinBackend<std::complex<double>> Backend;
 
   typedef Alina::DistributedPreconditionedSolver<Alina::DistributedPreconditioner<Backend>, Alina::DistributedSolverRuntime<Backend>> Solver;
-
-  using Alina::prof;
 
   prof.tic("setup");
   Solver solve(comm, std::tie(chunk, ptr, col, val), prm);
@@ -141,13 +135,12 @@ void solve_scalar(Alina::mpi_communicator comm,
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   Alina::mpi_init_thread mpi(&argc, &argv);
   Alina::mpi_communicator comm(MPI_COMM_WORLD);
 
   if (comm.rank == 0)
     std::cout << "World size: " << comm.size << std::endl;
-
-  using Alina::prof;
 
   // Read configuration from command line
   namespace po = boost::program_options;

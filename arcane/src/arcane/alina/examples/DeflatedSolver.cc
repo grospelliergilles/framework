@@ -17,17 +17,16 @@
 
 using namespace Arcane;
 
-namespace Arcane::Alina { Profiler prof; }
-using Alina::prof;
 using Alina::precondition;
 
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
+
   namespace po = boost::program_options;
   namespace io = Alina::IO;
 
-  using Alina::prof;
   using std::string;
   using std::vector;
 

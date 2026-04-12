@@ -38,50 +38,49 @@ using namespace Arcane::Alina;
 #  define ARCANE_ALINA_BLOCK_SIZES (3)(4)
 #endif
 
-namespace Arcane::Alina { Profiler prof; }
-using Alina::prof;
 using Alina::precondition;
 
 //---------------------------------------------------------------------------
 
 template <class USolver, class PSolver, class Matrix>
-void solve_schur(const Matrix &K, const std::vector<double> &rhs, Alina::PropertyTree &prm)
+void solve_schur(const Matrix& K, const std::vector<double>& rhs, Alina::PropertyTree& prm)
 {
-    Backend<double>::params bprm;
+  auto& prof = Alina::Profiler::globalProfiler();
+  Backend<double>::params bprm;
 
 #if defined(SOLVER_BACKEND_CUDA)
-    cusparseCreate(&bprm.cusparse_handle);
-    {
-        int dev;
-        cudaGetDevice(&dev);
+  cusparseCreate(&bprm.cusparse_handle);
+  {
+    int dev;
+    cudaGetDevice(&dev);
 
-        cudaDeviceProp prop;
-        cudaGetDeviceProperties(&prop, dev);
-        std::cout << prop.name << std::endl << std::endl;
-    }
+    cudaDeviceProp prop;
+    cudaGetDeviceProperties(&prop, dev);
+    std::cout << prop.name << std::endl
+              << std::endl;
+  }
 #endif
 
-    auto t1 = prof.scoped_tic("schur_complement");
+  auto t1 = prof.scoped_tic("schur_complement");
 
-    prof.tic("setup");
-    PreconditionedSolver<
-        preconditioner::SchurPressureCorrectionPreconditioner<USolver, PSolver>,
-        SolverRuntime<Backend<double>>
-        > solve(K, prm, bprm);
-    prof.toc("setup");
+  prof.tic("setup");
+  PreconditionedSolver<preconditioner::SchurPressureCorrectionPreconditioner<USolver, PSolver>,
+                       SolverRuntime<Backend<double>>>
+  solve(K, prm, bprm);
+  prof.toc("setup");
 
-    std::cout << solve << std::endl;
+  std::cout << solve << std::endl;
 
-    auto f = Backend<double>::copy_vector(rhs, bprm);
-    auto x = Backend<double>::create_vector(rhs.size(), bprm);
-    Alina::backend::clear(*x);
+  auto f = Backend<double>::copy_vector(rhs, bprm);
+  auto x = Backend<double>::create_vector(rhs.size(), bprm);
+  Alina::backend::clear(*x);
 
-    prof.tic("solve");
-    Alina::SolverResult r = solve(*f, *x);
-    prof.toc("solve");
+  prof.tic("solve");
+  Alina::SolverResult r = solve(*f, *x);
+  prof.toc("solve");
 
-    std::cout << "Iterations: " << r.nbIteration() << std::endl
-              << "Error:      " << r.residual() << std::endl;
+  std::cout << "Iterations: " << r.nbIteration() << std::endl
+            << "Error:      " << r.residual() << std::endl;
 }
 
 #define ARCANE_ALINA_BLOCK_PSOLVER(z, data, B) \
@@ -136,6 +135,7 @@ void solve_schur(int ub, int pb, const Matrix& K, const std::vector<double>& rhs
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   using std::string;
   using std::vector;
 

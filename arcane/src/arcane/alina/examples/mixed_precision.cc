@@ -21,11 +21,6 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> dBackend;
 using namespace Arcane;
 using namespace Arcane::Alina;
 
-namespace
-{
-Profiler prof;
-}
-
 int main()
 {
   // Combine single-precision preconditioner with a
@@ -41,40 +36,25 @@ int main()
 
   dBackend::params bprm;
 
-#ifdef SOLVER_BACKEND_VEXCL
-  vex::Context ctx(vex::Filter::Env);
-  std::cout << ctx << std::endl;
-
-  bprm.q = ctx;
-#endif
-
-  prof.tic("assemble");
+  ARCANE_ALINA_TIC("assemble");
   int n = sample_problem(128, val, col, ptr, rhs);
-  prof.toc("assemble");
+  ARCANE_ALINA_TOC("assemble");
 
-#if defined(SOLVER_BACKEND_VEXCL)
-  dBackend::matrix A_d(ctx, n, n, ptr, col, val);
-
-  vex::vector<double> f(ctx, rhs);
-  vex::vector<double> x(ctx, n);
-  x = 0;
-#elif defined(SOLVER_BACKEND_BUILTIN)
   auto A_d = std::tie(n, ptr, col, val);
   std::vector<double>& f = rhs;
   std::vector<double> x(n, 0.0);
-#endif
 
-  prof.tic("setup");
+  ARCANE_ALINA_TIC("setup");
   Solver S(std::tie(n, ptr, col, val), Solver::params(), bprm);
-  prof.toc("setup");
+  ARCANE_ALINA_TIC("setup");
 
   std::cout << S << std::endl;
 
-  prof.tic("solve");
+  ARCANE_ALINA_TIC("solve");
   SolverResult r = S(A_d, f, x);
-  prof.toc("solve");
+  ARCANE_ALINA_TIC("solve");
 
   std::cout << "Iterations: " << r.nbIteration() << std::endl
             << "Error:      " << r.residual() << std::endl
-            << prof << std::endl;
+            << Alina::Profiler::globalProfiler() << std::endl;
 }

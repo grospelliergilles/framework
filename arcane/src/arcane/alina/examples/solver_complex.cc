@@ -28,12 +28,7 @@
 using namespace Arcane;
 using namespace Arcane::Alina;
 
-namespace Arcane::Alina
-{
-Profiler prof;
-}
 using Alina::precondition;
-using Alina::prof;
 
 //---------------------------------------------------------------------------
 template <class Precond, class Matrix>
@@ -43,6 +38,8 @@ solve(const Matrix& A,
       std::vector<std::complex<double>> const& f,
       std::vector<std::complex<double>>& x)
 {
+  auto& prof = Alina::Profiler::globalProfiler();
+
   typedef typename Precond::backend_type Backend;
 
   typedef typename Alina::math::rhs_of<typename Backend::value_type>::type rhs_type;
@@ -70,10 +67,10 @@ solve(const Matrix& A,
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   namespace po = boost::program_options;
   namespace io = Alina::IO;
 
-  using Alina::prof;
   using std::string;
   using std::vector;
 

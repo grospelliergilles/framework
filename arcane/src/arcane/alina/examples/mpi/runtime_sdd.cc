@@ -51,11 +51,6 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 
 using namespace Arcane;
 
-namespace Arcane::Alina
-{
-Profiler prof;
-}
-
 struct partitioned_deflation
 {
   unsigned nparts;
@@ -444,6 +439,7 @@ struct renumbering
 
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   int provided;
   MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
   BOOST_SCOPE_EXIT(void)
@@ -552,8 +548,6 @@ int main(int argc, char* argv[])
 
   boost::array<ptrdiff_t, 2> lo = { { 0, 0 } };
   boost::array<ptrdiff_t, 2> hi = { { n - 1, n - 1 } };
-
-  using Alina::prof;
 
   prof.tic("partition");
   domain_partition<2> part(lo, hi, world.size);

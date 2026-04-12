@@ -23,10 +23,6 @@
 #include <arcane/alina/DistributedDirectSolverRuntime.h>
 #include <arcane/alina/Profiler.h>
 
-namespace Arcane::Alina {
-    Profiler prof;
-}
-
 using namespace Arcane;
 using namespace Arcane::Alina;
 
@@ -206,6 +202,7 @@ read_problem(const Alina::mpi_communicator& world,
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   int provided;
   MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
   BOOST_SCOPE_EXIT(void)
@@ -284,8 +281,6 @@ int main(int argc, char* argv[])
   prm.put("local.relax.type", relaxation);
   prm.put("isolver.type", iterative_solver);
   prm.put("dsolver.type", direct_solver);
-
-  using Alina::prof;
 
   int block_size = prm.get("precond.coarsening.aggr.block_size", 1);
 

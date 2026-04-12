@@ -12,15 +12,11 @@
 #include <arcane/alina/BiCGStabSolver.h>
 #include <arcane/alina/Profiler.h>
 
-namespace Arcane::Alina
-{
-Profiler prof("v2");
-}
 using namespace Arcane;
 
 int main()
 {
-  using Alina::prof;
+  auto& prof = Alina::Profiler::globalProfiler();
 
   typedef Alina::backend::BlockCSRBackend<double> Backend;
   typedef Alina::AMG<Backend, Alina::AggregationCoarsening, Alina::SPAI0Relaxation> AMG;
@@ -84,5 +80,5 @@ int main()
   std::cout << "Iterations: " << r.nbIteration() << std::endl
             << "Error:      " << r.residual() << std::endl;
 
-  std::cout << Alina::prof << std::endl;
+  std::cout << prof << std::endl;
 }

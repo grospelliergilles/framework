@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
   }
 
   // The profiler:
-  Alina::Profiler prof("Nullspace");
+  auto& prof = Alina::Profiler::globalProfiler();
 
   // Read the system matrix, the RHS, and the coordinates:
   ptrdiff_t rows, cols, ndim, ncoo;

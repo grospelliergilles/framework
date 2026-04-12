@@ -46,185 +46,186 @@ typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
 
 using namespace Arcane;
 
-namespace Arcane::Alina { Profiler prof; }
-using Alina::prof;
 using Alina::precondition;
 
 #ifdef SOLVER_BACKEND_BUILTIN
 //---------------------------------------------------------------------------
 template <int B>
-std::tuple<size_t, double> block_solve(
-        const Alina::PropertyTree &prm,
-        size_t rows,
-        std::vector<ptrdiff_t> const &ptr,
-        std::vector<ptrdiff_t> const &col,
-        std::vector<double>    const &val,
-        std::vector<double>    const &rhs,
-        std::vector<double>          &x,
-        bool reorder
-        )
+std::tuple<size_t, double> block_solve(const Alina::PropertyTree& prm,
+                                       size_t rows,
+                                       std::vector<ptrdiff_t> const& ptr,
+                                       std::vector<ptrdiff_t> const& col,
+                                       std::vector<double> const& val,
+                                       std::vector<double> const& rhs,
+                                       std::vector<double>& x,
+                                       bool reorder)
 {
-    typedef Alina::StaticMatrix<double, B, B> value_type;
-    typedef Alina::StaticMatrix<double, B, 1> rhs_type;
-    typedef Alina::backend::BuiltinBackend<value_type> BBackend;
+  auto& prof = Alina::Profiler::globalProfiler();
 
-    typedef Alina::PreconditionedSolver<
-        Alina::PreconditionerRuntime<BBackend>,
-        Alina::SolverRuntime<BBackend>
-        > Solver;
+  typedef Alina::StaticMatrix<double, B, B> value_type;
+  typedef Alina::StaticMatrix<double, B, 1> rhs_type;
+  typedef Alina::backend::BuiltinBackend<value_type> BBackend;
 
-    auto As = std::tie(rows, ptr, col, val);
-    auto Ab = Alina::adapter::block_matrix<value_type>(As);
+  typedef Alina::PreconditionedSolver<
+  Alina::PreconditionerRuntime<BBackend>,
+  Alina::SolverRuntime<BBackend>>
+  Solver;
 
-    std::tuple<size_t, double> info;
+  auto As = std::tie(rows, ptr, col, val);
+  auto Ab = Alina::adapter::block_matrix<value_type>(As);
 
-    if (reorder) {
-        prof.tic("reorder");
-        Alina::adapter::reorder<> perm(Ab);
-        prof.toc("reorder");
+  std::tuple<size_t, double> info;
 
-        prof.tic("setup");
-        Solver solve(perm(Ab), prm);
-        prof.toc("setup");
+  if (reorder) {
+    prof.tic("reorder");
+    Alina::adapter::reorder<> perm(Ab);
+    prof.toc("reorder");
 
-        std::cout << solve << std::endl;
+    prof.tic("setup");
+    Solver solve(perm(Ab), prm);
+    prof.toc("setup");
 
-        rhs_type const * fptr = reinterpret_cast<rhs_type const *>(&rhs[0]);
-        rhs_type       * xptr = reinterpret_cast<rhs_type       *>(&x[0]);
+    std::cout << solve << std::endl;
 
-        Alina::backend::numa_vector<rhs_type> F(perm(Alina::make_iterator_range(fptr, fptr + rows/B)));
-        Alina::backend::numa_vector<rhs_type> X(perm(Alina::make_iterator_range(xptr, xptr + rows/B)));
+    rhs_type const* fptr = reinterpret_cast<rhs_type const*>(&rhs[0]);
+    rhs_type* xptr = reinterpret_cast<rhs_type*>(&x[0]);
 
-        prof.tic("solve");
-        info = solve(F, X);
-        prof.toc("solve");
+    Alina::backend::numa_vector<rhs_type> F(perm(Alina::make_iterator_range(fptr, fptr + rows / B)));
+    Alina::backend::numa_vector<rhs_type> X(perm(Alina::make_iterator_range(xptr, xptr + rows / B)));
 
-        perm.inverse(X, xptr);
-    } else {
-        prof.tic("setup");
-        Solver solve(Ab, prm);
-        prof.toc("setup");
+    prof.tic("solve");
+    info = solve(F, X);
+    prof.toc("solve");
 
-        std::cout << solve << std::endl;
+    perm.inverse(X, xptr);
+  }
+  else {
+    prof.tic("setup");
+    Solver solve(Ab, prm);
+    prof.toc("setup");
 
-        rhs_type const * fptr = reinterpret_cast<rhs_type const *>(&rhs[0]);
-        rhs_type       * xptr = reinterpret_cast<rhs_type       *>(&x[0]);
+    std::cout << solve << std::endl;
 
-        Alina::backend::numa_vector<rhs_type> F(fptr, fptr + rows/B);
-        Alina::backend::numa_vector<rhs_type> X(xptr, xptr + rows/B);
+    rhs_type const* fptr = reinterpret_cast<rhs_type const*>(&rhs[0]);
+    rhs_type* xptr = reinterpret_cast<rhs_type*>(&x[0]);
 
-        prof.tic("solve");
-        info = solve(F, X);
-        prof.toc("solve");
+    Alina::backend::numa_vector<rhs_type> F(fptr, fptr + rows / B);
+    Alina::backend::numa_vector<rhs_type> X(xptr, xptr + rows / B);
 
-        std::copy(X.data(), X.data() + X.size(), xptr);
-    }
+    prof.tic("solve");
+    info = solve(F, X);
+    prof.toc("solve");
 
-    return info;
+    std::copy(X.data(), X.data() + X.size(), xptr);
+  }
+
+  return info;
 }
 #endif
 
 #ifdef SOLVER_BACKEND_VEXCL
 //---------------------------------------------------------------------------
-template <int B>
-std::tuple<size_t, double> block_solve(
-        const Alina::PropertyTree &prm,
-        size_t rows,
-        std::vector<ptrdiff_t> const &ptr,
-        std::vector<ptrdiff_t> const &col,
-        std::vector<double>    const &val,
-        std::vector<double>    const &rhs,
-        std::vector<double>          &x,
-        bool reorder
-        )
+template <int B> std::tuple<size_t, double>
+block_solve(const Alina::PropertyTree& prm,
+            size_t rows,
+            std::vector<ptrdiff_t> const& ptr,
+            std::vector<ptrdiff_t> const& col,
+            std::vector<double> const& val,
+            std::vector<double> const& rhs,
+            std::vector<double>& x,
+            bool reorder)
 {
-    typedef Alina::StaticMatrix<double, B, B> value_type;
-    typedef Alina::StaticMatrix<double, B, 1> rhs_type;
-    typedef Alina::backend::vexcl<value_type> BBackend;
+  auto& prof = Alina::Profiler::globalProfiler();
 
-    typedef Alina::PreconditionedSolver<
-        Alina::runtime::PreconditionerRuntime<BBackend>,
-        Alina::runtime::solver::SolverRuntime<BBackend>
-        > Solver;
+  typedef Alina::StaticMatrix<double, B, B> value_type;
+  typedef Alina::StaticMatrix<double, B, 1> rhs_type;
+  typedef Alina::backend::vexcl<value_type> BBackend;
 
-    typename BBackend::params bprm;
+  typedef Alina::PreconditionedSolver<
+  Alina::runtime::PreconditionerRuntime<BBackend>,
+  Alina::runtime::solver::SolverRuntime<BBackend>>
+  Solver;
 
-    vex::Context ctx(vex::Filter::Env);
-    std::cout << ctx << std::endl;
-    bprm.q = ctx;
-    bprm.fast_matrix_setup = prm.get("fast", true);
+  typename BBackend::params bprm;
 
-    vex::scoped_program_header header(ctx,
-            Alina::backend::vexcl_static_matrix_declaration<double,B>());
+  vex::Context ctx(vex::Filter::Env);
+  std::cout << ctx << std::endl;
+  bprm.q = ctx;
+  bprm.fast_matrix_setup = prm.get("fast", true);
 
-    auto As = std::tie(rows, ptr, col, val);
-    auto Ab = Alina::adapter::block_matrix<value_type>(As);
+  vex::scoped_program_header header(ctx,
+                                    Alina::backend::vexcl_static_matrix_declaration<double, B>());
 
-    std::tuple<size_t, double> info;
+  auto As = std::tie(rows, ptr, col, val);
+  auto Ab = Alina::adapter::block_matrix<value_type>(As);
 
-    if (reorder) {
-        prof.tic("reorder");
-        Alina::adapter::reorder<> perm(Ab);
-        prof.toc("reorder");
+  std::tuple<size_t, double> info;
 
-        prof.tic("setup");
-        Solver solve(perm(Ab), prm, bprm);
-        prof.toc("setup");
+  if (reorder) {
+    prof.tic("reorder");
+    Alina::adapter::reorder<> perm(Ab);
+    prof.toc("reorder");
 
-        std::cout << solve << std::endl;
+    prof.tic("setup");
+    Solver solve(perm(Ab), prm, bprm);
+    prof.toc("setup");
 
-        rhs_type const * fptr = reinterpret_cast<rhs_type const *>(&rhs[0]);
-        rhs_type       * xptr = reinterpret_cast<rhs_type       *>(&x[0]);
+    std::cout << solve << std::endl;
 
-        std::vector<rhs_type> tmp(rows / B);
+    rhs_type const* fptr = reinterpret_cast<rhs_type const*>(&rhs[0]);
+    rhs_type* xptr = reinterpret_cast<rhs_type*>(&x[0]);
 
-        perm.forward(Alina::make_iterator_range(fptr, fptr + rows/B), tmp);
-        vex::vector<rhs_type> f_b(ctx, tmp);
+    std::vector<rhs_type> tmp(rows / B);
 
-        perm.forward(Alina::make_iterator_range(xptr, xptr + rows/B), tmp);
-        vex::vector<rhs_type> x_b(ctx, tmp);
+    perm.forward(Alina::make_iterator_range(fptr, fptr + rows / B), tmp);
+    vex::vector<rhs_type> f_b(ctx, tmp);
 
-        prof.tic("solve");
-        info = solve(f_b, x_b);
-        prof.toc("solve");
+    perm.forward(Alina::make_iterator_range(xptr, xptr + rows / B), tmp);
+    vex::vector<rhs_type> x_b(ctx, tmp);
 
-        vex::copy(x_b, tmp);
-        perm.inverse(tmp, xptr);
-    } else {
-        prof.tic("setup");
-        Solver solve(Ab, prm, bprm);
-        prof.toc("setup");
+    prof.tic("solve");
+    info = solve(f_b, x_b);
+    prof.toc("solve");
 
-        std::cout << solve << std::endl;
+    vex::copy(x_b, tmp);
+    perm.inverse(tmp, xptr);
+  }
+  else {
+    prof.tic("setup");
+    Solver solve(Ab, prm, bprm);
+    prof.toc("setup");
 
-        rhs_type const * fptr = reinterpret_cast<rhs_type const *>(&rhs[0]);
-        rhs_type       * xptr = reinterpret_cast<rhs_type       *>(&x[0]);
+    std::cout << solve << std::endl;
 
-        vex::vector<rhs_type> f_b(ctx, rows/B, fptr);
-        vex::vector<rhs_type> x_b(ctx, rows/B, xptr);
+    rhs_type const* fptr = reinterpret_cast<rhs_type const*>(&rhs[0]);
+    rhs_type* xptr = reinterpret_cast<rhs_type*>(&x[0]);
 
-        prof.tic("solve");
-        info = solve(f_b, x_b);
-        prof.toc("solve");
+    vex::vector<rhs_type> f_b(ctx, rows / B, fptr);
+    vex::vector<rhs_type> x_b(ctx, rows / B, xptr);
 
-        vex::copy(x_b.begin(), x_b.end(), xptr);
-    }
+    prof.tic("solve");
+    info = solve(f_b, x_b);
+    prof.toc("solve");
 
-    return info;
+    vex::copy(x_b.begin(), x_b.end(), xptr);
+  }
+
+  return info;
 }
 #endif
 
 //---------------------------------------------------------------------------
-std::tuple<size_t, double> scalar_solve(
-const Alina::PropertyTree& prm,
-size_t rows,
-std::vector<ptrdiff_t> const& ptr,
-std::vector<ptrdiff_t> const& col,
-std::vector<double> const& val,
-std::vector<double> const& rhs,
-std::vector<double>& x,
-bool reorder)
+std::tuple<size_t, double>
+scalar_solve(const Alina::PropertyTree& prm,
+             size_t rows,
+             std::vector<ptrdiff_t> const& ptr,
+             std::vector<ptrdiff_t> const& col,
+             std::vector<double> const& val,
+             std::vector<double> const& rhs,
+             std::vector<double>& x,
+             bool reorder)
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   Backend::params bprm;
 
 #if defined(SOLVER_BACKEND_VEXCL)
@@ -320,37 +321,36 @@ bool reorder)
     return block_solve<B>(prm, rows, ptr, col, val, rhs, x, reorder);
 
 //---------------------------------------------------------------------------
-std::tuple<size_t, double> solve(
-        const Alina::PropertyTree &prm,
-        size_t rows,
-        std::vector<ptrdiff_t> const &ptr,
-        std::vector<ptrdiff_t> const &col,
-        std::vector<double>    const &val,
-        std::vector<double>    const &rhs,
-        std::vector<double>          &x,
-        int block_size,
-        bool reorder
-        )
+std::tuple<size_t, double>
+solve(const Alina::PropertyTree& prm,
+      size_t rows,
+      std::vector<ptrdiff_t> const& ptr,
+      std::vector<ptrdiff_t> const& col,
+      std::vector<double> const& val,
+      std::vector<double> const& rhs,
+      std::vector<double>& x,
+      int block_size,
+      bool reorder)
 {
-    switch (block_size) {
-        case 1:
-            return scalar_solve(prm, rows, ptr, col, val, rhs, x, reorder);
+  switch (block_size) {
+  case 1:
+    return scalar_solve(prm, rows, ptr, col, val, rhs, x, reorder);
 #if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
-        BOOST_PP_SEQ_FOR_EACH(ARCANE_ALINA_CALL_BLOCK_SOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
+    BOOST_PP_SEQ_FOR_EACH(ARCANE_ALINA_CALL_BLOCK_SOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
 #endif
-        default:
-            precondition(false, "Unsupported block size");
-            return std::make_tuple(0, 0.0);
-    }
+  default:
+    precondition(false, "Unsupported block size");
+    return std::make_tuple(0, 0.0);
+  }
 }
 
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   namespace po = boost::program_options;
   namespace io = Alina::IO;
 
-  using Alina::prof;
   using std::string;
   using std::vector;
 

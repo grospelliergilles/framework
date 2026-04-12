@@ -28,12 +28,7 @@
 using namespace Arcane;
 using namespace Arcane::Alina;
 
-namespace Arcane::Alina
-{
-Profiler prof;
-}
 using Alina::precondition;
-using Alina::prof;
 
 //---------------------------------------------------------------------------
 struct renumbering
@@ -63,6 +58,8 @@ solve(const Alina::mpi_communicator& comm,
       const Alina::PropertyTree& prm,
       const Matrix& A)
 {
+  auto& prof = Alina::Profiler::globalProfiler();
+
   typedef Alina::backend::BuiltinBackend<double> Backend;
 
   using Solver = DistributedPreconditionedSolver<DistributedBlockPreconditioner<Precond<Backend>>, DistributedSolverRuntime<Backend>>;
@@ -85,9 +82,9 @@ solve(const Alina::mpi_communicator& comm,
 
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   namespace po = boost::program_options;
 
-  using Alina::prof;
   using std::string;
   using std::vector;
 

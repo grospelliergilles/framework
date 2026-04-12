@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
   Alina::mpi_communicator world(MPI_COMM_WORLD);
 
   // The profiler:
-  Alina::Profiler prof("Nullspace");
+  auto& prof = Alina::Profiler::globalProfiler();
 
   // Read the system matrix, the RHS, and the coordinates:
   prof.tic("read");

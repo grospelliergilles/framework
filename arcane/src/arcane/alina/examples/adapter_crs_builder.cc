@@ -16,11 +16,6 @@
 using namespace Arcane;
 using namespace Arcane::Alina;
 
-namespace
-{
-Profiler prof;
-}
-
 //---------------------------------------------------------------------------
 struct poisson_2d
 {
@@ -81,6 +76,7 @@ double norm(const Vec& v)
 //---------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   int m = argc > 1 ? atoi(argv[1]) : 1024;
   int n = m * m;
 
@@ -88,14 +84,12 @@ int main(int argc, char* argv[])
   // The use of make_matrix() from crs_builder.hpp allows to construct the
   // system matrix on demand row by row.
   prof.tic("build");
-  typedef Alina::PreconditionedSolver<
-  Alina::AMG<
-  Alina::backend::BuiltinBackend<double>,
-  Alina::SmoothedAggregationCoarserning,
-  Alina::GaussSeidelRelaxation>,
-  Alina::ConjugateGradientSolver<
-  Alina::backend::BuiltinBackend<double>>>
-  Solver;
+  using Solver = Alina::PreconditionedSolver<Alina::AMG<Alina::backend::BuiltinBackend<double>,
+                                                        Alina::SmoothedAggregationCoarserning,
+                                                        Alina::GaussSeidelRelaxation>,
+                                             Alina::ConjugateGradientSolver<
+                                             Alina::backend::BuiltinBackend<double>>>;
+
   Solver solve(Alina::adapter::make_matrix(poisson_2d(m)));
   prof.toc("build");
 

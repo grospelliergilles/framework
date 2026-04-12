@@ -50,86 +50,81 @@ THE SOFTWARE.
 using namespace Arcane;
 
 //---------------------------------------------------------------------------
-int main(int argc, char *argv[]) {
-    // The command line should contain the matrix and the RHS file names,
-    // and the number of unknowns in the flow subsytem:
-    if (argc < 4) {
-        std::cerr << "Usage: " << argv[0] << " <matrix.bin> <rhs.bin> <nu>" << std::endl;
-        return 1;
-    }
+int main(int argc, char* argv[])
+{
+  // The command line should contain the matrix and the RHS file names,
+  // and the number of unknowns in the flow subsytem:
+  if (argc < 4) {
+    std::cerr << "Usage: " << argv[0] << " <matrix.bin> <rhs.bin> <nu>" << std::endl;
+    return 1;
+  }
 
-    // The profiler:
-    Alina::Profiler prof("UCube4");
+  // The profiler:
+  auto& prof = Alina::Profiler::globalProfiler();
 
-    // Read the system matrix:
-    ptrdiff_t rows, cols;
-    std::vector<ptrdiff_t> ptr, col;
-    std::vector<double> val, rhs;
+  // Read the system matrix:
+  ptrdiff_t rows, cols;
+  std::vector<ptrdiff_t> ptr, col;
+  std::vector<double> val, rhs;
 
-    prof.tic("read");
-    Alina::IO::read_crs(argv[1], rows, ptr, col, val);
-    Alina::IO::read_dense(argv[2], rows, cols, rhs);
-    std::cout << "Matrix " << argv[1] << ": " << rows << "x" << rows << std::endl;
-    std::cout << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
-    prof.toc("read");
+  prof.tic("read");
+  Alina::IO::read_crs(argv[1], rows, ptr, col, val);
+  Alina::IO::read_dense(argv[2], rows, cols, rhs);
+  std::cout << "Matrix " << argv[1] << ": " << rows << "x" << rows << std::endl;
+  std::cout << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
+  prof.toc("read");
 
-    // The number of unknowns in the U subsystem
-    ptrdiff_t nu = std::stoi(argv[3]);
+  // The number of unknowns in the U subsystem
+  ptrdiff_t nu = std::stoi(argv[3]);
 
-    // We use the tuple of CRS arrays to represent the system matrix.
-    // Note that std::tie creates a tuple of references, so no data is actually
-    // copied here:
-    auto A = std::tie(rows, ptr, col, val);
+  // We use the tuple of CRS arrays to represent the system matrix.
+  // Note that std::tie creates a tuple of references, so no data is actually
+  // copied here:
+  auto A = std::tie(rows, ptr, col, val);
 
-    // Compose the solver type
-    typedef Alina::backend::BuiltinBackend<double> SBackend; // the outer iterative solver backend
-    typedef Alina::backend::BuiltinBackend<float> PBackend;  // the PSolver backend
-    typedef Alina::backend::BuiltinBackend<Alina::StaticMatrix<float,3,3>> UBackend;    // the USolver backend
+  // Compose the solver type
+  typedef Alina::backend::BuiltinBackend<double> SBackend; // the outer iterative solver backend
+  typedef Alina::backend::BuiltinBackend<float> PBackend; // the PSolver backend
+  typedef Alina::backend::BuiltinBackend<Alina::StaticMatrix<float, 3, 3>> UBackend; // the USolver backend
 
-    typedef Alina::PreconditionedSolver<
-        Alina::preconditioner::SchurPressureCorrectionPreconditioner<
-            Alina::make_block_solver<
-                Alina::AMG<
-                    UBackend,
-                    Alina::AggregationCoarsening,
-                    Alina::ILU0Relaxation
-                    >,
-                Alina::PreconditionerOnlySolver<UBackend>
-                >,
-            Alina::PreconditionedSolver<
-                Alina::RelaxationAsPreconditioner<
-                    PBackend,
-                    Alina::SPAI0Relaxation
-                    >,
-                Alina::PreconditionerOnlySolver<PBackend>
-                >
-            >,
-        Alina::ConjugateGradientSolver<SBackend>
-        > Solver;
+  typedef Alina::PreconditionedSolver<
+  Alina::preconditioner::SchurPressureCorrectionPreconditioner<
+  Alina::make_block_solver<Alina::AMG<
+                           UBackend,
+                           Alina::AggregationCoarsening,
+                           Alina::ILU0Relaxation>,
+                           Alina::PreconditionerOnlySolver<UBackend>>,
+  Alina::PreconditionedSolver<Alina::RelaxationAsPreconditioner<
+                              PBackend,
+                              Alina::SPAI0Relaxation>,
+                              Alina::PreconditionerOnlySolver<PBackend>>>,
+  Alina::ConjugateGradientSolver<SBackend>>
+  Solver;
 
-    // Solver parameters
-    Solver::params prm;
-    prm.precond.simplec_dia = false;
-    prm.precond.pmask.resize(rows);
-    for(ptrdiff_t i = 0; i < rows; ++i) prm.precond.pmask[i] = (i >= nu);
+  // Solver parameters
+  Solver::params prm;
+  prm.precond.simplec_dia = false;
+  prm.precond.pmask.resize(rows);
+  for (ptrdiff_t i = 0; i < rows; ++i)
+    prm.precond.pmask[i] = (i >= nu);
 
-    // Initialize the solver with the system matrix.
-    prof.tic("setup");
-    Solver solve(A, prm);
-    prof.toc("setup");
+  // Initialize the solver with the system matrix.
+  prof.tic("setup");
+  Solver solve(A, prm);
+  prof.toc("setup");
 
-    // Show the mini-report on the constructed solver:
-    std::cout << solve << std::endl;
+  // Show the mini-report on the constructed solver:
+  std::cout << solve << std::endl;
 
-    // Solve the system with the zero initial approximation:
-    std::vector<double> x(rows, 0.0);
-    prof.tic("solve");
-    Alina::SolverResult r = solve(A, rhs, x);
-    prof.toc("solve");
+  // Solve the system with the zero initial approximation:
+  std::vector<double> x(rows, 0.0);
+  prof.tic("solve");
+  Alina::SolverResult r = solve(A, rhs, x);
+  prof.toc("solve");
 
-    // Output the number of iterations, the relative error,
-    // and the profiling data:
-    std::cout << "Iters: " << r.nbIteration() << std::endl
-              << "Error: " << r.residual() << std::endl
-              << prof << std::endl;
+  // Output the number of iterations, the relative error,
+  // and the profiling data:
+  std::cout << "Iters: " << r.nbIteration() << std::endl
+            << "Error: " << r.residual() << std::endl
+            << prof << std::endl;
 }

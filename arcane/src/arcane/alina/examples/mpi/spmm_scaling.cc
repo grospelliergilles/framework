@@ -13,11 +13,6 @@
 
 using namespace Arcane;
 
-namespace Arcane::Alina
-{
-Profiler prof;
-}
-
 struct renumbering
 {
   const domain_partition<3>& part;
@@ -39,6 +34,7 @@ struct renumbering
 
 int main(int argc, char* argv[])
 {
+  auto& prof = Alina::Profiler::globalProfiler();
   MPI_Init(&argc, &argv);
   BOOST_SCOPE_EXIT(void)
   {
@@ -73,8 +69,6 @@ int main(int argc, char* argv[])
 
   boost::array<ptrdiff_t, 3> lo = { { 0, 0, 0 } };
   boost::array<ptrdiff_t, 3> hi = { { n - 1, n - 1, n - 1 } };
-
-  using Alina::prof;
 
   prof.tic("partition");
   domain_partition<3> part(lo, hi, world.size);
