@@ -107,6 +107,7 @@ _doHypreSolver(int nb_row,
                int argc, char* argv[])
 {
   auto& prof = Alina::Profiler::globalProfiler();
+  auto t = prof.scoped_tic("Hypre");
 
   std::cout << "DO_HYPRE nb_row=" << nb_row << "\n";
   int i;
@@ -204,23 +205,20 @@ _doHypreSolver(int nb_row,
     }
   }
 
-  /* Preliminaries: want at least one processor per row */
-  //if (n * n < num_procs) {
-  //n = sqrt(num_procs) + 1;
-  //}
-  //N = n * n; /* global number of rows */
-  //h = 1.0 / (n + 1); /* mesh size*/
-  //h2 = h * h;
-
+  // Fill nb value per row.
   std::vector<int> nb_value_per_row(n);
-  std::vector<HYPRE_BigInt> hypre_row_index(_ptr.begin(), _ptr.end());
+  for (int i = 0; i < n; ++i)
+    nb_value_per_row[i] = static_cast<HYPRE_BigInt>(_ptr[i + 1] - _ptr[i]);
+
+  // The column index is the same that '_col' from CSR Matrix
+  // but we do a copy if index size is différent between Hypre and Alina.
   std::vector<HYPRE_BigInt> hypre_column_index(_col.begin(), _col.end());
-  //for (int i = 0; i < (n + 1); ++i) {
-  //hypre_row_index[i] = _ptr[i];
-  //}
-  //for (int i = 0; i < n; ++i) {
-  //hypre_column_index[i] = _col[i];
-  //}
+
+  // Id of each row (in sequential, this is the same that the index)
+  std::vector<HYPRE_Int> hypre_row_index(n);
+  for (int i = 0; i < n; ++i) {
+    hypre_row_index[i] = i;
+  }
 
   /* Each processor knows only of its own rows - the range is denoted by ilower
      and upper.  Here we partition the rows. We account for the fact that
@@ -238,45 +236,36 @@ _doHypreSolver(int nb_row,
   /* How many rows do I have? */
   local_size = iupper - ilower + 1;
 
-  /* Create the matrix.
-     Note that this is a square matrix, so we indicate the row partition
-     size twice (since number of rows = number of cols) */
-  HYPRE_IJMatrixCreate(MPI_COMM_WORLD, ilower, iupper, ilower, iupper, &A);
+  {
+    auto t = prof.scoped_tic("IJMatrix Create");
+    /* Create the matrix.
+       Note that this is a square matrix, so we indicate the row partition
+       size twice (since number of rows = number of cols) */
+    HYPRE_IJMatrixCreate(MPI_COMM_WORLD, ilower, iupper, ilower, iupper, &A);
 
-  /* Choose a parallel csr format storage (see the User's Manual) */
-  HYPRE_IJMatrixSetObjectType(A, HYPRE_PARCSR);
+    /* Choose a parallel csr format storage (see the User's Manual) */
+    HYPRE_IJMatrixSetObjectType(A, HYPRE_PARCSR);
 
-  /* Initialize before setting coefficients */
-  HYPRE_IJMatrixInitialize(A);
+    /* Initialize before setting coefficients */
+    HYPRE_IJMatrixInitialize(A);
+  }
 
   // Fill the matrix.
   {
-    int* tmp = (int*)malloc(2 * sizeof(int));
+    auto t = prof.scoped_tic("IJMatrix SetValues");
 
-    for (i = ilower; i <= iupper; i++) {
-
-      /* Set the values for row i */
-      int index = static_cast<HYPRE_Int>(_ptr[i]);
-      tmp[0] = static_cast<HYPRE_BigInt>(_ptr[i + 1] - _ptr[i]);
-      tmp[1] = i;
-      HYPRE_IJMatrixSetValues(A, 1, &tmp[0], &tmp[1], &hypre_column_index[index], &_val[index]);
-    }
-
-    free(tmp);
-
-    for (int i = 0; i < n; ++i)
-      nb_value_per_row[i] = static_cast<HYPRE_BigInt>(_ptr[i + 1] - _ptr[i]);
-#if 0
     HYPRE_IJMatrixSetValues(A, n,
                             nb_value_per_row.data(),
                             hypre_row_index.data(),
                             hypre_column_index.data(),
                             _val.data());
-#endif
   }
 
-  /* Assemble after setting the coefficients */
-  HYPRE_IJMatrixAssemble(A);
+  {
+    auto t = prof.scoped_tic("IJMatrix Assemble");
+    /* Assemble after setting the coefficients */
+    HYPRE_IJMatrixAssemble(A);
+  }
 
   /* Note: for the testing of small problems, one may wish to read
       in a matrix in IJ format (for the format, see the output files
@@ -370,8 +359,14 @@ _doHypreSolver(int nb_row,
     HYPRE_BoomerAMGSetTol(solver, 1e-8); /* conv. tolerance */
 
     /* Now setup and solve! */
-    HYPRE_BoomerAMGSetup(solver, parcsr_A, par_b, par_x);
-    HYPRE_BoomerAMGSolve(solver, parcsr_A, par_b, par_x);
+    {
+      auto t = prof.scoped_tic("AMG Setup");
+      HYPRE_BoomerAMGSetup(solver, parcsr_A, par_b, par_x);
+    }
+    {
+      auto t = prof.scoped_tic("AMG Solve");
+      HYPRE_BoomerAMGSolve(solver, parcsr_A, par_b, par_x);
+    }
 
     /* Run info - needed logging turned on */
     HYPRE_BoomerAMGGetNumIterations(solver, &num_iterations);
@@ -563,8 +558,14 @@ _doHypreSolver(int nb_row,
     }
 
     /* Now setup and solve! */
-    HYPRE_ParCSRFlexGMRESSetup(solver, parcsr_A, par_b, par_x);
-    HYPRE_ParCSRFlexGMRESSolve(solver, parcsr_A, par_b, par_x);
+    {
+      auto t = prof.scoped_tic("FlexGMRES Setup");
+      HYPRE_ParCSRFlexGMRESSetup(solver, parcsr_A, par_b, par_x);
+    }
+    {
+      auto t = prof.scoped_tic("FlexGMRES Solve");
+      HYPRE_ParCSRFlexGMRESSolve(solver, parcsr_A, par_b, par_x);
+    }
 
     /* Run info - needed logging turned on */
     HYPRE_FlexGMRESGetNumIterations(solver, &num_iterations);
