@@ -216,7 +216,7 @@ struct plain_aggregates
 
     scalar_type eps_squared = prm.eps_strong * prm.eps_strong;
 
-    const size_t n = rows(A);
+    const size_t n = backend::rows(A);
 
     /* 1. Get strong connections */
     auto dia = diagonal(A);
@@ -523,10 +523,10 @@ class pointwise_aggregates
       id.swap(aggr.id);
     }
     else {
-      strong_connection.resize(nonzeros(A));
-      id.resize(rows(A));
+      strong_connection.resize(backend::nonzeros(A));
+      id.resize(backend::rows(A));
 
-      auto ap = backend::pointwise_matrix(A, prm.block_size);
+      auto ap = pointwise_matrix(A, prm.block_size);
       auto& Ap = *ap;
 
       plain_aggregates pw_aggr(Ap, prm);
@@ -702,7 +702,7 @@ struct AggregationCoarsening
   std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>
   transfer_operators(const Matrix& A)
   {
-    const size_t n = rows(A);
+    const size_t n = backend::rows(A);
 
     ARCANE_ALINA_TIC("aggregates");
     Aggregates aggr(A, prm.aggr, prm.nullspace.cols);
@@ -768,8 +768,8 @@ struct AsScalarCoarsening
       auto& P = *std::get<0>(T);
       auto& R = *std::get<1>(T);
 
-      backend::sort_rows(P);
-      backend::sort_rows(R);
+      sort_rows(P);
+      sort_rows(R);
 
       return std::make_tuple(
       std::make_shared<Matrix>(adapter::block_matrix<Block>(P)),
@@ -972,14 +972,14 @@ struct RugeStubenCoarsening
     typedef typename backend::ptr_type<Matrix>::type Ptr;
     typedef typename math::scalar_of<Val>::type Scalar;
 
-    const size_t n = rows(A);
+    const size_t n = backend::rows(A);
 
     static const Scalar eps = Alina::detail::eps<Scalar>(1);
 
     static const Val zero = math::zero<Val>();
 
     std::vector<char> cf(n, 'U');
-    backend::CSRMatrix<char, Col, Ptr> S;
+    CSRMatrix<char, Col, Ptr> S;
 
     ARCANE_ALINA_TIC("C/F split");
     connect(A, prm.eps_strong, S, cf);
@@ -1140,14 +1140,14 @@ struct RugeStubenCoarsening
   // Variables that have no positive connections are marked as F(ine).
   //-------------------------------------------------------------------
   template <typename Val, typename Col, typename Ptr>
-  static void connect(backend::CSRMatrix<Val, Col, Ptr> const& A, float eps_strong,
-                      backend::CSRMatrix<char, Col, Ptr>& S,
+  static void connect(CSRMatrix<Val, Col, Ptr> const& A, float eps_strong,
+                      CSRMatrix<char, Col, Ptr>& S,
                       std::vector<char>& cf)
   {
     typedef typename math::scalar_of<Val>::type Scalar;
 
-    const size_t n = rows(A);
-    const size_t nnz = nonzeros(A);
+    const size_t n = backend::rows(A);
+    const size_t nnz = backend::nonzeros(A);
     const Scalar eps = Alina::detail::eps<Scalar>(1);
 
     S.nrows = S.ncols = n;
@@ -1161,7 +1161,7 @@ struct RugeStubenCoarsening
 
       Val a_min = math::zero<Val>();
 
-      for (auto a = row_begin(A, i); a; ++a)
+      for (auto a = backend::row_begin(A, i); a; ++a)
         if (a.col() != i)
           a_min = std::min(a_min, a.value());
 
@@ -1195,11 +1195,11 @@ struct RugeStubenCoarsening
 
   // Split variables into C(oarse) and F(ine) sets.
   template <typename Val, typename Col, typename Ptr>
-  static void cfsplit(backend::CSRMatrix<Val, Col, Ptr> const& A,
-                      backend::CSRMatrix<char, Col, Ptr> const& S,
+  static void cfsplit(CSRMatrix<Val, Col, Ptr> const& A,
+                      CSRMatrix<char, Col, Ptr> const& S,
                       std::vector<char>& cf)
   {
-    const size_t n = rows(A);
+    const size_t n = A.nrows;
 
     std::vector<Col> lambda(n);
 
@@ -1417,7 +1417,7 @@ struct SmoothedAggregationCoarserning
     typedef typename backend::value_type<Matrix>::type value_type;
     typedef typename math::scalar_of<value_type>::type scalar_type;
 
-    const size_t n = rows(A);
+    const size_t n = backend::rows(A);
 
     ARCANE_ALINA_TIC("aggregates");
     Aggregates aggr(A, prm.aggr, prm.nullspace.cols);
@@ -1428,11 +1428,11 @@ struct SmoothedAggregationCoarserning
     n, aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
 
     auto P = std::make_shared<Matrix>();
-    P->set_size(rows(*P_tent), cols(*P_tent), true);
+    P->set_size(backend::rows(*P_tent), backend::cols(*P_tent), true);
 
     scalar_type omega = prm.relax;
     if (prm.estimate_spectral_radius) {
-      omega *= static_cast<scalar_type>(4.0 / 3) / backend::spectral_radius<true>(A, prm.power_iters);
+      omega *= static_cast<scalar_type>(4.0 / 3) / spectral_radius<true>(A, prm.power_iters);
     }
     else {
       omega *= static_cast<scalar_type>(2.0 / 3);
@@ -1588,12 +1588,11 @@ struct SmoothedAggregationEnergyMinCoarsening
     ARCANE_ALINA_TOC("aggregates");
 
     ARCANE_ALINA_TIC("interpolation");
-    auto P_tent = tentative_prolongation<Matrix>(
-    rows(A), aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
+    auto P_tent = tentative_prolongation<Matrix>(backend::rows(A), aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
 
     // Filter the system matrix
-    backend::CSRMatrix<Val, Col, Ptr> Af;
-    Af.set_size(rows(A), cols(A));
+    CSRMatrix<Val, Col, Ptr> Af;
+    Af.set_size(backend::rows(A), backend::cols(A));
     Af.ptr[0] = 0;
 
     std::vector<Val> dia(Af.nrows);
@@ -1664,13 +1663,13 @@ struct SmoothedAggregationEnergyMinCoarsening
  private:
 
   template <class AMatrix, typename Val, typename Col, typename Ptr>
-  static std::shared_ptr<backend::CSRMatrix<Val, Col, Ptr>>
+  static std::shared_ptr<CSRMatrix<Val, Col, Ptr>>
   interpolation(const AMatrix& A, const std::vector<Val>& Adia,
-                const backend::CSRMatrix<Val, Col, Ptr>& P_tent,
+                const CSRMatrix<Val, Col, Ptr>& P_tent,
                 std::vector<Val>& omega)
   {
-    const size_t n = rows(P_tent);
-    const size_t nc = cols(P_tent);
+    const size_t n = backend::rows(P_tent);
+    const size_t nc = backend::cols(P_tent);
 
     auto AP = product(A, P_tent, /*sort rows: */ true);
 
@@ -1787,12 +1786,12 @@ struct SmoothedAggregationEnergyMinCoarsening
   }
 
   template <typename AMatrix, typename Val, typename Col, typename Ptr>
-  static std::shared_ptr<backend::CSRMatrix<Val, Col, Ptr>>
+  static std::shared_ptr<CSRMatrix<Val, Col, Ptr>>
   restriction(const AMatrix& A, const std::vector<Val>& Adia,
-              const backend::CSRMatrix<Val, Col, Ptr>& P_tent,
+              const CSRMatrix<Val, Col, Ptr>& P_tent,
               const std::vector<Val>& omega)
   {
-    const size_t nc = cols(P_tent);
+    const size_t nc = backend::cols(P_tent);
 
     auto R_tent = transpose(P_tent);
     sort_rows(*R_tent);

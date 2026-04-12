@@ -365,10 +365,10 @@ block_matrix_adapter<Matrix, BlockType> block_matrix(const Matrix& A)
 /*---------------------------------------------------------------------------*/
 
 template <class Matrix>
-std::shared_ptr<backend::CSRMatrix<typename math::element_of<
-                             typename backend::value_type<Matrix>::type>::type,
-                             typename backend::col_type<Matrix>::type,
-                             typename backend::ptr_type<Matrix>::type>>
+std::shared_ptr<CSRMatrix<typename math::element_of<
+                          typename backend::value_type<Matrix>::type>::type,
+                          typename backend::col_type<Matrix>::type,
+                          typename backend::ptr_type<Matrix>::type>>
 unblock_matrix(const Matrix& B)
 {
   typedef typename backend::value_type<Matrix>::type Block;
@@ -381,7 +381,7 @@ unblock_matrix(const Matrix& B)
 
   static_assert(brows > 1 || bcols > 1, "Can not unblock scalar matrix!");
 
-  auto A = std::make_shared<backend::CSRMatrix<Scalar, Col, Ptr>>();
+  auto A = std::make_shared<CSRMatrix<Scalar, Col, Ptr>>();
 
   A->set_size(backend::rows(B) * brows, backend::cols(B) * bcols);
   A->ptr[0] = 0;
@@ -950,7 +950,7 @@ const typename Backend::params& bprm = typename Backend::params())
 /*---------------------------------------------------------------------------*/
 
 template <typename Ptr, typename Col, typename Val>
-std::shared_ptr<backend::CSRMatrix<Val>>
+std::shared_ptr<CSRMatrix<Val>>
 zero_copy(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, const Val* val)
 {
   // Check that Ptr and Col types are binary-compatible with ptrdiff_t:
@@ -959,7 +959,7 @@ zero_copy(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, const Val*
   static_assert(sizeof(Ptr) == sizeof(ptrdiff_t), "Unsupported Ptr type");
   static_assert(sizeof(Col) == sizeof(ptrdiff_t), "Unsupported Col type");
 
-  auto A = std::make_shared<backend::CSRMatrix<Val>>();
+  auto A = std::make_shared<CSRMatrix<Val>>();
   A->nrows = nrows;
   A->ncols = ncols;
   A->nnz = nrows ? ptr[nrows] : 0;
@@ -977,7 +977,7 @@ zero_copy(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, const Val*
 /*---------------------------------------------------------------------------*/
 
 template <typename Ptr, typename Col, typename Val>
-std::shared_ptr<backend::CSRMatrix<Val>>
+std::shared_ptr<CSRMatrix<Val>>
 zero_copy(size_t n, const Ptr* ptr, const Col* col, const Val* val)
 {
   return zero_copy(n, n, ptr, col, val);
@@ -987,10 +987,10 @@ zero_copy(size_t n, const Ptr* ptr, const Col* col, const Val* val)
 /*---------------------------------------------------------------------------*/
 
 template <typename Ptr, typename Col, typename Val>
-std::shared_ptr<backend::CSRMatrix<Val, Col, Ptr>>
+std::shared_ptr<CSRMatrix<Val, Col, Ptr>>
 zero_copy_direct(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, const Val* val)
 {
-  auto A = std::make_shared<backend::CSRMatrix<Val, Col, Ptr>>();
+  auto A = std::make_shared<CSRMatrix<Val, Col, Ptr>>();
   A->nrows = nrows;
   A->ncols = ncols;
   A->nnz = nrows ? ptr[nrows] : 0;
@@ -1008,7 +1008,7 @@ zero_copy_direct(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, con
 /*---------------------------------------------------------------------------*/
 
 template <typename Ptr, typename Col, typename Val>
-std::shared_ptr<backend::CSRMatrix<Val, Col, Ptr>>
+std::shared_ptr<CSRMatrix<Val, Col, Ptr>>
 zero_copy_direct(size_t n, const Ptr* ptr, const Col* col, const Val* val)
 {
   return zero_copy_direct(n, n, ptr, col, val);

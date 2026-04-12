@@ -102,8 +102,8 @@ void test() {
         std::vector<Rhs> Y(n);
         assemble(n, 0, n, ptr, col, val);
 
-        Alina::backend::CSRMatrix<Val> A( std::tie(n, ptr, col, val) );
-        Alina::backend::spmv(1, *Alina::backend::product(A, A), X, 0, Y);
+        Alina::CSRMatrix<Val> A( std::tie(n, ptr, col, val) );
+        Alina::backend::spmv(1, *product(A, A), X, 0, Y);
 
         double s = 0;
         for(int i = 0; i < n; ++i) {

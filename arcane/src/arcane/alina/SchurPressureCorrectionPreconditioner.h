@@ -514,9 +514,7 @@ class SchurPressureCorrectionPreconditioner
       Kup_hat.col = Kup->col;
       Kup_hat.val = val.data();
 
-      Kpp = backend::sum(
-      math::identity<value_type>(), *Kpp,
-      -math::identity<value_type>(), *backend::product(*Kpu, Kup_hat));
+      Kpp = sum(math::identity<value_type>(), *Kpp, -math::identity<value_type>(), *product(*Kpu, Kup_hat));
     }
 
     U = std::make_shared<USolver>(*Kuu, prm.usolver, bprm);

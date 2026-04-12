@@ -91,8 +91,8 @@ class CommunicationPattern
   std::shared_ptr<vector> x_rem;
 
   CommunicationPattern(mpi_communicator comm,
-               ptrdiff_t n_loc_cols,
-               size_t n_rem_cols, const ptrdiff_t* p_rem_cols)
+                       ptrdiff_t n_loc_cols,
+                       size_t n_rem_cols, const ptrdiff_t* p_rem_cols)
   : comm(comm)
   , loc_cols(n_loc_cols)
   {
@@ -352,12 +352,12 @@ class DistributedMatrix
   typedef typename Backend::params backend_params;
   typedef typename Backend::matrix matrix;
   typedef CommunicationPattern<Backend> CommPattern;
-  typedef backend::CSRMatrix<value_type> build_matrix;
+  typedef CSRMatrix<value_type> build_matrix;
 
   DistributedMatrix(mpi_communicator comm,
-                     std::shared_ptr<build_matrix> a_loc,
-                     std::shared_ptr<build_matrix> a_rem,
-                     std::shared_ptr<CommPattern> c = std::shared_ptr<CommPattern>())
+                    std::shared_ptr<build_matrix> a_loc,
+                    std::shared_ptr<build_matrix> a_rem,
+                    std::shared_ptr<CommPattern> c = std::shared_ptr<CommPattern>())
   : a_loc(a_loc)
   , a_rem(a_rem)
   {
@@ -399,8 +399,8 @@ class DistributedMatrix
 
   template <class Matrix>
   DistributedMatrix(mpi_communicator comm,
-                     const Matrix& A,
-                     ptrdiff_t _n_loc_cols = -1)
+                    const Matrix& A,
+                    ptrdiff_t _n_loc_cols = -1)
   : n_loc_rows(backend::rows(A))
   , n_loc_cols(_n_loc_cols < 0 ? n_loc_rows : _n_loc_cols)
   , n_loc_nonzeros(backend::nonzeros(A))
@@ -615,7 +615,7 @@ transpose(const DistributedMatrix<Backend>& A)
   ARCANE_ALINA_TIC("MPI Transpose");
   typedef typename Backend::value_type value_type;
   typedef CommunicationPattern<Backend> CommPattern;
-  typedef backend::CSRMatrix<value_type> build_matrix;
+  typedef CSRMatrix<value_type> build_matrix;
 
   static const int tag_cnt = 2001;
   static const int tag_col = 2002;
@@ -648,7 +648,7 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t* a_rem_col = tmp_col.data();
     std::swap(a_rem_col, A_rem.col);
 
-    t_ptr = backend::transpose(A_rem);
+    t_ptr = transpose(A_rem);
 
     std::swap(a_rem_col, A_rem.col);
   }
@@ -765,21 +765,20 @@ transpose(const DistributedMatrix<Backend>& A)
 
   ARCANE_ALINA_TOC("MPI Transpose");
 
-  return std::make_shared<DistributedMatrix<Backend>>(
-  comm, backend::transpose(A_loc), T_ptr);
+  return std::make_shared<DistributedMatrix<Backend>>(comm, transpose(A_loc), T_ptr);
 }
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-std::shared_ptr<backend::CSRMatrix<typename Backend::value_type>>
+std::shared_ptr<CSRMatrix<typename Backend::value_type>>
 remote_rows(const CommunicationPattern<Backend>& C,
             const DistributedMatrix<Backend>& B,
             bool need_values = true)
 {
   typedef typename Backend::value_type value_type;
-  typedef backend::CSRMatrix<value_type> build_matrix;
+  typedef CSRMatrix<value_type> build_matrix;
 
   static const int tag_ptr = 3001;
   static const int tag_col = 3002;
@@ -916,7 +915,7 @@ std::shared_ptr<DistributedMatrix<Backend>>
 product(const DistributedMatrix<Backend>& A, const DistributedMatrix<Backend>& B)
 {
   typedef typename Backend::value_type value_type;
-  typedef backend::CSRMatrix<value_type> build_matrix;
+  typedef CSRMatrix<value_type> build_matrix;
   ARCANE_ALINA_TIC("product");
 
   const CommunicationPattern<Backend>& Acp = A.cpat();
@@ -1141,7 +1140,7 @@ template <class Backend, class T>
 void scale(DistributedMatrix<Backend>& A, T s)
 {
   typedef typename Backend::value_type value_type;
-  typedef backend::CSRMatrix<value_type> build_matrix;
+  typedef CSRMatrix<value_type> build_matrix;
 
   build_matrix& A_loc = *A.local();
   build_matrix& A_rem = *A.remote();
@@ -1163,14 +1162,14 @@ void scale(DistributedMatrix<Backend>& A, T s)
 template <class Backend>
 void sort_rows(DistributedMatrix<Backend>& A)
 {
-  backend::sort_rows(*A.local());
-  backend::sort_rows(*A.remote());
+  sort_rows(*A.local());
+  sort_rows(*A.remote());
 }
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::mpi
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -1235,7 +1234,7 @@ spectral_radius(const DistributedMatrix<Backend>& A, int power_iters = 0)
   typedef typename Backend::value_type value_type;
   typedef typename math::rhs_of<value_type>::type rhs_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
-  typedef backend::CSRMatrix<value_type> build_matrix;
+  typedef CSRMatrix<value_type> build_matrix;
 
   mpi_communicator comm = A.comm();
 

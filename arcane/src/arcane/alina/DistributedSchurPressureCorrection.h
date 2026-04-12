@@ -263,7 +263,7 @@ class DistributedSchurPressureCorrection
       ptrdiff_t ci = idx[i];
       char pi = prm.pmask[i];
 
-      for (auto a = row_begin(K_loc, i); a; ++a) {
+      for (auto a = backend::row_begin(K_loc, i); a; ++a) {
         char pj = prm.pmask[a.col()];
 
         if (pi) {
@@ -284,7 +284,7 @@ class DistributedSchurPressureCorrection
         }
       }
 
-      for (auto a = row_begin(K_rem, i); a; ++a) {
+      for (auto a = backend::row_begin(K_rem, i); a; ++a) {
         char pj = rmask[a.col()];
 
         if (pi) {
@@ -342,7 +342,7 @@ class DistributedSchurPressureCorrection
         up_rem_head = Kup_rem->ptr[ci];
       }
 
-      for (auto a = row_begin(K_loc, i); a; ++a) {
+      for (auto a = backend::row_begin(K_loc, i); a; ++a) {
         ptrdiff_t j = a.col();
         value_type v = a.value();
         char pj = prm.pmask[j];
@@ -374,7 +374,7 @@ class DistributedSchurPressureCorrection
         }
       }
 
-      for (auto a = row_begin(K_rem, i); a; ++a) {
+      for (auto a = backend::row_begin(K_rem, i); a; ++a) {
         ptrdiff_t j = a.col();
         value_type v = a.value();
         char pj = rmask[j];

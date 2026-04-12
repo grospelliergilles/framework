@@ -50,7 +50,7 @@ class DistributedSkylineLUDirectSolver
 
   typedef Alina::solver::SkylineLUSolver<value_type> Solver;
   typedef typename Solver::params params;
-  typedef backend::CSRMatrix<value_type> build_matrix;
+  typedef CSRMatrix<value_type> build_matrix;
 
   /// Constructor.
   template <class Matrix>

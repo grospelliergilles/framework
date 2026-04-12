@@ -52,9 +52,9 @@ struct DistributedPMISAggregation
   typedef typename math::scalar_of<value_type>::type scalar_type;
   typedef DistributedMatrix<Backend> matrix;
   typedef CommunicationPattern<Backend> CommPattern;
-  typedef backend::CSRMatrix<value_type> build_matrix;
+  typedef CSRMatrix<value_type> build_matrix;
   typedef backend::BuiltinBackend<char> bool_backend;
-  typedef backend::CSRMatrix<char> bool_matrix;
+  typedef CSRMatrix<char> bool_matrix;
 
   struct params
   {
@@ -344,7 +344,7 @@ struct DistributedPMISAggregation
   conn_strength(const DistributedMatrix<B>& A, scalar_type eps_strong)
   {
     typedef typename B::value_type val_type;
-    typedef backend::CSRMatrix<val_type> B_matrix;
+    typedef CSRMatrix<val_type> B_matrix;
 
     ARCANE_ALINA_TIC("conn_strength");
     ptrdiff_t n = A.loc_rows();
@@ -355,7 +355,7 @@ struct DistributedPMISAggregation
 
     scalar_type eps_squared = eps_strong * eps_strong;
 
-    auto d = backend::diagonal(A_loc);
+    auto d = diagonal(A_loc);
     backend::numa_vector<val_type>& D = *d;
 
     std::vector<val_type> D_loc(C.send.count());
@@ -1170,7 +1170,7 @@ struct DistributedAggregationCoarsening
 {
   typedef typename Backend::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
-  typedef backend::CSRMatrix<value_type> build_matrix;
+  typedef CSRMatrix<value_type> build_matrix;
 
   struct params
   {
@@ -1250,7 +1250,7 @@ struct DistributedSmoothedAggregationCoarsening
 {
   typedef typename Backend::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
-  typedef backend::CSRMatrix<value_type> build_matrix;
+  typedef CSRMatrix<value_type> build_matrix;
 
   struct params
   {
@@ -1303,7 +1303,7 @@ struct DistributedSmoothedAggregationCoarsening
   transfer_operators(const DistributedMatrix<Backend>& A)
   {
     typedef DistributedMatrix<Backend> DM;
-    typedef backend::CSRMatrix<char> bool_matrix;
+    typedef CSRMatrix<char> bool_matrix;
 
     DistributedPMISAggregation<Backend> aggr(A, prm.aggr);
     prm.aggr.eps_strong *= 0.5;

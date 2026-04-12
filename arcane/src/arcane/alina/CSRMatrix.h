@@ -31,7 +31,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::backend
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -39,7 +39,7 @@ namespace Arcane::Alina::backend
 /*!
  * \brief Sparse matrix stored in CSR (Compressed Sparse Row) format.
  */
-template <typename val_t = double, typename col_t = ptrdiff_t, typename ptr_t = col_t>
+template <typename val_t, typename col_t, typename ptr_t>
 struct CSRMatrix
 {
   typedef val_t value_type;
@@ -330,7 +330,7 @@ struct CSRMatrix
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::backend
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

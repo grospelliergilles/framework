@@ -85,7 +85,7 @@ struct RelaxationAsBlock
     type(const Matrix& A,
          const params& prm = params(),
          const backend_params& bprm = backend_params())
-    : base(*std::make_shared<typename backend::CSRMatrix<BlockType, col_type, ptr_type>>(adapter::block_matrix<BlockType>(A)), prm, bprm)
+    : base(*std::make_shared<CSRMatrix<BlockType, col_type, ptr_type>>(adapter::block_matrix<BlockType>(A)), prm, bprm)
     , nrows(backend::rows(A) / math::static_rows<BlockType>::value)
     {}
 
@@ -316,12 +316,12 @@ class ChebyshevRelaxation
   ChebyshevRelaxation(const Matrix& A, const params& prm,
                       const typename Backend::params& backend_prm)
   : prm(prm)
-  , p(Backend::create_vector(rows(A), backend_prm))
-  , r(Backend::create_vector(rows(A), backend_prm))
+  , p(Backend::create_vector(backend::rows(A), backend_prm))
+  , r(Backend::create_vector(backend::rows(A), backend_prm))
   {
     scalar_type hi, lo;
 
-    using backend::spectral_radius;
+    //using spectral_radius;
 
     if (prm.scale) {
       M = Backend::copy_vector(diagonal(A, /*invert*/ true), backend_prm);
@@ -694,7 +694,7 @@ struct GaussSeidelRelaxation
       for (ptrdiff_t i = beg; i != end; i += inc) {
         ptrdiff_t l = level[i];
 
-        for (auto a = row_begin(A, i); a; ++a) {
+        for (auto a = backend::row_begin(A, i); a; ++a) {
           ptrdiff_t c = a.col();
 
           if (forward) {
@@ -754,7 +754,7 @@ struct GaussSeidelRelaxation
           thread_rows[tid] += end - beg;
           for (ptrdiff_t i = beg; i < end; ++i) {
             ptrdiff_t j = order[i];
-            thread_cols[tid] += row_nonzeros(A, j);
+            thread_cols[tid] += backend::row_nonzeros(A, j);
           }
         }
       }
@@ -779,7 +779,7 @@ struct GaussSeidelRelaxation
 
             ord[tid].push_back(i);
 
-            for (auto a = row_begin(A, i); a; ++a) {
+            for (auto a = backend::row_begin(A, i); a; ++a) {
               col[tid].push_back(a.col());
               val[tid].push_back(a.value());
             }
@@ -1923,7 +1923,7 @@ struct SPAI0Relaxation
   template <class Matrix>
   SPAI0Relaxation(const Matrix& A, const params&, const typename Backend::params& backend_prm)
   {
-    const size_t n = rows(A);
+    const size_t n = backend::rows(A);
 
     auto m = std::make_shared<backend::numa_vector<value_type>>(n, false);
 
@@ -2049,7 +2049,7 @@ struct SPAI1Relaxation
         for (ptrdiff_t j = row_beg; j < row_end; ++j) {
           ptrdiff_t c = A.col[j];
 
-          for (auto a = row_begin(A, c); a; ++a)
+          for (auto a = backend::row_begin(A, c); a; ++a)
             B[marker[a.col()] + J.size() * (j - row_beg)] = a.value();
         }
 

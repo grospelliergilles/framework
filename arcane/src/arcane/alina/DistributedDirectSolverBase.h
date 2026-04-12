@@ -44,7 +44,7 @@ class DistributedDirectSolverBase
 
   typedef typename math::scalar_of<value_type>::type scalar_type;
   typedef typename math::rhs_of<value_type>::type rhs_type;
-  typedef backend::CSRMatrix<value_type> build_matrix;
+  typedef CSRMatrix<value_type> build_matrix;
 
   DistributedDirectSolverBase() {}
 

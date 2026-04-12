@@ -218,7 +218,7 @@ class DistributedSubDomainDeflation
             const backend_params& bprm = backend_params())
   {
     ARCANE_ALINA_TIC("setup deflation");
-    typedef backend::CSRMatrix<value_type, ptrdiff_t> build_matrix;
+    typedef CSRMatrix<value_type, ptrdiff_t> build_matrix;
 
     // Lets see how many deflation vectors are there.
     std::vector<ptrdiff_t> dv_size(comm.size);

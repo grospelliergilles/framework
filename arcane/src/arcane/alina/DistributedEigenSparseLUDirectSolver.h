@@ -53,7 +53,7 @@ class DistributedEigenSparseLUDirectSolver
   using EigenMatrix = Eigen::SparseMatrix<value_type, Eigen::ColMajor, int>;
   using Solver = EigenSolver<Eigen::SparseLU<EigenMatrix>>;
   typedef typename Solver::params params;
-  typedef backend::CSRMatrix<value_type> build_matrix;
+  typedef CSRMatrix<value_type> build_matrix;
 
   /// Constructor.
   template <class Matrix>

@@ -202,14 +202,14 @@ struct DistributedSPAI0Relaxation
   DistributedSPAI0Relaxation(const DistributedMatrix<Backend>& A,
                              const params&, const backend_params& bprm = backend_params())
   {
-    typedef backend::CSRMatrix<value_type> build_matrix;
+    typedef CSRMatrix<value_type> build_matrix;
 
     const ptrdiff_t n = A.loc_rows();
     const build_matrix& A_loc = *A.local();
     const build_matrix& A_rem = *A.remote();
 
     auto m = std::make_shared<backend::numa_vector<value_type>>(n, false);
-    typedef backend::CSRMatrix<value_type> build_matrix;
+    typedef CSRMatrix<value_type> build_matrix;
 
 #pragma omp parallel for
     for (ptrdiff_t i = 0; i < n; ++i) {

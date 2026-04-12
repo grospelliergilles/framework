@@ -157,10 +157,10 @@ int main(int argc, char* argv[])
 
   if (world.rank == 0) {
     if (world.size == 1) {
-      typedef Alina::backend::CSRMatrix<double> matrix;
+      typedef Alina::CSRMatrix<double> matrix;
       matrix A(std::tie(chunk, ptr, col, val));
       prof.tic("openmp product");
-      auto B = Alina::backend::product(A, A);
+      auto B = product(A, A);
       prof.toc("openmp product");
     }
 

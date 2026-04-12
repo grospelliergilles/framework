@@ -46,10 +46,130 @@
 #include <arcane/alina/MatrixOperationsImpl.h>
 #include <arcane/alina/CSRMatrix.h>
 
+
+namespace Arcane::Alina::backend
+{
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::backend
+/** NUMA-aware vector container. */
+template <class T>
+class numa_vector
+{
+ public:
+
+  typedef T value_type;
+
+  numa_vector()
+  : n(0)
+  , p(0)
+  {}
+
+  numa_vector(size_t n, bool init = true)
+  : n(n)
+  , p(new T[n])
+  {
+    if (init) {
+#pragma omp parallel for
+      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i)
+        p[i] = math::zero<T>();
+    }
+  }
+
+  void resize(size_t size, bool init = true)
+  {
+    delete[] p;
+    p = 0;
+
+    n = size;
+    p = new T[n];
+
+    if (init) {
+#pragma omp parallel for
+      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i)
+        p[i] = math::zero<T>();
+    }
+  }
+
+  template <class Vector>
+  numa_vector(const Vector& other,
+              typename std::enable_if<!std::is_integral<Vector>::value, int>::type = 0)
+  : n(other.size())
+  , p(new T[n])
+  {
+#pragma omp parallel for
+    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i)
+      p[i] = other[i];
+  }
+
+  template <class Iterator>
+  numa_vector(Iterator beg, Iterator end)
+  : n(std::distance(beg, end))
+  , p(new T[n])
+  {
+    static_assert(std::is_same<
+                  std::random_access_iterator_tag,
+                  typename std::iterator_traits<Iterator>::iterator_category>::value,
+                  "Iterator has to be random access");
+
+#pragma omp parallel for
+    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i)
+      p[i] = beg[i];
+  }
+
+  ~numa_vector()
+  {
+    delete[] p;
+    p = 0;
+  }
+
+  inline size_t size() const
+  {
+    return n;
+  }
+
+  inline const T& operator[](size_t i) const
+  {
+    return p[i];
+  }
+
+  inline T& operator[](size_t i)
+  {
+    return p[i];
+  }
+
+  inline const T* data() const
+  {
+    return p;
+  }
+
+  inline T* data()
+  {
+    return p;
+  }
+
+  void swap(numa_vector& other)
+  {
+    std::swap(n, other.n);
+    std::swap(p, other.p);
+  }
+
+ private:
+
+  size_t n;
+  T* p;
+};
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina::backend
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -59,7 +179,7 @@ namespace Arcane::Alina::backend
 template <typename V, typename C, typename P>
 void sort_rows(CSRMatrix<V, C, P>& A)
 {
-  const size_t n = rows(A);
+  const size_t n = A.nrows;
 
 #pragma omp parallel for
   for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i) {
@@ -74,11 +194,12 @@ void sort_rows(CSRMatrix<V, C, P>& A)
 
 /// Transpose of a sparse matrix.
 template <typename V, typename C, typename P>
-std::shared_ptr<CSRMatrix<V, C, P>> transpose(const CSRMatrix<V, C, P>& A)
+std::shared_ptr<CSRMatrix<V, C, P>>
+transpose(const CSRMatrix<V, C, P>& A)
 {
-  const size_t n = rows(A);
-  const size_t m = cols(A);
-  const size_t nnz = nonzeros(A);
+  const size_t n = backend::rows(A);
+  const size_t m = backend::cols(A);
+  const size_t nnz = backend::nonzeros(A);
 
   auto T = std::make_shared<CSRMatrix<V, C, P>>();
   T->set_size(m, n, true);
@@ -230,8 +351,8 @@ sum(Val alpha, const CSRMatrix<Val, Col, Ptr>& A, Val beta,
 /*---------------------------------------------------------------------------*/
 
 /// Scale matrix values.
-template <class Val, class Col, class Ptr, class T>
-void scale(CSRMatrix<Val, Col, Ptr>& A, T s)
+template <class Val, class Col, class Ptr, class T> void
+scale(CSRMatrix<Val, Col, Ptr>& A, T s)
 {
   ptrdiff_t n = backend::rows(A);
 
@@ -416,123 +537,12 @@ pointwise_matrix(const CSRMatrix<value_type, col_type, ptr_type>& A, unsigned bl
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-/** NUMA-aware vector container. */
-template <class T>
-class numa_vector
-{
- public:
-
-  typedef T value_type;
-
-  numa_vector()
-  : n(0)
-  , p(0)
-  {}
-
-  numa_vector(size_t n, bool init = true)
-  : n(n)
-  , p(new T[n])
-  {
-    if (init) {
-#pragma omp parallel for
-      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i)
-        p[i] = math::zero<T>();
-    }
-  }
-
-  void resize(size_t size, bool init = true)
-  {
-    delete[] p;
-    p = 0;
-
-    n = size;
-    p = new T[n];
-
-    if (init) {
-#pragma omp parallel for
-      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i)
-        p[i] = math::zero<T>();
-    }
-  }
-
-  template <class Vector>
-  numa_vector(const Vector& other,
-              typename std::enable_if<!std::is_integral<Vector>::value, int>::type = 0)
-  : n(other.size())
-  , p(new T[n])
-  {
-#pragma omp parallel for
-    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i)
-      p[i] = other[i];
-  }
-
-  template <class Iterator>
-  numa_vector(Iterator beg, Iterator end)
-  : n(std::distance(beg, end))
-  , p(new T[n])
-  {
-    static_assert(std::is_same<
-                  std::random_access_iterator_tag,
-                  typename std::iterator_traits<Iterator>::iterator_category>::value,
-                  "Iterator has to be random access");
-
-#pragma omp parallel for
-    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i)
-      p[i] = beg[i];
-  }
-
-  ~numa_vector()
-  {
-    delete[] p;
-    p = 0;
-  }
-
-  inline size_t size() const
-  {
-    return n;
-  }
-
-  inline const T& operator[](size_t i) const
-  {
-    return p[i];
-  }
-
-  inline T& operator[](size_t i)
-  {
-    return p[i];
-  }
-
-  inline const T* data() const
-  {
-    return p;
-  }
-
-  inline T* data()
-  {
-    return p;
-  }
-
-  void swap(numa_vector& other)
-  {
-    std::swap(n, other.n);
-    std::swap(p, other.p);
-  }
-
- private:
-
-  size_t n;
-  T* p;
-};
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
 /// Diagonal of a matrix
-template <typename V, typename C, typename P>
-std::shared_ptr<numa_vector<V>> diagonal(const CSRMatrix<V, C, P>& A, bool invert = false)
+template <typename V, typename C, typename P> std::shared_ptr<backend::numa_vector<V>>
+diagonal(const CSRMatrix<V, C, P>& A, bool invert = false)
 {
-  const size_t n = rows(A);
-  auto dia = std::make_shared<numa_vector<V>>(n, false);
+  const size_t n = A.nrows;
+  auto dia = std::make_shared<backend::numa_vector<V>>(n, false);
 
 #pragma omp parallel for
   for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i) {
@@ -699,7 +709,18 @@ spectral_radius(const Matrix& A, int power_iters = 0)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-/**
+} // namespace Arcane::Alina
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+namespace Arcane::Alina::backend
+{
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+/*!
  * The builtin backend does not have any dependencies, and uses OpenMP for
  * parallelization. Matrices are stored in the CRS format, and vectors are
  * instances of ``std::vector<value_type>``. There is no usual overhead of
@@ -1140,7 +1161,7 @@ struct copy_impl<Vec1, Vec2,
 
 template <class MatrixValue, class Vector, bool IsConst>
 struct reinterpret_as_rhs_impl<MatrixValue, Vector, IsConst,
-typename std::enable_if<is_builtin_vector<Vector>::value>::type>
+                               typename std::enable_if<is_builtin_vector<Vector>::value>::type>
 {
   typedef typename backend::value_type<Vector>::type src_type;
   typedef typename math::scalar_of<src_type>::type scalar_type;
@@ -1164,10 +1185,10 @@ typename std::enable_if<is_builtin_vector<Vector>::value>::type>
 namespace detail
 {
 
-template <typename V, typename C, typename P>
-struct use_builtin_matrix_ops<CSRMatrix<V, C, P>>
-: std::true_type
-{};
+  template <typename V, typename C, typename P>
+  struct use_builtin_matrix_ops<CSRMatrix<V, C, P>>
+  : std::true_type
+  {};
 
 } // namespace detail
 
