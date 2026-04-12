@@ -24,7 +24,8 @@ typedef Arcane::Alina::backend::EigenBackend<double> Backend;
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/StaticMatrix.h>
 #include <arcane/alina/Adapters.h>
-using Backend = Arcane::Alina::backend::BuiltinBackend<double>;
+//! Use 32 bit indexing for backend.
+using Backend = Arcane::Alina::backend::BuiltinBackend<double, Arcane::Int32>;
 #endif
 
 #include <arcane/utils/PlatformUtils.h>
