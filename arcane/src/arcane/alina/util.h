@@ -351,7 +351,7 @@ namespace detail
 
 // Put parameter in form "key=value" into a boost::property_tree::ptree
 extern "C++" ARCANE_ALINA_EXPORT void
-put(PropertyTree& ptree, const std::string& param);
+putKeyValue(PropertyTree& ptree, const std::string& param);
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
