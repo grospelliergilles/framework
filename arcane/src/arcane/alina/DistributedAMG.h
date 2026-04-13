@@ -80,7 +80,7 @@ class DistributedAMG
      * lower than this threshold, then the hierarchy construction is
      * stopped and the linear system is solved directly at this level.
      */
-    unsigned coarse_enough;
+    Int32 coarse_enough = DirectSolver::coarse_enough();
 
     /*!
      * \brief Use direct solver at the coarsest level.
@@ -88,7 +88,7 @@ class DistributedAMG
      * When set, the coarsest level is solved with a direct solver.
      * Otherwise a smoother is used as a solver.
      */
-    bool direct_coarse;
+    bool direct_coarse = true;
 
     /*!
      * \brief Maximum number of levels.
@@ -97,33 +97,24 @@ class DistributedAMG
      * greater that `coarse_enough`, then the coarsest level will not
      * be solved exactly, but will use a smoother.
      */
-    unsigned max_levels;
+    Int32 max_levels = std::numeric_limits<Int32>::max();
 
     /// Number of pre-relaxations.
-    unsigned npre;
+    Int32 npre = 1;
 
     /// Number of post-relaxations.
-    unsigned npost;
+    Int32 npost = 1;
 
     /// Number of cycles (1 for V-cycle, 2 for W-cycle, etc.).
-    unsigned ncycle;
+    Int32 ncycle = 1;
 
     /// Number of cycles to make as part of preconditioning.
-    unsigned pre_cycles;
+    Int32 pre_cycles = 1;
 
     /// Keep matrices in internal format to allow for quick rebuild of the hierarchy
-    bool allow_rebuild;
+    bool allow_rebuild = false;
 
-    params()
-    : coarse_enough(DirectSolver::coarse_enough())
-    , direct_coarse(true)
-    , max_levels(std::numeric_limits<unsigned>::max())
-    , npre(1)
-    , npost(1)
-    , ncycle(1)
-    , pre_cycles(1)
-    , allow_rebuild(false)
-    {}
+    params() = default;
 
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, coarsening)

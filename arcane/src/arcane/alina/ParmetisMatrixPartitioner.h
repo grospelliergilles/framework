@@ -51,7 +51,7 @@ struct ParmetisMatrixPartitioner
   struct params
   {
     bool shrink;
-    ptrdiff_t min_per_proc;
+    int min_per_proc;
     int shrink_ratio;
 
     params()

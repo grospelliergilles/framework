@@ -50,7 +50,7 @@ struct SimpleMatrixPartitioner
   struct params
   {
     bool enable = false;
-    ptrdiff_t min_per_proc = 10000;
+    int min_per_proc = 10000;
     int shrink_ratio = 8;
 
     params() = default;
