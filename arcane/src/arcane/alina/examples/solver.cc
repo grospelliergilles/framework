@@ -103,8 +103,8 @@ block_solve(const Alina::PropertyTree& prm,
     rhs_type const* fptr = reinterpret_cast<rhs_type const*>(&rhs[0]);
     rhs_type* xptr = reinterpret_cast<rhs_type*>(&x[0]);
 
-    Alina::backend::numa_vector<rhs_type> F(perm(Alina::make_iterator_range(fptr, fptr + rows / B)));
-    Alina::backend::numa_vector<rhs_type> X(perm(Alina::make_iterator_range(xptr, xptr + rows / B)));
+    Alina::backend::numa_vector<rhs_type> F(perm(SmallSpan<const rhs_type>(fptr, rows / B)));
+    Alina::backend::numa_vector<rhs_type> X(perm(SmallSpan<rhs_type>(xptr, rows / B)));
 
     prof.tic("solve");
     info = solve(F, X);

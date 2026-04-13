@@ -128,8 +128,8 @@ int main(int argc, char *argv[]) {
     // Reinterpret both the RHS and the solution vectors as block-valued:
     auto f_ptr = reinterpret_cast<dvec_type*>(f.data());
     auto x_ptr = reinterpret_cast<dvec_type*>(x.data());
-    auto F = Alina::make_iterator_range(f_ptr, f_ptr + rows / 4);
-    auto X = Alina::make_iterator_range(x_ptr, x_ptr + rows / 4);
+    auto F = SmallSpan<dvec_type>(f_ptr, rows / 4);
+    auto X = SmallSpan<dvec_type>(x_ptr, rows / 4);
 
     prof.tic("solve");
     Alina::SolverResult r = solve(Ab, F, X);

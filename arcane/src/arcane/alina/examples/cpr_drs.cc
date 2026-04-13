@@ -123,7 +123,7 @@ void solve_block_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::Pro
   size_t n = Alina::backend::rows(K) / B;
   auto rhs_ptr = reinterpret_cast<const rhs_type*>(rhs.data());
 
-  auto f = Alina::make_iterator_range(rhs_ptr, rhs_ptr + n);
+  SmallSpan<const rhs_type> f(rhs_ptr, n);
 
   auto x = SBackend::create_vector(n, bprm);
   Alina::backend::clear(*x);

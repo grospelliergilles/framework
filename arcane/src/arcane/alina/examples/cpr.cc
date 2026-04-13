@@ -81,7 +81,7 @@ void solve_block_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::Pro
   size_t n = Alina::backend::rows(K) / B;
 
   prof.tic("solve");
-  Alina::SolverResult r = solve(Alina::make_iterator_range(rhs_ptr, rhs_ptr + n), x);
+  Alina::SolverResult r = solve(SmallSpan<const rhs_type>(rhs_ptr, n), x);
   prof.toc("solve");
 
   std::cout << "Iterations: " << r.nbIteration() << std::endl

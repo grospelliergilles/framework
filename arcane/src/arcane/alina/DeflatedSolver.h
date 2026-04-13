@@ -135,9 +135,8 @@ class DeflatedSolver
     precondition(prm.nvec > 0 && prm.vec != nullptr, "Deflation vectors are not set!");
 
     for (int i = 0; i < prm.nvec; ++i) {
-      Z[i] = backend_type::copy_vector(
-      std::make_shared<backend::numa_vector<scalar_type>>(make_iterator_range(prm.vec + n * i, prm.vec + n * (i + 1))),
-      bprm);
+      SmallSpan<scalar_type> irange(prm.vec + n * i, n);
+      Z[i] = backend_type::copy_vector(std::make_shared<backend::numa_vector<scalar_type>>(irange), bprm);
     }
 
     std::vector<scalar_type> AZ(prm.nvec);

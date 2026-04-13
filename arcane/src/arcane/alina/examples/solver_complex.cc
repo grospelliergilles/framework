@@ -47,8 +47,8 @@ solve(const Matrix& A,
 
   rhs_type const* fptr = reinterpret_cast<rhs_type const*>(&f[0]);
   rhs_type* xptr = reinterpret_cast<rhs_type*>(&x[0]);
-  Alina::iterator_range<rhs_type const*> frng(fptr, fptr + n);
-  Alina::iterator_range<rhs_type*> xrng(xptr, xptr + n);
+  SmallSpan<const rhs_type> frng(fptr, n);
+  SmallSpan<rhs_type> xrng(xptr, n);
 
   using Solver = Alina::PreconditionedSolver<Precond, Alina::SolverRuntime<Backend>>;
 
