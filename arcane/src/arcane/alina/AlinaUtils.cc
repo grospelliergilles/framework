@@ -29,7 +29,7 @@ namespace Arcane::Alina
 void PropertyTree::
 read_json(const std::string& filename)
 {
-  boost::property_tree::ptree& p = *this;
+  boost::property_tree::ptree& p = *m_property_tree;
   boost::property_tree::json_parser::read_json(filename, p);
 }
 
