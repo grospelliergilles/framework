@@ -45,71 +45,69 @@ THE SOFTWARE.
 
 using namespace Arcane;
 
-int main(int argc, char *argv[]) {
-    // The matrix and the RHS file names should be in the command line options:
-    if (argc < 3) {
-        std::cerr << "Usage: " << argv[0] << " <matrix.mtx> <rhs.mtx>" << std::endl;
-        return 1;
-    }
+int main(int argc, char* argv[])
+{
+  // The matrix and the RHS file names should be in the command line options:
+  if (argc < 3) {
+    std::cerr << "Usage: " << argv[0] << " <matrix.mtx> <rhs.mtx>" << std::endl;
+    return 1;
+  }
 
-    // The profiler:
-    auto& prof = Alina::Profiler::globalProfiler();
+  // The profiler:
+  auto& prof = Alina::Profiler::globalProfiler();
 
-    // Read the system matrix and the RHS:
-    ptrdiff_t rows, cols;
-    std::vector<ptrdiff_t> ptr, col;
-    std::vector<double> val, rhs;
+  // Read the system matrix and the RHS:
+  ptrdiff_t rows, cols;
+  std::vector<ptrdiff_t> ptr, col;
+  std::vector<double> val, rhs;
 
-    prof.tic("read");
-    std::tie(rows, cols) = Alina::IO::mm_reader(argv[1])(ptr, col, val);
-    std::cout << "Matrix " << argv[1] << ": " << rows << "x" << cols << std::endl;
+  prof.tic("read");
+  std::tie(rows, cols) = Alina::IO::mm_reader(argv[1])(ptr, col, val);
+  std::cout << "Matrix " << argv[1] << ": " << rows << "x" << cols << std::endl;
 
-    std::tie(rows, cols) = Alina::IO::mm_reader(argv[2])(rhs);
-    std::cout << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
-    prof.toc("read");
+  std::tie(rows, cols) = Alina::IO::mm_reader(argv[2])(rhs);
+  std::cout << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
+  prof.toc("read");
 
-    // We use the tuple of CRS arrays to represent the system matrix.
-    // Note that std::tie creates a tuple of references, so no data is actually
-    // copied here:
-    auto A = std::tie(rows, ptr, col, val);
+  // We use the tuple of CRS arrays to represent the system matrix.
+  // Note that std::tie creates a tuple of references, so no data is actually
+  // copied here:
+  auto A = std::tie(rows, ptr, col, val);
 
-    // Compose the solver type
-    //   the solver backend:
-    typedef Alina::backend::BuiltinBackend<double> SBackend;
-    //   the preconditioner backend:
+  // Compose the solver type
+  //   the solver backend:
+  typedef Alina::backend::BuiltinBackend<double> SBackend;
+  //   the preconditioner backend:
 #ifdef MIXED_PRECISION
-    typedef Alina::backend::BuiltinBackend<float> PBackend;
+  typedef Alina::backend::BuiltinBackend<float> PBackend;
 #else
-    typedef Alina::backend::BuiltinBackend<double> PBackend;
+  typedef Alina::backend::BuiltinBackend<double> PBackend;
 #endif
-    
-    typedef Alina::PreconditionedSolver<
-        Alina::AMG<
-            PBackend,
-            Alina::SmoothedAggregationCoarserning,
-            Alina::SPAI0Relaxation
-            >,
-        Alina::BiCGStabSolver<SBackend>
-        > Solver;
 
-    // Initialize the solver with the system matrix:
-    prof.tic("setup");
-    Solver solve(A);
-    prof.toc("setup");
+  using Solver = Alina::PreconditionedSolver<Alina::AMG<
+                                             PBackend,
+                                             Alina::SmoothedAggregationCoarserning,
+                                             Alina::SPAI0Relaxation>,
+                                             Alina::BiCGStabSolver<SBackend>>;
 
-    // Show the mini-report on the constructed solver:
-    std::cout << solve << std::endl;
+  // Initialize the solver with the system matrix:
+  prof.tic("setup");
+  Solver solve(A);
+  prof.toc("setup");
 
-    // Solve the system with the zero initial approximation:
-    std::vector<double> x(rows, 0.0);
+  // Show the mini-report on the constructed solver:
+  std::cout << solve << std::endl;
 
-    prof.tic("solve");
-    Alina::SolverResult r = solve(A, rhs, x);
-    prof.toc("solve");
+  // Solve the system with the zero initial approximation:
+  std::vector<double> x(rows, 0.0);
 
-    // Output the number of iterations, the relative error,
-    // and the profiling data:
-    std::cout << "Iters: " << r.nbIteration() << std::endl
-              << "Error: " << r.residual() << std::endl
-              << prof << std::endl;
+  prof.tic("solve");
+  Alina::SolverResult r = solve(A, rhs, x);
+  prof.toc("solve");
+
+  // Output the number of iterations, the relative error,
+  // and the profiling data:
+  std::cout << "Iters: " << r.nbIteration() << std::endl
+            << "Error: " << r.residual() << std::endl
+            << prof << std::endl;
 }

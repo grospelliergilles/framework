@@ -175,6 +175,17 @@ void PropertyTree::put(const std::string& path, void* value)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+void PropertyTree::
+_addChild(const std::string& path, const char* name,
+          const PropertyTree& obj)
+{
+  boost::property_tree::ptree& p = this->toBoostPTree();
+  p.add_child(std::string(path) + name, obj.toBoostPTree());
+}
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 void check_params(const PropertyTree& ptree,
                   const std::set<std::string>& names)
 {
@@ -225,6 +236,18 @@ void put(PropertyTree& ptree, const std::string& param)
   if (eq_pos == std::string::npos)
     throw std::invalid_argument("param in put() should have \"key=value\" format!");
   p.put(param.substr(0, eq_pos), param.substr(eq_pos + 1));
+}
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+detail::empty_params::
+empty_params(const PropertyTree& ap)
+{
+  const boost::property_tree::ptree& p = ap.toBoostPTree();
+  for (const auto& v : p) {
+    std::cerr << "Alina: unknown parameter " << v.first << "\n";
+  }
 }
 
 /*---------------------------------------------------------------------------*/

@@ -184,6 +184,9 @@ class ARCANE_ALINA_EXPORT PropertyTree
   bool erase(const char* name);
   size_t count(const char* name) const;
 
+  // NOTE: Does not seems to be used.
+  void _addChild(const std::string& path, const char* name, const PropertyTree& obj);
+
  public:
 
   void read_json(const std::string& filename);
@@ -203,19 +206,15 @@ class ARCANE_ALINA_EXPORT PropertyTree
 
 namespace detail
 {
-
-  struct empty_params
+  //! Class to handle empty parameters list
+  class ARCANE_ALINA_EXPORT empty_params
   {
+   public:
+
     empty_params() {}
 
-    empty_params(const PropertyTree& ap)
-    {
-      const boost::property_tree::ptree& p = ap.toBoostPTree();
-      for (const auto& v : p) {
-        std::cerr << "Alina: unknown parameter " << v.first << "\n";
-      }
-    }
-    void get(boost::property_tree::ptree&, const std::string&) const {}
+    empty_params(const PropertyTree& ap);
+    void get(PropertyTree&, const std::string&) const {}
   };
 
 } // namespace detail
@@ -317,17 +316,16 @@ namespace detail
                                   const std::string& path,
                                   const char* name, const T& obj)
   {
-    boost::property_tree::ptree& p = ap.toBoostPTree();
-    obj.get(p, std::string(path) + name + ".");
+    obj.get(ap, std::string(path) + name + ".");
   }
 
+  // NOTE GG: This methods is not used in the tests.
   template <>
   inline void params_export_child(PropertyTree& ap,
                                   const std::string& path, const char* name,
-                                  const boost::property_tree::ptree& obj)
+                                  const PropertyTree& obj)
   {
-    boost::property_tree::ptree& p = ap.toBoostPTree();
-    p.add_child(std::string(path) + name, obj);
+    ap._addChild(path, name, obj);
   }
 
 } // namespace detail
