@@ -231,8 +231,13 @@ check_params(const std::set<std::string>& names,
   }
 }
 
-void putKeyValue(PropertyTree& ptree, const std::string& param)
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+void PropertyTree::
+putKeyValue(const std::string& param)
 {
+  PropertyTree& ptree = *this;
   boost::property_tree::ptree& p = ptree.toBoostPTree();
   size_t eq_pos = param.find('=');
   if (eq_pos == std::string::npos)

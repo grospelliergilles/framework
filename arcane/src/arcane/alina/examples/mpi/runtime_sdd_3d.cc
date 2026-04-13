@@ -187,7 +187,7 @@ int main(int argc, char* argv[])
 
   if (vm.count("prm")) {
     for (const std::string& v : vm["prm"].as<std::vector<std::string>>()) {
-      Alina::putKeyValue(prm, v);
+      prm.putKeyValue(v);
     }
   }
 

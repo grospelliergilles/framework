@@ -95,6 +95,21 @@ class ARCANE_ALINA_EXPORT SolverResult
 namespace Arcane::Alina
 {
 
+namespace detail
+{
+  //! Class to handle empty parameters list
+  class ARCANE_ALINA_EXPORT empty_params
+  {
+   public:
+
+    empty_params() {}
+
+    empty_params(const PropertyTree& ap);
+    void get(PropertyTree&, const std::string&) const {}
+  };
+
+} // namespace detail
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -103,6 +118,7 @@ class ARCANE_ALINA_EXPORT PropertyTree
 {
  public:
 
+  friend detail::empty_params;
   using BoostPTree = boost::property_tree::ptree;
 
  public:
@@ -180,6 +196,9 @@ class ARCANE_ALINA_EXPORT PropertyTree
   }
 #endif
 
+  // Put parameter in form "key=value" into a boost::property_tree::ptree
+  void putKeyValue(const std::string& param);
+
   PropertyTree get_child_empty(const std::string& path) const;
   bool erase(const char* name);
   size_t count(const char* name) const;
@@ -196,7 +215,7 @@ class ARCANE_ALINA_EXPORT PropertyTree
   void check_params(const std::set<std::string>& names) const;
   void check_params(const std::set<std::string>& names, const std::set<std::string>& opt_names) const;
 
- public:
+ private:
 
   //TODO: need remove
   const BoostPTree& toBoostPTree() const { return *m_property_tree; }
@@ -208,21 +227,6 @@ class ARCANE_ALINA_EXPORT PropertyTree
   BoostPTree* m_property_tree = nullptr;
   bool m_is_own = false;
 };
-
-namespace detail
-{
-  //! Class to handle empty parameters list
-  class ARCANE_ALINA_EXPORT empty_params
-  {
-   public:
-
-    empty_params() {}
-
-    empty_params(const PropertyTree& ap);
-    void get(PropertyTree&, const std::string&) const {}
-  };
-
-} // namespace detail
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -348,10 +352,6 @@ namespace detail
 #define ARCANE_ALINA_PARAM_UNKNOWN(name) \
   std::cerr << "AMGCL WARNING: unknown parameter " << name << std::endl
 #endif
-
-// Put parameter in form "key=value" into a boost::property_tree::ptree
-extern "C++" ARCANE_ALINA_EXPORT void
-putKeyValue(PropertyTree& ptree, const std::string& param);
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
