@@ -15,6 +15,7 @@
 
 #include "arcane/alina/util.h"
 
+#include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
 /*---------------------------------------------------------------------------*/
@@ -25,16 +26,48 @@ namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
+using BoostPTree = boost::property_tree::ptree;
 
 namespace detail
 {
-  inline const boost::property_tree::ptree& empty_ptree()
+  const BoostPTree& empty_ptree()
   {
-    static const boost::property_tree::ptree p;
+    static const BoostPTree p;
     return p;
   }
 
+  // To access PropertyTree::m_property_tree as 'boost::property_tree::ptree'
+  class PropertyWrapper
+  {
+   public:
+
+    static const BoostPTree& toBoostPTree(const PropertyTree& p)
+    {
+      return *(static_cast<const BoostPTree*>(p.m_property_tree));
+    }
+    static BoostPTree& toBoostPTree(PropertyTree& p)
+    {
+      return *(static_cast<BoostPTree*>(p.m_property_tree));
+    }
+  };
+
 } // namespace detail
+
+namespace
+{
+  const BoostPTree& toBoostPTree(const PropertyTree& p)
+  {
+    return detail::PropertyWrapper::toBoostPTree(p);
+  }
+  const BoostPTree& toBoostPTree(const PropertyTree* p)
+  {
+    return detail::PropertyWrapper::toBoostPTree(*p);
+  }
+  BoostPTree& toBoostPTree(PropertyTree* p)
+  {
+    return detail::PropertyWrapper::toBoostPTree(*p);
+  }
+} // namespace
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -53,23 +86,23 @@ PropertyTree::
 PropertyTree(const PropertyTree& rhs)
 {
   if (rhs.m_is_own) {
-    m_property_tree = new BoostPTree(*rhs.m_property_tree);
+    m_property_tree = new BoostPTree(toBoostPTree(rhs));
     m_is_own = true;
   }
   else {
     m_property_tree = rhs.m_property_tree;
-      m_is_own = false;
+    m_is_own = false;
   }
 }
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-PropertyTree::
+/*PropertyTree::
 PropertyTree(const BoostPTree& x)
 : m_property_tree(new BoostPTree(x))
 , m_is_own(true)
-{}
+{}*/
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -78,7 +111,7 @@ PropertyTree::
 ~PropertyTree()
 {
   if (m_is_own)
-    delete m_property_tree;
+    delete &toBoostPTree(this);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -87,7 +120,7 @@ PropertyTree::
 PropertyTree PropertyTree::
 get_child_empty(const std::string& path) const
 {
-  const BoostPTree& child = m_property_tree->get_child(path, detail::empty_ptree());
+  const BoostPTree& child = toBoostPTree(this).get_child(path, detail::empty_ptree());
   PropertyTree p;
   p.m_property_tree = const_cast<BoostPTree*>(&child);
   p.m_is_own = false;
@@ -100,7 +133,7 @@ get_child_empty(const std::string& path) const
 bool PropertyTree::
 erase(const char* name)
 {
-  return m_property_tree->erase(name);
+  return toBoostPTree(this).erase(name);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -109,7 +142,7 @@ erase(const char* name)
 size_t PropertyTree::
 count(const char* name) const
 {
-  return m_property_tree->count(name);
+  return toBoostPTree(this).count(name);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -118,58 +151,58 @@ count(const char* name) const
 void PropertyTree::
 read_json(const std::string& filename)
 {
-  boost::property_tree::ptree& p = *m_property_tree;
+  BoostPTree& p = toBoostPTree(this);
   boost::property_tree::json_parser::read_json(filename, p);
 }
 
 Int32 PropertyTree::get(const char* param_type, Int32 default_value) const
 {
-  return m_property_tree->get(param_type, default_value);
+  return toBoostPTree(this).get(param_type, default_value);
 }
 Int64 PropertyTree::get(const char* param_type, Int64 default_value) const
 {
-  return m_property_tree->get(param_type, default_value);
+  return toBoostPTree(this).get(param_type, default_value);
 }
 double PropertyTree::get(const char* param_type, double default_value) const
 {
-  return m_property_tree->get(param_type, default_value);
+  return toBoostPTree(this).get(param_type, default_value);
 }
 double* PropertyTree::get(const char* param_type, double* default_value) const
 {
-  return m_property_tree->get(param_type, default_value);
+  return toBoostPTree(this).get(param_type, default_value);
 }
 void* PropertyTree::get(const char* param_type, void* default_value) const
 {
-  return m_property_tree->get(param_type, default_value);
+  return toBoostPTree(this).get(param_type, default_value);
 }
 std::string PropertyTree::get(const char* param_type, const std::string& default_value) const
 {
-  return m_property_tree->get(param_type, default_value);
+  return toBoostPTree(this).get(param_type, default_value);
 }
 
 void PropertyTree::put(const std::string& path, Int32 value)
 {
-  m_property_tree->put(path, value);
+  toBoostPTree(this).put(path, value);
 }
 void PropertyTree::put(const std::string& path, Int64 value)
 {
-  m_property_tree->put(path, value);
+  toBoostPTree(this).put(path, value);
 }
 void PropertyTree::put(const std::string& path, double value)
 {
-  m_property_tree->put(path, value);
+  toBoostPTree(this).put(path, value);
 }
 void PropertyTree::put(const std::string& path, const std::string& value)
 {
-  m_property_tree->put(path, value);
+  toBoostPTree(this).put(path, value);
 }
 void PropertyTree::put(const std::string& path, double* value)
 {
-  m_property_tree->put(path, value);
+  toBoostPTree(this).put(path, value);
 }
 void PropertyTree::put(const std::string& path, void* value)
 {
-  m_property_tree->put(path, value);
+  toBoostPTree(this).put(path, value);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -179,8 +212,8 @@ void PropertyTree::
 _addChild(const std::string& path, const char* name,
           const PropertyTree& obj)
 {
-  boost::property_tree::ptree& p = this->toBoostPTree();
-  p.add_child(std::string(path) + name, obj.toBoostPTree());
+  auto& p = toBoostPTree(this);
+  p.add_child(std::string(path) + name, toBoostPTree(obj));
 }
 
 /*---------------------------------------------------------------------------*/
@@ -189,8 +222,7 @@ _addChild(const std::string& path, const char* name,
 void PropertyTree::
 check_params(const std::set<std::string>& names) const
 {
-  const PropertyTree& ptree = *this;
-  const boost::property_tree::ptree& p = ptree.toBoostPTree();
+  const auto& p = toBoostPTree(this);
 
   for (const auto& n : names) {
     if (!p.count(n)) {
@@ -211,8 +243,7 @@ void PropertyTree::
 check_params(const std::set<std::string>& names,
              const std::set<std::string>& opt_names) const
 {
-  const PropertyTree& ptree = *this;
-  const boost::property_tree::ptree& p = ptree.toBoostPTree();
+  const auto& p = toBoostPTree(this);
 
   for (const auto& n : names) {
     if (!p.count(n)) {
@@ -237,8 +268,7 @@ check_params(const std::set<std::string>& names,
 void PropertyTree::
 putKeyValue(const std::string& param)
 {
-  PropertyTree& ptree = *this;
-  boost::property_tree::ptree& p = ptree.toBoostPTree();
+  auto& p = toBoostPTree(this);
   size_t eq_pos = param.find('=');
   if (eq_pos == std::string::npos)
     throw std::invalid_argument("param in put() should have \"key=value\" format!");
@@ -251,7 +281,7 @@ putKeyValue(const std::string& param)
 detail::empty_params::
 empty_params(const PropertyTree& ap)
 {
-  const boost::property_tree::ptree& p = ap.toBoostPTree();
+  const auto& p = toBoostPTree(ap);
   for (const auto& v : p) {
     std::cerr << "Alina: unknown parameter " << v.first << "\n";
   }

@@ -80,23 +80,9 @@ class ARCANE_ALINA_EXPORT SolverResult
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-// If asked explicitly, or if boost is available, enable
-// using boost::propert_tree::ptree as parameters:
-#include <boost/property_tree/ptree.hpp>
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-namespace Arcane::Alina
-{
-
 namespace detail
 {
+  class PropertyWrapper;
   //! Class to handle empty parameters list
   class ARCANE_ALINA_EXPORT empty_params
   {
@@ -119,13 +105,14 @@ class ARCANE_ALINA_EXPORT PropertyTree
  public:
 
   friend detail::empty_params;
-  using BoostPTree = boost::property_tree::ptree;
+  friend detail::PropertyWrapper;
+  //using BoostPTree = boost::property_tree::ptree;
 
  public:
 
   PropertyTree();
   PropertyTree(const PropertyTree& rhs);
-  explicit PropertyTree(const BoostPTree& x);
+  //explicit PropertyTree(const BoostPTree& x);
   ~PropertyTree();
 
  public:
@@ -156,15 +143,6 @@ class ARCANE_ALINA_EXPORT PropertyTree
     return enum_value;
   }
 
-#if 0
-  // Default template to remove
-  template <typename DataType> auto
-  get(const char* param_type, const DataType& default_value) const
-  {
-    return m_property_tree->get(param_type, default_value);
-  }
-#endif
-
   void put(const std::string& path, Int32 value);
   void put(const std::string& path, Int64 value);
   void put(const std::string& path, size_t value)
@@ -187,15 +165,6 @@ class ARCANE_ALINA_EXPORT PropertyTree
     put(path, ostr.str());
   }
 
-#if 0
-  // Default template to remove
-  template <typename DataType> void
-  put(const std::string& path, const DataType& value)
-  {
-    m_property_tree->put(path, value);
-  }
-#endif
-
   // Put parameter in form "key=value" into a boost::property_tree::ptree
   void putKeyValue(const std::string& param);
 
@@ -217,35 +186,14 @@ class ARCANE_ALINA_EXPORT PropertyTree
 
  private:
 
-  //TODO: need remove
-  const BoostPTree& toBoostPTree() const { return *m_property_tree; }
-  //TODO: need remove
-  BoostPTree& toBoostPTree() { return *m_property_tree; }
-
- private:
-
-  BoostPTree* m_property_tree = nullptr;
+  void* m_property_tree = nullptr;
   bool m_is_own = false;
 };
 
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
 } // namespace Arcane::Alina
 
-namespace boost::property_tree::json_parser
-{
-
-inline void
-read_json(const std::string& filename, Arcane::Alina::PropertyTree& prm)
-{
-  prm.read_json(filename);
-}
-
-} // namespace boost::property_tree::json_parser
-
-  /*---------------------------------------------------------------------------*/
-  /*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #include <arcane/alina/ScopedStreamModifier.h>
 
@@ -262,24 +210,24 @@ read_json(const std::string& filename, Arcane::Alina::PropertyTree& prm)
  * If ARCANE_ALINA_PROFILING is undefined, then ARCANE_ALINA_TIC and ARCANE_ALINA_TOC are noop macros.
  */
 #ifdef ARCANE_ALINA_PROFILING
-#  if !defined(ARCANE_ALINA_TIC) || !defined(ARCANE_ALINA_TOC)
-#    include <arcane/alina/Profiler.h>
-#    define ARCANE_ALINA_TIC(name):: Arcane::Alina::Profiler::globalTic(name);
-#    define ARCANE_ALINA_TOC(name) ::Arcane::Alina::Profiler::globalToc(name);
-#  endif
+#if !defined(ARCANE_ALINA_TIC) || !defined(ARCANE_ALINA_TOC)
+#include <arcane/alina/Profiler.h>
+#define ARCANE_ALINA_TIC(name) ::Arcane::Alina::Profiler::globalTic(name);
+#define ARCANE_ALINA_TOC(name) ::Arcane::Alina::Profiler::globalToc(name);
+#endif
 #endif
 
 #ifndef ARCANE_ALINA_TIC
-#  define ARCANE_ALINA_TIC(name)
+#define ARCANE_ALINA_TIC(name)
 #endif
 #ifndef ARCANE_ALINA_TOC
-#  define ARCANE_ALINA_TOC(name)
+#define ARCANE_ALINA_TOC(name)
 #endif
 
-#define ARCANE_ALINA_DEBUG_SHOW(x)                                                    \
-    std::cout << std::setw(20) << #x << ": "                                   \
-              << std::setw(15) << std::setprecision(8) << std::scientific      \
-              << (x) << std::endl
+#define ARCANE_ALINA_DEBUG_SHOW(x) \
+  std::cout << std::setw(20) << #x << ": " \
+            << std::setw(15) << std::setprecision(8) << std::scientific \
+            << (x) << std::endl
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
