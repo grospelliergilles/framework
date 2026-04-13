@@ -79,13 +79,11 @@ class CPRPreconditioner
     pprecond_params pprecond;
     sprecond_params sprecond;
 
-    int block_size;
-    size_t active_rows;
+    Int32 block_size = math::static_rows<value_type>::value == 1 ? 2 : math::static_rows<value_type>::value;
 
-    params()
-    : block_size(math::static_rows<value_type>::value == 1 ? 2 : math::static_rows<value_type>::value)
-    , active_rows(0)
-    {}
+    Int32 active_rows = 0;
+
+    params() = default;
 
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, pprecond)

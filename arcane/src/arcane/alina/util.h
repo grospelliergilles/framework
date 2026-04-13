@@ -25,6 +25,7 @@
 /*---------------------------------------------------------------------------*/
 
 #pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wsign-compare"
 
 #include "arcane/alina/AlinaGlobal.h"
 
@@ -113,16 +114,72 @@ class ARCANE_ALINA_EXPORT PropertyTree
 
  public:
 
+  Int32 get(const char* param_type, Int32 default_value) const;
+  Int64 get(const char* param_type, Int64 default_value) const;
+  size_t get(const char* param_type, size_t default_value) const
+  {
+    return get(param_type, static_cast<Int64>(default_value));
+  }
+  double get(const char* param_type, double default_value) const;
+  double* get(const char* param_type, double* default_value) const;
+  void* get(const char* param_type, void* default_value) const;
+  std::string get(const char* param_type, const std::string& default_value) const;
+
+  template <typename DataType> DataType
+  get(const char* param_type, const DataType& default_value) const
+  requires(std::is_enum_v<DataType>)
+  {
+    std::ostringstream default_ostr;
+    default_ostr << default_value;
+    std::string s = get(param_type, default_ostr.str());
+    std::istringstream istr(s);
+    DataType enum_value;
+    istr >> enum_value;
+    if (istr.bad())
+      ARCANE_FATAL("Can not convert '{0}' to enumeration", s);
+    return enum_value;
+  }
+
+#if 0
+  // Default template to remove
   template <typename DataType> auto
   get(const char* param_type, const DataType& default_value) const
   {
     return m_property_tree->get(param_type, default_value);
   }
+#endif
+
+  void put(const std::string& path, Int32 value);
+  void put(const std::string& path, Int64 value);
+  void put(const std::string& path, size_t value)
+  {
+    put(path, static_cast<Int64>(value));
+  }
+
+  void put(const std::string& path, double value);
+  void put(const std::string& path, const std::string& value);
+  void put(const std::string& path, double* value);
+  void put(const std::string& path, void* value);
+
+  template <typename DataType> void
+  put(const std::string& path, const DataType& value)
+  requires(std::is_enum_v<DataType>)
+  {
+    // Convert enum to string.
+    std::ostringstream ostr;
+    ostr << value;
+    put(path, ostr.str());
+  }
+
+#if 0
+  // Default template to remove
   template <typename DataType> void
   put(const std::string& path, const DataType& value)
   {
     m_property_tree->put(path, value);
   }
+#endif
+
   PropertyTree get_child_empty(const std::string& path) const;
   bool erase(const char* name);
   size_t count(const char* name) const;

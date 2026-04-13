@@ -566,7 +566,7 @@ int main(int argc, char* argv[])
 
   prof.tic("deflation");
   std::function<double(ptrdiff_t, unsigned)> dv;
-  unsigned ndv = 1;
+  Int32 ndv = 1;
 
   if (deflation_type == "constant") {
     dv = Alina::constant_deflation(1);

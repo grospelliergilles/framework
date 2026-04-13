@@ -122,6 +122,56 @@ read_json(const std::string& filename)
   boost::property_tree::json_parser::read_json(filename, p);
 }
 
+Int32 PropertyTree::get(const char* param_type, Int32 default_value) const
+{
+  return m_property_tree->get(param_type, default_value);
+}
+Int64 PropertyTree::get(const char* param_type, Int64 default_value) const
+{
+  return m_property_tree->get(param_type, default_value);
+}
+double PropertyTree::get(const char* param_type, double default_value) const
+{
+  return m_property_tree->get(param_type, default_value);
+}
+double* PropertyTree::get(const char* param_type, double* default_value) const
+{
+  return m_property_tree->get(param_type, default_value);
+}
+void* PropertyTree::get(const char* param_type, void* default_value) const
+{
+  return m_property_tree->get(param_type, default_value);
+}
+std::string PropertyTree::get(const char* param_type, const std::string& default_value) const
+{
+  return m_property_tree->get(param_type, default_value);
+}
+
+void PropertyTree::put(const std::string& path, Int32 value)
+{
+  m_property_tree->put(path, value);
+}
+void PropertyTree::put(const std::string& path, Int64 value)
+{
+  m_property_tree->put(path, value);
+}
+void PropertyTree::put(const std::string& path, double value)
+{
+  m_property_tree->put(path, value);
+}
+void PropertyTree::put(const std::string& path, const std::string& value)
+{
+  m_property_tree->put(path, value);
+}
+void PropertyTree::put(const std::string& path, double* value)
+{
+  m_property_tree->put(path, value);
+}
+void PropertyTree::put(const std::string& path, void* value)
+{
+  m_property_tree->put(path, value);
+}
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
