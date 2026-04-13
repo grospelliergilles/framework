@@ -5,12 +5,12 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* SolverBase.h                                                (C) 2020-2026 */
+/* RelaxationBase.h                                            (C) 2020-2026 */
 /*                                                                           */
-/* Base class for solver classes.                                            */
+/* Base class for relaxation classes.                                        */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_SOLVERBASE_H
-#define ARCANE_ALINA_MPI_SOLVERBASE_H
+#ifndef ARCANE_ALINA_MPI_RELAXATIONBASE_H
+#define ARCANE_ALINA_MPI_RELAXATIONBASE_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -27,11 +27,11 @@ namespace Arcane::Alina
 /*!
  * \brief Base class for solvers.
  */
-class ARCANE_ALINA_EXPORT SolverBase
+class ARCANE_ALINA_EXPORT RelaxationBase
 {
  public:
 
-  virtual ~SolverBase() = default;
+  virtual ~RelaxationBase() = default;
 
  public:
 

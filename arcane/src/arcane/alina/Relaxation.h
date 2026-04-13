@@ -36,16 +36,16 @@
 #include <omp.h>
 #endif
 
-#include <arcane/alina/util.h>
-#include <arcane/alina/BackendInterface.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/QRFactorizationImpl.h>
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/DenseMatrixInverseImpl.h>
-#include <arcane/alina/BackendInterface.h>
-#include <arcane/alina/ILUSolverImpl.h>
-#include <arcane/alina/ValueTypeInterface.h>
+#include "arcane/alina/BackendInterface.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/ValueTypeInterface.h"
+#include "arcane/alina/QRFactorizationImpl.h"
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/DenseMatrixInverseImpl.h"
+#include "arcane/alina/BackendInterface.h"
+#include "arcane/alina/ILUSolverImpl.h"
+#include "arcane/alina/ValueTypeInterface.h"
+#include "arcane/alina/RelaxationBase.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -252,6 +252,7 @@ class RelaxationAsPreconditioner
  */
 template <class Backend>
 class ChebyshevRelaxation
+: public RelaxationBase
 {
  public:
 
@@ -406,14 +407,15 @@ class ChebyshevRelaxation
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-/// Damped Jacobi relaxation.
 /*!
+ * \brief Damped Jacobi relaxation.
+ *
  * \param Backend Backend for temporary structures allocation.
  * \ingroup relaxation
  */
 template <class Backend>
 struct DampedJacobiRelaxation
+: public RelaxationBase
 {
   typedef typename Backend::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
@@ -500,9 +502,9 @@ struct DampedJacobiRelaxation
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-/// Gauss-Seidel relaxation.
-/**
+/*!
+ * \brief Gauss-Seidel relaxation.
+ *
  * \note This is a serial relaxation and is only applicable to backends that
  * support matrix row iteration (e.g. BuiltinBackend or
  * EigenBackend).
@@ -512,6 +514,7 @@ struct DampedJacobiRelaxation
  */
 template <class Backend>
 struct GaussSeidelRelaxation
+: public RelaxationBase
 {
   /// Relaxation parameters.
   struct params
@@ -858,6 +861,7 @@ struct GaussSeidelRelaxation
  */
 template <class Backend>
 struct ILU0Relaxation
+: public RelaxationBase
 {
   typedef typename Backend::value_type value_type;
   typedef typename Backend::col_type col_type;
@@ -1062,10 +1066,12 @@ struct ILU0Relaxation
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-/// ILU(k) smoother.
+/*!
+ * \brief ILU(k) smoother.
+ */
 template <class Backend>
 struct ILUKRelaxation
+: public RelaxationBase
 {
   typedef typename Backend::value_type value_type;
   typedef typename Backend::col_type col_type;
@@ -1408,10 +1414,12 @@ namespace detail
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-/// ILU(k) smoother.
+/*!
+ * \brief ILU(k) smoother.
+ */
 template <class Backend>
 struct ILUPRelaxation
+: public RelaxationBase
 {
   typedef typename Backend::value_type value_type;
 
@@ -1524,6 +1532,7 @@ struct ILUPRelaxation
  */
 template <class Backend>
 struct ILUTRelaxation
+: public RelaxationBase
 {
   typedef typename Backend::value_type value_type;
   typedef typename Backend::col_type col_type;
@@ -1893,9 +1902,9 @@ struct ILUTRelaxation
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-/// Sparse approximate interface smoother.
-/**
+/*!
+ * \brief Sparse approximate interface smoother.
+ *
  * The inverse matrix is approximated with diagonal matrix.
  *
  * \tparam Backend Backend for temporary structures allocation.
@@ -1904,6 +1913,7 @@ struct ILUTRelaxation
  */
 template <class Backend>
 struct SPAI0Relaxation
+: public RelaxationBase
 {
   typedef typename Backend::value_type value_type;
   typedef typename Backend::matrix_diagonal matrix_diagonal;
@@ -1984,6 +1994,7 @@ struct SPAI0Relaxation
  */
 template <class Backend>
 struct SPAI1Relaxation
+: public RelaxationBase
 {
   typedef typename Backend::value_type value_type;
   typedef typename Backend::vector vector;

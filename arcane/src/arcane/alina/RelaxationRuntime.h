@@ -71,16 +71,16 @@ std::istream& operator>>(std::istream& in, eRelaxationType& r);
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#define ARCANE_ALINA_ALL_RUNTIME_RELAXATION()                 \
-      ARCANE_ALINA_RUNTIME_RELAXATION(GaussSeidelRelaxation);\
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILU0Relaxation);\
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUKRelaxation);\
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUPRelaxation);\
-      ARCANE_ALINA_RUNTIME_RELAXATION(ILUTRelaxation);\
-      ARCANE_ALINA_RUNTIME_RELAXATION(DampedJacobiRelaxation);\
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI0Relaxation);\
-      ARCANE_ALINA_RUNTIME_RELAXATION(SPAI1Relaxation);\
-      ARCANE_ALINA_RUNTIME_RELAXATION(ChebyshevRelaxation)
+#define ARCANE_ALINA_ALL_RUNTIME_RELAXATION() \
+  ARCANE_ALINA_RUNTIME_RELAXATION(GaussSeidelRelaxation); \
+  ARCANE_ALINA_RUNTIME_RELAXATION(ILU0Relaxation); \
+  ARCANE_ALINA_RUNTIME_RELAXATION(ILUKRelaxation); \
+  ARCANE_ALINA_RUNTIME_RELAXATION(ILUPRelaxation); \
+  ARCANE_ALINA_RUNTIME_RELAXATION(ILUTRelaxation); \
+  ARCANE_ALINA_RUNTIME_RELAXATION(DampedJacobiRelaxation); \
+  ARCANE_ALINA_RUNTIME_RELAXATION(SPAI0Relaxation); \
+  ARCANE_ALINA_RUNTIME_RELAXATION(SPAI1Relaxation); \
+  ARCANE_ALINA_RUNTIME_RELAXATION(ChebyshevRelaxation)
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -92,22 +92,19 @@ struct RelaxationRuntime
 {
   typedef Alina::PropertyTree params;
   typedef typename Backend::params backend_params;
-  eRelaxationType r;
-  void* handle;
 
   template <class Matrix>
-  RelaxationRuntime(const Matrix& A, params prm = params(),
-          const backend_params& bprm = backend_params())
-  : r(prm.get("type", eRelaxationType::spai0))
-  , handle(0)
+  explicit RelaxationRuntime(const Matrix& A, params prm = params(),
+                             const backend_params& bprm = backend_params())
+  : m_relaxation_type(prm.get("type", eRelaxationType::spai0))
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");
-    switch (r) {
+    switch (m_relaxation_type) {
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
-    handle = call_constructor<type>(A, prm, bprm); \
+    m_relaxation = call_constructor<type>(A, prm, bprm); \
     break
 
       ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
@@ -115,29 +112,19 @@ struct RelaxationRuntime
 #undef ARCANE_ALINA_RUNTIME_RELAXATION
 
     default:
-      throw std::invalid_argument("Unsupported relaxation type");
+      _throwBadTypeType();
     }
   }
 
   ~RelaxationRuntime()
   {
-    switch (r) {
-
-#define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
-  case eRelaxationType::type: \
-    delete static_cast<type<Backend>*>(handle); \
-    break
-
-      ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
-
-#undef ARCANE_ALINA_RUNTIME_RELAXATION
-    }
+    delete m_relaxation;
   }
 
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
-    switch (r) {
+    switch (m_relaxation_type) {
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
@@ -149,14 +136,14 @@ struct RelaxationRuntime
 #undef ARCANE_ALINA_RUNTIME_RELAXATION
 
     default:
-      throw std::invalid_argument("Unsupported relaxation type");
+      _throwBadTypeType();
     }
   }
 
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
-    switch (r) {
+    switch (m_relaxation_type) {
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
@@ -168,14 +155,14 @@ struct RelaxationRuntime
 #undef ARCANE_ALINA_RUNTIME_RELAXATION
 
     default:
-      throw std::invalid_argument("Unsupported relaxation type");
+      _throwBadTypeType();
     }
   }
 
   template <class Matrix, class VectorRHS, class VectorX>
   void apply(const Matrix& A, const VectorRHS& rhs, VectorX& x) const
   {
-    switch (r) {
+    switch (m_relaxation_type) {
 
 #define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
@@ -187,82 +174,87 @@ struct RelaxationRuntime
 #undef ARCANE_ALINA_RUNTIME_RELAXATION
 
     default:
-      throw std::invalid_argument("Unsupported relaxation type");
+      _throwBadTypeType();
     }
   }
 
   size_t bytes() const
   {
-    switch (r) {
-
-#define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
-  case eRelaxationType::type: \
-    return backend::bytes(*static_cast<type<Backend>*>(handle))
-
-      ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
-
-#undef ARCANE_ALINA_RUNTIME_RELAXATION
-
-    default:
-      throw std::invalid_argument("Unsupported relaxation type");
-    }
+    return m_relaxation->bytes();
   }
 
   template <template <class> class Relaxation, class Matrix>
-  typename std::enable_if<backend::relaxation_is_supported<Backend, Relaxation>::value, void*>::type
+  typename std::enable_if_t<backend::relaxation_is_supported<Backend, Relaxation>::value, RelaxationBase*>
   call_constructor(const Matrix& A, const params& prm, const backend_params& bprm)
   {
-    return static_cast<void*>(new Relaxation<Backend>(A, prm, bprm));
+    return new Relaxation<Backend>(A, prm, bprm);
   }
 
   template <template <class> class Relaxation, class Matrix>
-  typename std::enable_if<!backend::relaxation_is_supported<Backend, Relaxation>::value, void*>::type
+  typename std::enable_if_t<!backend::relaxation_is_supported<Backend, Relaxation>::value, RelaxationBase*>
   call_constructor(const Matrix&, const params&, const backend_params&)
   {
-    throw std::logic_error("The relaxation is not supported by the backend");
+    _throwUnsupportedBackendType();
   }
 
   template <template <class> class Relaxation, class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   typename std::enable_if<backend::relaxation_is_supported<Backend, Relaxation>::value, void>::type
   call_apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
-    static_cast<Relaxation<Backend>*>(handle)->apply_pre(A, rhs, x, tmp);
+    static_cast<Relaxation<Backend>*>(m_relaxation)->apply_pre(A, rhs, x, tmp);
   }
 
   template <template <class> class Relaxation, class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   typename std::enable_if<!backend::relaxation_is_supported<Backend, Relaxation>::value, void>::type
   call_apply_pre(const Matrix&, const VectorRHS&, VectorX&, VectorTMP&) const
   {
-    throw std::logic_error("The relaxation is not supported by the backend");
+    _throwUnsupportedBackendType();
   }
 
   template <template <class> class Relaxation, class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   typename std::enable_if<backend::relaxation_is_supported<Backend, Relaxation>::value, void>::type
   call_apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
-    static_cast<Relaxation<Backend>*>(handle)->apply_post(A, rhs, x, tmp);
+    static_cast<Relaxation<Backend>*>(m_relaxation)->apply_post(A, rhs, x, tmp);
   }
 
   template <template <class> class Relaxation, class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   typename std::enable_if<!backend::relaxation_is_supported<Backend, Relaxation>::value, void>::type
   call_apply_post(const Matrix&, const VectorRHS&, VectorX&, VectorTMP&) const
   {
-    throw std::logic_error("The relaxation is not supported by the backend");
+    _throwUnsupportedBackendType();
   }
 
   template <template <class> class Relaxation, class Matrix, class VectorRHS, class VectorX>
   typename std::enable_if<backend::relaxation_is_supported<Backend, Relaxation>::value, void>::type
   call_apply(const Matrix& A, const VectorRHS& rhs, VectorX& x) const
   {
-    static_cast<Relaxation<Backend>*>(handle)->apply(A, rhs, x);
+    static_cast<Relaxation<Backend>*>(m_relaxation)->apply(A, rhs, x);
   }
 
   template <template <class> class Relaxation, class Matrix, class VectorRHS, class VectorX>
   typename std::enable_if<!backend::relaxation_is_supported<Backend, Relaxation>::value, void>::type
   call_apply(const Matrix&, const VectorRHS&, VectorX&) const
   {
-    throw std::logic_error("The relaxation is not supported by the backend");
+    _throwUnsupportedBackendType();
   }
+
+  void _throwBadTypeType [[noreturn]] () const
+  {
+    int v = static_cast<int>(m_relaxation_type);
+    ARCANE_FATAL("Unsupported relaxation type '{0}'", v);
+  }
+  void _throwUnsupportedBackendType [[noreturn]] () const
+  {
+    String err_message = String::format("The relaxation '{0}' is not supported by the backend", m_relaxation_type);
+    //NOTE: We need to do a 'logic_error' because this is catched is some tests
+    throw std::logic_error(err_message.localstr());
+  }
+
+ private:
+
+  eRelaxationType m_relaxation_type = eRelaxationType::SPAI0Relaxation;
+  RelaxationBase* m_relaxation = nullptr;
 };
 
 /*---------------------------------------------------------------------------*/

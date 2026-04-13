@@ -36,9 +36,10 @@ set(ARCANE_SOURCES
   Profiler.cc
   relaxation_cusparse_ilu0.h
   ILUSolverImpl.h
+  RelaxationBase.h
+  Relaxation.h
   RelaxationRuntime.h
   RelaxationRuntime.cc
-  Relaxation.h
   CuthillMcKeeReorderer.h
   BiCGStabSolver.h
   FlexibleGMRESSolver.h
