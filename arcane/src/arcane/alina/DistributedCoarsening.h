@@ -62,15 +62,12 @@ struct DistributedPMISAggregation
     nullspace_params nullspace;
 
     // Strong connectivity threshold
-    scalar_type eps_strong;
+    double eps_strong = 0.08;
 
     // Block size for non-scalar problems.
-    unsigned block_size;
+    Int32 block_size = 1;
 
-    params()
-    : eps_strong(0.08)
-    , block_size(1)
-    {}
+    params() = default;
 
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)

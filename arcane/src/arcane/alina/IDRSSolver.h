@@ -60,7 +60,7 @@ struct IDRSSolverParams
   using params = IDRSSolverParams;
 
   /// Dimension of the shadow space in IDR(s).
-  unsigned s = 4;
+  Int32 s = 4;
 
   /*!
    * \brief Computation of omega.
@@ -86,7 +86,7 @@ struct IDRSSolverParams
   bool replacement = false;
 
   /// Maximum number of iterations.
-  unsigned maxiter = 100;
+  Int32 maxiter = 100;
 
   /// Target relative residual error.
   double tol = 1e-8;
@@ -183,7 +183,7 @@ class IDRSSolver
 
     G.reserve(prm.s);
     U.reserve(prm.s);
-    for (unsigned i = 0; i < prm.s; ++i) {
+    for (Int32 i = 0; i < prm.s; ++i) {
       G.push_back(Backend::create_vector(n, bprm));
       U.push_back(Backend::create_vector(n, bprm));
     }

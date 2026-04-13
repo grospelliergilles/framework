@@ -42,10 +42,10 @@ struct FlexibleGMRESSolverParams
   using params = FlexibleGMRESSolverParams;
 
   /// Number of inner GMRES iterations per each outer iteration.
-  unsigned M = 30;
+  Int32 M = 30;
 
   /// Maximum number of iterations.
-  unsigned maxiter = 100;
+  Int32 maxiter = 100;
 
   /// Target relative residual error.
   double tol = 1.0e-8;

@@ -110,7 +110,7 @@ class AMG
      * lower than this threshold, then the hierarchy construction is
      * stopped and the linear system is solved directly at this level.
      */
-    unsigned coarse_enough = Backend::direct_solver::coarse_enough();
+    Int32 coarse_enough = Backend::direct_solver::coarse_enough();
 
     /*!
      * \brief Use direct solver at the coarsest level.
@@ -127,19 +127,19 @@ class AMG
      * greater that `coarse_enough`, then the coarsest level will not
      * be solved exactly, but will use a smoother.
      */
-    unsigned max_levels = std::numeric_limits<unsigned>::max();
+    Int32 max_levels = std::numeric_limits<Int32>::max();
 
     /// Number of pre-relaxations.
-    unsigned npre = 1;
+    Int32 npre = 1;
 
     /// Number of post-relaxations.
-    unsigned npost = 1;
+    Int32 npost = 1;
 
     /// Number of cycles (1 for V-cycle, 2 for W-cycle, etc.).
-    unsigned ncycle = 1;
+    Int32 ncycle = 1;
 
     /// Number of cycles to make as part of preconditioning.
-    unsigned pre_cycles = 1;
+    Int32 pre_cycles = 1;
 
     /// Keep matrices in internal format to allow for quick rebuild of the hierarchy
     bool allow_rebuild = std::is_same<matrix, build_matrix>::value;

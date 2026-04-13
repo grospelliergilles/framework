@@ -44,7 +44,7 @@ struct ConjugateGradientSolverParams
   using params = ConjugateGradientSolverParams;
 
   /// Maximum number of iterations.
-  size_t maxiter = 100;
+  Int32 maxiter = 100;
 
   /// Target relative residual error.
   double tol = 1.0e-8;
@@ -164,14 +164,14 @@ class ConjugateGradientSolver
     backend::residual(rhs, A, x, *r);
     scalar_type res_norm = norm(*r);
 
-    size_t iter = 0;
+    Int32 iter = 0;
     for (; iter < prm.maxiter && math::norm(res_norm) > eps; ++iter) {
       P.apply(*r, *s);
 
       rho2 = rho1;
       rho1 = inner_product(*r, *s);
 
-      if (iter)
+      if (iter!=0)
         backend::axpby(one, *s, rho1 / rho2, *p);
       else
         backend::copy(*s, *p);

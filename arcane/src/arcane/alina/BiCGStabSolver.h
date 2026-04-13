@@ -45,7 +45,7 @@ struct BiCGStabSolverParams
   ePreconditionerSideType pside = ePreconditionerSideType::right;
 
   /// Maximum number of iterations.
-  size_t maxiter = 100;
+  Int32 maxiter = 100;
 
   /// Target relative residual error.
   double tol = 1.0e-8;
@@ -183,7 +183,7 @@ class BiCGStabSolver
     coef_type alpha = zero;
     coef_type omega = zero;
 
-    size_t iter = 0;
+    Int32 iter = 0;
     for (bool first = true; res > eps && iter < prm.maxiter; ++iter) {
 
       rho2 = rho1;
@@ -235,7 +235,7 @@ class BiCGStabSolver
         std::cout << iter << "\t" << std::scientific << res / norm_rhs << std::endl;
     }
 
-    return std::make_tuple(iter, res / norm_rhs);
+    return SolverResult(iter, res / norm_rhs);
   }
 
   /*

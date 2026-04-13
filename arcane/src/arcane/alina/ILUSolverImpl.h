@@ -59,15 +59,12 @@ class ILUSolver
   struct params
   {
     /// Number of Jacobi iterations.
-    unsigned iters;
+    Int32 iters = 2;
 
     /// Damping factor.
-    scalar_type damping;
+    double damping = 0.72;
 
-    params()
-    : iters(2)
-    , damping(0.72)
-    {}
+    params() = default;
 
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, iters)

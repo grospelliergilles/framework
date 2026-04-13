@@ -108,7 +108,7 @@ struct nullspace_params
     b = p.get("B", b);
 
     if (b) {
-      size_t rows = 0;
+      Int32 rows = 0;
       rows = p.get("rows", rows);
 
       precondition(cols > 0, "Error in nullspace parameters: "
@@ -476,11 +476,9 @@ class pointwise_aggregates
      * When block_size=1, the scheme is equivalent to (and performs on
      * par with) plain_aggregates.
      */
-    unsigned block_size;
+    Int32 block_size = 1;
 
-    params()
-    : block_size(1)
-    {}
+    params() = default;
 
     params(const PropertyTree& p)
     : plain_aggregates::params(p)

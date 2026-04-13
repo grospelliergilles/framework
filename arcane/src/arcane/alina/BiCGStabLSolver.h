@@ -93,7 +93,7 @@ struct BiCGStabLSolverParams
   ePreconditionerSideType pside = ePreconditionerSideType::right;
 
   // Maximum number of iterations.
-  size_t maxiter = 100;
+  Int32 maxiter = 100;
 
   // Target relative residual error.
   double tol = 1e-8;

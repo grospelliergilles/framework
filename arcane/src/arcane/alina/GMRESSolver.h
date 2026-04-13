@@ -42,13 +42,13 @@ struct GMRESSolverParams
   using params = GMRESSolverParams;
 
   /// Number of iterations before restart.
-  unsigned M = 30;
+  Int32 M = 30;
 
   /// Preconditioning kind (left/right).
   ePreconditionerSideType pside = ePreconditionerSideType::right;
 
   /// Maximum number of iterations.
-  unsigned maxiter = 100;
+  Int32 maxiter = 100;
 
   /// Target relative residual error.
   double tol = 1.0e-8;

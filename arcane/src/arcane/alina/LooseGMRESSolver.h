@@ -79,7 +79,7 @@ struct LooseGMRESSolverParams
   using params = LooseGMRESSolverParams;
 
   /// Number of inner GMRES iterations per each outer iteration.
-  unsigned M = 30;
+  Int32 M = 30;
 
   /*!
    * \brief Number of vectors to carry between inner GMRES iterations.
@@ -89,7 +89,7 @@ struct LooseGMRESSolverParams
    * accelerate solving multiple similar problems, larger values may
    * be beneficial.
    */
-  unsigned K = 3;
+  Int32 K = 3;
 
   /*!
    * \brief Reset augmented vectors between solves.
@@ -106,7 +106,7 @@ struct LooseGMRESSolverParams
   ePreconditionerSideType pside = ePreconditionerSideType::right;
 
   /// Maximum number of iterations.
-  size_t maxiter = 100;
+  Int32 maxiter = 100;
 
   /// Target relative residual error.
   double tol = 1.0e-8;
@@ -248,7 +248,8 @@ class LooseGMRESSolver
     scalar_type norm_r = zero;
     scalar_type eps = std::max(prm.tol * norm_rhs, prm.abstol);
 
-    unsigned iter = 0, n_outer = 0;
+    Int32 iter = 0;
+    unsigned n_outer = 0;
     while (true) {
       if (prm.pside == ePreconditionerSideType::left) {
         backend::residual(rhs, A, x, *vs[0]);
