@@ -44,7 +44,7 @@ void test_solver(const Matrix& A,
   std::vector<double> null;
 
   if (test_null_space && Alina::math::static_rows<value_type>::value == 1) {
-    size_t n = Alina::backend::rows(*A);
+    Int64 n = Alina::backend::rows(*A);
     null.resize(n, 1.0);
 
     prm.put("precond.coarsening.nullspace.cols", 1);

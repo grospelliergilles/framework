@@ -264,7 +264,7 @@ class ChebyshevRelaxation
   struct params
   {
     /// Chebyshev polynomial degree.
-    unsigned degree;
+    Int32 degree = 5;
 
     /// highest eigen value safety upscaling.
     // use boosting factor for a more conservative upper bound estimate
@@ -272,26 +272,20 @@ class ChebyshevRelaxation
     //      PARALLEL MULTIGRID SMOOTHING: POLYNOMIAL VERSUS
     //      GAUSS-SEIDEL, J. Comp. Phys. 188 (2003) 593-610.
     //
-    float higher;
+    double higher = 1.0;
 
     /// Lowest-to-highest eigen value ratio.
-    float lower;
+    double lower = 1.0 / 30.0;
 
     // Number of power iterations to apply for the spectral radius
     // estimation. When 0, use Gershgorin disk theorem to estimate
     // spectral radius.
-    int power_iters;
+    Int32 power_iters = 0;
 
     // Scale the system matrix
-    bool scale;
+    bool scale = false;
 
-    params()
-    : degree(5)
-    , higher(1.0f)
-    , lower(1.0f / 30)
-    , power_iters(0)
-    , scale(false)
-    {}
+    params() = default;
 
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, degree)
@@ -1546,22 +1540,18 @@ struct ILUTRelaxation
   struct params
   {
     /// Fill factor.
-    scalar_type p;
+    double p = 2.0;
 
     /// Minimum magnitude of non-zero elements relative to the current row norm.
-    scalar_type tau;
+    double tau = 1.0e-2;
 
     /// Damping factor.
-    scalar_type damping;
+    double damping = 1.0;
 
     /// Parameters for sparse triangular system solver
     typename ilu_solve::params solve;
 
-    params()
-    : p(2)
-    , tau(1e-2f)
-    , damping(1)
-    {}
+    params() = default;
 
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, p)
@@ -1574,7 +1564,8 @@ struct ILUTRelaxation
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, p);
+      double p2 = p;
+      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, p2);
       ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tau);
       ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
       ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solve);

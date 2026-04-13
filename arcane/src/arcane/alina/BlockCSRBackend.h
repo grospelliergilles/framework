@@ -66,9 +66,9 @@ struct BlockCSRBackend
   struct params
   {
     /// Block size to use with the created matrices.
-    size_t block_size;
+    Int32 block_size;
 
-    params(size_t block_size = 4)
+    explicit params(Int32 block_size = 4)
     : block_size(block_size)
     {}
 

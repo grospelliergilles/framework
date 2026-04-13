@@ -139,7 +139,7 @@ class DistributedSubDomainDeflation
     typename DirectSolver::params dsolver;
 
     // Number of deflation vectors.
-    unsigned num_def_vec;
+    Int32 num_def_vec = 0;
 
     // Value of deflation vector at the given row and column.
     std::function<double(ptrdiff_t, unsigned)> def_vec;
@@ -155,9 +155,7 @@ class DistributedSubDomainDeflation
       void* ptr = 0;
       ptr = p.get("def_vec", ptr);
 
-      Alina::precondition(ptr,
-                          "Error in subdomain_deflation parameters: "
-                          "def_vec is not set");
+      precondition(ptr, "Error in subdomain_deflation parameters: def_vec is not set");
 
       def_vec = *static_cast<std::function<double(ptrdiff_t, unsigned)>*>(ptr);
 
