@@ -400,7 +400,7 @@ struct harmonic_deflation
         ptrdiff_t idx = i * (nx - 1) + j * (ny - 1) * nx;
         rhs[idx] = 1.0;
 
-        boost::iterator_range<double*> x(dv, dv + chunk);
+        SmallSpan<double> x(dv, chunk);
         solve(rhs, x);
 
         rhs[idx] = 0.0;

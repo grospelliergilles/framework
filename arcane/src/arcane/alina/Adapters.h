@@ -526,12 +526,12 @@ complex_adapter<Matrix> complex_matrix(const Matrix& A)
 }
 
 template <class DataType, class Range>
-auto complex_range(Range& rng) -> std::span<DataType>
+auto complex_range(Range& rng) -> Span<DataType>
 {
   DataType* b = reinterpret_cast<DataType*>(&rng[0]);
   size_t s = 2 * std::size(rng);
 
-  return std::span<DataType>(b, s);
+  return Span<DataType>(b, s);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -767,16 +767,14 @@ class reorder
   }
 
   template <class Vector>
-  std::enable_if_t<backend::is_builtin_vector<Vector>::value,
-                          reordered_vector<Vector>>
+  std::enable_if_t<backend::is_builtin_vector<Vector>::value, reordered_vector<Vector>>
   operator()(Vector& x) const
   {
     return reordered_vector<Vector>(x, perm.data());
   }
 
   template <class Vector>
-  std::enable_if_t<backend::is_builtin_vector<Vector>::value,
-                          reordered_vector<const Vector>>
+  std::enable_if_t<backend::is_builtin_vector<Vector>::value, reordered_vector<const Vector>>
   operator()(const Vector& x) const
   {
     return reordered_vector<const Vector>(x, perm.data());

@@ -45,8 +45,6 @@
 #include "arcane/alina/MatrixOperationsImpl.h"
 #include "arcane/alina/CSRMatrix.h"
 
-#include <span>
-
 namespace Arcane::Alina::backend
 {
 
@@ -832,7 +830,11 @@ struct is_builtin_vector<std::vector<V>> : std::is_arithmetic<V>
 {};
 
 template <class V>
-struct is_builtin_vector<std::span<V>> : std::is_arithmetic<V>
+struct is_builtin_vector<SmallSpan<V>> : std::is_arithmetic<V>
+{};
+
+template <class V>
+struct is_builtin_vector<Span<V>> : std::is_arithmetic<V>
 {};
 
 template <class V>
@@ -1199,18 +1201,18 @@ namespace detail
 } // namespace Arcane::Alina::backend
 
 // Allow to use boost::iterator_range as vector in builtin backend:
-namespace boost
-{
-  template <class Iterator> class iterator_range;
-}
+//namespace boost
+//{
+//  template <class Iterator> class iterator_range;
+//}
 
 namespace Arcane::Alina::backend
 {
   template <class Iterator>
   struct is_builtin_vector< Alina::iterator_range<Iterator> > : std::true_type {};
 
-  template <class Iterator>
-  struct is_builtin_vector< boost::iterator_range<Iterator> > : std::true_type {};
+//template <class Iterator>
+//struct is_builtin_vector< boost::iterator_range<Iterator> > : std::true_type {};
 }
 
 namespace Arcane::Alina::detail

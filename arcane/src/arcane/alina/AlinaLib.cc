@@ -11,12 +11,6 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <iostream>
-
-#include <type_traits>
-#include <boost/iterator/transform_iterator.hpp>
-#include <boost/range/iterator_range.hpp>
-
 #include <arcane/alina/RelaxationRuntime.h>
 #include <arcane/alina/CoarseningRuntime.h>
 #include <arcane/alina/SolverRuntime.h>
@@ -28,6 +22,10 @@
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
 #include "arcane/alina/AlinaLib.h"
+
+#include <iostream>
+
+#include <type_traits>
 
 using namespace Arcane;
 
@@ -41,9 +39,9 @@ typedef Alina::PropertyTree Params;
 
 //---------------------------------------------------------------------------
 
-using DistributedSolverType = Alina::DistributedSubDomainDeflation < PreconditionerType,
-                                                                     Alina::DistributedSolverRuntime<Backend>,
-                                                                     Alina::DistributedDirectSolverRuntime<double>>;
+using DistributedSolverType = Alina::DistributedSubDomainDeflation<PreconditionerType,
+                                                                   Alina::DistributedSolverRuntime<Backend>,
+                                                                   Alina::DistributedDirectSolverRuntime<double>>;
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -171,15 +169,16 @@ params_destroy(AlinaParameters* prm)
 
 AlinaPreconditioner* AlinaLib::
 preconditioner_create(int n,
-                            const int* ptr,
-                            const int* col,
-                            const double* val,
-                            AlinaParameters* prm)
+                      const int* ptr,
+                      const int* col,
+                      const double* val,
+                      AlinaParameters* prm)
 {
-  auto A = std::make_tuple(n,
-                           boost::make_iterator_range(ptr, ptr + n + 1),
-                           boost::make_iterator_range(col, col + ptr[n]),
-                           boost::make_iterator_range(val, val + ptr[n]));
+  SmallSpan<const int> ptr_range(ptr, n + 1);
+  SmallSpan<const int> col_range(col, ptr[n]);
+  SmallSpan<const double> val_range(val, ptr[n]);
+
+  auto A = std::make_tuple(n, ptr_range, col_range, val_range);
 
   PreconditionerType* amg = nullptr;
   if (prm)
@@ -199,10 +198,10 @@ preconditioner_apply(AlinaPreconditioner* handle, const double* rhs, double* x)
 
   size_t n = Alina::backend::rows(amg->system_matrix());
 
-  boost::iterator_range<double*> x_range =
-  boost::make_iterator_range(x, x + n);
+  SmallSpan<double> x_range(x, n);
+  SmallSpan<const double> rhs_range(rhs, n);
 
-  amg->apply(boost::make_iterator_range(rhs, rhs + n), x_range);
+  amg->apply(rhs_range, x_range);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -232,10 +231,11 @@ solver_create(int n, const int* ptr,
               const double* val,
               AlinaParameters* prm)
 {
-  auto A = std::make_tuple(n,
-                           boost::make_iterator_range(ptr, ptr + n + 1),
-                           boost::make_iterator_range(col, col + ptr[n]),
-                           boost::make_iterator_range(val, val + ptr[n]));
+  SmallSpan<const int> ptr_range(ptr, n + 1);
+  SmallSpan<const int> col_range(col, ptr[n]);
+  SmallSpan<const double> val_range(val, ptr[n]);
+
+  auto A = std::make_tuple(n, ptr_range, col_range, val_range);
 
   SequentialSolverType* solver = new SequentialSolverType(A);
   if (prm)
@@ -270,16 +270,17 @@ solver_destroy(AlinaSequentialSolver* handle)
 
 AlinaConvergenceInfo AlinaLib::
 solver_solve(AlinaSequentialSolver* handle,
-                          const double* rhs,
-                          double* x)
+             const double* rhs,
+             double* x)
 {
   SequentialSolverType* slv = handle->m_solver;
 
   size_t n = slv->size();
 
-  boost::iterator_range<double*> x_range = boost::make_iterator_range(x, x + n);
+  SmallSpan<double> x_range(x, n);
+  SmallSpan<const double> rhs_range(rhs, n);
 
-  Alina::SolverResult r = (*slv)(boost::make_iterator_range(rhs, rhs + n), x_range);
+  Alina::SolverResult r = (*slv)(rhs_range, x_range);
 
   return _toConvInfo(r);
 }
@@ -289,24 +290,26 @@ solver_solve(AlinaSequentialSolver* handle,
 
 AlinaConvergenceInfo AlinaLib::
 solver_solve_matrix(AlinaSequentialSolver* handle,
-                              int const* A_ptr,
-                              int const* A_col,
-                              double const* A_val,
-                              const double* rhs,
-                              double* x)
+                    int const* A_ptr,
+                    int const* A_col,
+                    double const* A_val,
+                    const double* rhs,
+                    double* x)
 {
   SequentialSolverType* slv = handle->m_solver;
 
   size_t n = slv->size();
 
-  boost::iterator_range<double*> x_range = boost::make_iterator_range(x, x + n);
+  SmallSpan<double> x_range(x, n);
+  SmallSpan<const double> rhs_range(rhs, n);
 
-  Alina::SolverResult r = (*slv)(
-  std::make_tuple(n,
-                  boost::make_iterator_range(A_ptr, A_ptr + n + 1),
-                  boost::make_iterator_range(A_col, A_col + A_ptr[n]),
-                  boost::make_iterator_range(A_val, A_val + A_ptr[n])),
-  boost::make_iterator_range(rhs, rhs + n), x_range);
+  SmallSpan<const int> ptr_range(A_ptr, n + 1);
+  SmallSpan<const int> col_range(A_col, A_ptr[n]);
+  SmallSpan<const double> val_range(A_val, A_ptr[n]);
+
+  auto A = std::make_tuple(n, ptr_range, col_range, val_range);
+
+  Alina::SolverResult r = (*slv)(A, rhs_range, x_range);
 
   return _toConvInfo(r);
 }
@@ -351,13 +354,13 @@ solver_mpi_create(MPI_Comm comm,
   prm.put("num_def_vec", n_def_vec);
   prm.put("def_vec", &dv);
 
-  auto* p = new DistributedSolverType(comm,
-                                  std::make_tuple(
-                                  n,
-                                  boost::make_iterator_range(ptr, ptr + n + 1),
-                                  boost::make_iterator_range(col, col + ptr[n]),
-                                  boost::make_iterator_range(val, val + ptr[n])),
-                                  prm);
+  SmallSpan<const ptrdiff_t> ptr_range(ptr, n + 1);
+  SmallSpan<const ptrdiff_t> col_range(col, ptr[n]);
+  SmallSpan<const double> val_range(val, ptr[n]);
+
+  auto A = std::make_tuple(n, ptr_range, col_range, val_range);
+
+  auto* p = new DistributedSolverType(comm, A, prm);
 
   return new AlinaDistributedSolver(p);
 }
@@ -374,12 +377,12 @@ solver_mpi_solve(AlinaDistributedSolver* handle,
 
   size_t n = solver->size();
 
-  boost::iterator_range<double*> x_range =
-  boost::make_iterator_range(x, x + n);
+  SmallSpan<double> x_range(x, n);
+  SmallSpan<const double> rhs_range(rhs, n);
 
   AlinaConvergenceInfo cnv;
 
-  std::tie(cnv.iterations, cnv.residual) = (*solver)(boost::make_iterator_range(rhs, rhs + n), x_range);
+  std::tie(cnv.iterations, cnv.residual) = (*solver)(rhs_range, x_range);
 
   return cnv;
 }
