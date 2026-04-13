@@ -39,6 +39,7 @@ namespace Arcane::Alina
  */
 template <class Backend, class InnerProduct = detail::default_inner_product>
 class PreconditionerOnlySolver
+: public SolverBase
 {
  public:
 

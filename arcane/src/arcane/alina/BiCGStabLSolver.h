@@ -62,7 +62,7 @@
 #include <arcane/alina/ValueTypeInterface.h>
 #include <arcane/alina/SolverUtils.h>
 #include <arcane/alina/QRFactorizationImpl.h>
-#include <arcane/alina/util.h>
+#include "arcane/alina/SolverBase.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -148,6 +148,7 @@ struct BiCGStabLSolverParams
  */
 template <class Backend, class InnerProduct = detail::default_inner_product>
 class BiCGStabLSolver
+: public SolverBase
 {
  public:
 

@@ -24,7 +24,7 @@
 /*---------------------------------------------------------------------------*/
 
 #include <arcane/alina/SolverUtils.h>
-#include <arcane/alina/util.h>
+#include "arcane/alina/SolverBase.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -95,9 +95,9 @@ struct FlexibleGMRESSolverParams
  * Flexible version of the GMRES method [Saad03]_.
  * \endrst
  */
-template <class Backend,
-          class InnerProduct = detail::default_inner_product>
+template <class Backend, class InnerProduct = detail::default_inner_product>
 class FlexibleGMRESSolver
+: public SolverBase
 {
  public:
 
@@ -272,11 +272,10 @@ class FlexibleGMRESSolver
 
   friend std::ostream& operator<<(std::ostream& os, const FlexibleGMRESSolver& s)
   {
-    return os
-    << "Type:             FGMRES(" << s.prm.M << ")"
-    << "\nUnknowns:         " << s.n
-    << "\nMemory footprint: " << human_readable_memory(s.bytes())
-    << std::endl;
+    return os << "Type:             FGMRES(" << s.prm.M << ")"
+              << "\nUnknowns:         " << s.n
+              << "\nMemory footprint: " << human_readable_memory(s.bytes())
+              << "\n";
   }
 
  public:

@@ -24,7 +24,7 @@
 /*---------------------------------------------------------------------------*/
 
 #include <arcane/alina/SolverUtils.h>
-#include <arcane/alina/util.h>
+#include "arcane/alina/SolverBase.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -100,6 +100,7 @@ struct BiCGStabSolverParams
  */
 template <class Backend, class InnerProduct = detail::default_inner_product>
 class BiCGStabSolver
+: public SolverBase
 {
  public:
 

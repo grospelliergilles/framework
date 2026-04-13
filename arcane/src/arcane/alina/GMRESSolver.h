@@ -24,7 +24,7 @@
 /*---------------------------------------------------------------------------*/
 
 #include <arcane/alina/SolverUtils.h>
-#include <arcane/alina/util.h>
+#include "arcane/alina/SolverBase.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -99,9 +99,9 @@ struct GMRESSolverParams
  * only applicable to symmetric systems) to unsymmetric systems [Barr94]_.
  * \endrst
  */
-template <class Backend,
-          class InnerProduct = detail::default_inner_product>
+template <class Backend, class InnerProduct = detail::default_inner_product>
 class GMRESSolver
+: public SolverBase
 {
  public:
 
@@ -120,9 +120,9 @@ class GMRESSolver
 
   /// Preallocates necessary data structures for the system of size \p n.
   GMRESSolver(size_t n,
-        const params& prm = params(),
-        const backend_params& backend_prm = backend_params(),
-        const InnerProduct& inner_product = InnerProduct())
+              const params& prm = params(),
+              const backend_params& backend_prm = backend_params(),
+              const InnerProduct& inner_product = InnerProduct())
   : prm(prm)
   , n(n)
   , H(prm.M + 1, prm.M)

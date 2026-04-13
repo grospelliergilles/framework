@@ -61,7 +61,7 @@
 /*---------------------------------------------------------------------------*/
 
 #include <arcane/alina/SolverUtils.h>
-#include <arcane/alina/util.h>
+#include "arcane/alina/SolverBase.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -163,6 +163,7 @@ struct LooseGMRESSolverParams
  */
 template <class Backend, class InnerProduct = detail::default_inner_product>
 class LooseGMRESSolver
+: public SolverBase
 {
  public:
 

@@ -1,5 +1,6 @@
 set(ARCANE_SOURCES
   AlinaGlobal.h
+  AlinaGlobal.cc
   AlinaUtils.cc
   Adapters.h
   AlinaLib.h
@@ -50,6 +51,7 @@ set(ARCANE_SOURCES
   SolverUtils.h
   PreconditionerOnlySolver.h
   RichardsonSolver.h
+  SolverBase.h
   SolverRuntime.h
   SkylineLUSolver.h
   util.h

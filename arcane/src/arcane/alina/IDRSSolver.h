@@ -138,9 +138,9 @@ struct IDRSSolverParams
 /*---------------------------------------------------------------------------*/
 
 /// IDR(s) method (Induced Dimension Reduction)
-template <class Backend,
-          class InnerProduct = detail::default_inner_product>
+template <class Backend, class InnerProduct = detail::default_inner_product>
 class IDRSSolver
+: public SolverBase
 {
  public:
 

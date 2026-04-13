@@ -24,7 +24,7 @@
 /*---------------------------------------------------------------------------*/
 
 #include <arcane/alina/SolverUtils.h>
-#include <arcane/alina/util.h>
+#include "arcane/alina/SolverBase.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -89,9 +89,9 @@ struct RichardsonSolverParams
 /*!
  * \brief Richardson iteration.
  */
-template <class Backend,
-          class InnerProduct = detail::default_inner_product>
+template <class Backend, class InnerProduct = detail::default_inner_product>
 class RichardsonSolver
+: public SolverBase
 {
  public:
 

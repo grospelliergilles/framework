@@ -29,7 +29,7 @@
 #include "arcane/alina/AlinaGlobal.h"
 
 #include "arccore/base/Ref.h"
-#include "arccore/message_passing/IMessagePassingMng.h"
+#include "arccore/base/FatalErrorException.h"
 
 #include <set>
 #include <complex>

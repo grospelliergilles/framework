@@ -151,22 +151,22 @@ struct SolverRuntime
   typedef Backend backend_type;
   using BackendType = backend_type;
 
-  eSolverType s;
-  void* handle = nullptr;
+  eSolverType m_solver_type;
+  SolverBase* m_solver = nullptr;
 
   explicit SolverRuntime(size_t n, params prm = params(),
                          const backend_params& bprm = backend_params(),
                          const InnerProduct& inner_product = InnerProduct())
-  : s(prm.get("type", eSolverType::bicgstab))
+  : m_solver_type(prm.get("type", eSolverType::bicgstab))
   {
     if (!prm.erase("type"))
       ARCANE_ALINA_PARAM_MISSING("type");
 
-    switch (s) {
+    switch (m_solver_type) {
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case eSolverType::type: \
-    handle = static_cast<void*>(new type<Backend, InnerProduct>(n, prm, bprm, inner_product)); \
+    m_solver = new type<Backend, InnerProduct>(n, prm, bprm, inner_product); \
     break
 
       ARCANE_ALINA_ALL_RUNTIME_SOLVER();
@@ -174,40 +174,30 @@ struct SolverRuntime
 #undef ARCANE_ALINA_RUNTIME_SOLVER
 
     default:
-      throw std::invalid_argument("Unsupported solver type");
+      ARCCORE_FATAL("Unsupported solver type type={0}", m_solver_type);
     }
   }
 
   ~SolverRuntime()
   {
-    switch (s) {
-
-#define ARCANE_ALINA_RUNTIME_SOLVER(type) \
-  case eSolverType::type: \
-    delete static_cast<type<Backend, InnerProduct>*>(handle); \
-    break
-
-      ARCANE_ALINA_ALL_RUNTIME_SOLVER();
-
-#undef ARCANE_ALINA_RUNTIME_SOLVER
-    }
+    delete m_solver;
   }
 
   template <class Matrix, class Precond, class Vec1, class Vec2>
   SolverResult operator()(const Matrix& A, const Precond& P, const Vec1& rhs, Vec2&& x) const
   {
-    switch (s) {
+    switch (m_solver_type) {
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case eSolverType::type: \
-    return static_cast<type<Backend, InnerProduct>*>(handle)->operator()(A, P, rhs, x)
+    return static_cast<type<Backend, InnerProduct>*>(m_solver)->operator()(A, P, rhs, x)
 
       ARCANE_ALINA_ALL_RUNTIME_SOLVER();
 
 #undef ARCANE_ALINA_RUNTIME_SOLVER
 
     default:
-      throw std::invalid_argument("Unsupported solver type");
+      ARCCORE_FATAL("Unsupported solver type type={0}", m_solver_type);
     }
   }
 
@@ -219,41 +209,35 @@ struct SolverRuntime
 
   friend std::ostream& operator<<(std::ostream& os, const SolverRuntime& w)
   {
-    switch (w.s) {
+    switch (w.m_solver_type) {
 
 #define ARCANE_ALINA_RUNTIME_SOLVER(type) \
   case eSolverType::type: \
-    return os << *static_cast<type<Backend, InnerProduct>*>(w.handle)
+    return os << *static_cast<type<Backend, InnerProduct>*>(w.m_solver)
 
       ARCANE_ALINA_ALL_RUNTIME_SOLVER();
 
 #undef ARCANE_ALINA_RUNTIME_SOLVER
 
     default:
-      throw std::invalid_argument("Unsupported solver type");
+      ARCCORE_FATAL("Unsupported solver type type={0}", w.m_solver_type);
     }
   }
 
   size_t bytes() const
   {
-    switch (s) {
-
-#define ARCANE_ALINA_RUNTIME_SOLVER(type) \
-  case eSolverType::type: \
-    return backend::bytes(*static_cast<type<Backend, InnerProduct>*>(handle))
-
-      ARCANE_ALINA_ALL_RUNTIME_SOLVER();
-
-#undef ARCANE_ALINA_RUNTIME_SOLVER
-
-    default:
-      throw std::invalid_argument("Unsupported solver type");
-    }
+    return m_solver->bytes();
   }
 };
 
 #undef ARCANE_ALINA_ALL_RUNTIME_SOLVER
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 } // namespace Arcane::Alina
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #endif

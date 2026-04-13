@@ -23,11 +23,10 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <tuple>
 #include <iostream>
 
-#include <arcane/alina/SolverUtils.h>
-#include <arcane/alina/util.h>
+#include "arcane/alina/SolverUtils.h"
+#include "arcane/alina/SolverBase.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -94,6 +93,7 @@ struct ConjugateGradientSolverParams
  */
 template <class Backend_, class InnerProduct = detail::default_inner_product>
 class ConjugateGradientSolver
+: public SolverBase
 {
  public:
 
