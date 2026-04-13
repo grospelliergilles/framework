@@ -124,7 +124,7 @@ struct nullspace_params
                               "cols > 0, but B is empty");
     }
 
-    check_params(p, { "cols", "rows", "B" });
+    p.check_params( { "cols", "rows", "B" });
   }
 
   void get(PropertyTree&, const std::string&) const {}
@@ -168,7 +168,7 @@ struct plain_aggregates
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_strong)
     {
-      check_params(p, { "eps_strong", "block_size" });
+      p.check_params( { "eps_strong", "block_size" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
@@ -484,7 +484,7 @@ class pointwise_aggregates
     : plain_aggregates::params(p)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
     {
-      check_params(p, { "eps_strong", "block_size" });
+      p.check_params( { "eps_strong", "block_size" });
     }
 
     void get(Alina::PropertyTree& p, const std::string& path) const
@@ -674,7 +674,7 @@ struct AggregationCoarsening
     , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, over_interp)
     {
-      check_params(p, { "aggr", "nullspace", "over_interp" });
+      p.check_params( { "aggr", "nullspace", "over_interp" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
@@ -945,7 +945,7 @@ struct RugeStubenCoarsening
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, do_trunc)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_trunc)
     {
-      check_params(p, { "eps_strong", "do_trunc", "eps_trunc" });
+      p.check_params( { "eps_strong", "do_trunc", "eps_trunc" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
@@ -1388,7 +1388,7 @@ struct SmoothedAggregationCoarserning
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, estimate_spectral_radius)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
     {
-      check_params(p, { "aggr", "nullspace", "relax", "estimate_spectral_radius", "power_iters" });
+      p.check_params( { "aggr", "nullspace", "relax", "estimate_spectral_radius", "power_iters" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
@@ -1552,7 +1552,7 @@ struct SmoothedAggregationEnergyMinCoarsening
     : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
     , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)
     {
-      check_params(p, { "aggr", "nullspace" });
+      p.check_params( { "aggr", "nullspace" });
     }
 
     void get(PropertyTree& p, const std::string& path) const

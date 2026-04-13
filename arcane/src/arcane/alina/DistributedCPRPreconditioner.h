@@ -78,7 +78,7 @@ class DistributedCPRPreconditioner
     , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, sprecond)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
     {
-      check_params(p, { "pprecond", "sprecond", "block_size", "active_rows" });
+      p.check_params({ "pprecond", "sprecond", "block_size", "active_rows" });
     }
 
     void get(PropertyTree& p, const std::string& path = "") const
@@ -91,9 +91,9 @@ class DistributedCPRPreconditioner
 
   template <class Matrix>
   DistributedCPRPreconditioner(mpi_communicator comm,
-      const Matrix& K,
-      const params& prm = params(),
-      const backend_params& bprm = backend_params())
+                               const Matrix& K,
+                               const params& prm = params(),
+                               const backend_params& bprm = backend_params())
   : prm(prm)
   , comm(comm)
   , n(backend::rows(K))
@@ -102,9 +102,9 @@ class DistributedCPRPreconditioner
   }
 
   DistributedCPRPreconditioner(mpi_communicator comm,
-      std::shared_ptr<matrix> K,
-      const params& prm = params(),
-      const backend_params& bprm = backend_params())
+                               std::shared_ptr<matrix> K,
+                               const params& prm = params(),
+                               const backend_params& bprm = backend_params())
   : prm(prm)
   , comm(comm)
   , n(K->loc_rows())

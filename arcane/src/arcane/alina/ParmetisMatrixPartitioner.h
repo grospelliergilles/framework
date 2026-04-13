@@ -65,7 +65,7 @@ struct ParmetisMatrixPartitioner
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, min_per_proc)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, shrink_ratio)
     {
-      check_params(p, { "shrink", "min_per_proc", "shrink_ratio" });
+      p.check_params({ "shrink", "min_per_proc", "shrink_ratio" });
     }
 
     void get(PropertyTree& p, const std::string& path = "") const

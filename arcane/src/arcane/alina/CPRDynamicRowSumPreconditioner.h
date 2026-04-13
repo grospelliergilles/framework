@@ -112,7 +112,7 @@ class CPRDynamicRowSumPreconditioner
         static_cast<double*>(ptr) + n);
       }
 
-      check_params(p, { "pprecond", "sprecond", "block_size", "active_rows", "eps_dd", "eps_ps", "weights", "weights_size" });
+      p.check_params({ "pprecond", "sprecond", "block_size", "active_rows", "eps_dd", "eps_ps", "weights", "weights_size" });
     }
 
     void get(PropertyTree& p, const std::string& path = "") const

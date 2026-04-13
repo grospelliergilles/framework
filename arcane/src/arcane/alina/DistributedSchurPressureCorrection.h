@@ -140,13 +140,11 @@ class DistributedSchurPressureCorrection
         pmask.assign(static_cast<char*>(pm), static_cast<char*>(pm) + n);
       }
       else {
-        Alina::precondition(false,
-                            "Error in schur_complement parameters: "
-                            "neither pmask_pattern, nor pmask is set");
+        ARCANE_FATAL("Error in schur_complement parameters:  neither pmask_pattern, nor pmask is set");
       }
 
-      check_params(p, { "usolver", "psolver", "type", "approx_schur", "simplec_dia", "pmask_size", "verbose" },
-                   { "pmask", "pmask_pattern" });
+      p.check_params({ "usolver", "psolver", "type", "approx_schur", "simplec_dia", "pmask_size", "verbose" },
+                     { "pmask", "pmask_pattern" });
     }
 
     void get(PropertyTree& p, const std::string& path = "") const

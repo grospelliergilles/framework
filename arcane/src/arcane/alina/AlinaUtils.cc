@@ -186,9 +186,10 @@ _addChild(const std::string& path, const char* name,
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-void check_params(const PropertyTree& ptree,
-                  const std::set<std::string>& names)
+void PropertyTree::
+check_params(const std::set<std::string>& names) const
 {
+  const PropertyTree& ptree = *this;
   const boost::property_tree::ptree& p = ptree.toBoostPTree();
 
   for (const auto& n : names) {
@@ -206,10 +207,11 @@ void check_params(const PropertyTree& ptree,
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-void check_params(const PropertyTree& ptree,
-                  const std::set<std::string>& names,
-                  const std::set<std::string>& opt_names)
+void PropertyTree::
+check_params(const std::set<std::string>& names,
+             const std::set<std::string>& opt_names) const
 {
+  const PropertyTree& ptree = *this;
   const boost::property_tree::ptree& p = ptree.toBoostPTree();
 
   for (const auto& n : names) {

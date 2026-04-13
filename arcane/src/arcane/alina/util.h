@@ -193,6 +193,11 @@ class ARCANE_ALINA_EXPORT PropertyTree
 
  public:
 
+  void check_params(const std::set<std::string>& names) const;
+  void check_params(const std::set<std::string>& names, const std::set<std::string>& opt_names) const;
+
+ public:
+
   //TODO: need remove
   const BoostPTree& toBoostPTree() const { return *m_property_tree; }
   //TODO: need remove
@@ -343,14 +348,6 @@ namespace detail
 #define ARCANE_ALINA_PARAM_UNKNOWN(name) \
   std::cerr << "AMGCL WARNING: unknown parameter " << name << std::endl
 #endif
-
-extern "C++" ARCANE_ALINA_EXPORT void
-check_params(const PropertyTree& ptree, const std::set<std::string>& names);
-
-extern "C++" ARCANE_ALINA_EXPORT void
-check_params(const PropertyTree& ptree,
-             const std::set<std::string>& names,
-             const std::set<std::string>& opt_names);
 
 // Put parameter in form "key=value" into a boost::property_tree::ptree
 extern "C++" ARCANE_ALINA_EXPORT void

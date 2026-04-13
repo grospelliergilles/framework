@@ -91,7 +91,7 @@ class CPRPreconditioner
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, active_rows)
     {
-      check_params(p, { "pprecond", "sprecond", "block_size", "active_rows" });
+      p.check_params({ "pprecond", "sprecond", "block_size", "active_rows" });
     }
 
     void get(PropertyTree& p, const std::string& path = "") const

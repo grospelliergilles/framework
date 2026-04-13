@@ -124,7 +124,7 @@ struct BiCGStabLSolverParams
   , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
   , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
   {
-    check_params(p, { "L", "delta", "convex", "pside", "maxiter", "tol", "abstol", "ns_search", "verbose" });
+    p.check_params({ "L", "delta", "convex", "pside", "maxiter", "tol", "abstol", "ns_search", "verbose" });
   }
 
   void get(PropertyTree& p, const std::string& path) const

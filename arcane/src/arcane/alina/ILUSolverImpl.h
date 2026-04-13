@@ -70,7 +70,7 @@ class ILUSolver
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, iters)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
     {
-      check_params(p, { "iters", "damping" });
+      p.check_params( { "iters", "damping" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
@@ -166,7 +166,7 @@ class ILUSolver<backend::BuiltinBackend<value_type, col_type, ptr_type>>
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, serial)
     {
-      check_params(p, { "serial" });
+      p.check_params({ "serial" });
     }
 
     void get(PropertyTree& p, const std::string& path) const

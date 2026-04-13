@@ -159,7 +159,7 @@ class DistributedSubDomainDeflation
 
       def_vec = *static_cast<std::function<double(ptrdiff_t, unsigned)>*>(ptr);
 
-      check_params(p, { "local", "isolver", "dsolver", "num_def_vec", "def_vec" });
+      p.check_params({ "local", "isolver", "dsolver", "num_def_vec", "def_vec" });
     }
 
     void get(PropertyTree& p, const std::string& path) const

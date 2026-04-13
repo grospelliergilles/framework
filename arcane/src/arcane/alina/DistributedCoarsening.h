@@ -74,7 +74,7 @@ struct DistributedPMISAggregation
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_strong)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
     {
-      check_params(p, { "nullspace", "eps_strong", "block_size" });
+      p.check_params({ "nullspace", "eps_strong", "block_size" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
@@ -1197,7 +1197,7 @@ struct DistributedAggregationCoarsening
     : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, over_interp)
     {
-      check_params(p, { "aggr", "over_interp" });
+      p.check_params({ "aggr", "over_interp" });
     }
 
     void get(Alina::PropertyTree& p, const std::string& path) const
@@ -1279,7 +1279,7 @@ struct DistributedSmoothedAggregationCoarsening
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, estimate_spectral_radius)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
     {
-      check_params(p, { "aggr", "relax", "estimate_spectral_radius", "power_iters" });
+      p.check_params({ "aggr", "relax", "estimate_spectral_radius", "power_iters" });
     }
 
     void get(PropertyTree& p, const std::string& path) const

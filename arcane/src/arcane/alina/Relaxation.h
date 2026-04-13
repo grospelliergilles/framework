@@ -294,7 +294,7 @@ class ChebyshevRelaxation
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, scale)
     {
-      check_params(p, { "degree", "higher", "lower", "power_iters", "scale" });
+      p.check_params( { "degree", "higher", "lower", "power_iters", "scale" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
@@ -431,7 +431,7 @@ struct DampedJacobiRelaxation
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
     {
-      check_params(p, { "damping" });
+      p.check_params( { "damping" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
@@ -526,7 +526,7 @@ struct GaussSeidelRelaxation
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, serial)
     {
-      check_params(p, { "serial" });
+      p.check_params( { "serial" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
@@ -886,7 +886,7 @@ struct ILU0Relaxation
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
     , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solve)
     {
-      check_params(p, { "damping", "solve" }, { "k" });
+      p.check_params( { "damping", "solve" }, { "k" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
@@ -1100,7 +1100,7 @@ struct ILUKRelaxation
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
     , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solve)
     {
-      check_params(p, { "k", "damping", "solve" });
+      p.check_params( { "k", "damping", "solve" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
@@ -1433,7 +1433,7 @@ struct ILUPRelaxation
     : BasePrm(p)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, k)
     {
-      check_params(p, { "k", "damping", "solve" });
+      p.check_params( { "k", "damping", "solve" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
@@ -1559,7 +1559,7 @@ struct ILUTRelaxation
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
     , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solve)
     {
-      check_params(p, { "p", "tau", "damping", "solve" });
+      p.check_params( { "p", "tau", "damping", "solve" });
     }
 
     void get(PropertyTree& p, const std::string& path) const

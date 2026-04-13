@@ -158,7 +158,7 @@ class AMG
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, pre_cycles)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, allow_rebuild)
     {
-      check_params(p, { "coarsening", "relax", "coarse_enough", "direct_coarse", "max_levels", "npre", "npost", "ncycle", "pre_cycles", "allow_rebuild" });
+      p.check_params( { "coarsening", "relax", "coarse_enough", "direct_coarse", "max_levels", "npre", "npost", "ncycle", "pre_cycles", "allow_rebuild" });
 
       precondition(max_levels > 0, "max_levels should be positive");
     }

@@ -82,7 +82,7 @@ class DeflatedSolver
     , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, precond)
     , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solver)
     {
-      check_params(p, { "nvec", "vec", "precond", "solver" });
+      p.check_params({ "nvec", "vec", "precond", "solver" });
     }
 
     void get(PropertyTree& p, const std::string& path = "") const

@@ -73,7 +73,7 @@ class PreconditionedSolver
     : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, precond)
     , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solver)
     {
-      check_params(p, { "precond", "solver" });
+      p.check_params( { "precond", "solver" });
     }
 
     void get(PropertyTree& p, const std::string& path = "") const

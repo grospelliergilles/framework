@@ -75,7 +75,7 @@ struct BlockCSRBackend
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
     {
-      check_params(p, { "block_size" });
+      p.check_params( { "block_size" });
     }
     void get(PropertyTree& p, const std::string& path) const
     {

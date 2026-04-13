@@ -172,7 +172,7 @@ class SchurPressureCorrectionPreconditioner
                      "neither pmask_pattern, nor pmask is set");
       }
 
-      check_params(p, { "usolver", "psolver", "type", "approx_schur", "adjust_p", "simplec_dia", "pmask_size", "verbose" },
+      p.check_params({ "usolver", "psolver", "type", "approx_schur", "adjust_p", "simplec_dia", "pmask_size", "verbose" },
                    { "pmask", "pmask_pattern" });
     }
 
