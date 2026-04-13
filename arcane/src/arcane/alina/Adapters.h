@@ -28,7 +28,7 @@
 #include <vector>
 #include <tuple>
 
-#include <boost/range/iterator_range.hpp>
+//#include <boost/range/iterator_range.hpp>
 #include <boost/range/size.hpp>
 #include <boost/iterator/permutation_iterator.hpp>
 
@@ -37,6 +37,8 @@
 #include <arcane/alina/ValueTypeInterface.h>
 #include <arcane/alina/MatrixOperationsImpl.h>
 #include <arcane/alina/CuthillMcKeeReorderer.h>
+
+#include <span>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -523,35 +525,20 @@ complex_adapter<Matrix> complex_matrix(const Matrix& A)
   return complex_adapter<Matrix>(A);
 }
 
-template <class Range>
-auto complex_range(Range& rng) -> boost::iterator_range<std::add_pointer_t<
-std::conditional_t<std::is_const_v<Range>,
-                          std::add_const_t<
-                          typename boost::range_value<
-                          std::decay_t<Range>>::type::value_type>,
-                          typename boost::range_value<
-                          std::decay_t<Range>>::type::value_type>>>
+template <class DataType, class Range>
+auto complex_range(Range& rng) -> std::span<DataType>
 {
-  using pointer_type = std::add_pointer_t<
-  std::conditional_t<
-  std::is_const_v<Range>,
-  std::add_const_t<
-  typename boost::range_value<
-  std::decay_t<Range>>::type::value_type>,
-  typename boost::range_value<
-  std::decay_t<Range>>::type::value_type>>;
+  DataType* b = reinterpret_cast<DataType*>(&rng[0]);
+  size_t s = 2 * std::size(rng);
 
-  pointer_type b = reinterpret_cast<pointer_type>(&rng[0]);
-  pointer_type e = b + 2 * boost::size(rng);
-
-  return boost::iterator_range<pointer_type>(b, e);
+  return std::span<DataType>(b, s);
 }
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-/// Generates matrix rows as needed with help of user-provided functor.
-/**
+/*!
+ * \brief Generates matrix rows as needed with help of user-provided functor.
+ *
  * The generated rows are not stored anywhere.
  */
 template <class RowBuilder>
@@ -719,7 +706,7 @@ struct reordered_vector
 
   size_t size() const
   {
-    return boost::size(x);
+    return std::size(x);
   }
 
   value_type& operator[](size_t i) const
@@ -727,29 +714,25 @@ struct reordered_vector
     return x[perm[i]];
   }
 
-  boost::permutation_iterator<typename std::decay_t<Vector>::iterator,
-                              const ptrdiff_t*>
+  boost::permutation_iterator<typename std::decay_t<Vector>::iterator, const ptrdiff_t*>
   begin()
   {
     return boost::make_permutation_iterator(boost::begin(x), perm);
   }
 
-  boost::permutation_iterator<typename std::decay_t<Vector>::const_iterator,
-                              const ptrdiff_t*>
+  boost::permutation_iterator<typename std::decay_t<Vector>::const_iterator, const ptrdiff_t*>
   begin() const
   {
     return boost::make_permutation_iterator(boost::begin(x), perm);
   }
 
-  boost::permutation_iterator<typename std::decay_t<Vector>::iterator,
-                              const ptrdiff_t*>
+  boost::permutation_iterator<typename std::decay_t<Vector>::iterator, const ptrdiff_t*>
   end()
   {
     return boost::make_permutation_iterator(boost::end(x), perm + size());
   }
 
-  boost::permutation_iterator<typename std::decay_t<Vector>::const_iterator,
-                              const ptrdiff_t*>
+  boost::permutation_iterator<typename std::decay_t<Vector>::const_iterator, const ptrdiff_t*>
   end() const
   {
     return boost::make_permutation_iterator(boost::end(x), perm + size());
@@ -777,8 +760,7 @@ class reorder
   }
 
   template <class Matrix>
-  std::enable_if_t<!backend::is_builtin_vector<Matrix>::value,
-                          reordered_matrix<Matrix>>
+  std::enable_if_t<!backend::is_builtin_vector<Matrix>::value, reordered_matrix<Matrix>>
   operator()(const Matrix& A) const
   {
     return reordered_matrix<Matrix>(A, perm.data(), iperm.data());
@@ -924,9 +906,8 @@ scaled_problem<Backend,
                std::vector<
                typename math::scalar_of<
                typename backend::value_type<Matrix>::type>::type>>
-scale_diagonal(
-const Matrix& A,
-const typename Backend::params& bprm = typename Backend::params())
+scale_diagonal(const Matrix& A,
+               const typename Backend::params& bprm = typename Backend::params())
 {
   typedef typename backend::value_type<Matrix>::type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;

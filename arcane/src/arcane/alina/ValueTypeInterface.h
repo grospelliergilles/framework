@@ -24,6 +24,7 @@
 /*---------------------------------------------------------------------------*/
 
 #include <type_traits>
+#include <complex>
 
 namespace Arcane::Alina::math
 {

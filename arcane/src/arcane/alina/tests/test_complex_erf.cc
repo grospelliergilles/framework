@@ -44,16 +44,15 @@ TEST(alina_test_complex, complex_matrix_adapter)
   Alina::PropertyTree prm;
   prm.put("precond.coarsening.aggr.block_size", 2);
 
-  Alina::PreconditionedSolver<Alina::AMG<Backend,
-                                Alina::SmoothedAggregationCoarserning,
-                                Alina::SPAI0Relaxation>,
-                     Alina::BiCGStabSolver<Backend>>
-  solve(Alina::adapter::complex_matrix(std::tie(n, ptr, col, val)), prm);
+  using AMGType = Alina::AMG<Backend, Alina::SmoothedAggregationCoarserning, Alina::SPAI0Relaxation>;
+  using SolverType = Alina::PreconditionedSolver<AMGType, Alina::BiCGStabSolver<Backend>>;
+
+  SolverType solve(Alina::adapter::complex_matrix(std::tie(n, ptr, col, val)), prm);
 
   std::cout << solve.precond() << std::endl;
 
-  boost::iterator_range<const double*> f_range = Alina::adapter::complex_range(rhs);
-  boost::iterator_range<double*> x_range = Alina::adapter::complex_range(x);
+  auto f_range = Alina::adapter::complex_range<const double>(rhs);
+  auto x_range = Alina::adapter::complex_range<double>(x);
 
   SolverResult r = solve(f_range, x_range);
 

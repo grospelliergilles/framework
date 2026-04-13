@@ -38,14 +38,14 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/util.h>
-#include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/SkylineLUSolver.h>
-#include <arcane/alina/DenseMatrixInverseImpl.h>
-#include <arcane/alina/SparseMatrixMatrixProduct.h>
-#include <arcane/alina/MatrixOperationsImpl.h>
-#include <arcane/alina/CSRMatrix.h>
+#include "arcane/alina/ValueTypeInterface.h"
+#include "arcane/alina/SkylineLUSolver.h"
+#include "arcane/alina/DenseMatrixInverseImpl.h"
+#include "arcane/alina/SparseMatrixMatrixProduct.h"
+#include "arcane/alina/MatrixOperationsImpl.h"
+#include "arcane/alina/CSRMatrix.h"
 
+#include <span>
 
 namespace Arcane::Alina::backend
 {
@@ -829,6 +829,10 @@ struct is_builtin_vector : std::false_type
 
 template <class V>
 struct is_builtin_vector<std::vector<V>> : std::is_arithmetic<V>
+{};
+
+template <class V>
+struct is_builtin_vector<std::span<V>> : std::is_arithmetic<V>
 {};
 
 template <class V>
