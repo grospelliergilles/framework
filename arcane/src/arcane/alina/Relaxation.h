@@ -1466,7 +1466,7 @@ struct ILUPRelaxation
       }
 
       ptrdiff_t n = backend::rows(A);
-      P->val = new value_type[P->nnz];
+      P->val.resize(P->nnz);
 
 #pragma omp parallel for
       for (ptrdiff_t i = 0; i < n; ++i) {

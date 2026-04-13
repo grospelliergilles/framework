@@ -137,7 +137,7 @@ class DistributedDirectSolverBase
       A.set_nonzeros(A.scan_row_sizes());
 
       std::copy(Astrip.col, Astrip.col + Astrip.nnz, A.col);
-      std::copy(Astrip.val, Astrip.val + Astrip.nnz, A.val);
+      std::copy(Astrip.val.data(), Astrip.val.data() + Astrip.nnz, A.val.data());
 
       shift = Astrip.nnz;
       for (int j = 0, d0 = domain[comm.rank]; j < group_size; ++j) {

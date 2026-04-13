@@ -1148,7 +1148,7 @@ struct RugeStubenCoarsening
 
     S.nrows = S.ncols = n;
     S.ptr = new Ptr[n + 1];
-    S.val = new char[nnz];
+    S.val.resize(nnz);
     S.ptr[0] = 0;
 
 #pragma omp parallel for

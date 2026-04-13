@@ -28,8 +28,6 @@
 #include <vector>
 #include <tuple>
 
-//#include <boost/range/iterator_range.hpp>
-#include <boost/range/size.hpp>
 #include <boost/iterator/permutation_iterator.hpp>
 
 #include <arcane/alina/util.h>
@@ -717,25 +715,25 @@ struct reordered_vector
   boost::permutation_iterator<typename std::decay_t<Vector>::iterator, const ptrdiff_t*>
   begin()
   {
-    return boost::make_permutation_iterator(boost::begin(x), perm);
+    return boost::make_permutation_iterator(std::begin(x), perm);
   }
 
   boost::permutation_iterator<typename std::decay_t<Vector>::const_iterator, const ptrdiff_t*>
   begin() const
   {
-    return boost::make_permutation_iterator(boost::begin(x), perm);
+    return boost::make_permutation_iterator(std::begin(x), perm);
   }
 
   boost::permutation_iterator<typename std::decay_t<Vector>::iterator, const ptrdiff_t*>
   end()
   {
-    return boost::make_permutation_iterator(boost::end(x), perm + size());
+    return boost::make_permutation_iterator(std::end(x), perm + size());
   }
 
   boost::permutation_iterator<typename std::decay_t<Vector>::const_iterator, const ptrdiff_t*>
   end() const
   {
-    return boost::make_permutation_iterator(boost::end(x), perm + size());
+    return boost::make_permutation_iterator(std::end(x), perm + size());
   }
 };
 
@@ -945,7 +943,7 @@ zero_copy(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, const Val*
 
   A->ptr = (ptrdiff_t*)ptr;
   A->col = (ptrdiff_t*)col;
-  A->val = (Val*)val;
+  A->val.setPointerZeroCopy((Val*)val);
 
   A->own_data = false;
 
@@ -976,7 +974,7 @@ zero_copy_direct(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, con
 
   A->ptr = const_cast<Ptr*>(ptr);
   A->col = const_cast<Col*>(col);
-  A->val = const_cast<Val*>(val);
+  A->val.setPointerZeroCopy(const_cast<Val*>(val));
 
   A->own_data = false;
 

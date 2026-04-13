@@ -47,12 +47,56 @@ struct CSRMatrix
   typedef col_t col_type;
   typedef ptr_t ptr_type;
 
+  struct ValArray
+  {
+    ValArray() = default;
+    ValArray(const ValArray&) = delete;
+    ValArray& operator=(const ValArray&) = delete;
+    ~ValArray()
+    {
+      // Do not free memory here because we are not the owner
+      // if own_data is false. The CSRMatrix will handle that.
+    }
+
+   public:
+
+    val_type& operator[](Int64 i) { return ptr[i]; }
+    const val_type& operator[](Int64 i) const { return ptr[i]; }
+    operator val_type*() { return ptr; }
+    operator const val_type*() const { return ptr; }
+    val_type* operator+(Int64 i) { return ptr + i; }
+    const val_type* operator+(Int64 i) const { return ptr + i; }
+    val_type* data() { return ptr; }
+    const val_type* data() const { return ptr; }
+
+   public:
+
+    //! Set the new size. WARNING: this method do not handle the delete of the current value
+    void resize(size_t new_size)
+    {
+      ptr = new val_type[new_size];
+    }
+    void reset()
+    {
+      delete[] ptr;
+      ptr = nullptr;
+    }
+    void setPointerZeroCopy(val_type* new_ptr)
+    {
+      ptr = new_ptr;
+    }
+
+   private:
+
+    val_type* ptr = nullptr;
+  };
   size_t nrows = 0;
   size_t ncols = 0;
   size_t nnz = 0;
   ptr_type* ptr = nullptr;
   col_type* col = nullptr;
-  val_type* val = nullptr;
+  //val_type* val = nullptr;
+  ValArray val;
   bool own_data = true;
 
   CSRMatrix() = default;
@@ -76,7 +120,7 @@ struct CSRMatrix
 
     ptr = new ptr_type[nrows + 1];
     col = new col_type[nnz];
-    val = new val_type[nnz];
+    val.resize(nnz);
 
     ptr[0] = ptr_range[0];
 #pragma omp parallel for
@@ -109,7 +153,7 @@ struct CSRMatrix
 
     nnz = scan_row_sizes();
     col = new col_type[nnz];
-    val = new val_type[nnz];
+    val.resize(nnz);
 
 #pragma omp parallel for
     for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i) {
@@ -132,7 +176,7 @@ struct CSRMatrix
     if (other.ptr && other.col && other.val) {
       ptr = new ptr_type[nrows + 1];
       col = new col_type[nnz];
-      val = new val_type[nnz];
+      val.resize(nnz);
 
       ptr[0] = other.ptr[0];
 #pragma omp parallel for
@@ -210,8 +254,7 @@ struct CSRMatrix
       ptr = nullptr;
       delete[] col;
       col = nullptr;
-      delete[] val;
-      val = nullptr;
+      val.reset();
     }
   }
 
@@ -262,7 +305,7 @@ struct CSRMatrix
     col = new col_type[nnz];
 
     if (need_values)
-      val = new val_type[nnz];
+      val.resize(nnz);
   }
 
   ~CSRMatrix()

@@ -372,8 +372,8 @@ struct DistributedPMISAggregation
     S_loc.set_size(n, n, true);
     S_rem.set_size(n, 0, true);
 
-    S_loc.val = new char[A_loc.nnz];
-    S_rem.val = new char[A_rem.nnz];
+    S_loc.val.resize(A_loc.nnz);
+    S_rem.val.resize(A_rem.nnz);
 
 #pragma omp parallel for
     for (ptrdiff_t i = 0; i < n; ++i) {
@@ -1062,7 +1062,7 @@ struct DistributedPMISAggregation
     bool_matrix& C = *c;
 
     C.set_size(n, n, true);
-    C.val = new char[A.nnz];
+    C.val.resize(A.nnz);
 
 #pragma omp parallel
     {
@@ -1338,7 +1338,7 @@ struct DistributedSmoothedAggregationCoarsening
     Af_loc.nnz = S_loc.nnz;
     Af_loc.ptr = S_loc.ptr;
     Af_loc.col = S_loc.col;
-    Af_loc.val = Af_loc_val.data();
+    Af_loc.val.setPointerZeroCopy(Af_loc_val.data());
 
     Af_rem.own_data = false;
     Af_rem.nrows = S_rem.nrows;
@@ -1346,7 +1346,7 @@ struct DistributedSmoothedAggregationCoarsening
     Af_rem.nnz = S_rem.nnz;
     Af_rem.ptr = S_rem.ptr;
     Af_rem.col = S_rem.col;
-    Af_rem.val = Af_rem_val.data();
+    Af_rem.val.setPointerZeroCopy(Af_rem_val.data());
 
     backend::numa_vector<value_type> Df(n, false);
 
