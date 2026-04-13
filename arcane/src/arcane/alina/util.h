@@ -97,19 +97,6 @@ namespace Arcane::Alina
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace detail
-{
-  inline const boost::property_tree::ptree& empty_ptree()
-  {
-    static const boost::property_tree::ptree p;
-    return p;
-  }
-
-} // namespace detail
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
 // Class to wrap 'boost::property_tree::ptree' to ease removing it
 class ARCANE_ALINA_EXPORT PropertyTree
 {
@@ -119,36 +106,10 @@ class ARCANE_ALINA_EXPORT PropertyTree
 
  public:
 
-  PropertyTree()
-  : m_property_tree(new BoostPTree())
-  , m_is_own(true)
-  {
-  }
-  PropertyTree(const PropertyTree& rhs)
-  {
-    if (rhs.m_is_own) {
-      m_property_tree = new BoostPTree(*rhs.m_property_tree);
-      m_is_own = true;
-    }
-    else {
-      m_property_tree = rhs.m_property_tree;
-      m_is_own = false;
-    }
-  }
-  explicit PropertyTree(const BoostPTree& x)
-  : m_property_tree(new BoostPTree(x))
-  , m_is_own(true)
-  {}
-  //template <typename... Args>
-  //PropertyTree(Args&&... args)
-  //: m_property_tree(new BoostPTree(std::forward<Args>(args)...))
-  //, m_is_own(true)
-  //{}
-  ~PropertyTree()
-  {
-    if (m_is_own)
-      delete m_property_tree;
-  }
+  PropertyTree();
+  PropertyTree(const PropertyTree& rhs);
+  explicit PropertyTree(const BoostPTree& x);
+  ~PropertyTree();
 
  public:
 
@@ -162,22 +123,9 @@ class ARCANE_ALINA_EXPORT PropertyTree
   {
     m_property_tree->put(path, value);
   }
-  PropertyTree get_child_empty(const std::string& path) const
-  {
-    const BoostPTree& child = m_property_tree->get_child(path, detail::empty_ptree());
-    PropertyTree p;
-    p.m_property_tree = const_cast<BoostPTree*>(&child);
-    p.m_is_own = false;
-    return p;
-  }
-  bool erase(const char* name)
-  {
-    return m_property_tree->erase(name);
-  }
-  size_t count(const char* name) const
-  {
-    return m_property_tree->count(name);
-  }
+  PropertyTree get_child_empty(const std::string& path) const;
+  bool erase(const char* name);
+  size_t count(const char* name) const;
 
  public:
 
@@ -268,8 +216,14 @@ read_json(const std::string& filename, Arcane::Alina::PropertyTree& prm)
               << std::setw(15) << std::setprecision(8) << std::scientific      \
               << (x) << std::endl
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 namespace Arcane::Alina
 {
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 /// Throws \p message if \p condition is not true.
 template <class Condition, class Message>
@@ -286,7 +240,8 @@ void precondition(const Condition& condition, const Message& message)
 #endif
 }
 
-#ifndef ARCANE_ALINA_NO_BOOST
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 #define ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, name) \
   name(p.get(#name, params().name))
@@ -334,57 +289,20 @@ namespace detail
   std::cerr << "AMGCL WARNING: unknown parameter " << name << std::endl
 #endif
 
-inline void check_params(const PropertyTree& ptree,
-                         const std::set<std::string>& names)
-{
-  const boost::property_tree::ptree& p = ptree.toBoostPTree();
+extern "C++" ARCANE_ALINA_EXPORT void
+check_params(const PropertyTree& ptree, const std::set<std::string>& names);
 
-  for (const auto& n : names) {
-    if (!p.count(n)) {
-      ARCANE_ALINA_PARAM_MISSING(n);
-    }
-  }
-  for (const auto& v : p) {
-    if (!names.count(v.first)) {
-      ARCANE_ALINA_PARAM_UNKNOWN(v.first);
-    }
-  }
-}
-
-inline void check_params(const PropertyTree& ptree,
-                         const std::set<std::string>& names,
-                         const std::set<std::string>& opt_names)
-{
-  const boost::property_tree::ptree& p = ptree.toBoostPTree();
-
-  for (const auto& n : names) {
-    if (!p.count(n)) {
-      ARCANE_ALINA_PARAM_MISSING(n);
-    }
-  }
-  for (const auto& n : opt_names) {
-    if (!p.count(n)) {
-      ARCANE_ALINA_PARAM_MISSING(n);
-    }
-  }
-  for (const auto& v : p) {
-    if (!names.count(v.first) && !opt_names.count(v.first)) {
-      ARCANE_ALINA_PARAM_UNKNOWN(v.first);
-    }
-  }
-}
+extern "C++" ARCANE_ALINA_EXPORT void
+check_params(const PropertyTree& ptree,
+             const std::set<std::string>& names,
+             const std::set<std::string>& opt_names);
 
 // Put parameter in form "key=value" into a boost::property_tree::ptree
-inline void put(PropertyTree& ptree, const std::string& param)
-{
-  boost::property_tree::ptree& p = ptree.toBoostPTree();
-  size_t eq_pos = param.find('=');
-  if (eq_pos == std::string::npos)
-    throw std::invalid_argument("param in put() should have \"key=value\" format!");
-  p.put(param.substr(0, eq_pos), param.substr(eq_pos + 1));
-}
+extern "C++" ARCANE_ALINA_EXPORT void
+put(PropertyTree& ptree, const std::string& param);
 
-#endif
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
 // Iterator range
 template <class Iterator>
