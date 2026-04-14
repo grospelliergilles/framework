@@ -338,6 +338,8 @@ _doHypreSolver(int nb_row,
   if (auto v = Convert::Type<Int32>::tryParseFromEnvironment("ALINA_HYPRE_SOLVER", true))
     solver_id = v.value();
 
+  double solver_tolerance = 1.0e-8;
+
   /* Choose a solver and solve the system */
   std::cout << "FINISH ASSEMBLING solver_id=" << solver_id << "\n";
   /* AMG */
@@ -356,7 +358,7 @@ _doHypreSolver(int nb_row,
     HYPRE_BoomerAMGSetRelaxOrder(solver, 1); /* uses C/F relaxation */
     HYPRE_BoomerAMGSetNumSweeps(solver, 1); /* Sweeeps on each level */
     HYPRE_BoomerAMGSetMaxLevels(solver, 20); /* maximum number of levels */
-    HYPRE_BoomerAMGSetTol(solver, 1e-8); /* conv. tolerance */
+    HYPRE_BoomerAMGSetTol(solver, solver_tolerance); /* conv. tolerance */
 
     /* Now setup and solve! */
     {
@@ -392,7 +394,7 @@ _doHypreSolver(int nb_row,
 
     /* Set some parameters (See Reference Manual for more parameters) */
     HYPRE_PCGSetMaxIter(solver, 1000); /* max iterations */
-    HYPRE_PCGSetTol(solver, 1e-16); /* conv. tolerance */
+    HYPRE_PCGSetTol(solver, solver_tolerance); /* conv. tolerance */
     HYPRE_PCGSetTwoNorm(solver, 1); /* use the two norm as the stopping criteria */
     HYPRE_PCGSetPrintLevel(solver, 2); /* prints out the iteration info */
     HYPRE_PCGSetLogging(solver, 1); /* needed to get run info later */
@@ -425,7 +427,7 @@ _doHypreSolver(int nb_row,
 
     /* Set some parameters (See Reference Manual for more parameters) */
     HYPRE_PCGSetMaxIter(solver, 1000); /* max iterations */
-    HYPRE_PCGSetTol(solver, 1e-7); /* conv. tolerance */
+    HYPRE_PCGSetTol(solver, solver_tolerance); /* conv. tolerance */
     HYPRE_PCGSetTwoNorm(solver, 1); /* use the two norm as the stopping criteria */
     HYPRE_PCGSetPrintLevel(solver, 2); /* print solve info */
     HYPRE_PCGSetLogging(solver, 1); /* needed to get run info later */
@@ -482,7 +484,7 @@ _doHypreSolver(int nb_row,
 
     /* Set some parameters (See Reference Manual for more parameters) */
     HYPRE_PCGSetMaxIter(solver, 1000); /* max iterations */
-    HYPRE_PCGSetTol(solver, 1e-7); /* conv. tolerance */
+    HYPRE_PCGSetTol(solver, solver_tolerance); /* conv. tolerance */
     HYPRE_PCGSetTwoNorm(solver, 1); /* use the two norm as the stopping criteria */
     HYPRE_PCGSetPrintLevel(solver, 2); /* print solve info */
     HYPRE_PCGSetLogging(solver, 1); /* needed to get run info later */
@@ -532,7 +534,7 @@ _doHypreSolver(int nb_row,
     /* Set some parameters (See Reference Manual for more parameters) */
     HYPRE_FlexGMRESSetKDim(solver, restart);
     HYPRE_FlexGMRESSetMaxIter(solver, 1000); /* max iterations */
-    HYPRE_FlexGMRESSetTol(solver, 1e-7); /* conv. tolerance */
+    HYPRE_FlexGMRESSetTol(solver, solver_tolerance); /* conv. tolerance */
     HYPRE_FlexGMRESSetPrintLevel(solver, 2); /* print solve info */
     HYPRE_FlexGMRESSetLogging(solver, 1); /* needed to get run info later */
 
