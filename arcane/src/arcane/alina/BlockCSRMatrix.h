@@ -72,7 +72,7 @@ struct BlockCSRMatrix
   template <class Matrix>
   BlockCSRMatrix(const Matrix& A, size_t block_size)
   : block_size(block_size)
-  , nrows(rows(A))
+  , nrows(nbRow(A))
   , ncols(cols(A))
   , brows((nrows + block_size - 1) / block_size)
   , bcols((ncols + block_size - 1) / block_size)

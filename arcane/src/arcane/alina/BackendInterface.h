@@ -346,7 +346,7 @@ struct reinterpret_as_rhs_impl
 
 /// Returns the number of rows in a matrix.
 template <class Matrix>
-size_t rows(const Matrix& matrix)
+size_t nbRow(const Matrix& matrix)
 {
   return rows_impl<Matrix>::get(matrix);
 }

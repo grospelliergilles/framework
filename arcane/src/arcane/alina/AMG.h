@@ -242,8 +242,8 @@ class AMG
                const backend_params& bprm = backend_params())
   {
     precondition(prm.allow_rebuild, "allow_rebuild is not set!");
-    precondition(backend::rows(*A) == backend::rows(system_matrix()) &&
-                 backend::cols(*A) == backend::rows(*A),
+    precondition(backend::nbRow(*A) == backend::nbRow(system_matrix()) &&
+                 backend::cols(*A) == backend::nbRow(*A),
                  "Matrix dimensions differ from the original ones!");
 
     ARCANE_ALINA_TIC("rebuild");
@@ -361,7 +361,7 @@ class AMG
     AMGLevel() = default;
 
     AMGLevel(std::shared_ptr<build_matrix> A, params& prm, const backend_params& bprm)
-    : m_rows(backend::rows(*A))
+    : m_rows(backend::nbRow(*A))
     , m_nonzeros(backend::nonzeros(*A))
     {
       ARCANE_ALINA_TIC("move to backend");
@@ -416,7 +416,7 @@ class AMG
     void create_coarse(std::shared_ptr<build_matrix> A,
                        const backend_params& bprm, bool single_level)
     {
-      m_rows = backend::rows(*A);
+      m_rows = backend::nbRow(*A);
       m_nonzeros = backend::nonzeros(*A);
 
       u = Backend::create_vector(m_rows, bprm);
@@ -479,14 +479,14 @@ class AMG
   void _initialize(std::shared_ptr<build_matrix> A,
                    const backend_params& bprm = backend_params())
   {
-    precondition(backend::rows(*A) == backend::cols(*A), "Matrix should be square!");
+    precondition(backend::nbRow(*A) == backend::cols(*A), "Matrix should be square!");
 
     bool direct_coarse_solve = true;
 
     coarsening_type C(prm.coarsening);
     std::cout << "DoInit AMG coarse_enough=" << prm.coarse_enough << "\n";
-    while (backend::rows(*A) > prm.coarse_enough) {
-      std::cout << "DoIteration nb_row=" << backend::rows(*A) << "\n";
+    while (backend::nbRow(*A) > prm.coarse_enough) {
+      std::cout << "DoIteration nb_row=" << backend::nbRow(*A) << "\n";
       levels.push_back(AMGLevel(A, prm, bprm));
 
       if (levels.size() >= prm.max_levels)
@@ -502,7 +502,7 @@ class AMG
       }
     }
 
-    if (!A || backend::rows(*A) > prm.coarse_enough) {
+    if (!A || backend::nbRow(*A) > prm.coarse_enough) {
       // The coarse matrix is still too big to be solved directly.
       direct_coarse_solve = false;
     }

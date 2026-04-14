@@ -120,7 +120,7 @@ void solve_block_cpr(const Matrix& K, const std::vector<double>& rhs, Alina::Pro
 
   std::cout << solve.precond() << std::endl;
 
-  size_t n = Alina::backend::rows(K) / B;
+  size_t n = Alina::backend::nbRow(K) / B;
   auto rhs_ptr = reinterpret_cast<const rhs_type*>(rhs.data());
 
   SmallSpan<const rhs_type> f(rhs_ptr, n);

@@ -64,7 +64,7 @@ solve(const Alina::mpi_communicator& comm,
 
   using Solver = DistributedPreconditionedSolver<DistributedBlockPreconditioner<Precond<Backend>>, DistributedSolverRuntime<Backend>>;
 
-  const size_t n = Alina::backend::rows(A);
+  const size_t n = Alina::backend::nbRow(A);
 
   std::vector<double> rhs(n, 1), x(n, 0);
 

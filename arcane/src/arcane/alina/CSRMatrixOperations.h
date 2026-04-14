@@ -229,7 +229,7 @@ sum(Val alpha, const CSRMatrix<Val, Col, Ptr>& A, Val beta,
 template <class Val, class Col, class Ptr, class T> void
 scale(CSRMatrix<Val, Col, Ptr>& A, T s)
 {
-  ptrdiff_t n = backend::rows(A);
+  ptrdiff_t n = backend::nbRow(A);
 
 #pragma omp parallel for
   for (ptrdiff_t i = 0; i < n; ++i) {
@@ -452,7 +452,7 @@ spectral_radius(const Matrix& A, int power_iters = 0)
   typedef typename math::rhs_of<value_type>::type rhs_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
 
-  const ptrdiff_t n = backend::rows(A);
+  const ptrdiff_t n = backend::nbRow(A);
   scalar_type radius;
 
   if (power_iters <= 0) {

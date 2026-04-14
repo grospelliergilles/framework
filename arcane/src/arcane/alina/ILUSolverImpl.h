@@ -92,8 +92,8 @@ class ILUSolver
   , L(Backend::copy_matrix(L, bprm))
   , U(Backend::copy_matrix(U, bprm))
   , D(Backend::copy_vector(D, bprm))
-  , t1(Backend::create_vector(backend::rows(*L), bprm))
-  , t2(Backend::create_vector(backend::rows(*L), bprm))
+  , t1(Backend::create_vector(backend::nbRow(*L), bprm))
+  , t2(Backend::create_vector(backend::nbRow(*L), bprm))
   {}
 
   template <class Vector>
@@ -254,7 +254,7 @@ class ILUSolver<backend::BuiltinBackend<value_type, col_type, ptr_type>>
   template <class Vector>
   void serial_solve(Vector& x)
   {
-    const size_t n = backend::rows(*L);
+    const size_t n = backend::nbRow(*L);
 
     const matrix& L = *(this->L);
     const matrix& U = *(this->U);

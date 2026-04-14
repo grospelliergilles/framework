@@ -96,9 +96,9 @@ class DistributedCPRPreconditioner
                                const backend_params& bprm = backend_params())
   : prm(prm)
   , comm(comm)
-  , n(backend::rows(K))
+  , n(backend::nbRow(K))
   {
-    init(std::make_shared<matrix>(comm, K, backend::rows(K)), bprm);
+    init(std::make_shared<matrix>(comm, K, backend::nbRow(K)), bprm);
   }
 
   DistributedCPRPreconditioner(mpi_communicator comm,

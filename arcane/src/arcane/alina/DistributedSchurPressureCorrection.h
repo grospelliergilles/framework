@@ -166,7 +166,7 @@ class DistributedSchurPressureCorrection
   : prm(prm)
   , comm(comm)
   {
-    this->K = std::make_shared<matrix>(comm, K, backend::rows(K));
+    this->K = std::make_shared<matrix>(comm, K, backend::nbRow(K));
     init(bprm);
   }
 

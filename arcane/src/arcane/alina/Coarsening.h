@@ -209,14 +209,14 @@ struct plain_aggregates
   plain_aggregates(const Matrix& A, const params& prm)
   : count(0)
   , strong_connection(backend::nonzeros(A))
-  , id(backend::rows(A))
+  , id(backend::nbRow(A))
   {
     typedef typename backend::value_type<Matrix>::type value_type;
     typedef typename math::scalar_of<value_type>::type scalar_type;
 
     scalar_type eps_squared = prm.eps_strong * prm.eps_strong;
 
-    const size_t n = backend::rows(A);
+    const size_t n = backend::nbRow(A);
 
     /* 1. Get strong connections */
     auto dia = diagonal(A);
@@ -522,7 +522,7 @@ class pointwise_aggregates
     }
     else {
       strong_connection.resize(backend::nonzeros(A));
-      id.resize(backend::rows(A));
+      id.resize(backend::nbRow(A));
 
       auto ap = pointwise_matrix(A, prm.block_size);
       auto& Ap = *ap;
@@ -700,7 +700,7 @@ struct AggregationCoarsening
   std::tuple<std::shared_ptr<Matrix>, std::shared_ptr<Matrix>>
   transfer_operators(const Matrix& A)
   {
-    const size_t n = backend::rows(A);
+    const size_t n = backend::nbRow(A);
 
     ARCANE_ALINA_TIC("aggregates");
     Aggregates aggr(A, prm.aggr, prm.nullspace.cols);
@@ -969,7 +969,7 @@ struct RugeStubenCoarsening
     typedef typename backend::ptr_type<Matrix>::type Ptr;
     typedef typename math::scalar_of<Val>::type Scalar;
 
-    const size_t n = backend::rows(A);
+    const size_t n = backend::nbRow(A);
 
     static const Scalar eps = Alina::detail::eps<Scalar>(1);
 
@@ -1142,7 +1142,7 @@ struct RugeStubenCoarsening
   {
     typedef typename math::scalar_of<Val>::type Scalar;
 
-    const size_t n = backend::rows(A);
+    const size_t n = backend::nbRow(A);
     const size_t nnz = backend::nonzeros(A);
     const Scalar eps = Alina::detail::eps<Scalar>(1);
 
@@ -1412,7 +1412,7 @@ struct SmoothedAggregationCoarserning
     typedef typename backend::value_type<Matrix>::type value_type;
     typedef typename math::scalar_of<value_type>::type scalar_type;
 
-    const size_t n = backend::rows(A);
+    const size_t n = backend::nbRow(A);
 
     ARCANE_ALINA_TIC("aggregates");
     Aggregates aggr(A, prm.aggr, prm.nullspace.cols);
@@ -1423,7 +1423,7 @@ struct SmoothedAggregationCoarserning
     n, aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
 
     auto P = std::make_shared<Matrix>();
-    P->set_size(backend::rows(*P_tent), backend::cols(*P_tent), true);
+    P->set_size(backend::nbRow(*P_tent), backend::cols(*P_tent), true);
 
     scalar_type omega = prm.relax;
     if (prm.estimate_spectral_radius) {
@@ -1581,11 +1581,11 @@ struct SmoothedAggregationEnergyMinCoarsening
     ARCANE_ALINA_TOC("aggregates");
 
     ARCANE_ALINA_TIC("interpolation");
-    auto P_tent = tentative_prolongation<Matrix>(backend::rows(A), aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
+    auto P_tent = tentative_prolongation<Matrix>(backend::nbRow(A), aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
 
     // Filter the system matrix
     CSRMatrix<Val, Col, Ptr> Af;
-    Af.set_size(backend::rows(A), backend::cols(A));
+    Af.set_size(backend::nbRow(A), backend::cols(A));
     Af.ptr[0] = 0;
 
     std::vector<Val> dia(Af.nrows);
@@ -1661,7 +1661,7 @@ struct SmoothedAggregationEnergyMinCoarsening
                 const CSRMatrix<Val, Col, Ptr>& P_tent,
                 std::vector<Val>& omega)
   {
-    const size_t n = backend::rows(P_tent);
+    const size_t n = backend::nbRow(P_tent);
     const size_t nc = backend::cols(P_tent);
 
     auto AP = product(A, P_tent, /*sort rows: */ true);

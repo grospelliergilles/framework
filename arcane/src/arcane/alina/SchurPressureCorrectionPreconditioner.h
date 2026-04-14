@@ -193,7 +193,7 @@ class SchurPressureCorrectionPreconditioner
                                         const params& prm = params(),
                                         const backend_params& bprm = backend_params())
   : prm(prm)
-  , n(backend::rows(K))
+  , n(backend::nbRow(K))
   , np(0)
   , nu(0)
   {
@@ -204,7 +204,7 @@ class SchurPressureCorrectionPreconditioner
                                         const params& prm = params(),
                                         const backend_params& bprm = backend_params())
   : prm(prm)
-  , n(backend::rows(*K))
+  , n(backend::nbRow(*K))
   , np(0)
   , nu(0)
   {

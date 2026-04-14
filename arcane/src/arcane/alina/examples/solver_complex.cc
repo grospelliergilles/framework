@@ -43,7 +43,7 @@ solve(const Matrix& A,
   typedef typename Precond::backend_type Backend;
 
   typedef typename Alina::math::rhs_of<typename Backend::value_type>::type rhs_type;
-  size_t n = Alina::backend::rows(A);
+  size_t n = Alina::backend::nbRow(A);
 
   rhs_type const* fptr = reinterpret_cast<rhs_type const*>(&f[0]);
   rhs_type* xptr = reinterpret_cast<rhs_type*>(&x[0]);

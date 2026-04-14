@@ -91,9 +91,9 @@ class PreconditionedSolver
                        const params& prm = params(),
                        const backend_params& bprm = backend_params())
   : prm(prm)
-  , n(backend::rows(A))
+  , n(backend::nbRow(A))
   , P(A, prm.precond, bprm)
-  , S(backend::rows(A), prm.solver, bprm)
+  , S(backend::nbRow(A), prm.solver, bprm)
   {}
 
   // Constructs the preconditioner and creates iterative solver.
@@ -102,9 +102,9 @@ class PreconditionedSolver
                        const params& prm = params(),
                        const backend_params& bprm = backend_params())
   : prm(prm)
-  , n(backend::rows(*A))
+  , n(backend::nbRow(*A))
   , P(A, prm.precond, bprm)
-  , S(backend::rows(*A), prm.solver, bprm)
+  , S(backend::nbRow(*A), prm.solver, bprm)
   {}
 
   /** Computes the solution for the given system matrix \p A and the

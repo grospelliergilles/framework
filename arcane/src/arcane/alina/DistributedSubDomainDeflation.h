@@ -183,7 +183,7 @@ class DistributedSubDomainDeflation
                                 const params& prm = params(),
                                 const backend_params& bprm = backend_params())
   : comm(comm)
-  , nrows(backend::rows(Astrip))
+  , nrows(backend::nbRow(Astrip))
   , ndv(prm.num_def_vec)
   , dtype(mpi_datatype<value_type>())
   , dv_start(comm.size + 1, 0)

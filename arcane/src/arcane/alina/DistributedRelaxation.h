@@ -303,7 +303,7 @@ struct AsDistributedPreconditioner
                               const Matrix& A,
                               const params& prm = params(),
                               const backend_params& bprm = backend_params())
-  : A(std::make_shared<matrix>(comm, A, backend::rows(A)))
+  : A(std::make_shared<matrix>(comm, A, backend::nbRow(A)))
   , S(A, prm, bprm)
   {
     this->A->move_to_backend(bprm);

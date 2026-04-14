@@ -101,9 +101,9 @@ class DeflatedSolver
                   const params& prm = params(),
                   const backend_params& bprm = backend_params())
   : prm(prm)
-  , n(backend::rows(A))
+  , n(backend::nbRow(A))
   , P(A, prm.precond, bprm)
-  , S(backend::rows(A), prm.solver, bprm)
+  , S(backend::nbRow(A), prm.solver, bprm)
   , r(backend_type::create_vector(n, bprm))
   , Z(prm.nvec)
   , E(prm.nvec * prm.nvec, 0)
@@ -118,9 +118,9 @@ class DeflatedSolver
                   const params& prm = params(),
                   const backend_params& bprm = backend_params())
   : prm(prm)
-  , n(backend::rows(*A))
+  , n(backend::nbRow(*A))
   , P(A, prm.precond, bprm)
-  , S(backend::rows(*A), prm.solver, bprm)
+  , S(backend::nbRow(*A), prm.solver, bprm)
   , r(backend_type::create_vector(n, bprm))
   , Z(prm.nvec)
   , E(prm.nvec * prm.nvec, 0)

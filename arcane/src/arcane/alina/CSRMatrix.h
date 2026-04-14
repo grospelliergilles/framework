@@ -146,7 +146,7 @@ struct CSRMatrix
   // TODO: A supprimer. Mettre cela dans une function externe pour ne pas dépendre de backend
   template <class Matrix>
   CSRMatrix(const Matrix& A)
-  : nrows(backend::rows(A))
+  : nrows(backend::nbRow(A))
   , ncols(backend::cols(A))
   {
     ARCANE_ALINA_TIC("CSR copy");

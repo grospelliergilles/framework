@@ -59,13 +59,13 @@ class EigenSolver
 
   template <class Matrix>
   EigenSolver(const Matrix& A, const params& = params())
-  : n(backend::rows(A))
+  : n(backend::nbRow(A))
   {
     typedef typename std::remove_const<typename std::remove_pointer<typename backend::col_data_impl<Matrix>::type>::type>::type col_type;
     typedef typename std::remove_const<typename std::remove_pointer<typename backend::ptr_data_impl<Matrix>::type>::type>::type ptr_type;
 
     S.compute(MatrixType(Eigen::Map<Eigen::SparseMatrix<value_type, Eigen::RowMajor, ptrdiff_t>>(
-    backend::rows(A), backend::cols(A), backend::nonzeros(A),
+    backend::nbRow(A), backend::cols(A), backend::nonzeros(A),
     const_cast<ptr_type*>(backend::ptr_data(A)),
     const_cast<col_type*>(backend::col_data(A)),
     const_cast<value_type*>(backend::val_data(A)))));

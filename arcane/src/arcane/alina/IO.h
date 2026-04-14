@@ -408,7 +408,7 @@ void mm_write(const std::string& fname, const Matrix& A)
 {
   typedef typename backend::value_type<Matrix>::type Val;
 
-  const size_t rows = backend::rows(A);
+  const size_t rows = backend::nbRow(A);
   const size_t cols = backend::cols(A);
   const size_t nnz = backend::nonzeros(A);
 

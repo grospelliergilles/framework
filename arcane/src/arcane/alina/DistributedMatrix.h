@@ -401,7 +401,7 @@ class DistributedMatrix
   DistributedMatrix(mpi_communicator comm,
                     const Matrix& A,
                     ptrdiff_t _n_loc_cols = -1)
-  : n_loc_rows(backend::rows(A))
+  : n_loc_rows(backend::nbRow(A))
   , n_loc_cols(_n_loc_cols < 0 ? n_loc_rows : _n_loc_cols)
   , n_loc_nonzeros(backend::nonzeros(A))
   {

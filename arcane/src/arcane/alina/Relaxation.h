@@ -87,7 +87,7 @@ struct RelaxationAsBlock
          const params& prm = params(),
          const backend_params& bprm = backend_params())
     : base(*std::make_shared<CSRMatrix<BlockType, col_type, ptr_type>>(adapter::block_matrix<BlockType>(A)), prm, bprm)
-    , nrows(backend::rows(A) / math::static_rows<BlockType>::value)
+    , nrows(backend::nbRow(A) / math::static_rows<BlockType>::value)
     {}
 
     template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
@@ -229,7 +229,7 @@ class RelaxationAsPreconditioner
   friend std::ostream& operator<<(std::ostream& os, const RelaxationAsPreconditioner& p)
   {
     os << "Relaxation as preconditioner" << std::endl;
-    os << "  Unknowns: " << backend::rows(p.system_matrix()) << std::endl;
+    os << "  Unknowns: " << backend::nbRow(p.system_matrix()) << std::endl;
     os << "  Nonzeros: " << backend::nonzeros(p.system_matrix()) << std::endl;
     os << "  Memory:   " << human_readable_memory(p.bytes()) << std::endl;
 
@@ -313,8 +313,8 @@ class ChebyshevRelaxation
   ChebyshevRelaxation(const Matrix& A, const params& prm,
                       const typename Backend::params& backend_prm)
   : prm(prm)
-  , p(Backend::create_vector(backend::rows(A), backend_prm))
-  , r(Backend::create_vector(backend::rows(A), backend_prm))
+  , p(Backend::create_vector(backend::nbRow(A), backend_prm))
+  , r(Backend::create_vector(backend::nbRow(A), backend_prm))
   {
     scalar_type hi, lo;
 
@@ -621,7 +621,7 @@ struct GaussSeidelRelaxation
     typedef typename backend::value_type<Matrix>::type val_type;
     typedef typename math::rhs_of<val_type>::type rhs_type;
 
-    const ptrdiff_t n = backend::rows(A);
+    const ptrdiff_t n = backend::nbRow(A);
 
     const ptrdiff_t beg = forward ? 0 : n - 1;
     const ptrdiff_t end = forward ? n : -1;
@@ -679,7 +679,7 @@ struct GaussSeidelRelaxation
     , val(nthreads)
     , ord(nthreads)
     {
-      ptrdiff_t n = backend::rows(A);
+      ptrdiff_t n = backend::nbRow(A);
       ptrdiff_t nlev = 0;
 
       std::vector<ptrdiff_t> level(n, 0);
@@ -906,7 +906,7 @@ struct ILU0Relaxation
   : prm(prm)
   {
     typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
-    const size_t n = backend::rows(A);
+    const size_t n = backend::nbRow(A);
 
     size_t Lnz = 0, Unz = 0;
 
@@ -1124,7 +1124,7 @@ struct ILUKRelaxation
   {
     typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
 
-    const size_t n = backend::rows(A);
+    const size_t n = backend::nbRow(A);
 
     size_t Anz = backend::nonzeros(A);
 
@@ -1465,7 +1465,7 @@ struct ILUPRelaxation
         P = detail::symb_product(*P, A);
       }
 
-      ptrdiff_t n = backend::rows(A);
+      ptrdiff_t n = backend::nbRow(A);
       P->val.resize(P->nnz);
 
 #pragma omp parallel for
@@ -1586,7 +1586,7 @@ struct ILUTRelaxation
   ILUTRelaxation(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
   {
-    const size_t n = backend::rows(A);
+    const size_t n = backend::nbRow(A);
 
     size_t Lnz = 0, Unz = 0;
 
@@ -1926,7 +1926,7 @@ struct SPAI0Relaxation
   template <class Matrix>
   SPAI0Relaxation(const Matrix& A, const params&, const typename Backend::params& backend_prm)
   {
-    const size_t n = backend::rows(A);
+    const size_t n = backend::nbRow(A);
 
     auto m = std::make_shared<backend::numa_vector<value_type>>(n, false);
 
@@ -2010,7 +2010,7 @@ struct SPAI1Relaxation
   {
     typedef typename backend::value_type<Matrix>::type value_type;
 
-    const size_t n = backend::rows(A);
+    const size_t n = backend::nbRow(A);
     const size_t m = backend::cols(A);
 
     auto Ainv = std::make_shared<Matrix>(A);

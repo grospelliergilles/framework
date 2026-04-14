@@ -73,7 +73,7 @@ struct EigenBackend
     const typename BuiltinBackend<real>::matrix& a = *A;
 
     return std::shared_ptr<matrix>(new matrix(
-                                   rows(*A), cols(*A), nonzeros(*A),
+                                   nbRow(*A), cols(*A), nonzeros(*A),
                                    const_cast<index_type*>(a.ptr.data()),
                                    const_cast<index_type*>(a.col.data()),
                                    const_cast<value_type*>(a.val.data())),

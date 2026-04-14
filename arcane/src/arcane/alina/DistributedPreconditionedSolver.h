@@ -85,9 +85,9 @@ class DistributedPreconditionedSolver
                                   const params& prm = params(),
                                   const backend_params& bprm = backend_params())
   : prm(prm)
-  , n(backend::rows(A))
+  , n(backend::nbRow(A))
   , P(comm, A, prm.precond, bprm)
-  , S(backend::rows(A), prm.solver, bprm, DistributedInnerProduct(comm))
+  , S(backend::nbRow(A), prm.solver, bprm, DistributedInnerProduct(comm))
   {}
 
   DistributedPreconditionedSolver(mpi_communicator comm,
@@ -118,9 +118,9 @@ class DistributedPreconditionedSolver
                                   const params& prm = params(),
                                   const backend_params& bprm = backend_params())
   : prm(prm)
-  , n(backend::rows(*A))
+  , n(backend::nbRow(*A))
   , P(comm, A, prm.precond, bprm)
-  , S(backend::rows(*A), prm.solver, bprm, DistributedInnerProduct(comm))
+  , S(backend::nbRow(*A), prm.solver, bprm, DistributedInnerProduct(comm))
   {}
 
   template <class Matrix, class Vec1, class Vec2>

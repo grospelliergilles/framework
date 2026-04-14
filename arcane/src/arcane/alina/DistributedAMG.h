@@ -161,7 +161,7 @@ class DistributedAMG
   , comm(comm)
   , repart(prm.repart)
   {
-    init(std::make_shared<matrix>(comm, A, backend::rows(A)), bprm);
+    init(std::make_shared<matrix>(comm, A, backend::nbRow(A)), bprm);
   }
 
   DistributedAMG(mpi_communicator comm,
@@ -185,7 +185,7 @@ class DistributedAMG
   void rebuild(const Matrix& M,
                const backend_params& bprm = backend_params())
   {
-    rebuild(std::make_shared<matrix>(comm, M, backend::rows(M)), bprm);
+    rebuild(std::make_shared<matrix>(comm, M, backend::nbRow(M)), bprm);
   }
 
   template <class OtherBackend>

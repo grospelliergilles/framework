@@ -99,7 +99,7 @@ class SkylineLUSolver
 
   template <class Matrix>
   SkylineLUSolver(const Matrix& A, const params& = params())
-  : n(backend::rows(A))
+  : n(backend::nbRow(A))
   , perm(n)
   , ptr(n + 1, 0)
   , D(n, math::zero<value_type>())

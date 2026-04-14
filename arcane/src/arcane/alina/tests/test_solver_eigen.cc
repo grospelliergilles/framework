@@ -1,3 +1,6 @@
+// Pour Eigen
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+
 #include <gtest/gtest.h>
 
 #include <arcane/alina/EigenBackend.h>

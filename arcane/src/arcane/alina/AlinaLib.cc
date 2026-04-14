@@ -196,7 +196,7 @@ preconditioner_apply(AlinaPreconditioner* handle, const double* rhs, double* x)
 {
   PreconditionerType* amg = handle->m_preconditioner;
 
-  size_t n = Alina::backend::rows(amg->system_matrix());
+  size_t n = Alina::backend::nbRow(amg->system_matrix());
 
   SmallSpan<double> x_range(x, n);
   SmallSpan<const double> rhs_range(rhs, n);

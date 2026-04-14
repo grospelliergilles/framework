@@ -98,7 +98,7 @@ class DummyPreconditioner
   friend std::ostream& operator<<(std::ostream& os, const DummyPreconditioner& p)
   {
     os << "identity matrix as preconditioner" << std::endl;
-    os << "  unknowns: " << backend::rows(p.system_matrix()) << std::endl;
+    os << "  unknowns: " << backend::nbRow(p.system_matrix()) << std::endl;
     os << "  nonzeros: " << backend::nonzeros(p.system_matrix()) << std::endl;
 
     return os;

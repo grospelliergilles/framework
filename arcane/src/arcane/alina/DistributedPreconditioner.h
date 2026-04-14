@@ -110,7 +110,7 @@ class DistributedPreconditioner
   : _class(prm.get("class", eDistributedPreconditionerType::amg))
   , handle(0)
   {
-    init(std::make_shared<matrix>(comm, Astrip, backend::rows(Astrip)), prm, bprm);
+    init(std::make_shared<matrix>(comm, Astrip, backend::nbRow(Astrip)), prm, bprm);
   }
 
   DistributedPreconditioner(mpi_communicator,
@@ -259,7 +259,7 @@ class DistributedBlockPreconditioner
                                  const params& prm = params(),
                                  const backend_params& bprm = backend_params())
   {
-    A = std::make_shared<matrix>(comm, Astrip, backend::rows(Astrip));
+    A = std::make_shared<matrix>(comm, Astrip, backend::nbRow(Astrip));
     P = std::make_shared<Precond>(A->local(), prm, bprm);
     A->set_local(P->system_matrix_ptr());
     A->move_to_backend(bprm);

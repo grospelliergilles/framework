@@ -82,7 +82,7 @@ struct CuthillMcKeeReorderer
   template <class Matrix, class Vector>
   static void get(const Matrix& A, Vector& perm)
   {
-    const ptrdiff_t n = backend::rows(A);
+    const ptrdiff_t n = backend::nbRow(A);
 
     /* The data structure used to sort and traverse the level sets:
      *

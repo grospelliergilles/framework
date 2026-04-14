@@ -222,14 +222,14 @@ struct block_matrix_adapter
   : A(A)
   {
     precondition(
-    backend::rows(A) % BlockSize == 0 &&
+    backend::nbRow(A) % BlockSize == 0 &&
     backend::cols(A) % BlockSize == 0,
     "Matrix size is not divisible by block size!");
   }
 
   size_t rows() const
   {
-    return backend::rows(A) / BlockSize;
+    return backend::nbRow(A) / BlockSize;
   }
 
   size_t cols() const
@@ -383,10 +383,10 @@ unblock_matrix(const Matrix& B)
 
   auto A = std::make_shared<CSRMatrix<Scalar, Col, Ptr>>();
 
-  A->set_size(backend::rows(B) * brows, backend::cols(B) * bcols);
+  A->set_size(backend::nbRow(B) * brows, backend::cols(B) * bcols);
   A->ptr[0] = 0;
 
-  const ptrdiff_t nb = backend::rows(B);
+  const ptrdiff_t nb = backend::nbRow(B);
 
 #pragma omp for
   for (ptrdiff_t ib = 0; ib < nb; ++ib) {
@@ -442,7 +442,7 @@ struct complex_adapter
 
   size_t rows() const
   {
-    return 2 * backend::rows(A);
+    return 2 * backend::nbRow(A);
   }
 
   size_t cols() const
@@ -634,7 +634,7 @@ struct reordered_matrix
 
   size_t rows() const
   {
-    return backend::rows(A);
+    return backend::nbRow(A);
   }
 
   size_t cols() const
@@ -747,7 +747,7 @@ class reorder
 
   template <class Matrix>
   explicit reorder(const Matrix& A)
-  : n(backend::rows(A))
+  : n(backend::nbRow(A))
   , perm(n)
   , iperm(n)
   {
@@ -817,7 +817,7 @@ struct scaled_matrix
   , s(s)
   {}
 
-  size_t rows() const { return backend::rows(A); }
+  size_t rows() const { return backend::nbRow(A); }
   size_t cols() const { return backend::cols(A); }
   size_t nonzeros() const { return backend::nonzeros(A); }
 
@@ -907,7 +907,7 @@ scale_diagonal(const Matrix& A,
 {
   typedef typename backend::value_type<Matrix>::type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
-  ptrdiff_t n = backend::rows(A);
+  ptrdiff_t n = backend::nbRow(A);
   auto s = std::make_shared<std::vector<scalar_type>>(n);
 
 #pragma omp parallel for

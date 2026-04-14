@@ -232,7 +232,7 @@ class PreconditionerRuntime
 
   size_t size() const
   {
-    return backend::rows(system_matrix());
+    return backend::nbRow(system_matrix());
   }
 
   size_t bytes() const

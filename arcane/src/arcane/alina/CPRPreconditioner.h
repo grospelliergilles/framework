@@ -108,7 +108,7 @@ class CPRPreconditioner
                     const params& prm = params(),
                     const backend_params& bprm = backend_params())
   : prm(prm)
-  , n(backend::rows(K))
+  , n(backend::nbRow(K))
   {
     init(std::make_shared<build_matrix>(K), bprm,
          std::integral_constant<bool, math::static_rows<value_type>::value == 1>());
@@ -118,7 +118,7 @@ class CPRPreconditioner
                     const params& prm = params(),
                     const backend_params& bprm = backend_params())
   : prm(prm)
-  , n(backend::rows(*K))
+  , n(backend::nbRow(*K))
   {
     init(K, bprm,
          std::integral_constant<bool, math::static_rows<value_type>::value == 1>());
