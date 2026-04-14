@@ -2011,7 +2011,7 @@ struct SPAI1Relaxation
     typedef typename backend::value_type<Matrix>::type value_type;
 
     const size_t n = backend::nbRow(A);
-    const size_t m = backend::cols(A);
+    const size_t m = backend::nbColumn(A);
 
     auto Ainv = std::make_shared<Matrix>(A);
 

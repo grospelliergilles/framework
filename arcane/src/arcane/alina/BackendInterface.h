@@ -356,7 +356,7 @@ size_t nbRow(const Matrix& matrix)
 
 /// Returns the number of columns in a matrix.
 template <class Matrix>
-size_t cols(const Matrix& matrix)
+size_t nbColumn(const Matrix& matrix)
 {
   return cols_impl<Matrix>::get(matrix);
 }

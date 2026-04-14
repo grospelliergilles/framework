@@ -243,7 +243,7 @@ class AMG
   {
     precondition(prm.allow_rebuild, "allow_rebuild is not set!");
     precondition(backend::nbRow(*A) == backend::nbRow(system_matrix()) &&
-                 backend::cols(*A) == backend::nbRow(*A),
+                 backend::nbColumn(*A) == backend::nbRow(*A),
                  "Matrix dimensions differ from the original ones!");
 
     ARCANE_ALINA_TIC("rebuild");
@@ -479,7 +479,7 @@ class AMG
   void _initialize(std::shared_ptr<build_matrix> A,
                    const backend_params& bprm = backend_params())
   {
-    precondition(backend::nbRow(*A) == backend::cols(*A), "Matrix should be square!");
+    precondition(backend::nbRow(*A) == backend::nbColumn(*A), "Matrix should be square!");
 
     bool direct_coarse_solve = true;
 

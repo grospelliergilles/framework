@@ -223,7 +223,7 @@ struct block_matrix_adapter
   {
     precondition(
     backend::nbRow(A) % BlockSize == 0 &&
-    backend::cols(A) % BlockSize == 0,
+    backend::nbColumn(A) % BlockSize == 0,
     "Matrix size is not divisible by block size!");
   }
 
@@ -234,7 +234,7 @@ struct block_matrix_adapter
 
   size_t cols() const
   {
-    return backend::cols(A) / BlockSize;
+    return backend::nbColumn(A) / BlockSize;
   }
 
   size_t nonzeros() const
@@ -383,7 +383,7 @@ unblock_matrix(const Matrix& B)
 
   auto A = std::make_shared<CSRMatrix<Scalar, Col, Ptr>>();
 
-  A->set_size(backend::nbRow(B) * brows, backend::cols(B) * bcols);
+  A->set_size(backend::nbRow(B) * brows, backend::nbColumn(B) * bcols);
   A->ptr[0] = 0;
 
   const ptrdiff_t nb = backend::nbRow(B);
@@ -447,7 +447,7 @@ struct complex_adapter
 
   size_t cols() const
   {
-    return 2 * backend::cols(A);
+    return 2 * backend::nbColumn(A);
   }
 
   size_t nonzeros() const
@@ -639,7 +639,7 @@ struct reordered_matrix
 
   size_t cols() const
   {
-    return backend::cols(A);
+    return backend::nbColumn(A);
   }
 
   size_t nonzeros() const
@@ -818,7 +818,7 @@ struct scaled_matrix
   {}
 
   size_t rows() const { return backend::nbRow(A); }
-  size_t cols() const { return backend::cols(A); }
+  size_t cols() const { return backend::nbColumn(A); }
   size_t nonzeros() const { return backend::nonzeros(A); }
 
   struct row_iterator : public backend::row_iterator<Matrix>::type

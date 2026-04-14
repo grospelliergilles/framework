@@ -1423,7 +1423,7 @@ struct SmoothedAggregationCoarserning
     n, aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
 
     auto P = std::make_shared<Matrix>();
-    P->set_size(backend::nbRow(*P_tent), backend::cols(*P_tent), true);
+    P->set_size(backend::nbRow(*P_tent), backend::nbColumn(*P_tent), true);
 
     scalar_type omega = prm.relax;
     if (prm.estimate_spectral_radius) {
@@ -1585,7 +1585,7 @@ struct SmoothedAggregationEnergyMinCoarsening
 
     // Filter the system matrix
     CSRMatrix<Val, Col, Ptr> Af;
-    Af.set_size(backend::nbRow(A), backend::cols(A));
+    Af.set_size(backend::nbRow(A), backend::nbColumn(A));
     Af.ptr[0] = 0;
 
     std::vector<Val> dia(Af.nrows);
@@ -1662,7 +1662,7 @@ struct SmoothedAggregationEnergyMinCoarsening
                 std::vector<Val>& omega)
   {
     const size_t n = backend::nbRow(P_tent);
-    const size_t nc = backend::cols(P_tent);
+    const size_t nc = backend::nbColumn(P_tent);
 
     auto AP = product(A, P_tent, /*sort rows: */ true);
 
@@ -1784,7 +1784,7 @@ struct SmoothedAggregationEnergyMinCoarsening
               const CSRMatrix<Val, Col, Ptr>& P_tent,
               const std::vector<Val>& omega)
   {
-    const size_t nc = backend::cols(P_tent);
+    const size_t nc = backend::nbColumn(P_tent);
 
     auto R_tent = transpose(P_tent);
     sort_rows(*R_tent);

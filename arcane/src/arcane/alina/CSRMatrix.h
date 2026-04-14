@@ -147,7 +147,7 @@ struct CSRMatrix
   template <class Matrix>
   CSRMatrix(const Matrix& A)
   : nrows(backend::nbRow(A))
-  , ncols(backend::cols(A))
+  , ncols(backend::nbColumn(A))
   {
     ARCANE_ALINA_TIC("CSR copy");
     ptr.resize(nrows + 1);
