@@ -417,7 +417,7 @@ unblock_matrix(const Matrix& B)
     }
   }
 
-  std::rotate(A->ptr.data(), A->ptr.data() + A->nrows, A->ptr.data() + A->nrows + 1);
+  std::rotate(A->ptr.data(), A->ptr.data() + A->nbRow(), A->ptr.data() + A->nbRow() + 1);
   A->ptr[0] = 0;
 
   return A;
@@ -937,7 +937,7 @@ zero_copy(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, const Val*
   static_assert(sizeof(Col) == sizeof(ptrdiff_t), "Unsupported Col type");
 
   auto A = std::make_shared<CSRMatrix<Val>>();
-  A->nrows = nrows;
+  A->setNbRow(nrows);
   A->ncols = ncols;
   A->setNbNonZero(nrows ? ptr[nrows] : 0);
 
@@ -968,7 +968,7 @@ std::shared_ptr<CSRMatrix<Val, Col, Ptr>>
 zero_copy_direct(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, const Val* val)
 {
   auto A = std::make_shared<CSRMatrix<Val, Col, Ptr>>();
-  A->nrows = nrows;
+  A->setNbRow(nrows);
   A->ncols = ncols;
   A->setNbNonZero(nrows ? ptr[nrows] : 0);
 

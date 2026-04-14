@@ -100,7 +100,9 @@ struct CSRMatrix
   typedef col_t col_type;
   typedef ptr_t ptr_type;
 
-  size_t nrows = 0;
+ private:
+  size_t m_nb_row = 0;
+ public:
   size_t ncols = 0;
 private:
   size_t m_nb_non_zero = 0;
@@ -109,6 +111,9 @@ public:
   CSRArray<col_type> col;
   CSRArray<val_type> val;
   bool own_data = true;
+
+  [[nodiscard]] size_t nbRow() const noexcept { return m_nb_row; }
+  void setNbRow(size_t v) { m_nb_row = v; }
 
   [[nodiscard]] size_t nbNonZero() const noexcept { return m_nb_non_zero; }
   void setNbNonZero(size_t v) { m_nb_non_zero = v; }
@@ -119,7 +124,7 @@ public:
 
   template <class PtrRange, class ColRange, class ValRange>
   CSRMatrix(size_t nrows, size_t ncols, const PtrRange& ptr_range, const ColRange& col_range, const ValRange& val_range)
-  : nrows(nrows)
+  : m_nb_row(nrows)
   , ncols(ncols)
   {
     ARCANE_ALINA_TIC("CSR copy");
@@ -153,15 +158,15 @@ public:
   // TODO: A supprimer. Mettre cela dans une function externe pour ne pas dépendre de backend
   template <class Matrix>
   CSRMatrix(const Matrix& A)
-  : nrows(backend::nbRow(A))
+  : m_nb_row(backend::nbRow(A))
   , ncols(backend::nbColumn(A))
   {
     ARCANE_ALINA_TIC("CSR copy");
-    ptr.resize(nrows + 1);
+    ptr.resize(m_nb_row + 1);
     ptr[0] = 0;
 
 #pragma omp parallel for
-    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i) {
+    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(m_nb_row); ++i) {
       int row_width = 0;
       for (auto a = backend::row_begin(A, i); a; ++a)
         ++row_width;
@@ -173,7 +178,7 @@ public:
     val.resize(m_nb_non_zero);
 
 #pragma omp parallel for
-    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i) {
+    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(m_nb_row); ++i) {
       ptr_type row_head = ptr[i];
       for (auto a = backend::row_begin(A, i); a; ++a) {
         col[row_head] = a.col();
@@ -186,18 +191,18 @@ public:
   }
 
   CSRMatrix(const CSRMatrix& other)
-  : nrows(other.nrows)
+  : m_nb_row(other.m_nb_row)
   , ncols(other.ncols)
   , m_nb_non_zero(other.m_nb_non_zero)
   {
     if (other.ptr && other.col && other.val) {
-      ptr.resize(nrows + 1);
+      ptr.resize(m_nb_row + 1);
       col.resize(m_nb_non_zero);
       val.resize(m_nb_non_zero);
 
       ptr[0] = other.ptr[0];
 #pragma omp parallel for
-      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i) {
+      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(m_nb_row); ++i) {
         ptr[i + 1] = other.ptr[i + 1];
         for (ptr_type j = other.ptr[i]; j < other.ptr[i + 1]; ++j) {
           col[j] = other.col[j];
@@ -208,7 +213,7 @@ public:
   }
 
   CSRMatrix(CSRMatrix&& other) noexcept
-  : nrows(other.nrows)
+  : m_nb_row(other.m_nb_row)
   , ncols(other.ncols)
   , m_nb_non_zero(other.m_nb_non_zero)
   , ptr(other.ptr)
@@ -216,7 +221,7 @@ public:
   , val(other.val)
   , own_data(other.own_data)
   {
-    other.nrows = 0;
+    other.m_nbRow = 0;
     other.ncols = 0;
     other.m_nb_non_zero = 0;
     other.ptr = 0;
@@ -228,18 +233,18 @@ public:
   {
     free_data();
 
-    nrows = other.nrows;
+    m_nb_row = other.m_nb_row;
     ncols = other.ncols;
     m_nb_non_zero = other.m_nb_non_zero;
 
     if (other.ptr && other.col && other.val) {
-      ptr = new ptr_type[nrows + 1];
+      ptr = new ptr_type[m_nb_row + 1];
       col = new col_type[m_nb_non_zero];
       val = new val_type[m_nb_non_zero];
 
       ptr[0] = other.ptr[0];
 #pragma omp parallel for
-      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i) {
+      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(m_nb_row); ++i) {
         ptr[i + 1] = other.ptr[i + 1];
         for (ptr_type j = other.ptr[i]; j < other.ptr[i + 1]; ++j) {
           col[j] = other.col[j];
@@ -253,7 +258,7 @@ public:
 
   CSRMatrix& operator=(CSRMatrix&& other) noexcept
   {
-    std::swap(nrows, other.nrows);
+    std::swap(m_nb_row, other.m_nb_row);
     std::swap(ncols, other.ncols);
     std::swap(m_nb_non_zero, other.m_nb_non_zero);
     std::swap(ptr, other.ptr);
@@ -277,31 +282,31 @@ public:
   {
     precondition(!ptr, "matrix data has already been allocated!");
 
-    nrows = n;
+    m_nb_row = n;
     ncols = m;
 
-    ptr.resize(nrows + 1);
+    ptr.resize(m_nb_row + 1);
 
     if (clean_ptr) {
       ptr[0] = 0;
 #pragma omp parallel for
-      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i)
+      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(m_nb_row); ++i)
         ptr[i + 1] = 0;
     }
   }
 
   ptr_type scan_row_sizes()
   {
-    std::partial_sum(ptr.data(), ptr.data() + nrows + 1, ptr.data());
-    return ptr[nrows];
+    std::partial_sum(ptr.data(), ptr.data() + m_nb_row + 1, ptr.data());
+    return ptr[m_nb_row];
   }
 
   void set_nonzeros()
   {
-    set_nonzeros(ptr[nrows]);
+    set_nonzeros(ptr[m_nb_row]);
 
 #pragma omp parallel for
-    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i) {
+    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(m_nb_row); ++i) {
       ptrdiff_t row_beg = ptr[i];
       ptrdiff_t row_end = ptr[i + 1];
       for (ptrdiff_t j = row_beg; j < row_end; ++j) {
@@ -377,7 +382,7 @@ public:
   size_t bytes() const
   {
     if (own_data) {
-      return sizeof(ptr_type) * (nrows + 1) + sizeof(col_type) * m_nb_non_zero + sizeof(val_type) * m_nb_non_zero;
+      return sizeof(ptr_type) * (m_nb_row + 1) + sizeof(col_type) * m_nb_non_zero + sizeof(val_type) * m_nb_non_zero;
     }
     else {
       return 0;

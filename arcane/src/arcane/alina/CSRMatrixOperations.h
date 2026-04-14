@@ -54,7 +54,7 @@ namespace Arcane::Alina
 template <typename V, typename C, typename P>
 void sort_rows(CSRMatrix<V, C, P>& A)
 {
-  const size_t n = A.nrows;
+  const size_t n = A.nbRow();
 
 #pragma omp parallel for
   for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i) {
@@ -72,7 +72,7 @@ template <typename V, typename C, typename P>
 std::shared_ptr<CSRMatrix<V, C, P>>
 transpose(const CSRMatrix<V, C, P>& A)
 {
-  const size_t n = A.nrows;
+  const size_t n = A.nbRow();
   const size_t m = A.ncols;
   const size_t nnz = A.nbNonZero();
 
@@ -138,8 +138,8 @@ sum(Val alpha, const CSRMatrix<Val, Col, Ptr>& A, Val beta,
   typedef ptrdiff_t Idx;
 
   auto C = std::make_shared<CSRMatrix<Val, Col, Ptr>>();
-  precondition(A.nrows == B.nrows && A.ncols == B.ncols, "matrices should have same shape!");
-  C->set_size(A.nrows, A.ncols);
+  precondition(A.nbRow() == B.nbRow() && A.ncols == B.ncols, "matrices should have same shape!");
+  C->set_size(A.nbRow(), A.ncols);
 
   C->ptr[0] = 0;
 
@@ -148,7 +148,7 @@ sum(Val alpha, const CSRMatrix<Val, Col, Ptr>& A, Val beta,
     std::vector<ptrdiff_t> marker(C->ncols, -1);
 
 #pragma omp for
-    for (Idx i = 0; i < static_cast<Idx>(C->nrows); ++i) {
+    for (Idx i = 0; i < static_cast<Idx>(C->nbRow()); ++i) {
       Idx C_cols = 0;
 
       for (Idx j = A.ptr[i], e = A.ptr[i + 1]; j < e; ++j) {
@@ -180,7 +180,7 @@ sum(Val alpha, const CSRMatrix<Val, Col, Ptr>& A, Val beta,
     std::vector<ptrdiff_t> marker(C->ncols, -1);
 
 #pragma omp for
-    for (Idx i = 0; i < static_cast<Idx>(C->nrows); ++i) {
+    for (Idx i = 0; i < static_cast<Idx>(C->nbRow()); ++i) {
       Idx row_beg = C->ptr[i];
       Idx row_end = row_beg;
 
@@ -250,7 +250,7 @@ pointwise_matrix(const CSRMatrix<value_type, col_type, ptr_type>& A, unsigned bl
   typedef typename math::scalar_of<V>::type S;
 
   ARCANE_ALINA_TIC("pointwise_matrix");
-  const ptrdiff_t n = A.nrows;
+  const ptrdiff_t n = A.nbRow();
   const ptrdiff_t m = A.ncols;
   const ptrdiff_t np = n / block_size;
   const ptrdiff_t mp = m / block_size;
@@ -416,7 +416,7 @@ pointwise_matrix(const CSRMatrix<value_type, col_type, ptr_type>& A, unsigned bl
 template <typename V, typename C, typename P> std::shared_ptr<backend::numa_vector<V>>
 diagonal(const CSRMatrix<V, C, P>& A, bool invert = false)
 {
-  const size_t n = A.nrows;
+  const size_t n = A.nbRow();
   auto dia = std::make_shared<backend::numa_vector<V>>(n, false);
 
 #pragma omp parallel for

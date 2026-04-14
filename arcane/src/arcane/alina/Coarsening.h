@@ -514,7 +514,7 @@ class pointwise_aggregates
     if (prm.block_size == 1) {
       plain_aggregates aggr(A, prm);
 
-      remove_small_aggregates(A.nrows, 1, min_aggregate, aggr);
+      remove_small_aggregates(A.nbRow(), 1, min_aggregate, aggr);
 
       count = aggr.count;
       strong_connection.swap(aggr.strong_connection);
@@ -529,8 +529,7 @@ class pointwise_aggregates
 
       plain_aggregates pw_aggr(Ap, prm);
 
-      remove_small_aggregates(
-      Ap.nrows, prm.block_size, min_aggregate, pw_aggr);
+      remove_small_aggregates(Ap.nbRow(), prm.block_size, min_aggregate, pw_aggr);
 
       count = pw_aggr.count * prm.block_size;
 
@@ -540,7 +539,7 @@ class pointwise_aggregates
         std::vector<ptrdiff_t> e(prm.block_size);
 
 #pragma omp for
-        for (ptrdiff_t ip = 0; ip < static_cast<ptrdiff_t>(Ap.nrows); ++ip) {
+        for (ptrdiff_t ip = 0; ip < static_cast<ptrdiff_t>(Ap.nbRow()); ++ip) {
           ptrdiff_t ia = ip * prm.block_size;
 
           for (unsigned k = 0; k < prm.block_size; ++k, ++ia) {
@@ -1146,7 +1145,8 @@ struct RugeStubenCoarsening
     const size_t nnz = backend::nonzeros(A);
     const Scalar eps = Alina::detail::eps<Scalar>(1);
 
-    S.nrows = S.ncols = n;
+    S.setNbRow(n);
+    S.ncols = n;
     S.ptr.resize(n + 1);
     S.val.resize(nnz);
     S.ptr[0] = 0;
@@ -1195,7 +1195,7 @@ struct RugeStubenCoarsening
                       CSRMatrix<char, Col, Ptr> const& S,
                       std::vector<char>& cf)
   {
-    const size_t n = A.nrows;
+    const size_t n = A.nbRow();
 
     std::vector<Col> lambda(n);
 
@@ -1588,10 +1588,10 @@ struct SmoothedAggregationEnergyMinCoarsening
     Af.set_size(backend::nbRow(A), backend::nbColumn(A));
     Af.ptr[0] = 0;
 
-    std::vector<Val> dia(Af.nrows);
+    std::vector<Val> dia(Af.nbRow());
 
 #pragma omp parallel for
-    for (Idx i = 0; i < static_cast<Idx>(Af.nrows); ++i) {
+    for (Idx i = 0; i < static_cast<Idx>(Af.nbRow()); ++i) {
       Idx row_begin = A.ptr[i];
       Idx row_end = A.ptr[i + 1];
       Idx row_width = row_end - row_begin;
@@ -1616,7 +1616,7 @@ struct SmoothedAggregationEnergyMinCoarsening
     Af.set_nonzeros(Af.scan_row_sizes());
 
 #pragma omp parallel for
-    for (Idx i = 0; i < static_cast<Idx>(Af.nrows); ++i) {
+    for (Idx i = 0; i < static_cast<Idx>(Af.nbRow()); ++i) {
       Idx row_begin = A.ptr[i];
       Idx row_end = A.ptr[i + 1];
       Idx row_head = Af.ptr[i];

@@ -53,7 +53,7 @@ mpi_symm_graph(const DistributedMatrix<Backend>& A,
   build_matrix& A_loc = *A.local();
   build_matrix& A_rem = *A.remote();
 
-  ptrdiff_t n = A_loc.nrows;
+  ptrdiff_t n = A_loc.nbRow();
   ptrdiff_t row_beg = A.loc_col_shift();
 
   auto T = transpose(A);

@@ -370,7 +370,7 @@ class DistributedMatrix
 
     a_rem->ncols = C->recv.count();
 
-    n_loc_rows = a_loc->nrows;
+    n_loc_rows = a_loc->nbRow();
     n_loc_cols = a_loc->ncols;
     n_loc_nonzeros = a_loc->nbNonZero() + a_rem->nbNonZero();
 
@@ -628,7 +628,7 @@ transpose(const DistributedMatrix<Backend>& A)
   build_matrix& A_rem = *A.remote();
 
   ptrdiff_t nrows = A_loc.ncols;
-  ptrdiff_t ncols = A_loc.nrows;
+  ptrdiff_t ncols = A_loc.nbRow();
 
   std::vector<MPI_Request> recv_cnt_req(C.send.req.size());
   std::vector<MPI_Request> recv_col_req(C.send.req.size());
@@ -665,8 +665,8 @@ transpose(const DistributedMatrix<Backend>& A)
     t_rem.col[i] += loc_beg;
 
   // Shift from row pointers to row sizes:
-  std::vector<ptrdiff_t> row_size(t_rem.nrows);
-  for (size_t i = 0; i < t_rem.nrows; ++i)
+  std::vector<ptrdiff_t> row_size(t_rem.nbRow());
+  for (size_t i = 0; i < t_rem.nbRow(); ++i)
     row_size[i] = t_rem.ptr[i + 1] - t_rem.ptr[i];
 
   // Sizes of transposed remote blocks:
@@ -824,7 +824,7 @@ remote_rows(const CommunicationPattern<Backend>& C,
     }
     m.setNbNonZero(nnz);
 
-    MPI_Isend(m.ptr, m.nrows, mpi_datatype<ptrdiff_t>(),
+    MPI_Isend(m.ptr, m.nbRow(), mpi_datatype<ptrdiff_t>(),
               C.send.nbr[k], tag_ptr, comm, &send_ptr_req[k]);
 
     m.set_nonzeros(nnz, need_values);
@@ -1151,7 +1151,7 @@ void scale(DistributedMatrix<Backend>& A, T s)
   build_matrix& A_loc = *A.local();
   build_matrix& A_rem = *A.remote();
 
-  ptrdiff_t n = A_loc.nrows;
+  ptrdiff_t n = A_loc.nbRow();
 
 #pragma omp parallel for
   for (ptrdiff_t i = 0; i < n; ++i) {
@@ -1248,7 +1248,7 @@ spectral_radius(const DistributedMatrix<Backend>& A, int power_iters = 0)
   const build_matrix& A_rem = *A.remote();
   const CommunicationPattern<Backend>& C = A.cpat();
 
-  const ptrdiff_t n = A_loc.nrows;
+  const ptrdiff_t n = A_loc.nbRow();
   scalar_type radius = 0;
 
   if (power_iters <= 0) {

@@ -51,7 +51,7 @@ class DistributedDirectSolverBase
   void init(mpi_communicator comm, const build_matrix& Astrip)
   {
     this->comm = comm;
-    n = Astrip.nrows;
+    n = Astrip.nbRow();
 
     std::vector<int> domain = comm.exclusive_sum(n);
     std::vector<int> active;
@@ -117,8 +117,8 @@ class DistributedDirectSolverBase
       A.set_size(nloc, domain.back(), false);
       A.ptr[0] = 0;
 
-      cons_f.resize(A.nrows);
-      cons_x.resize(A.nrows);
+      cons_f.resize(A.nbRow());
+      cons_x.resize(A.nbRow());
 
       int shift = n + 1;
       std::copy(widths.begin(), widths.end(), &A.ptr[1]);
@@ -183,7 +183,7 @@ class DistributedDirectSolverBase
     a.set_nonzeros(A_loc.nbNonZero() + A_rem.nbNonZero());
     a.ptr[0] = 0;
 
-    for (size_t i = 0, head = 0; i < A_loc.nrows; ++i) {
+    for (size_t i = 0, head = 0; i < A_loc.nbRow(); ++i) {
       ptrdiff_t shift = A.loc_col_shift();
 
       for (ptrdiff_t j = A_loc.ptr[i], e = A_loc.ptr[i + 1]; j < e; ++j) {

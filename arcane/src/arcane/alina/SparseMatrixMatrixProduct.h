@@ -63,7 +63,7 @@ void spgemm_saad(const AMatrix& A, const BMatrix& B, CMatrix& C, bool sort = tru
   typedef typename backend::col_type<CMatrix>::type Col;
   typedef ptrdiff_t Idx;
 
-  C.set_size(A.nrows, B.ncols);
+  C.set_size(A.nbRow(), B.ncols);
   C.ptr[0] = 0;
 
 #pragma omp parallel
@@ -71,7 +71,7 @@ void spgemm_saad(const AMatrix& A, const BMatrix& B, CMatrix& C, bool sort = tru
     std::vector<ptrdiff_t> marker(B.ncols, -1);
 
 #pragma omp for
-    for (Idx ia = 0; ia < static_cast<Idx>(A.nrows); ++ia) {
+    for (Idx ia = 0; ia < static_cast<Idx>(A.nbRow()); ++ia) {
       Col C_cols = 0;
       for (Idx ja = A.ptr[ia], ea = A.ptr[ia + 1]; ja < ea; ++ja) {
         Col ca = A.col[ja];
@@ -95,7 +95,7 @@ void spgemm_saad(const AMatrix& A, const BMatrix& B, CMatrix& C, bool sort = tru
     std::vector<ptrdiff_t> marker(B.ncols, -1);
 
 #pragma omp for
-    for (Idx ia = 0; ia < static_cast<Idx>(A.nrows); ++ia) {
+    for (Idx ia = 0; ia < static_cast<Idx>(A.nbRow()); ++ia) {
       Idx row_beg = C.ptr[ia];
       Idx row_end = row_beg;
 
@@ -420,7 +420,7 @@ void spgemm_rmerge(const AMatrix& A, const BMatrix& B, CMatrix& C)
     Idx my_max = 0;
 
 #pragma omp for
-    for (int i = 0; i < static_cast<Idx>(A.nrows); ++i) {
+    for (int i = 0; i < static_cast<Idx>(A.nbRow()); ++i) {
       Idx row_beg = A.ptr[i];
       Idx row_end = A.ptr[i + 1];
       Idx row_width = 0;
@@ -449,7 +449,7 @@ void spgemm_rmerge(const AMatrix& A, const BMatrix& B, CMatrix& C)
     tmp_val[i].resize(2 * max_row_width);
   }
 
-  C.set_size(A.nrows, B.ncols);
+  C.set_size(A.nbRow(), B.ncols);
   C.ptr[0] = 0;
 
 #pragma omp parallel
@@ -463,7 +463,7 @@ void spgemm_rmerge(const AMatrix& A, const BMatrix& B, CMatrix& C)
     Col* t_col = &tmp_col[tid][0];
 
 #pragma omp for
-    for (Idx i = 0; i < static_cast<Idx>(A.nrows); ++i) {
+    for (Idx i = 0; i < static_cast<Idx>(A.nbRow()); ++i) {
       Idx row_beg = A.ptr[i];
       Idx row_end = A.ptr[i + 1];
 
@@ -487,7 +487,7 @@ void spgemm_rmerge(const AMatrix& A, const BMatrix& B, CMatrix& C)
     Val* t_val = tmp_val[tid].data();
 
 #pragma omp for
-    for (Idx i = 0; i < static_cast<Idx>(A.nrows); ++i) {
+    for (Idx i = 0; i < static_cast<Idx>(A.nbRow()); ++i) {
       Idx row_beg = A.ptr[i];
       Idx row_end = A.ptr[i + 1];
 

@@ -189,7 +189,7 @@ struct rows_impl<CSRMatrix<V, C, P>>
 {
   static size_t get(const CSRMatrix<V, C, P>& A)
   {
-    return A.nrows;
+    return A.nbRow();
   }
 };
 
@@ -247,7 +247,7 @@ struct nonzeros_impl<CSRMatrix<V, C, P>>
 {
   static size_t get(const CSRMatrix<V, C, P>& A)
   {
-    return A.nrows == 0 ? 0 : A.ptr[A.nrows];
+    return A.nbRow() == 0 ? 0 : A.ptr[A.nbRow()];
   }
 };
 

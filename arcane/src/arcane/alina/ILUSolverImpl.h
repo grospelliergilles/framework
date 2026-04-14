@@ -311,7 +311,7 @@ class ILUSolver<backend::BuiltinBackend<value_type, col_type, ptr_type>>
     , val(nthreads)
     , ord(nthreads)
     {
-      ptrdiff_t n = A.nrows;
+      ptrdiff_t n = A.nbRow();
       ptrdiff_t nlev = 0;
 
       std::vector<ptrdiff_t> level(n, 0);

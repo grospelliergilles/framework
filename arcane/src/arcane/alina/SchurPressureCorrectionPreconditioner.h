@@ -507,7 +507,7 @@ class SchurPressureCorrectionPreconditioner
       build_matrix Kup_hat;
 
       Kup_hat.own_data = false;
-      Kup_hat.nrows = nu;
+      Kup_hat.setNbRow(nu);
       Kup_hat.ncols = np;
       Kup_hat.setNbNonZero(Kup->nbNonZero());
       Kup_hat.ptr.setPointerZeroCopy(Kup->ptr.data());

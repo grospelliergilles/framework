@@ -136,7 +136,7 @@ struct rows_impl<BlockCSRMatrix<V, C, P>>
 {
   static size_t get(const BlockCSRMatrix<V, C, P>& A)
   {
-    return A.nrows;
+    return A.m_nbRow;
   }
 };
 

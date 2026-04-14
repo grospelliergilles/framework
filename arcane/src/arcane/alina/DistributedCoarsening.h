@@ -431,7 +431,7 @@ struct DistributedPMISAggregation
     const bool_matrix& A_loc = *A.local();
     const bool_matrix& A_rem = *A.remote();
 
-    ptrdiff_t n = A_loc.nrows;
+    ptrdiff_t n = A_loc.nbRow();
 
     mpi_communicator comm = A.comm();
 
@@ -1055,7 +1055,7 @@ struct DistributedPMISAggregation
   expand_conn(const build_matrix& A, const pw_matrix& Ap, const bool_matrix& Cp,
               unsigned block_size) const
   {
-    ptrdiff_t np = Cp.nrows;
+    ptrdiff_t np = Cp.nbRow();
     ptrdiff_t n = np * block_size;
 
     auto c = std::make_shared<bool_matrix>();
@@ -1333,7 +1333,7 @@ struct DistributedSmoothedAggregationCoarsening
     backend::numa_vector<value_type> Af_rem_val(S_rem.nbNonZero(), false);
 
     Af_loc.own_data = false;
-    Af_loc.nrows = S_loc.nrows;
+    Af_loc.setNbRow(S_loc.nbRow());
     Af_loc.ncols = S_loc.ncols;
     Af_loc.setNbNonZero(S_loc.nbNonZero());
     Af_loc.ptr.setPointerZeroCopy(S_loc.ptr.data());
@@ -1341,7 +1341,7 @@ struct DistributedSmoothedAggregationCoarsening
     Af_loc.val.setPointerZeroCopy(Af_loc_val.data());
 
     Af_rem.own_data = false;
-    Af_rem.nrows = S_rem.nrows;
+    Af_rem.setNbRow(S_rem.nbRow());
     Af_rem.ncols = S_rem.ncols;
     Af_rem.setNbNonZero(S_rem.nbNonZero());
     Af_rem.ptr.setPointerZeroCopy(S_rem.ptr.data());

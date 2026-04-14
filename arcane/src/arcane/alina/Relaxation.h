@@ -1346,7 +1346,7 @@ namespace detail
   {
     auto C = std::make_shared<Matrix>();
 
-    C->set_size(A.nrows, B.ncols);
+    C->set_size(A.nbRow(), B.ncols);
 
     auto A_ptr = A.ptr.data();
     auto A_col = A.col.data();
@@ -1360,7 +1360,7 @@ namespace detail
       std::vector<ptrdiff_t> marker(B.ncols, -1);
 
 #pragma omp for
-      for (ptrdiff_t ia = 0; ia < static_cast<ptrdiff_t>(A.nrows); ++ia) {
+      for (ptrdiff_t ia = 0; ia < static_cast<ptrdiff_t>(A.nbRow()); ++ia) {
         ptrdiff_t C_cols = 0;
         for (ptrdiff_t ja = A_ptr[ia], ea = A_ptr[ia + 1]; ja < ea; ++ja) {
           ptrdiff_t ca = A_col[ja];
@@ -1385,7 +1385,7 @@ namespace detail
       std::vector<ptrdiff_t> marker(B.ncols, -1);
 
 #pragma omp for
-      for (ptrdiff_t ia = 0; ia < static_cast<ptrdiff_t>(A.nrows); ++ia) {
+      for (ptrdiff_t ia = 0; ia < static_cast<ptrdiff_t>(A.nbRow()); ++ia) {
         ptrdiff_t row_beg = C_ptr[ia];
         ptrdiff_t row_end = row_beg;
 
