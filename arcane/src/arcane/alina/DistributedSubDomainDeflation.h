@@ -397,7 +397,8 @@ class DistributedSubDomainDeflation
       for (int k = 0; k <= ndv; ++k)
         E.ptr[k] = k * nnz;
     }
-    E.set_nonzeros(E.nnz = E.ptr[ndv]);
+    E.setNbNonZero(E.ptr[ndv]);
+    E.set_nonzeros(E.ptr[ndv]);
 
     // Build local strip of E.
 #ifdef _OPENMP

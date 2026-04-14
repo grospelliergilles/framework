@@ -939,7 +939,7 @@ zero_copy(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, const Val*
   auto A = std::make_shared<CSRMatrix<Val>>();
   A->nrows = nrows;
   A->ncols = ncols;
-  A->nnz = nrows ? ptr[nrows] : 0;
+  A->setNbNonZero(nrows ? ptr[nrows] : 0);
 
   A->ptr.setPointerZeroCopy((ptrdiff_t*)ptr);
   A->col.setPointerZeroCopy((ptrdiff_t*)col);
@@ -970,7 +970,7 @@ zero_copy_direct(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, con
   auto A = std::make_shared<CSRMatrix<Val, Col, Ptr>>();
   A->nrows = nrows;
   A->ncols = ncols;
-  A->nnz = nrows ? ptr[nrows] : 0;
+  A->setNbNonZero(nrows ? ptr[nrows] : 0);
 
   A->ptr.setPointerZeroCopy(const_cast<Ptr*>(ptr));
   A->col.setPointerZeroCopy(const_cast<Col*>(col));

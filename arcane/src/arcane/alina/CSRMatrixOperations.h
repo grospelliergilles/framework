@@ -74,7 +74,7 @@ transpose(const CSRMatrix<V, C, P>& A)
 {
   const size_t n = A.nrows;
   const size_t m = A.ncols;
-  const size_t nnz = A.nnz;
+  const size_t nnz = A.nbNonZero();
 
   auto T = std::make_shared<CSRMatrix<V, C, P>>();
   T->set_size(m, n, true);

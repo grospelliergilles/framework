@@ -136,10 +136,10 @@ class DistributedDirectSolverBase
 
       A.set_nonzeros(A.scan_row_sizes());
 
-      std::copy(Astrip.col.data(), Astrip.col.data() + Astrip.nnz, A.col.data());
-      std::copy(Astrip.val.data(), Astrip.val.data() + Astrip.nnz, A.val.data());
+      std::copy(Astrip.col.data(), Astrip.col.data() + Astrip.nbNonZero(), A.col.data());
+      std::copy(Astrip.val.data(), Astrip.val.data() + Astrip.nbNonZero(), A.val.data());
 
-      shift = Astrip.nnz;
+      shift = Astrip.nbNonZero();
       for (int j = 0, d0 = domain[comm.rank]; j < group_size; ++j) {
         int i = slaves[j];
 
@@ -162,9 +162,9 @@ class DistributedDirectSolverBase
     else {
       MPI_Send(widths.data(), n, mpi_datatype<ptrdiff_t>(),
                group_master, cnt_tag, comm);
-      MPI_Send(Astrip.col, Astrip.nnz, mpi_datatype<ptrdiff_t>(),
+      MPI_Send(Astrip.col, Astrip.nbNonZero(), mpi_datatype<ptrdiff_t>(),
                group_master, col_tag, comm);
-      MPI_Send(Astrip.val, Astrip.nnz, mpi_datatype<value_type>(),
+      MPI_Send(Astrip.val, Astrip.nbNonZero(), mpi_datatype<value_type>(),
                group_master, val_tag, comm);
     }
 
@@ -180,7 +180,7 @@ class DistributedDirectSolverBase
     build_matrix a;
 
     a.set_size(A.loc_rows(), A.glob_cols(), false);
-    a.set_nonzeros(A_loc.nnz + A_rem.nnz);
+    a.set_nonzeros(A_loc.nbNonZero() + A_rem.nbNonZero());
     a.ptr[0] = 0;
 
     for (size_t i = 0, head = 0; i < A_loc.nrows; ++i) {

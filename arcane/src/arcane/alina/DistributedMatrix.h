@@ -365,14 +365,14 @@ class DistributedMatrix
       C = c;
     }
     else {
-      C = std::make_shared<CommPattern>(comm, a_loc->ncols, a_rem->nnz, a_rem->col);
+      C = std::make_shared<CommPattern>(comm, a_loc->ncols, a_rem->nbNonZero(), a_rem->col);
     }
 
     a_rem->ncols = C->recv.count();
 
     n_loc_rows = a_loc->nrows;
     n_loc_cols = a_loc->ncols;
-    n_loc_nonzeros = a_loc->nnz + a_rem->nnz;
+    n_loc_nonzeros = a_loc->nbNonZero() + a_rem->nbNonZero();
 
     n_glob_rows = comm.reduce(MPI_SUM, n_loc_rows);
     n_glob_cols = comm.reduce(MPI_SUM, n_loc_cols);
@@ -461,7 +461,7 @@ class DistributedMatrix
       }
     }
 
-    C = std::make_shared<CommPattern>(comm, n_loc_cols, a_rem->nnz, a_rem->col);
+    C = std::make_shared<CommPattern>(comm, n_loc_cols, a_rem->nbNonZero(), a_rem->col);
     a_rem->ncols = C->recv.count();
   }
 
@@ -542,14 +542,14 @@ class DistributedMatrix
       A_loc = Backend::copy_matrix(a_loc, bprm);
     }
 
-    if (!A_rem && a_rem && a_rem->nnz > 0) {
+    if (!A_rem && a_rem && a_rem->nbNonZero() > 0) {
       if (keep_src) {
         auto rem_copy = std::make_shared<build_matrix>(*a_rem);
-        C->renumber(rem_copy->nnz, rem_copy->col);
+        C->renumber(rem_copy->nbNonZero(), rem_copy->col);
         A_rem = Backend::copy_matrix(rem_copy, bprm);
       }
       else {
-        C->renumber(a_rem->nnz, a_rem->col);
+        C->renumber(a_rem->nbNonZero(), a_rem->col);
         A_rem = Backend::copy_matrix(a_rem, bprm);
       }
     }
@@ -642,7 +642,7 @@ transpose(const DistributedMatrix<Backend>& A)
   // and the other way around.
   std::shared_ptr<build_matrix> t_ptr;
   {
-    std::vector<ptrdiff_t> tmp_col(A_rem.col.data(), A_rem.col.data() + A_rem.nnz);
+    std::vector<ptrdiff_t> tmp_col(A_rem.col.data(), A_rem.col.data() + A_rem.nbNonZero());
     C.renumber(tmp_col.size(), tmp_col.data());
 
     ptrdiff_t* a_rem_col = tmp_col.data();
@@ -661,7 +661,7 @@ transpose(const DistributedMatrix<Backend>& A)
   // Shift to global numbering:
   std::vector<ptrdiff_t> domain = comm.exclusive_sum(ncols);
   ptrdiff_t loc_beg = domain[comm.rank];
-  for (size_t i = 0; i < t_rem.nnz; ++i)
+  for (size_t i = 0; i < t_rem.nbNonZero(); ++i)
     t_rem.col[i] += loc_beg;
 
   // Shift from row pointers to row sizes:
@@ -813,19 +813,21 @@ remote_rows(const CommunicationPattern<Backend>& C,
     build_matrix& m = send_rows[k];
     m.set_size(end - beg, 0, false);
 
+    size_t nnz = 0;
     for (ptrdiff_t i = 0, ii = beg; ii < end; ++i, ++ii) {
       ptrdiff_t r = C.send.col[ii];
 
       ptrdiff_t w = (B_loc.ptr[r + 1] - B_loc.ptr[r]) + (B_rem.ptr[r + 1] - B_rem.ptr[r]);
 
       m.ptr[i] = w;
-      m.nnz += w;
+      nnz += w;
     }
+    m.setNbNonZero(nnz);
 
     MPI_Isend(m.ptr, m.nrows, mpi_datatype<ptrdiff_t>(),
               C.send.nbr[k], tag_ptr, comm, &send_ptr_req[k]);
 
-    m.set_nonzeros(m.nnz, need_values);
+    m.set_nonzeros(nnz, need_values);
 
     for (ptrdiff_t i = 0, ii = beg, head = 0; ii < end; ++i, ++ii) {
       ptrdiff_t r = C.send.col[ii];
@@ -851,10 +853,10 @@ remote_rows(const CommunicationPattern<Backend>& C,
       }
     }
 
-    MPI_Isend(m.col, m.nnz, mpi_datatype<ptrdiff_t>(),
+    MPI_Isend(m.col, m.nbNonZero(), mpi_datatype<ptrdiff_t>(),
               C.send.nbr[k], tag_col, comm, &send_col_req[k]);
     if (need_values)
-      MPI_Isend(m.val, m.nnz, mpi_datatype<value_type>(),
+      MPI_Isend(m.val, m.nbNonZero(), mpi_datatype<value_type>(),
                 C.send.nbr[k], tag_val, comm, &send_val_req[k]);
   }
 
@@ -940,10 +942,10 @@ product(const DistributedMatrix<Backend>& A, const DistributedMatrix<Backend>& B
 
   // Build mapping from global to local column numbers in the remote part of
   // the product matrix.
-  std::vector<ptrdiff_t> rem_cols(B_rem.nnz + B_nbr.nnz);
+  std::vector<ptrdiff_t> rem_cols(B_rem.nbNonZero() + B_nbr.nbNonZero());
 
-  std::copy(B_nbr.col.data(), B_nbr.col.data() + B_nbr.nnz,
-            std::copy(B_rem.col.data(), B_rem.col.data() + B_rem.nnz, rem_cols.begin()));
+  std::copy(B_nbr.col.data(), B_nbr.col.data() + B_nbr.nbNonZero(),
+            std::copy(B_rem.col.data(), B_rem.col.data() + B_rem.nbNonZero(), rem_cols.begin()));
 
   std::sort(rem_cols.begin(), rem_cols.end());
   rem_cols.erase(std::unique(rem_cols.begin(), rem_cols.end()), rem_cols.end());
@@ -1284,7 +1286,7 @@ spectral_radius(const DistributedMatrix<Backend>& A, int power_iters = 0)
   }
   else {
     backend::numa_vector<rhs_type> b0(n, false), b1(n, false);
-    backend::numa_vector<ptrdiff_t> rem_col(A_rem.nnz, false);
+    backend::numa_vector<ptrdiff_t> rem_col(A_rem.nbNonZero(), false);
 
     // Fill the initial vector with random values.
     // Also extract the inverted matrix diagonal values.

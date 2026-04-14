@@ -494,7 +494,7 @@ class SchurPressureCorrectionPreconditioner
 
       // Use (Kpp - Kpu * dia(Kuu)^-1 * Kup)
       // to setup the P preconditioner.
-      backend::numa_vector<value_type> val(Kup->nnz);
+      backend::numa_vector<value_type> val(Kup->nbNonZero());
 
 #pragma omp parallel for
       for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nu); ++i) {
@@ -509,7 +509,7 @@ class SchurPressureCorrectionPreconditioner
       Kup_hat.own_data = false;
       Kup_hat.nrows = nu;
       Kup_hat.ncols = np;
-      Kup_hat.nnz = Kup->nnz;
+      Kup_hat.setNbNonZero(Kup->nbNonZero());
       Kup_hat.ptr.setPointerZeroCopy(Kup->ptr.data());
       Kup_hat.col.setPointerZeroCopy(Kup->col.data());
       Kup_hat.val.setPointerZeroCopy(val.data());

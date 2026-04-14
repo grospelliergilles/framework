@@ -429,7 +429,7 @@ class CPRPreconditioner
 
     auto App = std::make_shared<build_matrix_p>();
     App->set_size(np, np, true);
-    App->set_nonzeros(K->nnz);
+    App->set_nonzeros(K->nbNonZero());
     App->ptr[0] = 0;
 
 #pragma omp parallel for

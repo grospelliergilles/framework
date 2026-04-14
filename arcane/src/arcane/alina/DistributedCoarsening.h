@@ -160,10 +160,10 @@ struct DistributedPMISAggregation
 
     // Build mapping from global to local column numbers in the remote part of
     // the square matrix.
-    std::vector<ptrdiff_t> rem_cols(A_rem.nnz + A_nbr.nnz);
+    std::vector<ptrdiff_t> rem_cols(A_rem.nbNonZero() + A_nbr.nbNonZero());
 
-    std::copy(A_nbr.col.data(), A_nbr.col.data() + A_nbr.nnz,
-              std::copy(A_rem.col.data(), A_rem.col.data() + A_rem.nnz, rem_cols.begin()));
+    std::copy(A_nbr.col.data(), A_nbr.col.data() + A_nbr.nbNonZero(),
+              std::copy(A_rem.col.data(), A_rem.col.data() + A_rem.nbNonZero(), rem_cols.begin()));
 
     std::sort(rem_cols.begin(), rem_cols.end());
     rem_cols.erase(std::unique(rem_cols.begin(), rem_cols.end()), rem_cols.end());
@@ -372,8 +372,8 @@ struct DistributedPMISAggregation
     S_loc.set_size(n, n, true);
     S_rem.set_size(n, 0, true);
 
-    S_loc.val.resize(A_loc.nnz);
-    S_rem.val.resize(A_rem.nnz);
+    S_loc.val.resize(A_loc.nbNonZero());
+    S_rem.val.resize(A_rem.nbNonZero());
 
 #pragma omp parallel for
     for (ptrdiff_t i = 0; i < n; ++i) {
@@ -396,11 +396,11 @@ struct DistributedPMISAggregation
       }
     }
 
-    S_loc.nnz = S_loc.scan_row_sizes();
-    S_rem.nnz = S_rem.scan_row_sizes();
+    S_loc.setNbNonZero(S_loc.scan_row_sizes());
+    S_rem.setNbNonZero(S_rem.scan_row_sizes());
 
-    S_loc.col.resize(S_loc.nnz);
-    S_rem.col.resize(S_rem.nnz);
+    S_loc.col.resize(S_loc.nbNonZero());
+    S_rem.col.resize(S_rem.nbNonZero());
 
 #pragma omp parallel for
     for (ptrdiff_t i = 0; i < n; ++i) {
@@ -1062,7 +1062,7 @@ struct DistributedPMISAggregation
     bool_matrix& C = *c;
 
     C.set_size(n, n, true);
-    C.val.resize(A.nnz);
+    C.val.resize(A.nbNonZero());
 
 #pragma omp parallel
     {
@@ -1101,8 +1101,8 @@ struct DistributedPMISAggregation
       }
     }
 
-    C.nnz = C.scan_row_sizes();
-    C.col.resize(C.nnz);
+    C.setNbNonZero(C.scan_row_sizes());
+    C.col.resize(C.nbNonZero());
 
 #pragma omp parallel
     {
@@ -1329,13 +1329,13 @@ struct DistributedSmoothedAggregationCoarsening
     build_matrix& Af_loc = *af_loc;
     build_matrix& Af_rem = *af_rem;
 
-    backend::numa_vector<value_type> Af_loc_val(S_loc.nnz, false);
-    backend::numa_vector<value_type> Af_rem_val(S_rem.nnz, false);
+    backend::numa_vector<value_type> Af_loc_val(S_loc.nbNonZero(), false);
+    backend::numa_vector<value_type> Af_rem_val(S_rem.nbNonZero(), false);
 
     Af_loc.own_data = false;
     Af_loc.nrows = S_loc.nrows;
     Af_loc.ncols = S_loc.ncols;
-    Af_loc.nnz = S_loc.nnz;
+    Af_loc.setNbNonZero(S_loc.nbNonZero());
     Af_loc.ptr.setPointerZeroCopy(S_loc.ptr.data());
     Af_loc.col.setPointerZeroCopy(S_loc.col.data());
     Af_loc.val.setPointerZeroCopy(Af_loc_val.data());
@@ -1343,7 +1343,7 @@ struct DistributedSmoothedAggregationCoarsening
     Af_rem.own_data = false;
     Af_rem.nrows = S_rem.nrows;
     Af_rem.ncols = S_rem.ncols;
-    Af_rem.nnz = S_rem.nnz;
+    Af_rem.setNbNonZero(S_rem.nbNonZero());
     Af_rem.ptr.setPointerZeroCopy(S_rem.ptr.data());
     Af_rem.col.setPointerZeroCopy(S_rem.col.data());
     Af_rem.val.setPointerZeroCopy(Af_rem_val.data());

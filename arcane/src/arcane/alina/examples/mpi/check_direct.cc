@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
 
     A.ptr[row + 1] = head;
   }
-  A.nnz = A.ptr[chunk];
+  A.setNbNonZero(A.ptr[chunk]);
   prof.toc("assemble");
 
   prof.tic("setup");

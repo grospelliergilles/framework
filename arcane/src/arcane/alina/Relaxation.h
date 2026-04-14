@@ -1022,8 +1022,8 @@ struct ILU0Relaxation
         work[A.col[j]] = NULL;
     }
 
-    L->nnz = Lhead;
-    U->nnz = Uhead;
+    L->setNbNonZero(Lhead);
+    U->setNbNonZero(Uhead);
 
     ilu = std::make_shared<ilu_solve>(L, U, D, prm.solve, bprm);
   }
@@ -1466,7 +1466,7 @@ struct ILUPRelaxation
       }
 
       ptrdiff_t n = backend::nbRow(A);
-      P->val.resize(P->nnz);
+      P->val.resize(P->nbNonZero());
 
 #pragma omp parallel for
       for (ptrdiff_t i = 0; i < n; ++i) {
@@ -1660,8 +1660,8 @@ struct ILUTRelaxation
       U->ptr[i + 1] = Uhead;
     }
 
-    L->nnz = L->ptr[n];
-    U->nnz = U->ptr[n];
+    L->setNbNonZero(L->ptr[n]);
+    U->setNbNonZero(U->ptr[n]);
 
     ilu = std::make_shared<ilu_solve>(L, U, D, prm.solve, bprm);
   }

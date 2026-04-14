@@ -102,11 +102,18 @@ struct CSRMatrix
 
   size_t nrows = 0;
   size_t ncols = 0;
-  size_t nnz = 0;
+private:
+  size_t m_nb_non_zero = 0;
+public:
   CSRArray<ptr_type> ptr;
   CSRArray<col_type> col;
   CSRArray<val_type> val;
   bool own_data = true;
+
+  [[nodiscard]] size_t nbNonZero() const noexcept { return m_nb_non_zero; }
+  void setNbNonZero(size_t v) { m_nb_non_zero = v; }
+
+ public:
 
   CSRMatrix() = default;
 
@@ -119,17 +126,17 @@ struct CSRMatrix
     precondition(static_cast<ptrdiff_t>(nrows + 1) == std::distance(std::begin(ptr_range), std::end(ptr_range)),
                  "ptr_range has wrong size in crs constructor");
 
-    nnz = ptr_range[nrows];
+    m_nb_non_zero = ptr_range[nrows];
 
-    precondition(static_cast<ptrdiff_t>(nnz) == std::distance(std::begin(col_range), std::end(col_range)),
+    precondition(static_cast<ptrdiff_t>(m_nb_non_zero) == std::distance(std::begin(col_range), std::end(col_range)),
                  "col_range has wrong size in crs constructor");
 
-    precondition(static_cast<ptrdiff_t>(nnz) == std::distance(std::begin(val_range), std::end(val_range)),
+    precondition(static_cast<ptrdiff_t>(m_nb_non_zero) == std::distance(std::begin(val_range), std::end(val_range)),
                  "val_range has wrong size in crs constructor");
 
     ptr.resize(nrows + 1);
-    col.resize(nnz);
-    val.resize(nnz);
+    col.resize(m_nb_non_zero);
+    val.resize(m_nb_non_zero);
 
     ptr[0] = ptr_range[0];
 #pragma omp parallel for
@@ -161,9 +168,9 @@ struct CSRMatrix
       ptr[i + 1] = row_width;
     }
 
-    nnz = scan_row_sizes();
-    col.resize(nnz);
-    val.resize(nnz);
+    m_nb_non_zero = scan_row_sizes();
+    col.resize(m_nb_non_zero);
+    val.resize(m_nb_non_zero);
 
 #pragma omp parallel for
     for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nrows); ++i) {
@@ -181,12 +188,12 @@ struct CSRMatrix
   CSRMatrix(const CSRMatrix& other)
   : nrows(other.nrows)
   , ncols(other.ncols)
-  , nnz(other.nnz)
+  , m_nb_non_zero(other.m_nb_non_zero)
   {
     if (other.ptr && other.col && other.val) {
       ptr.resize(nrows + 1);
-      col.resize(nnz);
-      val.resize(nnz);
+      col.resize(m_nb_non_zero);
+      val.resize(m_nb_non_zero);
 
       ptr[0] = other.ptr[0];
 #pragma omp parallel for
@@ -203,7 +210,7 @@ struct CSRMatrix
   CSRMatrix(CSRMatrix&& other) noexcept
   : nrows(other.nrows)
   , ncols(other.ncols)
-  , nnz(other.nnz)
+  , m_nb_non_zero(other.m_nb_non_zero)
   , ptr(other.ptr)
   , col(other.col)
   , val(other.val)
@@ -211,7 +218,7 @@ struct CSRMatrix
   {
     other.nrows = 0;
     other.ncols = 0;
-    other.nnz = 0;
+    other.m_nb_non_zero = 0;
     other.ptr = 0;
     other.col = 0;
     other.val = 0;
@@ -223,12 +230,12 @@ struct CSRMatrix
 
     nrows = other.nrows;
     ncols = other.ncols;
-    nnz = other.nnz;
+    m_nb_non_zero = other.m_nb_non_zero;
 
     if (other.ptr && other.col && other.val) {
       ptr = new ptr_type[nrows + 1];
-      col = new col_type[nnz];
-      val = new val_type[nnz];
+      col = new col_type[m_nb_non_zero];
+      val = new val_type[m_nb_non_zero];
 
       ptr[0] = other.ptr[0];
 #pragma omp parallel for
@@ -248,7 +255,7 @@ struct CSRMatrix
   {
     std::swap(nrows, other.nrows);
     std::swap(ncols, other.ncols);
-    std::swap(nnz, other.nnz);
+    std::swap(m_nb_non_zero, other.m_nb_non_zero);
     std::swap(ptr, other.ptr);
     std::swap(col, other.col);
     std::swap(val, other.val);
@@ -308,12 +315,12 @@ struct CSRMatrix
   {
     precondition(!col && !val, "matrix data has already been allocated!");
 
-    nnz = n;
+    m_nb_non_zero = n;
 
-    col.resize(nnz);
+    col.resize(m_nb_non_zero);
 
     if (need_values)
-      val.resize(nnz);
+      val.resize(m_nb_non_zero);
   }
 
   ~CSRMatrix()
@@ -370,7 +377,7 @@ struct CSRMatrix
   size_t bytes() const
   {
     if (own_data) {
-      return sizeof(ptr_type) * (nrows + 1) + sizeof(col_type) * nnz + sizeof(val_type) * nnz;
+      return sizeof(ptr_type) * (nrows + 1) + sizeof(col_type) * m_nb_non_zero + sizeof(val_type) * m_nb_non_zero;
     }
     else {
       return 0;
