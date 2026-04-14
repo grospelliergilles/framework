@@ -116,9 +116,9 @@ struct BuiltinBackend
 
   struct gather
   {
-    std::vector<ptrdiff_t> I;
+    std::vector<col_type> I;
 
-    gather(size_t /*size*/, const std::vector<ptrdiff_t>& I, const params&)
+    gather(size_t /*size*/, const std::vector<col_type>& I, const params&)
     : I(I)
     {}
 
@@ -132,9 +132,9 @@ struct BuiltinBackend
 
   struct scatter
   {
-    std::vector<ptrdiff_t> I;
+    std::vector<col_type> I;
 
-    scatter(size_t /*size*/, const std::vector<ptrdiff_t>& I, const params&)
+    scatter(size_t /*size*/, const std::vector<col_type>& I, const params&)
     : I(I)
     {}
 

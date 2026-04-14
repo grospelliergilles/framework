@@ -58,12 +58,13 @@ class CommunicationPattern
   typedef typename Backend::matrix matrix;
   typedef typename Backend::vector vector;
   typedef typename Backend::params backend_params;
+  typedef typename Backend::col_type col_type;
 
   struct
   {
     std::vector<ptrdiff_t> nbr;
     std::vector<ptrdiff_t> ptr;
-    std::vector<ptrdiff_t> col;
+    std::vector<col_type> col;
 
     size_t count() const
     {
@@ -92,7 +93,7 @@ class CommunicationPattern
 
   CommunicationPattern(mpi_communicator comm,
                        ptrdiff_t n_loc_cols,
-                       size_t n_rem_cols, const ptrdiff_t* p_rem_cols)
+                       size_t n_rem_cols, const col_type* p_rem_cols)
   : comm(comm)
   , loc_cols(n_loc_cols)
   {
@@ -187,7 +188,7 @@ class CommunicationPattern
     ARCANE_ALINA_TOC("MPI Wait");
 
     // Shift columns to send to local numbering:
-    for (ptrdiff_t& c : send.col)
+    for (col_type& c : send.col)
       c -= loc_beg;
 
     ARCANE_ALINA_TOC("communication pattern");
@@ -250,7 +251,7 @@ class CommunicationPattern
     return idx.cend();
   }
 
-  size_t renumber(size_t n, ptrdiff_t* col) const
+  size_t renumber(size_t n, col_type* col) const
   {
     for (size_t i = 0; i < n; ++i)
       col[i] = std::get<1>(idx.at(col[i]));
@@ -320,7 +321,7 @@ class CommunicationPattern
 
  private:
 
-  typedef typename Backend::gather Gather;
+  using Gather = Backend::gather;
 
   static const int tag_set_comm = 1001;
   static const int tag_exc_cols = 1002;
@@ -330,7 +331,8 @@ class CommunicationPattern
 
   std::unordered_map<ptrdiff_t, std::tuple<int, int>> idx;
   std::shared_ptr<Gather> gather;
-  ptrdiff_t loc_beg, loc_cols;
+  ptrdiff_t loc_beg;
+  ptrdiff_t loc_cols;
 
   template <class B>
   friend class CommunicationPattern;
@@ -352,7 +354,7 @@ class DistributedMatrix
   typedef typename Backend::params backend_params;
   typedef typename Backend::matrix matrix;
   typedef CommunicationPattern<Backend> CommPattern;
-  typedef CSRMatrix<value_type> build_matrix;
+  typedef typename Backend::matrix build_matrix;
 
   DistributedMatrix(mpi_communicator comm,
                     std::shared_ptr<build_matrix> a_loc,
@@ -615,7 +617,8 @@ transpose(const DistributedMatrix<Backend>& A)
   ARCANE_ALINA_TIC("MPI Transpose");
   typedef typename Backend::value_type value_type;
   typedef CommunicationPattern<Backend> CommPattern;
-  typedef CSRMatrix<value_type> build_matrix;
+  typedef typename Backend::matrix build_matrix;
+  typedef typename Backend::col_type col_type;
 
   static const int tag_cnt = 2001;
   static const int tag_col = 2002;
@@ -642,11 +645,11 @@ transpose(const DistributedMatrix<Backend>& A)
   // and the other way around.
   std::shared_ptr<build_matrix> t_ptr;
   {
-    std::vector<ptrdiff_t> tmp_col(A_rem.col.data(), A_rem.col.data() + A_rem.nbNonZero());
+    std::vector<col_type> tmp_col(A_rem.col.data(), A_rem.col.data() + A_rem.nbNonZero());
     C.renumber(tmp_col.size(), tmp_col.data());
 
-    ptrdiff_t* a_rem_col = tmp_col.data();
-    ptrdiff_t* a_rem_col_backup = A_rem.col.data();
+    col_type* a_rem_col = tmp_col.data();
+    col_type* a_rem_col_backup = A_rem.col.data();
     A_rem.col.setPointerZeroCopy(a_rem_col);
 
     //std::swap(a_rem_col, A_rem.col);
@@ -776,13 +779,13 @@ transpose(const DistributedMatrix<Backend>& A)
 /*---------------------------------------------------------------------------*/
 
 template <class Backend>
-std::shared_ptr<CSRMatrix<typename Backend::value_type>>
+std::shared_ptr<typename Backend::matrix>
 remote_rows(const CommunicationPattern<Backend>& C,
             const DistributedMatrix<Backend>& B,
             bool need_values = true)
 {
   typedef typename Backend::value_type value_type;
-  typedef CSRMatrix<value_type> build_matrix;
+  typedef typename Backend::matrix build_matrix;
 
   static const int tag_ptr = 3001;
   static const int tag_col = 3002;
@@ -921,7 +924,7 @@ std::shared_ptr<DistributedMatrix<Backend>>
 product(const DistributedMatrix<Backend>& A, const DistributedMatrix<Backend>& B)
 {
   typedef typename Backend::value_type value_type;
-  typedef CSRMatrix<value_type> build_matrix;
+  using build_matrix = Backend::matrix;
   ARCANE_ALINA_TIC("product");
 
   const CommunicationPattern<Backend>& Acp = A.cpat();
@@ -1145,8 +1148,7 @@ product(const DistributedMatrix<Backend>& A, const DistributedMatrix<Backend>& B
 template <class Backend, class T>
 void scale(DistributedMatrix<Backend>& A, T s)
 {
-  typedef typename Backend::value_type value_type;
-  typedef CSRMatrix<value_type> build_matrix;
+  using build_matrix = Backend::matrix;
 
   build_matrix& A_loc = *A.local();
   build_matrix& A_rem = *A.remote();

@@ -52,9 +52,11 @@ struct DistributedPMISAggregation
   typedef typename math::scalar_of<value_type>::type scalar_type;
   typedef DistributedMatrix<Backend> matrix;
   typedef CommunicationPattern<Backend> CommPattern;
-  typedef CSRMatrix<value_type> build_matrix;
-  typedef backend::BuiltinBackend<char> bool_backend;
-  typedef CSRMatrix<char> bool_matrix;
+  using build_matrix = Backend::matrix;
+  using col_type = Backend::col_type;
+  using ptr_type = Backend::ptr_type;
+  using bool_backend = backend::BuiltinBackend<char,col_type,ptr_type>;
+  using bool_matrix = bool_backend::matrix;
 
   struct params
   {
@@ -104,7 +106,7 @@ struct DistributedPMISAggregation
     }
     else {
       typedef typename math::scalar_of<value_type>::type scalar;
-      typedef backend::BuiltinBackend<scalar> sbackend;
+      using sbackend = backend::BuiltinBackend<scalar,col_type,ptr_type>;
 
       ptrdiff_t np = n / prm.block_size;
 
@@ -1167,7 +1169,7 @@ struct DistributedAggregationCoarsening
 {
   typedef typename Backend::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
-  typedef CSRMatrix<value_type> build_matrix;
+  using build_matrix = Backend::matrix;
 
   struct params
   {
@@ -1247,7 +1249,11 @@ struct DistributedSmoothedAggregationCoarsening
 {
   typedef typename Backend::value_type value_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
-  typedef CSRMatrix<value_type> build_matrix;
+  using build_matrix = Backend::matrix;
+  using col_type = Backend::col_type;
+  using ptr_type = Backend::ptr_type;
+  using bool_backend = backend::BuiltinBackend<char,col_type,ptr_type>;
+  using bool_matrix = bool_backend::matrix;
 
   struct params
   {
@@ -1300,7 +1306,7 @@ struct DistributedSmoothedAggregationCoarsening
   transfer_operators(const DistributedMatrix<Backend>& A)
   {
     typedef DistributedMatrix<Backend> DM;
-    typedef CSRMatrix<char> bool_matrix;
+    using build_matrix = Backend::matrix;
 
     DistributedPMISAggregation<Backend> aggr(A, prm.aggr);
     prm.aggr.eps_strong *= 0.5;

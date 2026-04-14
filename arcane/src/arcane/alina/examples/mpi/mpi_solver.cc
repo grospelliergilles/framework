@@ -1,5 +1,6 @@
 // Pour Eigen
 #pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#pragma GCC diagnostic ignored "-Wint-in-bool-context"
 
 #include <iostream>
 #include <vector>
@@ -330,10 +331,17 @@ void solve_scalar(Alina::mpi_communicator comm,
 {
   auto& prof = Alina::Profiler::globalProfiler();
 #if defined(SOLVER_BACKEND_BUILTIN)
-  typedef Alina::backend::BuiltinBackend<double> Backend;
+  using Backend = Alina::backend::BuiltinBackend<double>;
+  //using Backend = Alina::backend::BuiltinBackend<double, Arcane::Int32>;
 #elif defined(SOLVER_BACKEND_CUDA)
-  typedef Alina::backend::cuda<double> Backend;
+  using Backend = Alina::backend::cuda<double>;
 #endif
+
+  std::cout << "Using scalar solve ptr_size=" << sizeof(ptrdiff_t)
+            << " ptr_type_size=" << sizeof(Backend::ptr_type)
+            << " col_type_size=" << sizeof(Backend::col_type)
+            << " value_type_size=" << sizeof(Backend::value_type)
+            << "\n";
 
   typedef Alina::DistributedMatrix<Backend> DMatrix;
 
@@ -375,6 +383,7 @@ void solve_scalar(Alina::mpi_communicator comm,
   }
 
   if (comm.rank == 0) {
+    std::cout << "SolverInfo:\n";
     std::cout << *solve << std::endl;
   }
 

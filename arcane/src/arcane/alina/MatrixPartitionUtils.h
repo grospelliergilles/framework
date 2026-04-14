@@ -45,8 +45,7 @@ template <class Backend, class Ptr, class Col> void
 mpi_symm_graph(const DistributedMatrix<Backend>& A,
                std::vector<Ptr>& ptr, std::vector<Col>& col)
 {
-  typedef typename Backend::value_type value_type;
-  typedef CSRMatrix<value_type> build_matrix;
+  using build_matrix = Backend::matrix;
 
   ARCANE_ALINA_TIC("symm graph");
 
@@ -282,7 +281,7 @@ mpi_graph_perm_matrix(mpi_communicator comm, ptrdiff_t col_beg, ptrdiff_t col_en
                       const std::vector<Idx>& perm)
 {
   typedef typename Backend::value_type value_type;
-  typedef CSRMatrix<value_type> build_matrix;
+  using build_matrix = Backend::matrix;
 
   ARCANE_ALINA_TIC("perm matrix");
 

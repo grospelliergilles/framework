@@ -47,6 +47,8 @@ struct ParmetisMatrixPartitioner
 {
   typedef typename Backend::value_type value_type;
   typedef DistributedMatrix<Backend> matrix;
+  using col_type = Backend::col_type;
+  using ptr_type = Backend::ptr_type;
 
   struct params
   {
@@ -77,7 +79,7 @@ struct ParmetisMatrixPartitioner
 
   } prm;
 
-  ParmetisMatrixPartitioner(const params& prm = params())
+  explicit ParmetisMatrixPartitioner(const params& prm = params())
   : prm(prm)
   {}
 
@@ -136,7 +138,7 @@ struct ParmetisMatrixPartitioner
       }
       else {
         typedef typename math::scalar_of<value_type>::type scalar;
-        typedef backend::BuiltinBackend<scalar> sbackend;
+        using sbackend = backend::BuiltinBackend<scalar,col_type,ptr_type>;
         ptrdiff_t np = n / block_size;
 
         DistributedMatrix<sbackend> A_pw(A.comm(),
