@@ -331,8 +331,8 @@ void solve_scalar(Alina::mpi_communicator comm,
 {
   auto& prof = Alina::Profiler::globalProfiler();
 #if defined(SOLVER_BACKEND_BUILTIN)
-  using Backend = Alina::backend::BuiltinBackend<double>;
-  //using Backend = Alina::backend::BuiltinBackend<double, Arcane::Int32>;
+  //using Backend = Alina::backend::BuiltinBackend<double>;
+  using Backend = Alina::backend::BuiltinBackend<double, Arcane::Int32>;
 #elif defined(SOLVER_BACKEND_CUDA)
   using Backend = Alina::backend::cuda<double>;
 #endif

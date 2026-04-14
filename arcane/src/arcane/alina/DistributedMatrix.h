@@ -59,11 +59,12 @@ class CommunicationPattern
   typedef typename Backend::vector vector;
   typedef typename Backend::params backend_params;
   typedef typename Backend::col_type col_type;
+  typedef typename Backend::ptr_type ptr_type;
 
   struct
   {
     std::vector<ptrdiff_t> nbr;
-    std::vector<ptrdiff_t> ptr;
+    std::vector<ptr_type> ptr;
     std::vector<col_type> col;
 
     size_t count() const
@@ -78,7 +79,7 @@ class CommunicationPattern
   struct
   {
     std::vector<ptrdiff_t> nbr;
-    std::vector<ptrdiff_t> ptr;
+    std::vector<ptr_type> ptr;
 
     size_t count() const
     {
@@ -104,7 +105,7 @@ class CommunicationPattern
 
     // Renumber remote columns,
     // find out how many remote values we need from each process.
-    std::vector<ptrdiff_t> rem_cols(p_rem_cols, p_rem_cols + n_rem_cols);
+    std::vector<col_type> rem_cols(p_rem_cols, p_rem_cols + n_rem_cols);
 
     std::sort(rem_cols.begin(), rem_cols.end());
     rem_cols.erase(std::unique(rem_cols.begin(), rem_cols.end()), rem_cols.end());
@@ -175,12 +176,12 @@ class CommunicationPattern
     // What columns do you need from me?
     for (size_t i = 0; i < send.nbr.size(); ++i)
       MPI_Irecv(&send.col[send.ptr[i]], send.ptr[i + 1] - send.ptr[i],
-                mpi_datatype<ptrdiff_t>(), send.nbr[i], tag_exc_cols, comm, &send.req[i]);
+                mpi_datatype<col_type>(), send.nbr[i], tag_exc_cols, comm, &send.req[i]);
 
     // Here is what I need from you:
     for (size_t i = 0; i < recv.nbr.size(); ++i)
       MPI_Isend(&rem_cols[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
-                mpi_datatype<ptrdiff_t>(), recv.nbr[i], tag_exc_cols, comm, &recv.req[i]);
+                mpi_datatype<col_type>(), recv.nbr[i], tag_exc_cols, comm, &recv.req[i]);
 
     ARCANE_ALINA_TIC("MPI Wait");
     MPI_Waitall(recv.req.size(), recv.req.data(), MPI_STATUSES_IGNORE);
@@ -619,6 +620,7 @@ transpose(const DistributedMatrix<Backend>& A)
   typedef CommunicationPattern<Backend> CommPattern;
   typedef typename Backend::matrix build_matrix;
   typedef typename Backend::col_type col_type;
+  typedef typename Backend::ptr_type ptr_type;
 
   static const int tag_cnt = 2001;
   static const int tag_col = 2002;
@@ -681,7 +683,7 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t beg = C.send.ptr[i];
     ptrdiff_t end = C.send.ptr[i + 1];
 
-    MPI_Irecv(&rem_ptr[beg + 1], end - beg, mpi_datatype<ptrdiff_t>(),
+    MPI_Irecv(&rem_ptr[beg + 1], end - beg, mpi_datatype<ptr_type>(),
               C.send.nbr[i], tag_cnt, comm, &recv_cnt_req[i]);
   }
 
@@ -689,7 +691,7 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t beg = C.recv.ptr[i];
     ptrdiff_t end = C.recv.ptr[i + 1];
 
-    MPI_Isend(&row_size[beg], end - beg, mpi_datatype<ptrdiff_t>(),
+    MPI_Isend(&row_size[beg], end - beg, mpi_datatype<ptr_type>(),
               C.recv.nbr[i], tag_cnt, comm, &send_cnt_req[i]);
   }
 
@@ -699,7 +701,7 @@ transpose(const DistributedMatrix<Backend>& A)
   std::partial_sum(rem_ptr.begin(), rem_ptr.end(), rem_ptr.begin());
 
   // 2. Start exchange of rem_col, rem_val
-  std::vector<ptrdiff_t> rem_col(rem_ptr.back());
+  std::vector<col_type> rem_col(rem_ptr.back());
   std::vector<value_type> rem_val(rem_ptr.back());
 
   for (size_t i = 0; i < C.send.nbr.size(); ++i) {
@@ -709,7 +711,7 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t cbeg = rem_ptr[rbeg];
     ptrdiff_t cend = rem_ptr[rend];
 
-    MPI_Irecv(&rem_col[cbeg], cend - cbeg, mpi_datatype<ptrdiff_t>(),
+    MPI_Irecv(&rem_col[cbeg], cend - cbeg, mpi_datatype<col_type>(),
               C.send.nbr[i], tag_col, comm, &recv_col_req[i]);
 
     MPI_Irecv(&rem_val[cbeg], cend - cbeg, mpi_datatype<value_type>(),
@@ -723,7 +725,7 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t cbeg = t_rem.ptr[rbeg];
     ptrdiff_t cend = t_rem.ptr[rend];
 
-    MPI_Isend(&t_rem.col[cbeg], cend - cbeg, mpi_datatype<ptrdiff_t>(),
+    MPI_Isend(&t_rem.col[cbeg], cend - cbeg, mpi_datatype<col_type>(),
               C.recv.nbr[i], tag_col, comm, &send_col_req[i]);
 
     MPI_Isend(&t_rem.val[cbeg], cend - cbeg, mpi_datatype<value_type>(),
@@ -786,6 +788,8 @@ remote_rows(const CommunicationPattern<Backend>& C,
 {
   typedef typename Backend::value_type value_type;
   typedef typename Backend::matrix build_matrix;
+  typedef typename Backend::col_type col_type;
+  typedef typename Backend::ptr_type ptr_type;
 
   static const int tag_ptr = 3001;
   static const int tag_col = 3002;
@@ -827,7 +831,7 @@ remote_rows(const CommunicationPattern<Backend>& C,
     }
     m.setNbNonZero(nnz);
 
-    MPI_Isend(m.ptr, m.nbRow(), mpi_datatype<ptrdiff_t>(),
+    MPI_Isend(m.ptr, m.nbRow(), mpi_datatype<ptr_type>(),
               C.send.nbr[k], tag_ptr, comm, &send_ptr_req[k]);
 
     m.set_nonzeros(nnz, need_values);
@@ -856,7 +860,7 @@ remote_rows(const CommunicationPattern<Backend>& C,
       }
     }
 
-    MPI_Isend(m.col, m.nbNonZero(), mpi_datatype<ptrdiff_t>(),
+    MPI_Isend(m.col, m.nbNonZero(), mpi_datatype<col_type>(),
               C.send.nbr[k], tag_col, comm, &send_col_req[k]);
     if (need_values)
       MPI_Isend(m.val, m.nbNonZero(), mpi_datatype<value_type>(),
@@ -876,7 +880,7 @@ remote_rows(const CommunicationPattern<Backend>& C,
     ptrdiff_t beg = C.recv.ptr[k];
     ptrdiff_t end = C.recv.ptr[k + 1];
 
-    MPI_Irecv(&B_nbr->ptr[beg + 1], end - beg, mpi_datatype<ptrdiff_t>(),
+    MPI_Irecv(&B_nbr->ptr[beg + 1], end - beg, mpi_datatype<ptr_type>(),
               C.recv.nbr[k], tag_ptr, comm, &recv_ptr_req[k]);
   }
 
@@ -893,7 +897,7 @@ remote_rows(const CommunicationPattern<Backend>& C,
     ptrdiff_t cbeg = B_nbr->ptr[rbeg];
     ptrdiff_t cend = B_nbr->ptr[rend];
 
-    MPI_Irecv(&B_nbr->col[cbeg], cend - cbeg, mpi_datatype<ptrdiff_t>(),
+    MPI_Irecv(&B_nbr->col[cbeg], cend - cbeg, mpi_datatype<col_type>(),
               C.recv.nbr[k], tag_col, comm, &recv_col_req[k]);
 
     if (need_values)
@@ -925,6 +929,7 @@ product(const DistributedMatrix<Backend>& A, const DistributedMatrix<Backend>& B
 {
   typedef typename Backend::value_type value_type;
   using build_matrix = Backend::matrix;
+  typedef typename Backend::col_type col_type;
   ARCANE_ALINA_TIC("product");
 
   const CommunicationPattern<Backend>& Acp = A.cpat();
@@ -945,7 +950,7 @@ product(const DistributedMatrix<Backend>& A, const DistributedMatrix<Backend>& B
 
   // Build mapping from global to local column numbers in the remote part of
   // the product matrix.
-  std::vector<ptrdiff_t> rem_cols(B_rem.nbNonZero() + B_nbr.nbNonZero());
+  std::vector<col_type> rem_cols(B_rem.nbNonZero() + B_nbr.nbNonZero());
 
   std::copy(B_nbr.col.data(), B_nbr.col.data() + B_nbr.nbNonZero(),
             std::copy(B_rem.col.data(), B_rem.col.data() + B_rem.nbNonZero(), rem_cols.begin()));
