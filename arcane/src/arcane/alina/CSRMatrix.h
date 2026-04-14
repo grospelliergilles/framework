@@ -24,7 +24,10 @@
 /*---------------------------------------------------------------------------*/
 
 #include "arcane/alina/AlinaGlobal.h"
-#include <arcane/alina/util.h>
+#include "arcane/alina/util.h"
+
+// A supprimer
+#include "arcane/alina/BackendInterface.h"
 
 #include <cstddef>
 
@@ -140,6 +143,7 @@ struct CSRMatrix
     ARCANE_ALINA_TOC("CSR copy");
   }
 
+  // TODO: A supprimer. Mettre cela dans une function externe pour ne pas dépendre de backend
   template <class Matrix>
   CSRMatrix(const Matrix& A)
   : nrows(backend::rows(A))

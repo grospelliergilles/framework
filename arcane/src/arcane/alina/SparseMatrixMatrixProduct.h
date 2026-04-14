@@ -45,7 +45,7 @@
 #include <omp.h>
 #endif
 
-#include <arcane/alina/ValueTypeInterface.h>
+#include <arcane/alina/BackendInterface.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

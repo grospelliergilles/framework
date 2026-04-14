@@ -26,7 +26,6 @@
 #include <algorithm>
 #include <cassert>
 #include <numeric>
-#include <utility>
 #include <arcane/alina/util.h>
 #include <arcane/alina/ValueTypeInterface.h>
 

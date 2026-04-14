@@ -14,6 +14,7 @@ set(ARCANE_SOURCES
   BackendInterface.h
   BlockCSRMatrix.h
   CSRMatrix.h
+  CSRMatrixOperations.h
   Coarsening.h
   CoarseningRuntime.h
   DeflatedSolver.h
@@ -36,6 +37,7 @@ set(ARCANE_SOURCES
   Profiler.cc
   relaxation_cusparse_ilu0.h
   ILUSolverImpl.h
+  NumaVector.h
   RelaxationBase.h
   Relaxation.h
   RelaxationRuntime.h
