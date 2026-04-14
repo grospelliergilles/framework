@@ -55,6 +55,8 @@ class PropertyTree;
 
 template <typename val_t = double, typename col_t = ptrdiff_t, typename ptr_t = col_t>
 struct CSRMatrix;
+template <typename V, typename C, typename P>
+struct BlockCSRMatrix;
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
