@@ -1,3 +1,6 @@
+// Pour Eigen
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+
 #include <iostream>
 #include <iterator>
 #include <iomanip>
