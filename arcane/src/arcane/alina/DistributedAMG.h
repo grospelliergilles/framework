@@ -329,6 +329,7 @@ class DistributedAMG
     {
       if (relax) {
         relax = std::make_shared<Relaxation>(*A, prm.relax, bprm);
+        std::cout << "DistributedAMG: relaxation=" << relax << "\n";
       }
 
       if (solve) {
@@ -386,6 +387,7 @@ class DistributedAMG
 
     this->A = A;
     Coarsening C(prm.coarsening);
+    //std::cout << "DistributedAMGInit: Coarsening=" << C << "\n";
     bool need_coarse = true;
 
     while (A->glob_rows() > prm.coarse_enough) {
@@ -485,6 +487,10 @@ std::ostream& operator<<(std::ostream& os, const DistributedAMG<B, C, R, D, I>& 
     sum_dof += lvl.rows();
     sum_nnz += lvl.nonzeros();
   }
+
+  os << "Preconditioner: DistributedAMG\n";
+  //os << "Coarsening: " << a.prm.coarsening.type << "\n";
+  //os << "Relaxation: " << a.prm.relax.type << "\n";
 
   os << "Number of levels:    " << a.levels.size()
      << "\nOperator complexity: " << std::fixed << std::setprecision(2)

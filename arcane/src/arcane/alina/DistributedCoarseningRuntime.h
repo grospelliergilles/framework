@@ -147,6 +147,11 @@ struct DistributedCoarseningRuntime
       throw std::invalid_argument("Unsupported partition type");
     }
   }
+  friend std::ostream& operator<<(std::ostream& os, const DistributedCoarseningRuntime& w)
+  {
+    os << "Coarsening: " << w.c << "\n";
+    return os;
+  }
 };
 
 template <class Backend>
