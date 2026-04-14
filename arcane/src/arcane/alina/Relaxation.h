@@ -1348,11 +1348,11 @@ namespace detail
 
     C->set_size(A.nrows, B.ncols);
 
-    auto A_ptr = A.ptr;
+    auto A_ptr = A.ptr.data();
     auto A_col = A.col.data();
-    auto B_ptr = B.ptr;
+    auto B_ptr = B.ptr.data();
     auto B_col = B.col.data();
-    auto C_ptr = C->ptr;
+    auto C_ptr = C->ptr.data();
     C_ptr[0] = 0;
 
 #pragma omp parallel

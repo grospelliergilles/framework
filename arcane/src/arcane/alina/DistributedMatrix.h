@@ -758,7 +758,7 @@ transpose(const DistributedMatrix<Backend>& A)
     T_rem.ptr[row] = head;
   }
 
-  std::rotate(T_rem.ptr, T_rem.ptr + nrows, T_rem.ptr + nrows + 1);
+  std::rotate(T_rem.ptr.data(), T_rem.ptr.data() + nrows, T_rem.ptr.data() + nrows + 1);
   T_rem.ptr[0] = 0;
 
   ARCANE_ALINA_TIC("MPI Wait");

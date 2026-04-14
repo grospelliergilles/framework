@@ -217,7 +217,7 @@ transpose(const CSRMatrix<V, C, P>& A)
     }
   }
 
-  std::rotate(T->ptr, T->ptr + m, T->ptr + m + 1);
+  std::rotate(T->ptr.data(), T->ptr.data() + m, T->ptr.data() + m + 1);
   T->ptr[0] = 0;
 
   return T;

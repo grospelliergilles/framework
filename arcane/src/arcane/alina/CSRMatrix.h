@@ -100,7 +100,7 @@ struct CSRMatrix
   size_t nrows = 0;
   size_t ncols = 0;
   size_t nnz = 0;
-  ptr_type* ptr = nullptr;
+  CSRArray<ptr_type> ptr;
   CSRArray<col_type> col;
   CSRArray<val_type> val;
   bool own_data = true;
@@ -124,7 +124,7 @@ struct CSRMatrix
     precondition(static_cast<ptrdiff_t>(nnz) == std::distance(std::begin(val_range), std::end(val_range)),
                  "val_range has wrong size in crs constructor");
 
-    ptr = new ptr_type[nrows + 1];
+    ptr.resize(nrows + 1);
     col.resize(nnz);
     val.resize(nnz);
 
@@ -146,7 +146,7 @@ struct CSRMatrix
   , ncols(backend::cols(A))
   {
     ARCANE_ALINA_TIC("CSR copy");
-    ptr = new ptr_type[nrows + 1];
+    ptr.resize(nrows + 1);
     ptr[0] = 0;
 
 #pragma omp parallel for
@@ -180,7 +180,7 @@ struct CSRMatrix
   , nnz(other.nnz)
   {
     if (other.ptr && other.col && other.val) {
-      ptr = new ptr_type[nrows + 1];
+      ptr.resize(nrows + 1);
       col.resize(nnz);
       val.resize(nnz);
 
@@ -256,8 +256,7 @@ struct CSRMatrix
   void free_data()
   {
     if (own_data) {
-      delete[] ptr;
-      ptr = nullptr;
+      ptr.reset();
       col.reset();
       val.reset();
     }
@@ -270,7 +269,7 @@ struct CSRMatrix
     nrows = n;
     ncols = m;
 
-    ptr = new ptr_type[nrows + 1];
+    ptr.resize(nrows + 1);
 
     if (clean_ptr) {
       ptr[0] = 0;
@@ -282,7 +281,7 @@ struct CSRMatrix
 
   ptr_type scan_row_sizes()
   {
-    std::partial_sum(ptr, ptr + nrows + 1, ptr);
+    std::partial_sum(ptr.data(), ptr.data() + nrows + 1, ptr.data());
     return ptr[nrows];
   }
 

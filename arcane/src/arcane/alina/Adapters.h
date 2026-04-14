@@ -417,7 +417,7 @@ unblock_matrix(const Matrix& B)
     }
   }
 
-  std::rotate(A->ptr, A->ptr + A->nrows, A->ptr + A->nrows + 1);
+  std::rotate(A->ptr.data(), A->ptr.data() + A->nrows, A->ptr.data() + A->nrows + 1);
   A->ptr[0] = 0;
 
   return A;
@@ -941,7 +941,7 @@ zero_copy(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, const Val*
   A->ncols = ncols;
   A->nnz = nrows ? ptr[nrows] : 0;
 
-  A->ptr = (ptrdiff_t*)ptr;
+  A->ptr.setPointerZeroCopy((ptrdiff_t*)ptr);
   A->col.setPointerZeroCopy((ptrdiff_t*)col);
   A->val.setPointerZeroCopy((Val*)val);
 
@@ -972,7 +972,7 @@ zero_copy_direct(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, con
   A->ncols = ncols;
   A->nnz = nrows ? ptr[nrows] : 0;
 
-  A->ptr = const_cast<Ptr*>(ptr);
+  A->ptr.setPointerZeroCopy(const_cast<Ptr*>(ptr));
   A->col.setPointerZeroCopy(const_cast<Col*>(col));
   A->val.setPointerZeroCopy(const_cast<Val*>(val));
 

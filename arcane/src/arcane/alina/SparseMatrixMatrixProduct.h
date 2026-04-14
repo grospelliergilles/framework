@@ -468,7 +468,7 @@ void spgemm_rmerge(const AMatrix& A, const BMatrix& B, CMatrix& C)
       Idx row_end = A.ptr[i + 1];
 
       C.ptr[i + 1] = prod_row_width(A.col.data() + row_beg, A.col.data() + row_end,
-                                    B.ptr, B.col.data(),
+                                    B.ptr.data(), B.col.data(),
                                     t_col, t_col + max_row_width, t_col + 2 * max_row_width);
     }
   }
@@ -492,7 +492,7 @@ void spgemm_rmerge(const AMatrix& A, const BMatrix& B, CMatrix& C)
       Idx row_end = A.ptr[i + 1];
 
       prod_row(A.col.data() + row_beg, A.col.data() + row_end, A.val.data() + row_beg,
-               B.ptr, B.col.data(), B.val.data(),
+               B.ptr.data(), B.col.data(), B.val.data(),
                C.col.data() + C.ptr[i], C.val.data() + C.ptr[i],
                t_col, t_val, t_col + max_row_width, t_val + max_row_width);
     }

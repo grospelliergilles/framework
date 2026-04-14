@@ -510,7 +510,7 @@ class SchurPressureCorrectionPreconditioner
       Kup_hat.nrows = nu;
       Kup_hat.ncols = np;
       Kup_hat.nnz = Kup->nnz;
-      Kup_hat.ptr = Kup->ptr;
+      Kup_hat.ptr.setPointerZeroCopy(Kup->ptr.data());
       Kup_hat.col.setPointerZeroCopy(Kup->col.data());
       Kup_hat.val.setPointerZeroCopy(val.data());
 

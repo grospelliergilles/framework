@@ -1147,7 +1147,7 @@ struct RugeStubenCoarsening
     const Scalar eps = Alina::detail::eps<Scalar>(1);
 
     S.nrows = S.ncols = n;
-    S.ptr = new Ptr[n + 1];
+    S.ptr.resize(n + 1);
     S.val.resize(nnz);
     S.ptr[0] = 0;
 
@@ -1185,7 +1185,7 @@ struct RugeStubenCoarsening
         if (S.val[j])
           S.col[S.ptr[A.col[j]]++] = i;
 
-    std::rotate(S.ptr, S.ptr + n, S.ptr + n + 1);
+    std::rotate(S.ptr.data(), S.ptr.data() + n, S.ptr.data() + n + 1);
     S.ptr[0] = 0;
   }
 

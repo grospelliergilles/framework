@@ -1336,7 +1336,7 @@ struct DistributedSmoothedAggregationCoarsening
     Af_loc.nrows = S_loc.nrows;
     Af_loc.ncols = S_loc.ncols;
     Af_loc.nnz = S_loc.nnz;
-    Af_loc.ptr = S_loc.ptr;
+    Af_loc.ptr.setPointerZeroCopy(S_loc.ptr.data());
     Af_loc.col.setPointerZeroCopy(S_loc.col.data());
     Af_loc.val.setPointerZeroCopy(Af_loc_val.data());
 
@@ -1344,7 +1344,7 @@ struct DistributedSmoothedAggregationCoarsening
     Af_rem.nrows = S_rem.nrows;
     Af_rem.ncols = S_rem.ncols;
     Af_rem.nnz = S_rem.nnz;
-    Af_rem.ptr = S_rem.ptr;
+    Af_rem.ptr.setPointerZeroCopy(S_rem.ptr.data());
     Af_rem.col.setPointerZeroCopy(S_rem.col.data());
     Af_rem.val.setPointerZeroCopy(Af_rem_val.data());
 
