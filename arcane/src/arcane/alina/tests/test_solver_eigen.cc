@@ -1,5 +1,6 @@
 // Pour Eigen
 #pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#pragma GCC diagnostic ignored "-Wint-in-bool-context"
 
 #include <gtest/gtest.h>
 
