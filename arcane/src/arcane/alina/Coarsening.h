@@ -1178,7 +1178,7 @@ struct RugeStubenCoarsening
         ++(S.ptr[A.col[i] + 1]);
 
     S.scan_row_sizes();
-    S.col = new Col[S.ptr[n]];
+    S.col.resize(S.ptr[n]);
 
     for (size_t i = 0; i < n; ++i)
       for (Ptr j = A.ptr[i], e = A.ptr[i + 1]; j < e; ++j)

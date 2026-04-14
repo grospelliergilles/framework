@@ -511,7 +511,7 @@ class SchurPressureCorrectionPreconditioner
       Kup_hat.ncols = np;
       Kup_hat.nnz = Kup->nnz;
       Kup_hat.ptr = Kup->ptr;
-      Kup_hat.col = Kup->col;
+      Kup_hat.col.setPointerZeroCopy(Kup->col.data());
       Kup_hat.val.setPointerZeroCopy(val.data());
 
       Kpp = sum(math::identity<value_type>(), *Kpp, -math::identity<value_type>(), *product(*Kpu, Kup_hat));

@@ -942,7 +942,7 @@ zero_copy(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, const Val*
   A->nnz = nrows ? ptr[nrows] : 0;
 
   A->ptr = (ptrdiff_t*)ptr;
-  A->col = (ptrdiff_t*)col;
+  A->col.setPointerZeroCopy((ptrdiff_t*)col);
   A->val.setPointerZeroCopy((Val*)val);
 
   A->own_data = false;
@@ -973,7 +973,7 @@ zero_copy_direct(size_t nrows, size_t ncols, const Ptr* ptr, const Col* col, con
   A->nnz = nrows ? ptr[nrows] : 0;
 
   A->ptr = const_cast<Ptr*>(ptr);
-  A->col = const_cast<Col*>(col);
+  A->col.setPointerZeroCopy(const_cast<Col*>(col));
   A->val.setPointerZeroCopy(const_cast<Val*>(val));
 
   A->own_data = false;

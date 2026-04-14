@@ -136,7 +136,7 @@ class DistributedDirectSolverBase
 
       A.set_nonzeros(A.scan_row_sizes());
 
-      std::copy(Astrip.col, Astrip.col + Astrip.nnz, A.col);
+      std::copy(Astrip.col.data(), Astrip.col.data() + Astrip.nnz, A.col.data());
       std::copy(Astrip.val.data(), Astrip.val.data() + Astrip.nnz, A.val.data());
 
       shift = Astrip.nnz;

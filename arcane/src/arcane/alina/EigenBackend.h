@@ -75,7 +75,7 @@ struct EigenBackend
     return std::shared_ptr<matrix>(new matrix(
                                    rows(*A), cols(*A), nonzeros(*A),
                                    const_cast<index_type*>(a.ptr),
-                                   const_cast<index_type*>(a.col),
+                                   const_cast<index_type*>(a.col.data()),
                                    const_cast<value_type*>(a.val.data())),
                                    hold_host(A));
   }

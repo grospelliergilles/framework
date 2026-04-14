@@ -642,15 +642,19 @@ transpose(const DistributedMatrix<Backend>& A)
   // and the other way around.
   std::shared_ptr<build_matrix> t_ptr;
   {
-    std::vector<ptrdiff_t> tmp_col(A_rem.col, A_rem.col + A_rem.nnz);
+    std::vector<ptrdiff_t> tmp_col(A_rem.col.data(), A_rem.col.data() + A_rem.nnz);
     C.renumber(tmp_col.size(), tmp_col.data());
 
     ptrdiff_t* a_rem_col = tmp_col.data();
-    std::swap(a_rem_col, A_rem.col);
+    ptrdiff_t* a_rem_col_backup = A_rem.col.data();
+    A_rem.col.setPointerZeroCopy(a_rem_col);
+
+    //std::swap(a_rem_col, A_rem.col);
 
     t_ptr = transpose(A_rem);
 
-    std::swap(a_rem_col, A_rem.col);
+    A_rem.col.setPointerZeroCopy(a_rem_col_backup);
+    //std::swap(a_rem_col, A_rem.col);
   }
   build_matrix& t_rem = *t_ptr;
 
@@ -938,8 +942,8 @@ product(const DistributedMatrix<Backend>& A, const DistributedMatrix<Backend>& B
   // the product matrix.
   std::vector<ptrdiff_t> rem_cols(B_rem.nnz + B_nbr.nnz);
 
-  std::copy(B_nbr.col, B_nbr.col + B_nbr.nnz,
-            std::copy(B_rem.col, B_rem.col + B_rem.nnz, rem_cols.begin()));
+  std::copy(B_nbr.col.data(), B_nbr.col.data() + B_nbr.nnz,
+            std::copy(B_rem.col.data(), B_rem.col.data() + B_rem.nnz, rem_cols.begin()));
 
   std::sort(rem_cols.begin(), rem_cols.end());
   rem_cols.erase(std::unique(rem_cols.begin(), rem_cols.end()), rem_cols.end());

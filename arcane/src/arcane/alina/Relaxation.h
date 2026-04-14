@@ -1349,9 +1349,9 @@ namespace detail
     C->set_size(A.nrows, B.ncols);
 
     auto A_ptr = A.ptr;
-    auto A_col = A.col;
+    auto A_col = A.col.data();
     auto B_ptr = B.ptr;
-    auto B_col = B.col;
+    auto B_col = B.col.data();
     auto C_ptr = C->ptr;
     C_ptr[0] = 0;
 
@@ -1378,7 +1378,7 @@ namespace detail
     }
 
     C->set_nonzeros(C->scan_row_sizes(), /*need_values = */ false);
-    auto C_col = C->col;
+    auto C_col = C->col.data();
 
 #pragma omp parallel
     {
