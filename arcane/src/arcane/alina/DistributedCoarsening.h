@@ -597,11 +597,11 @@ struct DistributedPMISAggregation
 
       for (size_t i = 0; i < Sp.recv.nbr.size(); ++i) {
         int npts = send_pts[i].size();
-        send_cnt_req[i] = _doISend2(&npts, 1, Sp.recv.nbr[i], tag_exc_cnt, comm);
+        send_cnt_req[i] = comm.doISend(&npts, 1, Sp.recv.nbr[i], tag_exc_cnt);
 
         if (!npts)
           continue;
-        send_pts_req[i] = _doISend2(&send_pts[i][0], npts, Sp.recv.nbr[i], tag_exc_pts, comm);
+        send_pts_req[i] = comm.doISend(&send_pts[i][0], npts, Sp.recv.nbr[i], tag_exc_pts);
       }
 
       for (size_t i = 0; i < Sp.send.nbr.size(); ++i) {
@@ -688,11 +688,11 @@ struct DistributedPMISAggregation
 
       for (size_t i = 0; i < Sp.recv.nbr.size(); ++i) {
         int npts = send_pts[i].size();
-        send_cnt_req[i] = _doISend2(&npts, 1, Sp.recv.nbr[i], tag_exc_cnt, comm);
+        send_cnt_req[i] = comm.doISend(&npts, 1, Sp.recv.nbr[i], tag_exc_cnt);
 
         if (!npts)
           continue;
-        send_pts_req[i] = _doISend2(&send_pts[i][0], npts, Sp.recv.nbr[i], tag_exc_pts, comm);
+        send_pts_req[i] = comm.doISend(&send_pts[i][0], npts, Sp.recv.nbr[i], tag_exc_pts);
       }
 
       for (size_t i = 0; i < Sp.send.nbr.size(); ++i) {
@@ -854,9 +854,9 @@ struct DistributedPMISAggregation
 
         MessagePassing::Request* req = &recv_req[3 * i];
 
-        req[0] = _doIReceive2(&recv_agg[p], w, n, tag_exc_agg, comm);
-        req[1] = _doIReceive2(&recv_dof[p], w, n, tag_exc_dof, comm);
-        req[2] = _doIReceive2(&recv_row[null_cols * p], null_cols * w, n, tag_exc_row, comm);
+        req[0] = comm.doIReceive(&recv_agg[p], w, n, tag_exc_agg);
+        req[1] = comm.doIReceive(&recv_dof[p], w, n, tag_exc_dof);
+        req[2] = comm.doIReceive(&recv_row[null_cols * p], null_cols * w, n, tag_exc_row);
       }
 
       for (int i = 0; i < snbr; ++i) {
@@ -866,9 +866,9 @@ struct DistributedPMISAggregation
 
         MessagePassing::Request* req = &send_req[3 * i];
 
-        req[0] = _doISend2(&send_agg[p], w, n, tag_exc_agg, comm);
-        req[1] = _doISend2(&send_dof[p], w, n, tag_exc_dof, comm);
-        req[2] = _doISend2(&send_row[null_cols * p], null_cols * w, n, tag_exc_row, comm);
+        req[0] = comm.doISend(&send_agg[p], w, n, tag_exc_agg);
+        req[1] = comm.doISend(&send_dof[p], w, n, tag_exc_dof);
+        req[2] = comm.doISend(&send_row[null_cols * p], null_cols * w, n, tag_exc_row);
       }
 
       ARCANE_ALINA_TIC("MPI Wait");
@@ -958,14 +958,14 @@ struct DistributedPMISAggregation
         int n = send_nbr[i];
         int p = send_ptr[i];
         int w = send_ptr[i + 1] - p;
-        send_req[i] = _doIReceive2(&send_row[null_cols * p], null_cols * w, n, tag_exc_row, comm);
+        send_req[i] = comm.doIReceive(&send_row[null_cols * p], null_cols * w, n, tag_exc_row);
       }
 
       for (int i = 0; i < rnbr; ++i) {
         int n = recv_nbr[i];
         int p = recv_ptr[i];
         int w = recv_ptr[i + 1] - p;
-        recv_req[i] = _doISend2(&recv_row[null_cols * p], null_cols * w, n, tag_exc_row, comm);
+        recv_req[i] = comm.doISend(&recv_row[null_cols * p], null_cols * w, n, tag_exc_row);
       }
 
       // Fill column numbers

@@ -126,7 +126,7 @@ class DistributedDirectSolverBase
       for (int j = 0; j < group_size; ++j) {
         int i = slaves[j];
 
-        cnt_req[j] = _doIReceive2(&A.ptr[shift], counts[j], i, cnt_tag, comm);
+        cnt_req[j] = comm.doIReceive(&A.ptr[shift], counts[j], i, cnt_tag);
 
         shift += counts[j];
       }
@@ -144,8 +144,8 @@ class DistributedDirectSolverBase
 
         int nnz = A.ptr[domain[i + 1] - d0] - A.ptr[domain[i] - d0];
 
-        col_req[j] = _doIReceive2(A.col + shift, nnz, i, col_tag, comm);
-        val_req[j] = _doIReceive2(A.val + shift, nnz, i, val_tag, comm);
+        col_req[j] = comm.doIReceive(A.col + shift, nnz, i, col_tag);
+        val_req[j] = comm.doIReceive(A.val + shift, nnz, i, val_tag);
 
         shift += nnz;
       }
@@ -231,7 +231,7 @@ class DistributedDirectSolverBase
 
       int shift = n, j = 0;
       for (int i : slaves) {
-        solve_req[j] = _doIReceive2(&cons_f[shift], counts[j], i, rhs_tag, comm);
+        solve_req[j] = comm.doIReceive(&cons_f[shift], counts[j], i, rhs_tag);
         shift += counts[j++];
       }
 
@@ -244,7 +244,7 @@ class DistributedDirectSolverBase
       j = 0;
 
       for (int i : slaves) {
-        solve_req[j] = _doISend2(&cons_x[shift], counts[j], i, sol_tag, comm);
+        solve_req[j] = comm.doISend(&cons_x[shift], counts[j], i, sol_tag);
         shift += counts[j++];
       }
 

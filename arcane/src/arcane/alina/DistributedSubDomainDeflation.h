@@ -324,7 +324,7 @@ class DistributedSubDomainDeflation
       ptrdiff_t begin = zrecv_ptr[i];
       ptrdiff_t size = zrecv_ptr[i + 1] - begin;
 
-      Acp.recv.req[i] = _doIReceive2(&zrecv[begin], size, Acp.recv.nbr[i], tag_exc_vals, comm);
+      Acp.recv.req[i] = comm.doIReceive(&zrecv[begin], size, Acp.recv.nbr[i], tag_exc_vals);
     }
 
     for (size_t i = 0, k = 0; i < Acp.send.count(); ++i)
@@ -332,8 +332,8 @@ class DistributedSubDomainDeflation
         zsend[k] = prm.def_vec(Acp.send.col[i], j);
 
     for (size_t i = 0; i < Acp.send.nbr.size(); ++i)
-      Acp.send.req[i] = _doISend2(&zsend[ndv * Acp.send.ptr[i]], ndv * (Acp.send.ptr[i + 1] - Acp.send.ptr[i]),
-                                  Acp.send.nbr[i], tag_exc_vals, comm);
+      Acp.send.req[i] = comm.doISend(&zsend[ndv * Acp.send.ptr[i]], ndv * (Acp.send.ptr[i + 1] - Acp.send.ptr[i]),
+                                     Acp.send.nbr[i], tag_exc_vals);
 
     comm.waitAll(Acp.recv.req);
     comm.waitAll(Acp.send.req);

@@ -175,13 +175,13 @@ class CommunicationPattern
 
     // What columns do you need from me?
     for (size_t i = 0; i < send.nbr.size(); ++i)
-      send.req[i] = _doIReceive2(&send.col[send.ptr[i]], send.ptr[i + 1] - send.ptr[i],
-                                 send.nbr[i], tag_exc_cols, comm);
+      send.req[i] = comm.doIReceive(&send.col[send.ptr[i]], send.ptr[i + 1] - send.ptr[i],
+                                    send.nbr[i], tag_exc_cols);
 
     // Here is what I need from you:
     for (size_t i = 0; i < recv.nbr.size(); ++i)
-      recv.req[i] = _doISend2(&rem_cols[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
-                              recv.nbr[i], tag_exc_cols, comm);
+      recv.req[i] = comm.doISend(&rem_cols[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
+                              recv.nbr[i], tag_exc_cols);
 
     ARCANE_ALINA_TIC("MPI Wait");
     comm.waitAll(recv.req);
@@ -269,16 +269,16 @@ class CommunicationPattern
   {
     // Start receiving ghost values from our neighbours.
     for (size_t i = 0; i < recv.nbr.size(); ++i)
-      recv.req[i] = _doIReceive2(&recv.val[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
-                                 recv.nbr[i], tag_exc_vals, comm);
+      recv.req[i] = comm.doIReceive(&recv.val[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
+                                    recv.nbr[i], tag_exc_vals);
 
     // Start sending our data to neighbours.
     if (!send.val.empty()) {
       (*gather)(x, send.val);
 
       for (size_t i = 0; i < send.nbr.size(); ++i)
-        send.req[i] = _doISend2(&send.val[send.ptr[i]], send.ptr[i + 1] - send.ptr[i],
-                                send.nbr[i], tag_exc_vals, comm);
+        send.req[i] = comm.doISend(&send.val[send.ptr[i]], send.ptr[i + 1] - send.ptr[i],
+                                   send.nbr[i], tag_exc_vals);
     }
   }
 
@@ -297,12 +297,12 @@ class CommunicationPattern
   void exchange(const T* send_val, T* recv_val) const
   {
     for (size_t i = 0; i < recv.nbr.size(); ++i)
-      recv.req[i] = _doIReceive2(&recv_val[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
-                                 recv.nbr[i], tag_exc_vals, comm);
+      recv.req[i] = comm.doIReceive(&recv_val[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
+                                 recv.nbr[i], tag_exc_vals);
 
     for (size_t i = 0; i < send.nbr.size(); ++i)
-      send.req[i] = _doISend2(const_cast<T*>(&send_val[send.ptr[i]]), send.ptr[i + 1] - send.ptr[i],
-                              send.nbr[i], tag_exc_vals, comm);
+      send.req[i] = comm.doISend(const_cast<T*>(&send_val[send.ptr[i]]), send.ptr[i + 1] - send.ptr[i],
+                              send.nbr[i], tag_exc_vals);
 
     ARCANE_ALINA_TIC("MPI Wait");
     comm.waitAll(recv.req);
@@ -682,14 +682,14 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t beg = C.send.ptr[i];
     ptrdiff_t end = C.send.ptr[i + 1];
 
-    recv_cnt_req[i] = _doIReceive2(&rem_ptr[beg + 1], end - beg, C.send.nbr[i], tag_cnt, comm);
+    recv_cnt_req[i] = comm.doIReceive(&rem_ptr[beg + 1], end - beg, C.send.nbr[i], tag_cnt);
   }
 
   for (size_t i = 0; i < C.recv.nbr.size(); ++i) {
     ptrdiff_t beg = C.recv.ptr[i];
     ptrdiff_t end = C.recv.ptr[i + 1];
 
-    send_cnt_req[i] = _doISend2(&row_size[beg], end - beg, C.recv.nbr[i], tag_cnt, comm);
+    send_cnt_req[i] = comm.doISend(&row_size[beg], end - beg, C.recv.nbr[i], tag_cnt);
   }
 
   ARCANE_ALINA_TIC("MPI Wait");
@@ -708,8 +708,8 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t cbeg = rem_ptr[rbeg];
     ptrdiff_t cend = rem_ptr[rend];
 
-    recv_col_req[i] = _doIReceive2(&rem_col[cbeg], cend - cbeg, C.send.nbr[i], tag_col, comm);
-    recv_val_req[i] = _doIReceive2(&rem_val[cbeg], cend - cbeg, C.send.nbr[i], tag_val, comm);
+    recv_col_req[i] = comm.doIReceive(&rem_col[cbeg], cend - cbeg, C.send.nbr[i], tag_col);
+    recv_val_req[i] = comm.doIReceive(&rem_val[cbeg], cend - cbeg, C.send.nbr[i], tag_val);
   }
 
   for (size_t i = 0; i < C.recv.nbr.size(); ++i) {
@@ -719,8 +719,8 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t cbeg = t_rem.ptr[rbeg];
     ptrdiff_t cend = t_rem.ptr[rend];
 
-    send_col_req[i] = _doISend2(&t_rem.col[cbeg], cend - cbeg, C.recv.nbr[i], tag_col, comm);
-    send_val_req[i] = _doISend2(&t_rem.val[cbeg], cend - cbeg, C.recv.nbr[i], tag_val, comm);
+    send_col_req[i] = comm.doISend(&t_rem.col[cbeg], cend - cbeg, C.recv.nbr[i], tag_col);
+    send_val_req[i] = comm.doISend(&t_rem.val[cbeg], cend - cbeg, C.recv.nbr[i], tag_val);
   }
 
   // 3. While rem_col and rem_val are in flight,
@@ -819,7 +819,7 @@ remote_rows(const CommunicationPattern<Backend>& C,
     }
     m.setNbNonZero(nnz);
 
-    send_ptr_req[k] = _doISend2(m.ptr.data(), m.nbRow(), C.send.nbr[k], tag_ptr, comm);
+    send_ptr_req[k] = comm.doISend(m.ptr.data(), m.nbRow(), C.send.nbr[k], tag_ptr);
 
     m.set_nonzeros(nnz, need_values);
 
@@ -847,9 +847,9 @@ remote_rows(const CommunicationPattern<Backend>& C,
       }
     }
 
-    send_col_req[k] = _doISend2(m.col.data(), m.nbNonZero(), C.send.nbr[k], tag_col, comm);
+    send_col_req[k] = comm.doISend(m.col.data(), m.nbNonZero(), C.send.nbr[k], tag_col);
     if (need_values)
-      send_val_req[k] = _doISend2(m.val.data(), m.nbNonZero(), C.send.nbr[k], tag_val, comm);
+      send_val_req[k] = comm.doISend(m.val.data(), m.nbNonZero(), C.send.nbr[k], tag_val);
   }
 
   // Receive rows of B in block format from our neighbors:
@@ -865,7 +865,7 @@ remote_rows(const CommunicationPattern<Backend>& C,
     ptrdiff_t beg = C.recv.ptr[k];
     ptrdiff_t end = C.recv.ptr[k + 1];
 
-    recv_ptr_req[k] = _doIReceive2(&B_nbr->ptr[beg + 1], end - beg, C.recv.nbr[k], tag_ptr, comm);
+    recv_ptr_req[k] = comm.doIReceive(&B_nbr->ptr[beg + 1], end - beg, C.recv.nbr[k], tag_ptr);
   }
 
   ARCANE_ALINA_TIC("MPI Wait");
@@ -881,10 +881,10 @@ remote_rows(const CommunicationPattern<Backend>& C,
     ptrdiff_t cbeg = B_nbr->ptr[rbeg];
     ptrdiff_t cend = B_nbr->ptr[rend];
 
-    recv_col_req[k] = _doIReceive2(&B_nbr->col[cbeg], cend - cbeg, C.recv.nbr[k], tag_col, comm);
+    recv_col_req[k] = comm.doIReceive(&B_nbr->col[cbeg], cend - cbeg, C.recv.nbr[k], tag_col);
 
     if (need_values)
-      recv_val_req[k] = _doIReceive2(&B_nbr->val[cbeg], cend - cbeg, C.recv.nbr[k], tag_val, comm);
+      recv_val_req[k] = comm.doIReceive(&B_nbr->val[cbeg], cend - cbeg, C.recv.nbr[k], tag_val);
   }
 
   ARCANE_ALINA_TIC("MPI Wait");
