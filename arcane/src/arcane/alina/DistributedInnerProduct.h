@@ -54,7 +54,7 @@ struct DistributedInnerProduct
     typedef typename math::inner_product_impl<value_type>::return_type coef_type;
 
     ARCANE_ALINA_TIC("inner product");
-    coef_type sum = comm.reduce(MPI_SUM, backend::inner_product(x, y));
+    coef_type sum = comm.reduceSum(backend::inner_product(x, y));
     ARCANE_ALINA_TOC("inner product");
 
     return sum;

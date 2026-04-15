@@ -26,6 +26,7 @@
 #include <arccore/message_passing_mpi/StandaloneMpiMessagePassingMng.h>
 
 #include <arcane/alina/ValueTypeInterface.h>
+#include <arcane/alina/AlinaUtils.h>
 
 #include <vector>
 #include <numeric>
@@ -196,9 +197,9 @@ struct mpi_communicator
   int size = 0;
   Ref<IMessagePassingMng> m_message_passing_mng;
 
-  mpi_communicator() {}
+  mpi_communicator() = default;
 
-  mpi_communicator(MPI_Comm comm)
+  explicit mpi_communicator(MPI_Comm comm)
   : comm(comm)
   {
     MPI_Comm_rank(comm, &rank);
@@ -224,17 +225,14 @@ struct mpi_communicator
   }
 
   template <typename T>
-  T reduce(MPI_Op op, const T& lval) const
+    T reduceSum(const T& lval) const
   {
-    const int elems = math::static_rows<T>::value * math::static_cols<T>::value;
-    T gval;
-
-    MPI_Allreduce((void*)&lval, &gval, elems, mpi_datatype<T>(), op, comm);
-    return gval;
+    return _reduce(MPI_SUM,lval);
   }
 
-  /// Communicator-wise condition checking.
-  /**
+  /*!
+   * \brief Communicator-wise condition checking.
+   *
    * Checks conditions at each process in the communicator;
    *
    * If the condition is false on any of the participating processes, outputs the
@@ -245,7 +243,7 @@ struct mpi_communicator
   void check(const Condition& cond, const Message& message)
   {
     int lc = static_cast<int>(cond);
-    int gc = reduce(MPI_PROD, lc);
+    int gc = _reduce(MPI_PROD, lc);
 
     if (!gc) {
       std::vector<int> c(size);
@@ -259,9 +257,20 @@ struct mpi_communicator
         std::cerr << std::endl;
       }
       MPI_Barrier(comm);
-      throw std::runtime_error(message);
+      ARCCORE_FATAL("CheckError in MessagePassingUtils: {0}",message);
     }
   }
+private:
+  template <typename T> T _reduce(MPI_Op op, const T& lval) const
+  {
+    const int elems = math::static_rows<T>::value * math::static_cols<T>::value;
+    T gval;
+
+    MPI_Allreduce((void*)&lval, &gval, elems, mpi_datatype<T>(), op, comm);
+    return gval;
+  }
+
+
 };
 
 

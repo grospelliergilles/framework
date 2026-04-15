@@ -113,7 +113,7 @@ struct ParmetisMatrixPartitioner
 
     // Partition the graph.
     int active = (n > 0);
-    int active_ranks = comm.reduce(MPI_SUM, active);
+    int active_ranks = comm.reduceSum(active);
     int shrink = prm.shrink ? prm.shrink_ratio : 1;
 
     idx_t npart = std::max(1, active_ranks / shrink);

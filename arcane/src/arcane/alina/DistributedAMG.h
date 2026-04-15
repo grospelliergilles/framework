@@ -268,7 +268,7 @@ class DistributedAMG
     , u(Backend::create_vector(a->loc_rows(), bprm))
     {
       int active = (a->loc_rows() > 0);
-      active_procs = a->comm().reduce(MPI_SUM, active);
+      active_procs = a->comm().reduceSum(active);
 
       sort_rows(*a);
 

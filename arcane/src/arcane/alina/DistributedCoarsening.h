@@ -637,7 +637,7 @@ struct DistributedPMISAggregation
         send_state[i] = loc_state[Sp.send.col[i]];
       Sp.exchange(&send_state[0], &rem_state[0]);
 
-      if (0 == comm.reduce(MPI_SUM, n_undone))
+      if (0 == comm.reduceSum(n_undone))
         break;
     }
 
@@ -661,7 +661,7 @@ struct DistributedPMISAggregation
 
     std::partial_sum(new_id.begin(), new_id.end(), new_id.begin());
 
-    if (comm.reduce(MPI_SUM, naggr - new_id.back()) > 0) {
+    if (comm.reduceSum(naggr - new_id.back()) > 0) {
       naggr = new_id.back();
 
       for (ptrdiff_t i = 0; i < n; ++i) {

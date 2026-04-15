@@ -377,9 +377,9 @@ class DistributedMatrix
     n_loc_cols = a_loc->ncols;
     n_loc_nonzeros = a_loc->nbNonZero() + a_rem->nbNonZero();
 
-    n_glob_rows = comm.reduce(MPI_SUM, n_loc_rows);
-    n_glob_cols = comm.reduce(MPI_SUM, n_loc_cols);
-    n_glob_nonzeros = comm.reduce(MPI_SUM, n_loc_nonzeros);
+    n_glob_rows = comm.reduceSum(n_loc_rows);
+    n_glob_cols = comm.reduceSum(n_loc_cols);
+    n_glob_nonzeros = comm.reduceSum(n_loc_nonzeros);
   }
 
   // Copy the distributed_matrix from another backend
@@ -414,8 +414,8 @@ class DistributedMatrix
     ptrdiff_t loc_end = domain[comm.rank + 1];
 
     n_glob_cols = domain.back();
-    n_glob_rows = comm.reduce(MPI_SUM, n_loc_rows);
-    n_glob_nonzeros = comm.reduce(MPI_SUM, n_loc_nonzeros);
+    n_glob_rows = comm.reduceSum(n_loc_rows);
+    n_glob_nonzeros = comm.reduceSum(n_loc_nonzeros);
 
     // Split the matrix into local and remote parts.
     a_loc = std::make_shared<build_matrix>();
@@ -1312,7 +1312,7 @@ spectral_radius(const DistributedMatrix<Backend>& A, int power_iters = 0)
       b0_loc_norm += t_norm;
     }
 
-    scalar_type b0_norm = comm.reduce(MPI_SUM, b0_loc_norm);
+    scalar_type b0_norm = comm.reduceSum(b0_loc_norm);
 
     // Normalize b0
     b0_norm = 1 / sqrt(b0_norm);
@@ -1372,11 +1372,11 @@ spectral_radius(const DistributedMatrix<Backend>& A, int power_iters = 0)
         }
       }
 
-      radius = comm.reduce(MPI_SUM, loc_radius);
+      radius = comm.reduceSum(loc_radius);
 
       if (++iter < power_iters) {
         scalar_type b1_norm;
-        b1_norm = comm.reduce(MPI_SUM, b1_loc_norm);
+        b1_norm = comm.reduceSum(b1_loc_norm);
 
         // b0 = b1 / b1_norm
         b1_norm = 1 / sqrt(b1_norm);

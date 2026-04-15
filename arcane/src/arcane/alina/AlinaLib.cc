@@ -359,8 +359,8 @@ solver_mpi_create(MPI_Comm comm,
   SmallSpan<const double> val_range(val, ptr[n]);
 
   auto A = std::make_tuple(n, ptr_range, col_range, val_range);
-
-  auto* p = new DistributedSolverType(comm, A, prm);
+  Alina::mpi_communicator mpi_comm(comm);
+  auto* p = new DistributedSolverType(mpi_comm, A, prm);
 
   return new AlinaDistributedSolver(p);
 }

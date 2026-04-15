@@ -153,7 +153,7 @@ class DistributedDirectSolverBase
       MPI_Waitall(col_req.size(), col_req.data(), MPI_STATUSES_IGNORE);
       MPI_Waitall(val_req.size(), val_req.data(), MPI_STATUSES_IGNORE);
 
-      solver().init(masters_comm, A);
+      solver().init(mpi_communicator(masters_comm), A);
     }
     else {
       MPI_Send(widths.data(), n, mpi_datatype<ptrdiff_t>(),
