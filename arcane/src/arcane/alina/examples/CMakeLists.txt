@@ -4,11 +4,22 @@ set(ARCANE_ALINA_BLOCK_SIZES_SEQ "")
 foreach(B ${ARCANE_ALINA_BLOCK_SIZES})
   set(ARCANE_ALINA_BLOCK_SIZES_SEQ "${ARCANE_ALINA_BLOCK_SIZES_SEQ}(${B})")
 endforeach()
+
+# Add a library for common samples functions and types
+add_library(arcane_alina_samples_lib
+  AlinaSamplesCommon.h
+  AlinaSamplesCommon.cc
+)
+arcane_target_set_standard_path(arcane_alina_samples_lib)
+target_link_libraries(arcane_alina_samples_lib PRIVATE arcane_launcher arcane_full)
+target_link_libraries(arcane_alina_samples_lib PUBLIC arcane_alina)
+target_compile_definitions(arcane_alina PRIVATE ARCANE_COMPONENT_arcane_alina)
+
 set(ALINA_SAMPLE_BUILD_DIR "${CMAKE_BINARY_DIR}/alina_samples")
 function(add_arcane_alina_example_no_test EXAMPLE SOURCES)
   add_executable(${EXAMPLE} ${SOURCES})
   set_target_properties(${EXAMPLE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${ALINA_SAMPLE_BUILD_DIR}")
-  target_link_libraries(${EXAMPLE} PUBLIC arcane_alina Boost::program_options)
+  target_link_libraries(${EXAMPLE} PUBLIC arcane_alina_samples_lib Boost::program_options)
   target_include_directories(${EXAMPLE} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../tests")
   target_compile_definitions(${EXAMPLE} PUBLIC "ARCANE_ALINA_BLOCK_SIZES=${ARCANE_ALINA_BLOCK_SIZES_SEQ}")
 endfunction()
@@ -16,7 +27,7 @@ endfunction()
 # NOTE:
 # Certains tests utilisent OpenMP
 # On fixe en dur le nombre de threads sinon on utilise tous
-# les coeurs disponibles.
+# les coeurs disponibles par défaut.
 function(add_arcane_alina_example EXAMPLE SOURCES)
   add_arcane_alina_example_no_test(${EXAMPLE} ${SOURCES})
   set(TEST_NAME "alina_sample_seq_${EXAMPLE}")

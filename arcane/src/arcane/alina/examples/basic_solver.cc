@@ -3,26 +3,29 @@
 
 #include <boost/program_options.hpp>
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/StaticMatrix.h>
-#include <arcane/alina/Adapters.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/StaticMatrix.h"
+#include "arcane/alina/Adapters.h"
 
-#include <arcane/utils/PlatformUtils.h>
-#include <arcane/utils/String.h>
-#include <arcane/utils/Convert.h>
+#include "arcane/utils/PlatformUtils.h"
+#include "arcane/utils/String.h"
+#include "arcane/utils/Convert.h"
 
-#include <arcane/alina/Relaxation.h>
-#include <arcane/alina/Coarsening.h>
-#include <arcane/alina/BiCGStabSolver.h>
-#include <arcane/alina/PreconditionedSolver.h>
-#include <arcane/alina/AMG.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/IO.h>
+#include "arcane/alina/Relaxation.h"
+#include "arcane/alina/Coarsening.h"
+#include "arcane/alina/BiCGStabSolver.h"
+#include "arcane/alina/PreconditionedSolver.h"
+#include "arcane/alina/AMG.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/IO.h"
 
-#include <arcane/alina/SolverRuntime.h>
-#include <arcane/alina/PreconditionerRuntime.h>
+#include "arcane/alina/SolverRuntime.h"
+#include "arcane/alina/PreconditionerRuntime.h"
 
-#include <arcane/alina/Profiler.h>
+#include "arcane/alina/Profiler.h"
+
+#include "./AlinaSamplesCommon.h"
+#include "arccore/trace/ITraceMng.h"
 
 #include "sample_problem.h"
 
@@ -94,8 +97,11 @@ solve(const Alina::PropertyTree& prm,
 }
 
 //---------------------------------------------------------------------------
-int main(int argc, char* argv[])
+
+int main2(const Alina::SampleMainContext& ctx, int argc, char* argv[])
 {
+  ITraceMng* tm = ctx.traceMng();
+
   auto& prof = Alina::Profiler::globalProfiler();
   namespace po = boost::program_options;
   namespace io = Alina::IO;
@@ -134,7 +140,7 @@ int main(int argc, char* argv[])
   po::notify(vm);
 
   if (vm.count("help")) {
-    std::cout << desc << std::endl;
+    tm->info() << desc;
     return 0;
   }
 
@@ -156,13 +162,13 @@ int main(int argc, char* argv[])
     }
   }
 
-  size_t rows, nv = 0;
+  size_t rows = vm["size"].as<int>();
   vector<ptrdiff_t> ptr, col;
   vector<double> val, rhs, null, x;
-
+  std::cout << "ROWS=" << rows << "\n";
   {
     auto t = prof.scoped_tic("assembling");
-    rows = sample_problem(vm["size"].as<int>(), val, col, ptr, rhs, vm["anisotropy"].as<double>());
+    rows = sample_problem(rows, val, col, ptr, rhs, vm["anisotropy"].as<double>());
   }
 
   x.resize(rows, 0.0);
@@ -187,4 +193,16 @@ int main(int argc, char* argv[])
   std::cout << "Iterations: " << solver_result.nbIteration() << std::endl
             << "Error:      " << solver_result.residual() << std::endl
             << prof << std::endl;
+  return 0;
 }
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+int main(int argc, char* argv[])
+{
+  return Arcane::Alina::SampleMainContext::execMain(main2, argc, argv);
+}
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
