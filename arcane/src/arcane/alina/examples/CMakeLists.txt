@@ -13,7 +13,8 @@ add_library(arcane_alina_samples_lib
 arcane_target_set_standard_path(arcane_alina_samples_lib)
 target_link_libraries(arcane_alina_samples_lib PRIVATE arcane_launcher arcane_full)
 target_link_libraries(arcane_alina_samples_lib PUBLIC arcane_alina)
-target_compile_definitions(arcane_alina PRIVATE ARCANE_COMPONENT_arcane_alina)
+target_compile_definitions(arcane_alina_samples_lib PRIVATE ARCANE_COMPONENT_arcane_alina)
+target_include_directories(arcane_alina_samples_lib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(ALINA_SAMPLE_BUILD_DIR "${CMAKE_BINARY_DIR}/alina_samples")
 function(add_arcane_alina_example_no_test EXAMPLE SOURCES)

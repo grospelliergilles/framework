@@ -6,8 +6,10 @@
 
 #include <boost/scope_exit.hpp>
 
-#include <arcane/alina/MessagePassingUtils.h>
-#include <arcane/alina/AlinaLib.h>
+#include "arcane/alina/MessagePassingUtils.h"
+#include "arcane/alina/AlinaLib.h"
+#include "AlinaSamplesCommon.h"
+#include "arccore/trace/ITraceMng.h"
 
 #include "domain_partition.h"
 
@@ -18,22 +20,16 @@ double constant_deflation(int, ptrdiff_t, void*)
 
 using namespace Arcane;
 
-int main(int argc, char* argv[])
+int main2(const Alina::SampleMainContext& ctx, int argc, char* argv[])
 {
-  int provided;
-  MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
-  BOOST_SCOPE_EXIT(void)
-  {
-    MPI_Finalize();
-  }
-  BOOST_SCOPE_EXIT_END
+  ITraceMng* tm = ctx.traceMng();
 
   int rank, size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 
   if (rank == 0)
-    std::cout << "World size: " << size << std::endl;
+    tm->info() << "World size: " << size;
 
   const ptrdiff_t n = argc > 1 ? atoi(argv[1]) : 1024;
   const ptrdiff_t n2 = n * n;
@@ -46,10 +42,7 @@ int main(int argc, char* argv[])
   ptrdiff_t chunk = part.size(rank);
 
   std::vector<ptrdiff_t> domain(size + 1);
-  MPI_Allgather(
-  &chunk, 1, Alina::mpi_datatype<ptrdiff_t>(),
-  &domain[1], 1, Alina::mpi_datatype<ptrdiff_t>(),
-  MPI_COMM_WORLD);
+  MPI_Allgather(&chunk, 1, Alina::mpi_datatype<ptrdiff_t>(), &domain[1], 1, Alina::mpi_datatype<ptrdiff_t>(), MPI_COMM_WORLD);
   std::partial_sum(domain.begin(), domain.end(), domain.begin());
 
   ptrdiff_t chunk_start = domain[rank];
@@ -121,8 +114,8 @@ int main(int argc, char* argv[])
   AlinaLib::params_set_string(prm, "dsolver.type", "skyline_lu");
 
   AlinaDistributedSolver* solver = AlinaLib::solver_mpi_create(MPI_COMM_WORLD,
-                                               chunk, ptr.data(), col.data(), val.data(),
-                                               1, constant_deflation, NULL, prm);
+                                                               chunk, ptr.data(), col.data(), val.data(),
+                                                               1, constant_deflation, NULL, prm);
 
   // Solve
   std::vector<double> x(chunk, 0);
@@ -153,4 +146,10 @@ int main(int argc, char* argv[])
       MPI_Send(x.data(), chunk, MPI_DOUBLE, 0, 42, MPI_COMM_WORLD);
     }
   }
+  return 0;
+}
+
+int main(int argc, char* argv[])
+{
+  return Arcane::Alina::SampleMainContext::execMain(main2, argc, argv);
 }

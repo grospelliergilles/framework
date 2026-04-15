@@ -24,7 +24,7 @@
 
 #include "arcane/alina/Profiler.h"
 
-#include "./AlinaSamplesCommon.h"
+#include "AlinaSamplesCommon.h"
 #include "arccore/trace/ITraceMng.h"
 
 #include "sample_problem.h"

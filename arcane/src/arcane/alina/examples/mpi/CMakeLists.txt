@@ -19,7 +19,7 @@ set(ALINA_SAMPLE_MPI_BUILD_DIR "${CMAKE_BINARY_DIR}/alina_samples_mpi")
 function(add_mpi_example example sources nb_core)
   add_executable(${example} ${sources})
   set_target_properties(${example} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${ALINA_SAMPLE_MPI_BUILD_DIR}")
-  target_link_libraries(${example} PUBLIC arcane_alina_mpi_example)
+  target_link_libraries(${example} PUBLIC arcane_alina_samples_lib arcane_alina_mpi_example)
   set(TEST_NAME "alina_sample_mpi${nb_core}_${example}")
   add_test(NAME ${TEST_NAME}
     WORKING_DIRECTORY "${ALINA_SAMPLE_MPI_BUILD_DIR}"
@@ -46,6 +46,7 @@ add_mpi_example(test_transpose test_transpose.cc 4)
 add_mpi_example(test_spmm test_spmm.cc 4)
 add_mpi_example(spmm_scaling spmm_scaling.cc 4)
 add_mpi_example(mpi_solver mpi_solver.cc 2)
+add_mpi_example(mpi_basic_solver mpi_basic_solver.cc 2)
 add_mpi_example(mpi_complex mpi_complex.cc 2)
 
 # Il faut un argument 'matrix' pour le test
