@@ -21,7 +21,10 @@ function(add_mpi_example example sources nb_core)
   set_target_properties(${example} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${ALINA_SAMPLE_MPI_BUILD_DIR}")
   target_link_libraries(${example} PUBLIC arcane_alina_mpi_example)
   set(TEST_NAME "alina_sample_mpi${nb_core}_${example}")
-  add_test(${TEST_NAME} ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${nb_core} ./${example})
+  add_test(NAME ${TEST_NAME}
+    WORKING_DIRECTORY "${ALINA_SAMPLE_MPI_BUILD_DIR}"
+    COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${nb_core} ./${example}
+  )
   set_property(TEST ${TEST_NAME} APPEND PROPERTY ENVIRONMENT "OMP_NUM_THREADS=2")
 endfunction()
 

@@ -20,7 +20,10 @@ endfunction()
 function(add_arcane_alina_example EXAMPLE SOURCES)
   add_arcane_alina_example_no_test(${EXAMPLE} ${SOURCES})
   set(TEST_NAME "alina_sample_seq_${EXAMPLE}")
-  add_test(NAME ${TEST_NAME} COMMAND ${EXAMPLE} ${ARGN})
+  add_test(NAME ${TEST_NAME}
+    COMMAND ${EXAMPLE} ${ARGN}
+    WORKING_DIRECTORY "${ALINA_SAMPLE_BUILD_DIR}"
+  )
   set_property(TEST ${TEST_NAME} APPEND PROPERTY ENVIRONMENT "OMP_NUM_THREADS=2")
 endfunction()
 
