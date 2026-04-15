@@ -31,7 +31,7 @@
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Adapters.h>
-#include <arcane/alina/mp_util.h>
+#include <arcane/alina/MessagePassingUtils.h>
 #include <arcane/alina/DistributedSkylineLUDirectSolver.h>
 #include <arcane/alina/DistributedInnerProduct.h>
 #include <arcane/alina/DistributedMatrix.h>

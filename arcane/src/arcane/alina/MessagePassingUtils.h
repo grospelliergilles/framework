@@ -5,12 +5,12 @@
 // SPDX-License-Identifier: Apache-2.0
 //-----------------------------------------------------------------------------
 /*---------------------------------------------------------------------------*/
-/* mp_util.h                                                   (C) 2026-2026 */
+/* MessagePassingUtils.h                                       (C) 2026-2026 */
 /*                                                                           */
-/* MPI utilities.                                                            */
+/* Various utilities to handle message passing.                              */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_MPUTIL_H
-#define ARCANE_ALINA_MPI_MPUTIL_H
+#ifndef ARCANE_ALINA_MESSAGEPASSINGUTILS_H
+#define ARCANE_ALINA_MESSAGEPASSINGUTILS_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

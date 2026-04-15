@@ -85,5 +85,5 @@ set(ARCANE_SOURCES
   ParmetisMatrixPartitioner.h
   MatrixPartitionerRuntime.h
   MatrixPartitionUtils.h
-  mp_util.h
+  MessagePassingUtils.h
 )

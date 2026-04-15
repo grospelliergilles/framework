@@ -31,7 +31,7 @@
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/util.h>
 #include <arcane/alina/Coarsening.h>
-#include <arcane/alina/mp_util.h>
+#include <arcane/alina/MessagePassingUtils.h>
 #include <arcane/alina/DistributedMatrix.h>
 
 /*---------------------------------------------------------------------------*/

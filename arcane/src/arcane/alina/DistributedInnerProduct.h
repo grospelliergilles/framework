@@ -25,7 +25,7 @@
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/mp_util.h>
+#include <arcane/alina/MessagePassingUtils.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

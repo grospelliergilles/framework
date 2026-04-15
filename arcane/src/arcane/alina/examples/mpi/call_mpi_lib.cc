@@ -6,7 +6,7 @@
 
 #include <boost/scope_exit.hpp>
 
-#include <arcane/alina/mp_util.h>
+#include <arcane/alina/MessagePassingUtils.h>
 #include <arcane/alina/AlinaLib.h>
 
 #include "domain_partition.h"

@@ -25,7 +25,7 @@
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/EigenSolver.h>
-#include <arcane/alina/mp_util.h>
+#include <arcane/alina/MessagePassingUtils.h>
 #include <arcane/alina/DistributedDirectSolverBase.h>
 
 #include <Eigen/SparseLU>

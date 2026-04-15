@@ -22,7 +22,7 @@
 #  endif
 #endif
 
-#include <arcane/alina/mp_util.h>
+#include <arcane/alina/MessagePassingUtils.h>
 #include <arcane/alina/DistributedPreconditionedSolver.h>
 #include <arcane/alina/DistributedPreconditioner.h>
 #include <arcane/alina/DistributedSolverRuntime.h>
