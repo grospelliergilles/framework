@@ -185,7 +185,6 @@ class DistributedSubDomainDeflation
   : comm(comm)
   , nrows(backend::nbRow(Astrip))
   , ndv(prm.num_def_vec)
-  , dtype(mpi_datatype<value_type>())
   , dv_start(comm.size + 1, 0)
   , Z(ndv)
   , q(backend_type::create_vector(nrows, bprm))
@@ -202,7 +201,6 @@ class DistributedSubDomainDeflation
   : comm(comm)
   , nrows(A->loc_rows())
   , ndv(prm.num_def_vec)
-  , dtype(mpi_datatype<value_type>())
   , A(A)
   , dv_start(comm.size + 1, 0)
   , Z(ndv)
@@ -544,8 +542,6 @@ class DistributedSubDomainDeflation
 
   mpi_communicator comm;
   ptrdiff_t nrows, ndv, nz;
-
-  MPI_Datatype dtype;
 
   std::shared_ptr<matrix> A, AZ;
   std::shared_ptr<LocalPrecond> P;

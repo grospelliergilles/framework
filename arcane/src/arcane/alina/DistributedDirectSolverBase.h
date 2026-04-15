@@ -156,12 +156,9 @@ class DistributedDirectSolverBase
       solver().init(mpi_communicator(masters_comm), A);
     }
     else {
-      MPI_Send(widths.data(), n, mpi_datatype<ptrdiff_t>(),
-               group_master, cnt_tag, comm);
-      MPI_Send(Astrip.col, Astrip.nbNonZero(), mpi_datatype<ptrdiff_t>(),
-               group_master, col_tag, comm);
-      MPI_Send(Astrip.val, Astrip.nbNonZero(), mpi_datatype<value_type>(),
-               group_master, val_tag, comm);
+      comm.doSend(widths.data(), n, group_master, cnt_tag);
+      comm.doSend(Astrip.col.data(), Astrip.nbNonZero(), group_master, col_tag);
+      comm.doSend(Astrip.val.data(), Astrip.nbNonZero(), group_master, val_tag);
     }
 
     host_v.resize(n);
@@ -219,8 +216,6 @@ class DistributedDirectSolverBase
   template <class VecF, class VecX>
   void operator()(const VecF& f, VecX& x) const
   {
-    static const MPI_Datatype T = mpi_datatype<rhs_type>();
-
     if (!n)
       return;
 
@@ -251,8 +246,8 @@ class DistributedDirectSolverBase
       comm.waitAll(solve_req);
     }
     else {
-      MPI_Send(host_v.data(), n, T, group_master, rhs_tag, comm);
-      MPI_Recv(host_v.data(), n, T, group_master, sol_tag, comm, MPI_STATUS_IGNORE);
+      comm.doSend(host_v.data(), n, group_master, rhs_tag);
+      comm.doReceive(host_v.data(), n, group_master, sol_tag);
     }
 
     backend::copy(host_v, x);

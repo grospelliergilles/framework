@@ -299,6 +299,16 @@ struct mpi_communicator
     return mpReceive(m_message_passing_mng.get(), schar, msg_info);
   }
 
+  template <typename T> void
+  doReceive(T* buf, int count, int source, int tag) const
+  {
+    using namespace Arcane::MessagePassing;
+    Span<T> s(buf, count);
+    Span<unsigned char> schar(reinterpret_cast<unsigned char*>(s.data()), s.sizeBytes());
+    PointToPointMessageInfo msg_info(MessageRank{ source }, MessageTag{ tag }, eBlockingType::Blocking);
+    mpReceive(m_message_passing_mng.get(), schar, msg_info);
+  }
+
   template <typename T> MessagePassing::Request
   doISend(const T* buf, int count, int dest, int tag) const
   {
@@ -307,6 +317,16 @@ struct mpi_communicator
     Span<const unsigned char> schar(reinterpret_cast<const unsigned char*>(s.data()), s.sizeBytes());
     PointToPointMessageInfo msg_info(MessageRank{ dest }, MessageTag{ tag }, eBlockingType::NonBlocking);
     return mpSend(m_message_passing_mng.get(), schar, msg_info);
+  }
+
+  template <typename T> void
+  doSend(const T* buf, int count, int dest, int tag) const
+  {
+    using namespace Arcane::MessagePassing;
+    Span<const T> s(buf, count);
+    Span<const unsigned char> schar(reinterpret_cast<const unsigned char*>(s.data()), s.sizeBytes());
+    PointToPointMessageInfo msg_info(MessageRank{ dest }, MessageTag{ tag }, eBlockingType::Blocking);
+    mpSend(m_message_passing_mng.get(), schar, msg_info);
   }
 
  private:

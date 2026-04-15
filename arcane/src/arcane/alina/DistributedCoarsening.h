@@ -606,12 +606,12 @@ struct DistributedPMISAggregation
 
       for (size_t i = 0; i < Sp.send.nbr.size(); ++i) {
         int npts;
-        MPI_Recv(&npts, 1, MPI_INT, Sp.send.nbr[i], tag_exc_cnt, comm, MPI_STATUS_IGNORE);
+        comm.doReceive(&npts, 1, Sp.send.nbr[i], tag_exc_cnt);
 
         if (!npts)
           continue;
         recv_pts.resize(npts);
-        MPI_Recv(&recv_pts[0], npts, mpi_datatype<ptrdiff_t>(), Sp.send.nbr[i], tag_exc_pts, comm, MPI_STATUS_IGNORE);
+        comm.doReceive(&recv_pts[0], npts, Sp.send.nbr[i], tag_exc_pts);
 
         for (int k = 0; k < npts; k += 2) {
           ptrdiff_t c = recv_pts[k] - Sp.loc_col_shift();
@@ -697,12 +697,12 @@ struct DistributedPMISAggregation
 
       for (size_t i = 0; i < Sp.send.nbr.size(); ++i) {
         int npts;
-        MPI_Recv(&npts, 1, MPI_INT, Sp.send.nbr[i], tag_exc_cnt, comm, MPI_STATUS_IGNORE);
+        comm.doReceive(&npts, 1, Sp.send.nbr[i], tag_exc_cnt);
 
         if (!npts)
           continue;
         recv_pts.resize(npts);
-        MPI_Recv(&recv_pts[0], npts, mpi_datatype<ptrdiff_t>(), Sp.send.nbr[i], tag_exc_pts, comm, MPI_STATUS_IGNORE);
+        comm.doReceive(&recv_pts[0], npts, Sp.send.nbr[i], tag_exc_pts);
 
         for (int k = 0; k < npts; k += 2) {
           ptrdiff_t c = recv_pts[k] - Sp.loc_col_shift();
