@@ -30,7 +30,7 @@
 
 #include <boost/iterator/permutation_iterator.hpp>
 
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/ValueTypeInterface.h>
 #include <arcane/alina/MatrixOperationsImpl.h>

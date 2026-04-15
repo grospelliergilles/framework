@@ -36,7 +36,7 @@
 /*---------------------------------------------------------------------------*/
 
 #include <arcane/alina/SolverUtils.h>
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 
 #ifdef _OPENMP
 #include <omp.h>

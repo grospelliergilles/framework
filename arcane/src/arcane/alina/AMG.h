@@ -31,7 +31,7 @@
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/SolverUtils.h>
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 
 #include <iostream>
 #include <iomanip>

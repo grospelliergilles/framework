@@ -25,7 +25,7 @@
 
 #include <memory>
 #include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

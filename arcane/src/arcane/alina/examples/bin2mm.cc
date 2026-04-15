@@ -2,7 +2,7 @@
 #include <string>
 
 #include <boost/program_options.hpp>
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/IO.h>
 

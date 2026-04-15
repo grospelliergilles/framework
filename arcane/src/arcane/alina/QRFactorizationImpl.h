@@ -83,7 +83,7 @@
 #include <complex>
 #include <cmath>
 
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 #include <arcane/alina/ValueTypeInterface.h>
 
 /*---------------------------------------------------------------------------*/

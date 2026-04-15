@@ -63,7 +63,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <algorithm>
 
 #include <arcane/alina/BackendInterface.h>
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

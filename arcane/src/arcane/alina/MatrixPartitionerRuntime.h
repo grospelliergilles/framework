@@ -25,7 +25,7 @@
 
 #include <memory>
 
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 #include <arcane/alina/SimpleMatrixPartitioner.h>
 #if defined(ARCANE_ALINA_HAVE_PARMETIS)
 #include <arcane/alina/ParmetisMatrixPartitioner.h>

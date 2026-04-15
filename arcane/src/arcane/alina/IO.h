@@ -35,7 +35,7 @@
 #include <type_traits>
 #include <tuple>
 
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 #include <arcane/alina/BackendInterface.h>
 
 /*---------------------------------------------------------------------------*/

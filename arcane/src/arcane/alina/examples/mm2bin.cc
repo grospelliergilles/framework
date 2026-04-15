@@ -3,7 +3,7 @@
 #include <complex>
 
 #include <boost/program_options.hpp>
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 #include <arcane/alina/ValueTypeComplex.h>
 #include <arcane/alina/IO.h>
 

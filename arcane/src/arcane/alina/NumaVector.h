@@ -27,7 +27,7 @@
 #include <omp.h>
 #endif
 
-#include "arcane/alina/util.h"
+#include "arcane/alina/AlinaUtils.h"
 #include "arcane/alina/ValueTypeInterface.h"
 
 /*---------------------------------------------------------------------------*/

@@ -28,7 +28,7 @@
 #include <type_traits>
 
 #include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

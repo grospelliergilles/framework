@@ -36,7 +36,7 @@
 #endif
 
 #include "arcane/alina/BuiltinBackend.h"
-#include "arcane/alina/util.h"
+#include "arcane/alina/AlinaUtils.h"
 #include "arcane/alina/QRFactorizationImpl.h"
 #include "arcane/alina/Adapters.h"
 #include "arcane/alina/ValueTypeInterface.h"

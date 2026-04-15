@@ -5,7 +5,7 @@
 #include <arcane/alina/Adapters.h>
 #include <arcane/alina/StaticMatrix.h>
 #include <arcane/alina/PreconditionedSolver.h>
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 
 namespace Arcane::Alina
 {

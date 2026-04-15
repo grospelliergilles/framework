@@ -13,7 +13,7 @@
 
 #include "arcane/utils/ArcaneGlobal.h"
 
-#include "arcane/alina/util.h"
+#include "arcane/alina/AlinaUtils.h"
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>

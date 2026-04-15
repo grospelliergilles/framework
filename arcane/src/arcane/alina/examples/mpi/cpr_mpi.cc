@@ -18,7 +18,7 @@
 #include <arcane/alina/DistributedDirectSolverRuntime.h>
 #include <arcane/alina/MatrixPartitionerRuntime.h>
 #include <arcane/alina/Profiler.h>
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 
 using namespace Arcane;
 using namespace Arcane::Alina;

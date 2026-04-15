@@ -15,7 +15,7 @@
 #include <arcane/alina/DistributedSolverRuntime.h>
 #include <arcane/alina/DistributedPreconditioner.h>
 #include <arcane/alina/Profiler.h>
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 
 // Pour test compilation uniquement
 #include <arcane/alina/DistributedSolver.h>

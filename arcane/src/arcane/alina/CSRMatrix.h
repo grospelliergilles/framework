@@ -24,7 +24,7 @@
 /*---------------------------------------------------------------------------*/
 
 #include "arcane/alina/AlinaGlobal.h"
-#include "arcane/alina/util.h"
+#include "arcane/alina/AlinaUtils.h"
 
 // A supprimer
 #include "arcane/alina/BackendInterface.h"

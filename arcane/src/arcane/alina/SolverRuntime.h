@@ -27,7 +27,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 #include <arcane/alina/ConjugateGradientSolver.h>
 #include <arcane/alina/BiCGStabSolver.h>
 #include <arcane/alina/BiCGStabLSolver.h>
