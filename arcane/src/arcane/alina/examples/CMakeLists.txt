@@ -30,9 +30,13 @@ endfunction()
 add_arcane_alina_example_no_test(mm2bin mm2bin.cc)
 add_arcane_alina_example_no_test(bin2mm bin2mm.cc)
 
-add_arcane_alina_example(solver solver.cc)
-
 arcane_find_package(Hypre)
+
+add_arcane_alina_example(basic_solver basic_solver.cc)
+target_sources(basic_solver PUBLIC HypreComparer.cc)
+arcane_add_arccon_packages(basic_solver PRIVATE Hypre)
+
+add_arcane_alina_example(solver solver.cc)
 target_sources(solver PUBLIC HypreComparer.cc)
 arcane_add_arccon_packages(solver PRIVATE Hypre)
 
