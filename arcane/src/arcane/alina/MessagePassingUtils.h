@@ -23,14 +23,15 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arccore/base/FixedArray.h>
-#include <arccore/common/Array.h>
+#include "arccore/base/FixedArray.h"
+#include "arccore/common/Array.h"
 
-#include <arccore/message_passing_mpi/StandaloneMpiMessagePassingMng.h>
-#include <arccore/message_passing/Messages.h>
+#include "arccore/message_passing_mpi/StandaloneMpiMessagePassingMng.h"
+#include "arccore/message_passing/Messages.h"
+#include "arccore/message_passing/PointToPointMessageInfo.h"
 
-#include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/AlinaUtils.h>
+#include "arcane/alina/ValueTypeInterface.h"
+#include "arcane/alina/AlinaUtils.h"
 
 #include <vector>
 #include <numeric>
@@ -288,6 +289,26 @@ struct mpi_communicator
     }
   }
 
+  template <typename T> MessagePassing::Request
+  doIReceive(T* buf, int count, int source, int tag) const
+  {
+    using namespace Arcane::MessagePassing;
+    Span<T> s(buf, count);
+    Span<unsigned char> schar(reinterpret_cast<unsigned char*>(s.data()), s.sizeBytes());
+    PointToPointMessageInfo msg_info(MessageRank{ source }, MessageTag{ tag }, eBlockingType::NonBlocking);
+    return mpReceive(m_message_passing_mng.get(), schar, msg_info);
+  }
+
+  template <typename T> MessagePassing::Request
+  doISend(const T* buf, int count, int dest, int tag) const
+  {
+    using namespace Arcane::MessagePassing;
+    Span<const T> s(buf, count);
+    Span<const unsigned char> schar(reinterpret_cast<const unsigned char*>(s.data()), s.sizeBytes());
+    PointToPointMessageInfo msg_info(MessageRank{ dest }, MessageTag{ tag }, eBlockingType::NonBlocking);
+    return mpSend(m_message_passing_mng.get(), schar, msg_info);
+  }
+
  private:
 
   template <typename T> T _reduce(MPI_Op op, const T& lval) const
@@ -318,6 +339,7 @@ int _doISend(const T* buf, int count, int dest, int tag, MPI_Comm comm, MPI_Requ
   return MPI_Isend(buf, count, mpi_datatype<T>(), dest,
                    tag, comm, request);
 }
+
 template <typename T> MessagePassing::Request
 _doISend2(const T* buf, int count, int dest, int tag, MPI_Comm comm)
 {
