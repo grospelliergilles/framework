@@ -251,6 +251,11 @@ struct mpi_communicator
   {
     mpWaitAll(m_message_passing_mng.get(), requests);
   }
+  void wait(MessagePassing::Request request) const
+  {
+    ArrayView<MessagePassing::Request> requests(1, &request);
+    mpWaitAll(m_message_passing_mng.get(), requests);
+  }
 
   /*!
    * \brief Communicator-wise condition checking.

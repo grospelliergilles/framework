@@ -634,13 +634,13 @@ transpose(const DistributedMatrix<Backend>& A)
   ptrdiff_t nrows = A_loc.ncols;
   ptrdiff_t ncols = A_loc.nbRow();
 
-  std::vector<MPI_Request> recv_cnt_req(C.send.req.size());
-  std::vector<MPI_Request> recv_col_req(C.send.req.size());
-  std::vector<MPI_Request> recv_val_req(C.send.req.size());
+  UniqueArray<MessagePassing::Request> recv_cnt_req(C.send.req.size());
+  UniqueArray<MessagePassing::Request> recv_col_req(C.send.req.size());
+  UniqueArray<MessagePassing::Request> recv_val_req(C.send.req.size());
 
-  std::vector<MPI_Request> send_cnt_req(C.recv.req.size());
-  std::vector<MPI_Request> send_col_req(C.recv.req.size());
-  std::vector<MPI_Request> send_val_req(C.recv.req.size());
+  UniqueArray<MessagePassing::Request> send_cnt_req(C.recv.req.size());
+  UniqueArray<MessagePassing::Request> send_col_req(C.recv.req.size());
+  UniqueArray<MessagePassing::Request> send_val_req(C.recv.req.size());
 
   // Our transposed remote part becomes remote part of someone else,
   // and the other way around.
@@ -682,18 +682,18 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t beg = C.send.ptr[i];
     ptrdiff_t end = C.send.ptr[i + 1];
 
-    _doIReceive(&rem_ptr[beg + 1], end - beg, C.send.nbr[i], tag_cnt, comm, &recv_cnt_req[i]);
+    recv_cnt_req[i] = _doIReceive2(&rem_ptr[beg + 1], end - beg, C.send.nbr[i], tag_cnt, comm);
   }
 
   for (size_t i = 0; i < C.recv.nbr.size(); ++i) {
     ptrdiff_t beg = C.recv.ptr[i];
     ptrdiff_t end = C.recv.ptr[i + 1];
 
-    _doISend(&row_size[beg], end - beg, C.recv.nbr[i], tag_cnt, comm, &send_cnt_req[i]);
+    send_cnt_req[i] = _doISend2(&row_size[beg], end - beg, C.recv.nbr[i], tag_cnt, comm);
   }
 
   ARCANE_ALINA_TIC("MPI Wait");
-  MPI_Waitall(recv_cnt_req.size(), recv_cnt_req.data(), MPI_STATUSES_IGNORE);
+  comm.waitAll(recv_cnt_req);
   ARCANE_ALINA_TOC("MPI Wait");
   std::partial_sum(rem_ptr.begin(), rem_ptr.end(), rem_ptr.begin());
 
@@ -708,9 +708,8 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t cbeg = rem_ptr[rbeg];
     ptrdiff_t cend = rem_ptr[rend];
 
-    _doIReceive(&rem_col[cbeg], cend - cbeg, C.send.nbr[i], tag_col, comm, &recv_col_req[i]);
-
-    _doIReceive(&rem_val[cbeg], cend - cbeg, C.send.nbr[i], tag_val, comm, &recv_val_req[i]);
+    recv_col_req[i] = _doIReceive2(&rem_col[cbeg], cend - cbeg, C.send.nbr[i], tag_col, comm);
+    recv_val_req[i] = _doIReceive2(&rem_val[cbeg], cend - cbeg, C.send.nbr[i], tag_val, comm);
   }
 
   for (size_t i = 0; i < C.recv.nbr.size(); ++i) {
@@ -720,8 +719,8 @@ transpose(const DistributedMatrix<Backend>& A)
     ptrdiff_t cbeg = t_rem.ptr[rbeg];
     ptrdiff_t cend = t_rem.ptr[rend];
 
-    _doISend(&t_rem.col[cbeg], cend - cbeg, C.recv.nbr[i], tag_col, comm, &send_col_req[i]);
-    _doISend(&t_rem.val[cbeg], cend - cbeg, C.recv.nbr[i], tag_val, comm, &send_val_req[i]);
+    send_col_req[i] = _doISend2(&t_rem.col[cbeg], cend - cbeg, C.recv.nbr[i], tag_col, comm);
+    send_val_req[i] = _doISend2(&t_rem.val[cbeg], cend - cbeg, C.recv.nbr[i], tag_val, comm);
   }
 
   // 3. While rem_col and rem_val are in flight,
@@ -739,8 +738,8 @@ transpose(const DistributedMatrix<Backend>& A)
   // 4. Finish rem_col and rem_val exchange, and
   //    finish contruction of our remote part.
   ARCANE_ALINA_TIC("MPI Wait");
-  MPI_Waitall(recv_col_req.size(), recv_col_req.data(), MPI_STATUSES_IGNORE);
-  MPI_Waitall(recv_val_req.size(), recv_val_req.data(), MPI_STATUSES_IGNORE);
+  comm.waitAll(recv_col_req);
+  comm.waitAll(recv_val_req);
   ARCANE_ALINA_TOC("MPI Wait");
 
   for (size_t i = 0; i < C.send.count(); ++i) {
@@ -759,9 +758,9 @@ transpose(const DistributedMatrix<Backend>& A)
   T_rem.ptr[0] = 0;
 
   ARCANE_ALINA_TIC("MPI Wait");
-  MPI_Waitall(send_cnt_req.size(), send_cnt_req.data(), MPI_STATUSES_IGNORE);
-  MPI_Waitall(send_col_req.size(), send_col_req.data(), MPI_STATUSES_IGNORE);
-  MPI_Waitall(send_val_req.size(), send_val_req.data(), MPI_STATUSES_IGNORE);
+  comm.waitAll(send_cnt_req);
+  comm.waitAll(send_col_req);
+  comm.waitAll(send_val_req);
   ARCANE_ALINA_TOC("MPI Wait");
 
   ARCANE_ALINA_TOC("MPI Transpose");
@@ -796,9 +795,9 @@ remote_rows(const CommunicationPattern<Backend>& C,
 
   // Create blocked matrix to send to each domain
   // that needs data from us:
-  std::vector<MPI_Request> send_ptr_req(nsend);
-  std::vector<MPI_Request> send_col_req(nsend);
-  std::vector<MPI_Request> send_val_req(nsend);
+  UniqueArray<MessagePassing::Request> send_ptr_req(nsend);
+  UniqueArray<MessagePassing::Request> send_col_req(nsend);
+  UniqueArray<MessagePassing::Request> send_val_req(nsend);
 
   std::vector<build_matrix> send_rows(nsend);
 
@@ -820,7 +819,7 @@ remote_rows(const CommunicationPattern<Backend>& C,
     }
     m.setNbNonZero(nnz);
 
-    _doISend(m.ptr.data(), m.nbRow(), C.send.nbr[k], tag_ptr, comm, &send_ptr_req[k]);
+    send_ptr_req[k] = _doISend2(m.ptr.data(), m.nbRow(), C.send.nbr[k], tag_ptr, comm);
 
     m.set_nonzeros(nnz, need_values);
 
@@ -848,15 +847,15 @@ remote_rows(const CommunicationPattern<Backend>& C,
       }
     }
 
-    _doISend(m.col.data(), m.nbNonZero(), C.send.nbr[k], tag_col, comm, &send_col_req[k]);
+    send_col_req[k] = _doISend2(m.col.data(), m.nbNonZero(), C.send.nbr[k], tag_col, comm);
     if (need_values)
-      _doISend(m.val.data(), m.nbNonZero(), C.send.nbr[k], tag_val, comm, &send_val_req[k]);
+      send_val_req[k] = _doISend2(m.val.data(), m.nbNonZero(), C.send.nbr[k], tag_val, comm);
   }
 
   // Receive rows of B in block format from our neighbors:
-  std::vector<MPI_Request> recv_ptr_req(nrecv);
-  std::vector<MPI_Request> recv_col_req(nrecv);
-  std::vector<MPI_Request> recv_val_req(nrecv);
+  UniqueArray<MessagePassing::Request> recv_ptr_req(nrecv);
+  UniqueArray<MessagePassing::Request> recv_col_req(nrecv);
+  UniqueArray<MessagePassing::Request> recv_val_req(nrecv);
 
   auto B_nbr = std::make_shared<build_matrix>();
   B_nbr->set_size(C.recv.count(), 0, false);
@@ -866,11 +865,11 @@ remote_rows(const CommunicationPattern<Backend>& C,
     ptrdiff_t beg = C.recv.ptr[k];
     ptrdiff_t end = C.recv.ptr[k + 1];
 
-    _doIReceive(&B_nbr->ptr[beg + 1], end - beg, C.recv.nbr[k], tag_ptr, comm, &recv_ptr_req[k]);
+    recv_ptr_req[k] = _doIReceive2(&B_nbr->ptr[beg + 1], end - beg, C.recv.nbr[k], tag_ptr, comm);
   }
 
   ARCANE_ALINA_TIC("MPI Wait");
-  MPI_Waitall(recv_ptr_req.size(), recv_ptr_req.data(), MPI_STATUSES_IGNORE);
+  comm.waitAll(recv_ptr_req);
   ARCANE_ALINA_TOC("MPI Wait");
 
   B_nbr->set_nonzeros(B_nbr->scan_row_sizes(), need_values);
@@ -882,20 +881,20 @@ remote_rows(const CommunicationPattern<Backend>& C,
     ptrdiff_t cbeg = B_nbr->ptr[rbeg];
     ptrdiff_t cend = B_nbr->ptr[rend];
 
-    _doIReceive(&B_nbr->col[cbeg], cend - cbeg, C.recv.nbr[k], tag_col, comm, &recv_col_req[k]);
+    recv_col_req[k] = _doIReceive2(&B_nbr->col[cbeg], cend - cbeg, C.recv.nbr[k], tag_col, comm);
 
     if (need_values)
-      _doIReceive(&B_nbr->val[cbeg], cend - cbeg, C.recv.nbr[k], tag_val, comm, &recv_val_req[k]);
+      recv_val_req[k] = _doIReceive2(&B_nbr->val[cbeg], cend - cbeg, C.recv.nbr[k], tag_val, comm);
   }
 
   ARCANE_ALINA_TIC("MPI Wait");
-  MPI_Waitall(send_ptr_req.size(), send_ptr_req.data(), MPI_STATUSES_IGNORE);
-  MPI_Waitall(send_col_req.size(), send_col_req.data(), MPI_STATUSES_IGNORE);
-  MPI_Waitall(recv_col_req.size(), recv_col_req.data(), MPI_STATUSES_IGNORE);
+  comm.waitAll(send_ptr_req);
+  comm.waitAll(send_col_req);
+  comm.waitAll(recv_col_req);
 
   if (need_values) {
-    MPI_Waitall(send_val_req.size(), send_val_req.data(), MPI_STATUSES_IGNORE);
-    MPI_Waitall(recv_val_req.size(), recv_val_req.data(), MPI_STATUSES_IGNORE);
+    comm.waitAll(send_val_req);
+    comm.waitAll(recv_val_req);
   }
   ARCANE_ALINA_TOC("MPI Wait");
 
