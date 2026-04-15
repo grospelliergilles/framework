@@ -44,22 +44,6 @@ find_package(Boost REQUIRED COMPONENTS
   program_options
 )
 
-#----------------------------------------------------------------------------
-# Builtin backend
-#----------------------------------------------------------------------------
-#add_library(amgcl INTERFACE)
-#add_library(amgcl::amgcl ALIAS amgcl)
-#target_sources(amgcl INTERFACE ${ARCANE_SOURCES})
-#target_include_directories(amgcl INTERFACE ${Arcane_SOURCE_DIR}/src)
-  
-# target_compile_features(amgcl INTERFACE
-#   cxx_auto_type
-#   cxx_range_for
-#   cxx_rvalue_references
-#   cxx_right_angle_brackets
-#   cxx_static_assert
-# )
-
 if (Boost_FOUND)
   message(STATUS "Found boost")
   target_include_directories(arcane_alina SYSTEM PUBLIC
@@ -160,11 +144,6 @@ if (MPI_CXX_FOUND)
     add_library(mpi_target INTERFACE)
     target_link_libraries(mpi_target INTERFACE arcane_alina ${MPI_CXX_LIBRARIES})
     target_include_directories(mpi_target INTERFACE ${MPI_CXX_INCLUDE_PATH})
-    # target_compile_options(mpi_target INTERFACE
-    #     $<$<CXX_COMPILER_ID:GNU>:-Wno-long-long>
-    #     $<$<CXX_COMPILER_ID:GNU>:-Wno-literal-suffix>
-    #     $<$<CXX_COMPILER_ID:Clang>:-Wno-long-long>
-    #     )
 endif()
 
 #----------------------------------------------------------------------------
@@ -183,44 +162,17 @@ if(Parmetis_FOUND)
   target_link_libraries(arcane_alina PUBLIC arccon::Parmetis)
 endif()
 
-option(ARCANE_ALINA_BUILD_TESTS    ON)
-option(ARCANE_ALINA_BUILD_EXAMPLES ON)
+option(ARCANE_ALINA_BUILD_TESTS "Build Alina tests" ON)
+option(ARCANE_ALINA_BUILD_SAMPLES "Build Alina samples" ON)
 
-option(ARCANE_ALINA_DISABLE_RARE_COMPONENTS OFF)
-
-if(ARCANE_ALINA_DISABLE_RARE_COMPONENTS)
-  add_definitions(
-    -DARCANE_ALINA_RUNTIME_DISABLE_MULTICOLOR_GS
-    -DARCANE_ALINA_RUNTIME_DISABLE_SPAI1
-    -DARCANE_ALINA_RUNTIME_DISABLE_CHEBYSHEV
-  )
-endif()
-
-#if (ARCANE_ALINA_BUILD_TESTS)
+if (ARCANE_ALINA_BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)
-#endif()
+endif()
 
-add_subdirectory(examples)
-add_subdirectory(tutorial)
-
-if (ARCANE_ALINA_BUILD_EXAMPLES)
-
-  #----------------------------------------------------------------------------
-  # Build Fortran example
-  #----------------------------------------------------------------------------
-  option(ARCANE_ALINA_HAVE_FORTRAN "Build Fortran example" OFF)
-  if (ARCANE_ALINA_HAVE_FORTRAN)
-    add_subdirectory(fortran)
-  endif()
-
-  #----------------------------------------------------------------------------
-  # Build Python example
-  #----------------------------------------------------------------------------
-  option(ARCANE_ALINA_HAVE_PYTHON "Build Python example" OFF)
-  if (ARCANE_ALINA_HAVE_PYTHON)
-    add_subdirectory(pyamgcl)
-  endif()
+if (ARCANE_ALINA_BUILD_SAMPLES)
+  add_subdirectory(samples)
+  add_subdirectory(tutorial)
 endif()
 
 # ----------------------------------------------------------------------------
