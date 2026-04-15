@@ -23,7 +23,10 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+#include <arccore/base/FixedArray.h>
+
 #include <arccore/message_passing_mpi/StandaloneMpiMessagePassingMng.h>
+#include <arccore/message_passing/Messages.h>
 
 #include <arcane/alina/ValueTypeInterface.h>
 #include <arcane/alina/AlinaUtils.h>
@@ -224,10 +227,22 @@ struct mpi_communicator
     return v;
   }
 
-  template <typename T>
-    T reduceSum(const T& lval) const
+  std::complex<long double> reduceSum(const std::complex<long double>& lval) const
   {
-    return _reduce(MPI_SUM,lval);
+    return _reduceSumForComplex(lval);
+  }
+  std::complex<double> reduceSum(const std::complex<double>& lval) const
+  {
+    return _reduceSumForComplex(lval);
+  }
+  std::complex<float> reduceSum(const std::complex<float>& lval) const
+  {
+    return _reduceSumForComplex(lval);
+  }
+
+  template <typename T> T reduceSum(const T& lval) const
+  {
+    return mpAllReduce(m_message_passing_mng.get(), MessagePassing::eReduceType::ReduceSum, lval);
   }
 
   /*!
@@ -257,10 +272,12 @@ struct mpi_communicator
         std::cerr << std::endl;
       }
       MPI_Barrier(comm);
-      ARCCORE_FATAL("CheckError in MessagePassingUtils: {0}",message);
+      ARCCORE_FATAL("CheckError in MessagePassingUtils: {0}", message);
     }
   }
-private:
+
+ private:
+
   template <typename T> T _reduce(MPI_Op op, const T& lval) const
   {
     const int elems = math::static_rows<T>::value * math::static_cols<T>::value;
@@ -270,9 +287,15 @@ private:
     return gval;
   }
 
-
+  template <typename T> std::complex<T>
+  _reduceSumForComplex(const std::complex<T>& lval) const
+  {
+    // Specialisation for 'std::complex<float>' as 2 float.
+    FixedArray<T, 2> values = { { lval.real(), lval.imag() } };
+    mpAllReduce(m_message_passing_mng.get(), MessagePassing::eReduceType::ReduceSum, values.view());
+    return std::complex<T>(values[0], values[1]);
+  }
 };
-
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
