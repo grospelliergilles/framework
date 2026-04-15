@@ -73,7 +73,7 @@ class CommunicationPattern
     }
 
     mutable std::vector<rhs_type> val;
-    mutable std::vector<MPI_Request> req;
+    mutable UniqueArray<MessagePassing::Request> req;
   } send;
 
   struct
@@ -87,7 +87,7 @@ class CommunicationPattern
     }
 
     mutable std::vector<rhs_type> val;
-    mutable std::vector<MPI_Request> req;
+    mutable UniqueArray<MessagePassing::Request> req;
   } recv;
 
   std::shared_ptr<vector> x_rem;
@@ -175,17 +175,17 @@ class CommunicationPattern
 
     // What columns do you need from me?
     for (size_t i = 0; i < send.nbr.size(); ++i)
-      _doIReceive(&send.col[send.ptr[i]], send.ptr[i + 1] - send.ptr[i],
-                  send.nbr[i], tag_exc_cols, comm, &send.req[i]);
+      send.req[i] = _doIReceive2(&send.col[send.ptr[i]], send.ptr[i + 1] - send.ptr[i],
+                                 send.nbr[i], tag_exc_cols, comm);
 
     // Here is what I need from you:
     for (size_t i = 0; i < recv.nbr.size(); ++i)
-      _doISend(&rem_cols[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
-               recv.nbr[i], tag_exc_cols, comm, &recv.req[i]);
+      recv.req[i] = _doISend2(&rem_cols[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
+                              recv.nbr[i], tag_exc_cols, comm);
 
     ARCANE_ALINA_TIC("MPI Wait");
-    MPI_Waitall(recv.req.size(), recv.req.data(), MPI_STATUSES_IGNORE);
-    MPI_Waitall(send.req.size(), send.req.data(), MPI_STATUSES_IGNORE);
+    comm.waitAll(recv.req);
+    comm.waitAll(send.req);
     ARCANE_ALINA_TOC("MPI Wait");
 
     // Shift columns to send to local numbering:
@@ -269,24 +269,24 @@ class CommunicationPattern
   {
     // Start receiving ghost values from our neighbours.
     for (size_t i = 0; i < recv.nbr.size(); ++i)
-      _doIReceive(&recv.val[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
-                  recv.nbr[i], tag_exc_vals, comm, &recv.req[i]);
+      recv.req[i] = _doIReceive2(&recv.val[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
+                                 recv.nbr[i], tag_exc_vals, comm);
 
     // Start sending our data to neighbours.
     if (!send.val.empty()) {
       (*gather)(x, send.val);
 
       for (size_t i = 0; i < send.nbr.size(); ++i)
-        _doISend(&send.val[send.ptr[i]], send.ptr[i + 1] - send.ptr[i],
-                 send.nbr[i], tag_exc_vals, comm, &send.req[i]);
+        send.req[i] = _doISend2(&send.val[send.ptr[i]], send.ptr[i + 1] - send.ptr[i],
+                                send.nbr[i], tag_exc_vals, comm);
     }
   }
 
   void finish_exchange() const
   {
     ARCANE_ALINA_TIC("MPI Wait");
-    MPI_Waitall(recv.req.size(), recv.req.data(), MPI_STATUSES_IGNORE);
-    MPI_Waitall(send.req.size(), send.req.data(), MPI_STATUSES_IGNORE);
+    comm.waitAll(recv.req);
+    comm.waitAll(send.req);
     ARCANE_ALINA_TOC("MPI Wait");
 
     if (!recv.val.empty())
@@ -297,16 +297,16 @@ class CommunicationPattern
   void exchange(const T* send_val, T* recv_val) const
   {
     for (size_t i = 0; i < recv.nbr.size(); ++i)
-      _doIReceive(&recv_val[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
-                  recv.nbr[i], tag_exc_vals, comm, &recv.req[i]);
+      recv.req[i] = _doIReceive2(&recv_val[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
+                                 recv.nbr[i], tag_exc_vals, comm);
 
     for (size_t i = 0; i < send.nbr.size(); ++i)
-      _doISend(const_cast<T*>(&send_val[send.ptr[i]]), send.ptr[i + 1] - send.ptr[i],
-               send.nbr[i], tag_exc_vals, comm, &send.req[i]);
+      send.req[i] = _doISend2(const_cast<T*>(&send_val[send.ptr[i]]), send.ptr[i + 1] - send.ptr[i],
+                              send.nbr[i], tag_exc_vals, comm);
 
     ARCANE_ALINA_TIC("MPI Wait");
-    MPI_Waitall(recv.req.size(), recv.req.data(), MPI_STATUSES_IGNORE);
-    MPI_Waitall(send.req.size(), send.req.data(), MPI_STATUSES_IGNORE);
+    comm.waitAll(recv.req);
+    comm.waitAll(send.req);
     ARCANE_ALINA_TOC("MPI Wait");
   }
 

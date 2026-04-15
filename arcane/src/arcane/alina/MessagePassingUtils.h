@@ -24,6 +24,7 @@
 /*---------------------------------------------------------------------------*/
 
 #include <arccore/base/FixedArray.h>
+#include <arccore/common/Array.h>
 
 #include <arccore/message_passing_mpi/StandaloneMpiMessagePassingMng.h>
 #include <arccore/message_passing/Messages.h>
@@ -191,8 +192,9 @@ struct mpi_init_thread
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
-/// Convenience wrapper around MPI_Comm.
+/*!
+ * \brief Convenience wrapper around MPI_Comm.
+ */
 struct mpi_communicator
 {
   MPI_Comm comm = MPI_COMM_NULL;
@@ -243,6 +245,11 @@ struct mpi_communicator
   template <typename T> T reduceSum(const T& lval) const
   {
     return mpAllReduce(m_message_passing_mng.get(), MessagePassing::eReduceType::ReduceSum, lval);
+  }
+
+  void waitAll(ArrayView<MessagePassing::Request> requests) const
+  {
+    mpWaitAll(m_message_passing_mng.get(), requests);
   }
 
   /*!
@@ -306,11 +313,26 @@ int _doISend(const T* buf, int count, int dest, int tag, MPI_Comm comm, MPI_Requ
   return MPI_Isend(buf, count, mpi_datatype<T>(), dest,
                    tag, comm, request);
 }
+template <typename T> MessagePassing::Request
+_doISend2(const T* buf, int count, int dest, int tag, MPI_Comm comm)
+{
+  MPI_Request request;
+  int r = _doISend(buf, count, dest, tag, comm, &request);
+  return MessagePassing::Request(r, nullptr, request);
+}
 
 template <typename T>
 int _doIReceive(T* buf, int count, int source, int tag, MPI_Comm comm, MPI_Request* request)
 {
   return MPI_Irecv(buf, count, mpi_datatype<T>(), source, tag, comm, request);
+}
+
+template <typename T> MessagePassing::Request
+_doIReceive2(T* buf, int count, int source, int tag, MPI_Comm comm)
+{
+  MPI_Request request;
+  int r = _doIReceive(buf, count, source, tag, comm, &request);
+  return MessagePassing::Request(r, nullptr, request);
 }
 
 /*---------------------------------------------------------------------------*/
