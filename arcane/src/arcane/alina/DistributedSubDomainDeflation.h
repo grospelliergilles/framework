@@ -324,8 +324,8 @@ class DistributedSubDomainDeflation
       ptrdiff_t begin = zrecv_ptr[i];
       ptrdiff_t size = zrecv_ptr[i + 1] - begin;
 
-      MPI_Irecv(&zrecv[begin], size, dtype, Acp.recv.nbr[i],
-                tag_exc_vals, comm, &Acp.recv.req[i]);
+      _doIReceive(&zrecv[begin], size, Acp.recv.nbr[i],
+                  tag_exc_vals, comm, &Acp.recv.req[i]);
     }
 
     for (size_t i = 0, k = 0; i < Acp.send.count(); ++i)
@@ -333,9 +333,8 @@ class DistributedSubDomainDeflation
         zsend[k] = prm.def_vec(Acp.send.col[i], j);
 
     for (size_t i = 0; i < Acp.send.nbr.size(); ++i)
-      MPI_Isend(
-      &zsend[ndv * Acp.send.ptr[i]], ndv * (Acp.send.ptr[i + 1] - Acp.send.ptr[i]),
-      dtype, Acp.send.nbr[i], tag_exc_vals, comm, &Acp.send.req[i]);
+      _doISend(&zsend[ndv * Acp.send.ptr[i]], ndv * (Acp.send.ptr[i + 1] - Acp.send.ptr[i]),
+               Acp.send.nbr[i], tag_exc_vals, comm, &Acp.send.req[i]);
 
     MPI_Waitall(Acp.recv.req.size(), &Acp.recv.req[0], MPI_STATUSES_IGNORE);
     MPI_Waitall(Acp.send.req.size(), &Acp.send.req[0], MPI_STATUSES_IGNORE);

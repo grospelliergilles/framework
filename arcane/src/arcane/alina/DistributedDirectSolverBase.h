@@ -126,8 +126,7 @@ class DistributedDirectSolverBase
       for (int j = 0; j < group_size; ++j) {
         int i = slaves[j];
 
-        MPI_Irecv(&A.ptr[shift], counts[j], mpi_datatype<ptrdiff_t>(),
-                  i, cnt_tag, comm, &cnt_req[j]);
+        _doIReceive(&A.ptr[shift], counts[j], i, cnt_tag, comm, &cnt_req[j]);
 
         shift += counts[j];
       }
@@ -145,11 +144,8 @@ class DistributedDirectSolverBase
 
         int nnz = A.ptr[domain[i + 1] - d0] - A.ptr[domain[i] - d0];
 
-        MPI_Irecv(A.col + shift, nnz, mpi_datatype<ptrdiff_t>(),
-                  i, col_tag, comm, &col_req[j]);
-
-        MPI_Irecv(A.val + shift, nnz, mpi_datatype<value_type>(),
-                  i, val_tag, comm, &val_req[j]);
+        _doIReceive(A.col + shift, nnz, i, col_tag, comm, &col_req[j]);
+        _doIReceive(A.val + shift, nnz, i, val_tag, comm, &val_req[j]);
 
         shift += nnz;
       }
@@ -235,7 +231,7 @@ class DistributedDirectSolverBase
 
       int shift = n, j = 0;
       for (int i : slaves) {
-        MPI_Irecv(&cons_f[shift], counts[j], T, i, rhs_tag, comm, &solve_req[j]);
+        _doIReceive(&cons_f[shift], counts[j], i, rhs_tag, comm, &solve_req[j]);
         shift += counts[j++];
       }
 
@@ -248,7 +244,7 @@ class DistributedDirectSolverBase
       j = 0;
 
       for (int i : slaves) {
-        MPI_Isend(&cons_x[shift], counts[j], T, i, sol_tag, comm, &solve_req[j]);
+        _doISend(&cons_x[shift], counts[j], i, sol_tag, comm, &solve_req[j]);
         shift += counts[j++];
       }
 

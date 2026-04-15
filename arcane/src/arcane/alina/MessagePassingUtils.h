@@ -264,6 +264,23 @@ struct mpi_communicator
   }
 };
 
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+template <typename T>
+int _doISend(const T* buf, int count, int dest, int tag, MPI_Comm comm, MPI_Request* request)
+{
+  return MPI_Isend(buf, count, mpi_datatype<T>(), dest,
+                   tag, comm, request);
+}
+
+template <typename T>
+int _doIReceive(T* buf, int count, int source, int tag, MPI_Comm comm, MPI_Request* request)
+{
+  return MPI_Irecv(buf, count, mpi_datatype<T>(), source, tag, comm, request);
+}
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
