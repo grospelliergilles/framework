@@ -92,9 +92,9 @@ class DistributedDirectSolverBase
       group_beg += 1;
       int group_size = group_end - group_beg;
 
-      std::vector<MPI_Request> cnt_req(group_size);
-      std::vector<MPI_Request> col_req(group_size);
-      std::vector<MPI_Request> val_req(group_size);
+      UniqueArray<MessagePassing::Request> cnt_req(group_size);
+      UniqueArray<MessagePassing::Request> col_req(group_size);
+      UniqueArray<MessagePassing::Request> val_req(group_size);
 
       solve_req.resize(group_size);
       slaves.reserve(group_size);
@@ -126,12 +126,12 @@ class DistributedDirectSolverBase
       for (int j = 0; j < group_size; ++j) {
         int i = slaves[j];
 
-        _doIReceive(&A.ptr[shift], counts[j], i, cnt_tag, comm, &cnt_req[j]);
+        cnt_req[j] = _doIReceive2(&A.ptr[shift], counts[j], i, cnt_tag, comm);
 
         shift += counts[j];
       }
 
-      MPI_Waitall(cnt_req.size(), cnt_req.data(), MPI_STATUSES_IGNORE);
+      comm.waitAll(cnt_req);
 
       A.set_nonzeros(A.scan_row_sizes());
 
@@ -144,14 +144,14 @@ class DistributedDirectSolverBase
 
         int nnz = A.ptr[domain[i + 1] - d0] - A.ptr[domain[i] - d0];
 
-        _doIReceive(A.col + shift, nnz, i, col_tag, comm, &col_req[j]);
-        _doIReceive(A.val + shift, nnz, i, val_tag, comm, &val_req[j]);
+        col_req[j] = _doIReceive2(A.col + shift, nnz, i, col_tag, comm);
+        val_req[j] = _doIReceive2(A.val + shift, nnz, i, val_tag, comm);
 
         shift += nnz;
       }
 
-      MPI_Waitall(col_req.size(), col_req.data(), MPI_STATUSES_IGNORE);
-      MPI_Waitall(val_req.size(), val_req.data(), MPI_STATUSES_IGNORE);
+      comm.waitAll(col_req);
+      comm.waitAll(val_req);
 
       solver().init(mpi_communicator(masters_comm), A);
     }
@@ -231,11 +231,11 @@ class DistributedDirectSolverBase
 
       int shift = n, j = 0;
       for (int i : slaves) {
-        _doIReceive(&cons_f[shift], counts[j], i, rhs_tag, comm, &solve_req[j]);
+        solve_req[j] = _doIReceive2(&cons_f[shift], counts[j], i, rhs_tag, comm);
         shift += counts[j++];
       }
 
-      MPI_Waitall(solve_req.size(), solve_req.data(), MPI_STATUSES_IGNORE);
+      comm.waitAll(solve_req);
 
       solver().solve(cons_f, cons_x);
 
@@ -244,11 +244,11 @@ class DistributedDirectSolverBase
       j = 0;
 
       for (int i : slaves) {
-        _doISend(&cons_x[shift], counts[j], i, sol_tag, comm, &solve_req[j]);
+        solve_req[j] = _doISend2(&cons_x[shift], counts[j], i, sol_tag, comm);
         shift += counts[j++];
       }
 
-      MPI_Waitall(solve_req.size(), solve_req.data(), MPI_STATUSES_IGNORE);
+      comm.waitAll(solve_req);
     }
     else {
       MPI_Send(host_v.data(), n, T, group_master, rhs_tag, comm);
@@ -273,7 +273,7 @@ class DistributedDirectSolverBase
   std::vector<int> slaves;
   std::vector<int> counts;
   mutable std::vector<rhs_type> cons_f, cons_x, host_v;
-  mutable std::vector<MPI_Request> solve_req;
+  mutable UniqueArray<MessagePassing::Request> solve_req;
 };
 
 /*---------------------------------------------------------------------------*/
