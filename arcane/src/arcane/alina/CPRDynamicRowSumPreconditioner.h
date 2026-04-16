@@ -68,8 +68,8 @@ class CPRDynamicRowSumPreconditioner
 
   typedef typename backend_type::params backend_params;
 
-  typedef typename backend::BuiltinBackend<value_type>::matrix build_matrix;
-  typedef typename backend::BuiltinBackend<value_type_p>::matrix build_matrix_p;
+  typedef typename BuiltinBackend<value_type>::matrix build_matrix;
+  typedef typename BuiltinBackend<value_type_p>::matrix build_matrix_p;
 
   struct params
   {

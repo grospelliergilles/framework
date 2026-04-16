@@ -92,8 +92,8 @@ int main(int argc, char* argv[])
     << "RHS " << argv[2] << ": " << rows << "x" << cols << std::endl;
 
   // Compose the solver type
-  typedef backend::BuiltinBackend<double> DBackend;
-  typedef backend::BuiltinBackend<float> FBackend;
+  typedef BuiltinBackend<double> DBackend;
+  typedef BuiltinBackend<float> FBackend;
   using Solver = DistributedPreconditionedSolver<DistributedAMG<
                                                  FBackend,
                                                  DistributedSmoothedAggregationCoarsening<FBackend>,

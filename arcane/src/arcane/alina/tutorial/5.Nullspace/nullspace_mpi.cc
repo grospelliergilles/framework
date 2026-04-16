@@ -103,8 +103,8 @@ int main(int argc, char* argv[])
   }
 
   // Declare the backends and the solver type
-  typedef Alina::backend::BuiltinBackend<double> SBackend; // the solver backend
-  typedef Alina::backend::BuiltinBackend<float> PBackend; // the preconditioner backend
+  typedef Alina::BuiltinBackend<double> SBackend; // the solver backend
+  typedef Alina::BuiltinBackend<float> PBackend; // the preconditioner backend
 
   using Solver = DistributedPreconditionedSolver<DistributedAMG<
                                                  PBackend,

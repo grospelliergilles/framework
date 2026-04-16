@@ -80,7 +80,7 @@ struct RelaxationAsBlock
     typedef typename Backend::value_type value_type;
     typedef typename Backend::col_type col_type;
     typedef typename Backend::ptr_type ptr_type;
-    typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
+    typedef typename BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
 
     template <class Matrix>
     type(const Matrix& A,
@@ -166,7 +166,7 @@ class RelaxationAsPreconditioner
   typedef typename Backend::value_type value_type;
   typedef typename Backend::col_type col_type;
   typedef typename Backend::ptr_type ptr_type;
-  typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
+  typedef typename BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
 
   template <class Matrix>
   RelaxationAsPreconditioner(const Matrix& M,
@@ -905,7 +905,7 @@ struct ILU0Relaxation
   ILU0Relaxation(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
   {
-    typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
+    typedef typename BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
     const size_t n = backend::nbRow(A);
 
     size_t Lnz = 0, Unz = 0;
@@ -1122,7 +1122,7 @@ struct ILUKRelaxation
   ILUKRelaxation(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
   {
-    typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
+    typedef typename BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
 
     const size_t n = backend::nbRow(A);
 
@@ -1698,7 +1698,7 @@ struct ILUTRelaxation
 
  private:
 
-  typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
+  typedef typename BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
   std::shared_ptr<ilu_solve> ilu;
 
   struct sparse_vector

@@ -59,7 +59,7 @@ class DistributedCPRPreconditioner
   typedef BackendType::params backend_params;
 
   typedef DistributedMatrix<BackendType> matrix;
-  typedef typename backend::BuiltinBackend<value_type>::matrix build_matrix;
+  typedef typename BuiltinBackend<value_type>::matrix build_matrix;
 
   struct params
   {

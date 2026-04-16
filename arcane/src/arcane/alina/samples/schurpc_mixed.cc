@@ -1,3 +1,7 @@
+// Pour Eigen
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#pragma GCC diagnostic ignored "-Wint-in-bool-context"
+
 #include <iostream>
 #include <string>
 
@@ -30,7 +34,7 @@ using BlockMatrix = Eigen::Matrix<T, N, M>;
      template <class T, int N, int M>
      using BlockMatrix = Arcane::Alina::StaticMatrix<T, N, M>;
 #endif
-template <class T> using Backend = Arcane::Alina::backend::BuiltinBackend<T>;
+template <class T> using Backend = Arcane::Alina::BuiltinBackend<T>;
 #endif
 
 #include <arcane/alina/IO.h>

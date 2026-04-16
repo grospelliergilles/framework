@@ -99,8 +99,8 @@ int main(int argc, char* argv[])
   typedef Alina::StaticMatrix<double, B, B> dmat_type;
   typedef Alina::StaticMatrix<double, B, 1> dvec_type;
   typedef Alina::StaticMatrix<float, B, B> fmat_type;
-  typedef Alina::backend::BuiltinBackend<dmat_type> DBackend;
-  typedef Alina::backend::BuiltinBackend<fmat_type> FBackend;
+  typedef Alina::BuiltinBackend<dmat_type> DBackend;
+  typedef Alina::BuiltinBackend<fmat_type> FBackend;
 
   typedef DistributedPreconditionedSolver<
     DistributedAMG<

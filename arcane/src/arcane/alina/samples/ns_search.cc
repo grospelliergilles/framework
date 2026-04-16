@@ -180,7 +180,7 @@ int main(int argc, char* argv[])
     }
   }
 
-  using Backend = Alina::backend::BuiltinBackend<double>;
+  using Backend = Alina::BuiltinBackend<double>;
   using Solver = Alina::PreconditionedSolver<Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::RelaxationRuntime>,
                                              Alina::SolverRuntime<Backend>>;
 

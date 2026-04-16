@@ -303,10 +303,10 @@ int main(int argc, char* argv[])
   prof.tic("setup");
   typedef DistributedSubDomainDeflation<
     AMG<
-      backend::BuiltinBackend<double>,
+      BuiltinBackend<double>,
       CoarseningRuntime,
       RelaxationRuntime>,
-    DistributedSolverRuntime<backend::BuiltinBackend<double>>,
+    DistributedSolverRuntime<BuiltinBackend<double>>,
     DistributedDirectSolverRuntime<double>>
   SDD;
 

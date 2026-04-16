@@ -13,8 +13,8 @@
 #define SOLVER_BACKEND_BUILTIN
 #endif
 #include <arcane/alina/BuiltinBackend.h>
-typedef Arcane::Alina::backend::BuiltinBackend<float> fBackend;
-typedef Arcane::Alina::backend::BuiltinBackend<double> dBackend;
+typedef Arcane::Alina::BuiltinBackend<float> fBackend;
+typedef Arcane::Alina::BuiltinBackend<double> dBackend;
 
 #include "sample_problem.h"
 

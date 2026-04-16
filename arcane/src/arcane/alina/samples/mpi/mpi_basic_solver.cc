@@ -152,10 +152,10 @@ void solve_scalar(Alina::mpi_communicator comm,
                   Alina::eMatrixPartitionerType ptype)
 {
   auto& prof = Alina::Profiler::globalProfiler();
-  //using Backend = Alina::backend::BuiltinBackend<double>;
+  //using Backend = Alina::BuiltinBackend<double>;
 
   using BackendValueType = double;
-  using Backend = Alina::backend::BuiltinBackend<BackendValueType, Arcane::Int32>;
+  using Backend = Alina::BuiltinBackend<BackendValueType, Arcane::Int32>;
 
   std::cout << "Using scalar solve ptr_size=" << sizeof(ptrdiff_t)
             << " ptr_type_size=" << sizeof(Backend::ptr_type)

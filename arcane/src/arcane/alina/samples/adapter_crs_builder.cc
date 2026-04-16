@@ -84,11 +84,11 @@ int main(int argc, char* argv[])
   // The use of make_matrix() from crs_builder.hpp allows to construct the
   // system matrix on demand row by row.
   prof.tic("build");
-  using Solver = Alina::PreconditionedSolver<Alina::AMG<Alina::backend::BuiltinBackend<double>,
+  using Solver = Alina::PreconditionedSolver<Alina::AMG<Alina::BuiltinBackend<double>,
                                                         Alina::SmoothedAggregationCoarserning,
                                                         Alina::GaussSeidelRelaxation>,
                                              Alina::ConjugateGradientSolver<
-                                             Alina::backend::BuiltinBackend<double>>>;
+                                             Alina::BuiltinBackend<double>>>;
 
   Solver solve(Alina::adapter::make_matrix(poisson_2d(m)));
   prof.toc("build");
@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
   //
   // Nesting iterative solvers in this way allows to shave last bits off the
   // error.
-  Alina::ConjugateGradientSolver<Alina::backend::BuiltinBackend<double>> S(n);
+  Alina::ConjugateGradientSolver<Alina::BuiltinBackend<double>> S(n);
   std::fill(x.begin(), x.end(), 0);
 
   prof.tic("nested solver");

@@ -138,7 +138,7 @@ struct ParmetisMatrixPartitioner
       }
       else {
         typedef typename math::scalar_of<value_type>::type scalar;
-        using sbackend = backend::BuiltinBackend<scalar,col_type,ptr_type>;
+        using sbackend = BuiltinBackend<scalar,col_type,ptr_type>;
         ptrdiff_t np = n / block_size;
 
         DistributedMatrix<sbackend> A_pw(A.comm(),

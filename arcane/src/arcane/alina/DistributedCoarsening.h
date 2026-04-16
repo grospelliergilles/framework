@@ -55,7 +55,7 @@ struct DistributedPMISAggregation
   using build_matrix = Backend::matrix;
   using col_type = Backend::col_type;
   using ptr_type = Backend::ptr_type;
-  using bool_backend = backend::BuiltinBackend<char,col_type,ptr_type>;
+  using bool_backend = BuiltinBackend<char,col_type,ptr_type>;
   using bool_matrix = bool_backend::matrix;
 
   struct params
@@ -106,7 +106,7 @@ struct DistributedPMISAggregation
     }
     else {
       typedef typename math::scalar_of<value_type>::type scalar;
-      using sbackend = backend::BuiltinBackend<scalar,col_type,ptr_type>;
+      using sbackend = BuiltinBackend<scalar,col_type,ptr_type>;
 
       ptrdiff_t np = n / prm.block_size;
 
@@ -1252,7 +1252,7 @@ struct DistributedSmoothedAggregationCoarsening
   using build_matrix = Backend::matrix;
   using col_type = Backend::col_type;
   using ptr_type = Backend::ptr_type;
-  using bool_backend = backend::BuiltinBackend<char,col_type,ptr_type>;
+  using bool_backend = BuiltinBackend<char,col_type,ptr_type>;
   using bool_matrix = bool_backend::matrix;
 
   struct params
@@ -1323,7 +1323,7 @@ struct DistributedSmoothedAggregationCoarsening
 
     scalar_type omega = prm.relax;
     if (prm.estimate_spectral_radius) {
-      omega *= static_cast<scalar_type>(4.0 / 3) / backend::spectral_radius<true>(A, prm.power_iters);
+      omega *= static_cast<scalar_type>(4.0 / 3) / spectral_radius<true>(A, prm.power_iters);
     }
     else {
       omega *= static_cast<scalar_type>(2.0 / 3);

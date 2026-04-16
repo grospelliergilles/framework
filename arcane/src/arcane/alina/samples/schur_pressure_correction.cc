@@ -13,7 +13,7 @@
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
 #include <arcane/alina/BuiltinBackend.h>
-template <class T> using Backend = Arcane::Alina::backend::BuiltinBackend<T>;
+template <class T> using Backend = Arcane::Alina::BuiltinBackend<T>;
 #endif
 
 #include <arcane/alina/PreconditionedSolver.h>

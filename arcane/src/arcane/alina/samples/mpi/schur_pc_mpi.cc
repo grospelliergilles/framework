@@ -26,7 +26,7 @@ typedef Arcane::Alina::backend::cuda<double> Backend;
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
 #include <arcane/alina/BuiltinBackend.h>
-typedef Arcane::Alina::backend::BuiltinBackend<double> Backend;
+typedef Arcane::Alina::BuiltinBackend<double> Backend;
 #endif
 
 #include <arcane/alina/IO.h>

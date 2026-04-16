@@ -32,7 +32,7 @@ using namespace Arcane;
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-using Backend = Alina::backend::BuiltinBackend<double>;
+using Backend = Alina::BuiltinBackend<double>;
 using PreconditionerType = Alina::AMG<Backend, Alina::CoarseningRuntime, Alina::RelaxationRuntime>;
 using SequentialSolverType = Alina::PreconditionedSolver<PreconditionerType, Alina::SolverRuntime<Backend>>;
 typedef Alina::PropertyTree Params;

@@ -36,7 +36,7 @@ using Alina::precondition;
 /*---------------------------------------------------------------------------*/
 
 //! Use 32 bit indexing for backend.
-using Backend = Arcane::Alina::backend::BuiltinBackend<double, Arcane::Int32>;
+using Backend = Arcane::Alina::BuiltinBackend<double, Arcane::Int32>;
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

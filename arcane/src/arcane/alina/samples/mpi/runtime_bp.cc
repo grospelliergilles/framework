@@ -60,7 +60,7 @@ solve(const Alina::mpi_communicator& comm,
 {
   auto& prof = Alina::Profiler::globalProfiler();
 
-  typedef Alina::backend::BuiltinBackend<double> Backend;
+  typedef Alina::BuiltinBackend<double> Backend;
 
   using Solver = DistributedPreconditionedSolver<DistributedBlockPreconditioner<Precond<Backend>>, DistributedSolverRuntime<Backend>>;
 

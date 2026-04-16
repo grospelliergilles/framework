@@ -107,9 +107,10 @@ void solve_scalar(Alina::mpi_communicator comm,
                   const std::vector<std::complex<double>>& rhs)
 {
   auto& prof = Alina::Profiler::globalProfiler();
-  typedef Alina::backend::BuiltinBackend<std::complex<double>> Backend;
+  using Backend = Alina::BuiltinBackend<std::complex<double>>;
 
-  typedef Alina::DistributedPreconditionedSolver<Alina::DistributedPreconditioner<Backend>, Alina::DistributedSolverRuntime<Backend>> Solver;
+  using Solver = Alina::DistributedPreconditionedSolver<Alina::DistributedPreconditioner<Backend>,
+                                                        Alina::DistributedSolverRuntime<Backend>>;
 
   prof.tic("setup");
   Solver solve(comm, std::tie(chunk, ptr, col, val), prm);

@@ -38,10 +38,6 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-//#include "arcane/alina/ValueTypeInterface.h"
-//#include "arcane/alina/DenseMatrixInverseImpl.h"
-//#include "arcane/alina/SparseMatrixMatrixProduct.h"
-
 #include "arcane/alina/CSRMatrixOperations.h"
 #include "arcane/alina/SkylineLUSolver.h"
 #include "arcane/alina/MatrixOperationsImpl.h"
@@ -49,7 +45,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::backend
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -153,6 +149,14 @@ struct BuiltinBackend
     return std::make_shared<direct_solver>(*A);
   }
 };
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+} // namespace Arcane::Alina
+
+namespace Arcane::Alina::backend
+{
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -542,15 +546,15 @@ namespace Arcane::Alina::detail
 
 // Backend with scalar value_type of highest precision.
 template <class V1, class V2>
-struct common_scalar_backend<backend::BuiltinBackend<V1>, backend::BuiltinBackend<V2>,
+struct common_scalar_backend<BuiltinBackend<V1>, BuiltinBackend<V2>,
                              typename std::enable_if<math::static_rows<V1>::value != 1 || math::static_rows<V2>::value != 1>::type>
 {
   typedef typename math::scalar_of<V1>::type S1;
   typedef typename math::scalar_of<V2>::type S2;
 
-  typedef typename std::conditional<(sizeof(S1) > sizeof(S2)), backend::BuiltinBackend<S1>, backend::BuiltinBackend<S2>>::type type;
+  typedef typename std::conditional<(sizeof(S1) > sizeof(S2)), BuiltinBackend<S1>, BuiltinBackend<S2>>::type type;
 };
 
-} // namespace detail
+} // namespace Arcane::Alina::detail
 
 #endif

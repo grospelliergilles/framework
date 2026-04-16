@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
     ptr.push_back(col.size());
   }
 
-  typedef Alina::backend::BuiltinBackend<double> Backend;
+  typedef Alina::BuiltinBackend<double> Backend;
   typedef Alina::DistributedMatrix<Backend> Matrix;
 
   Matrix A(comm, std::tie(chunk, ptr, col, val), chunk);

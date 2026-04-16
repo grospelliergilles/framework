@@ -55,7 +55,7 @@ class PreconditionedSolver
   typedef typename backend_type::col_type col_type;
   typedef typename backend_type::ptr_type ptr_type;
   typedef typename backend_type::params backend_params;
-  typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
+  typedef typename BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
 
   typedef typename math::scalar_of<value_type>::type scalar_type;
 

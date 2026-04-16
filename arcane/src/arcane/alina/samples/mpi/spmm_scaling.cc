@@ -138,7 +138,7 @@ int main(int argc, char* argv[])
   }
   prof.toc("assemble");
 
-  typedef Alina::backend::BuiltinBackend<double> Backend;
+  typedef Alina::BuiltinBackend<double> Backend;
   typedef Alina::DistributedMatrix<Backend> Matrix;
 
   prof.tic("create distributed version");

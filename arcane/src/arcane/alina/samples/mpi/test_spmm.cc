@@ -84,7 +84,7 @@ void test()
   for (int i = 0; i < chunk; ++i)
     x[i] = math::constant<Rhs>(drand48());
 
-  typedef Alina::backend::BuiltinBackend<Val> Backend;
+  typedef Alina::BuiltinBackend<Val> Backend;
   typedef Alina::DistributedMatrix<Backend> Matrix;
 
   Matrix A(comm, std::tie(chunk, ptr, col, val), chunk);

@@ -216,7 +216,7 @@ int main(int argc, char* argv[])
 #define CALL_BLOCK_SOLVER(z, data, B) \
   case B: { \
     typedef StaticMatrix<std::complex<double>, B, B> value_type; \
-    typedef ::Arcane::Alina::backend::BuiltinBackend<value_type> Backend; \
+    typedef ::Arcane::Alina::BuiltinBackend<value_type> Backend; \
     r = solve<::Arcane::Alina::PreconditionerRuntime<Backend>>( \
     ::Arcane::Alina::adapter::block_matrix<value_type>( \
     std::tie(rows, ptr, col, val)), \
@@ -225,7 +225,7 @@ int main(int argc, char* argv[])
 
   switch (block_size) {
   case 1: {
-    typedef Alina::backend::BuiltinBackend<std::complex<double>> Backend;
+    typedef Alina::BuiltinBackend<std::complex<double>> Backend;
     r = solve<PreconditionerRuntime<Backend>>(
     std::tie(rows, ptr, col, val), prm, rhs, x);
   } break;

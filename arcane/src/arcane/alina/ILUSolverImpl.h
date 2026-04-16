@@ -53,7 +53,7 @@ class ILUSolver
   typedef typename Backend::matrix matrix;
   typedef typename Backend::vector vector;
   typedef typename Backend::matrix_diagonal matrix_diagonal;
-  typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
+  typedef typename BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
   typedef typename math::scalar_of<value_type>::type scalar_type;
 
   struct params
@@ -141,16 +141,16 @@ class ILUSolver
  * Spécialisation for BuiltinBackend.
  */
 template <class value_type, class col_type, class ptr_type>
-class ILUSolver<backend::BuiltinBackend<value_type, col_type, ptr_type>>
+class ILUSolver<BuiltinBackend<value_type, col_type, ptr_type>>
 {
  public:
 
-  typedef backend::BuiltinBackend<value_type, col_type, ptr_type> Backend;
+  typedef BuiltinBackend<value_type, col_type, ptr_type> Backend;
   typedef typename Backend::params backend_params;
   typedef typename Backend::matrix matrix;
   typedef typename Backend::vector vector;
   typedef typename Backend::matrix_diagonal matrix_diagonal;
-  typedef typename backend::BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
+  typedef typename BuiltinBackend<value_type, col_type, ptr_type>::matrix build_matrix;
   typedef typename Backend::rhs_type rhs_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
 
@@ -494,9 +494,9 @@ class ILUSolver<backend::BuiltinBackend<value_type, col_type, ptr_type>>
 
 template <class Block, class Col, class Ptr>
 class ILUSolver<backend::HybridBuiltinBackend<Block, Col, Ptr>>
-: public ILUSolver<backend::BuiltinBackend<typename math::scalar_of<Block>::type, Col, Ptr>>
+: public ILUSolver<BuiltinBackend<typename math::scalar_of<Block>::type, Col, Ptr>>
 {
-  typedef ILUSolver<backend::BuiltinBackend<typename math::scalar_of<Block>::type, Col, Ptr>> Base;
+  typedef ILUSolver<BuiltinBackend<typename math::scalar_of<Block>::type, Col, Ptr>> Base;
 
  public:
 

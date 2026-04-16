@@ -25,8 +25,8 @@ typedef Arcane::Alina::backend::EigenBackend<double> Backend;
 #include <arcane/alina/StaticMatrix.h>
 #include <arcane/alina/Adapters.h>
 // Use 32 bit indexing for backend.
-using Backend = Arcane::Alina::backend::BuiltinBackend<double, Arcane::Int32>;
-//using Backend = Arcane::Alina::backend::BuiltinBackend<double>;
+using Backend = Arcane::Alina::BuiltinBackend<double, Arcane::Int32>;
+//using Backend = Arcane::Alina::BuiltinBackend<double>;
 #endif
 
 #include <arcane/utils/PlatformUtils.h>
@@ -81,7 +81,7 @@ block_solve(const Alina::PropertyTree& prm,
 
   typedef Alina::StaticMatrix<double, B, B> value_type;
   typedef Alina::StaticMatrix<double, B, 1> rhs_type;
-  typedef Alina::backend::BuiltinBackend<value_type> BBackend;
+  typedef Alina::BuiltinBackend<value_type> BBackend;
 
   typedef Alina::PreconditionedSolver<Alina::PreconditionerRuntime<BBackend>, Alina::SolverRuntime<BBackend>> Solver;
 

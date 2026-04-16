@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
   int m = argc > 1 ? atoi(argv[1]) : 1024;
   int n = m * m;
 
-  using Backend = Alina::backend::BuiltinBackend<double>;
+  using Backend = Alina::BuiltinBackend<double>;
   std::vector<double> f(n);
   std::vector<double> x(n);
 

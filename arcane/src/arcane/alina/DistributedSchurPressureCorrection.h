@@ -61,7 +61,7 @@ class DistributedSchurPressureCorrection
 
   typedef DistributedMatrix<backend_type> matrix;
 
-  typedef typename backend::BuiltinBackend<value_type>::matrix build_matrix;
+  typedef typename BuiltinBackend<value_type>::matrix build_matrix;
 
   struct params
   {
