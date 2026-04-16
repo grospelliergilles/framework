@@ -82,28 +82,9 @@ if (ARCCORE_HAS_CUDA)
 endif()
 
 #----------------------------------------------------------------------------
-# Find MPI
-#----------------------------------------------------------------------------
-# find_package(MPI 3.0)
-# if (MPI_CXX_FOUND)
-#   message(STATUS "FOUND MPI_CXX for Alina")
-#     # Need this to comply with CMP004 policy:
-#     string(STRIP "${MPI_CXX_LINK_FLAGS}" MPI_CXX_LINK_FLAGS)
-#     string(STRIP "${MPI_CXX_LIBRARIES}" MPI_CXX_LIBRARIES)
-
-#     add_library(mpi_target INTERFACE)
-#     target_link_libraries(mpi_target INTERFACE arcane_alina ${MPI_CXX_LIBRARIES})
-#     target_include_directories(mpi_target INTERFACE ${MPI_CXX_INCLUDE_PATH})
-# endif()
-
-#----------------------------------------------------------------------------
 # Find Pastix
 #----------------------------------------------------------------------------
 find_package(Metis  QUIET)
-#find_package(BLAS   QUIET)
-#find_library(PTHREAD_LIBRARY pthread)
-#find_library(BZ2_LIBRARY bz2)
-#find_library(HWLOC_LIBRARY hwloc)
 
 arcane_find_package(Parmetis)
 if(Parmetis_FOUND)

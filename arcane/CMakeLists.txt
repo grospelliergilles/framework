@@ -920,11 +920,6 @@ add_subdirectory(src/arcane/std)
 if (ARCANE_ENABLE_ALEPH)
   add_subdirectory(src/arcane/aleph)
 endif()
-set (ARCANE_ENABLE_ALINA TRUE)
-#set (ARCANE_ENABLE_ALINA FALSE)
-if (ARCANE_ENABLE_ALINA)
-  add_subdirectory(src/arcane/alina)
-endif()
 add_subdirectory(src/arcane/driverlib)
 add_subdirectory(src/arcane/driver)
 
@@ -956,6 +951,14 @@ add_subdirectory(src/arcane/accelerator)
 
 if (ARCANE_HAS_ACCELERATOR)
   add_subdirectory(src/arcane/accelerator/${ARCANE_ACCELERATOR_RUNTIME}/runtime)
+endif()
+
+# ----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+# Handling of Alina
+option (ARCANE_ENABLE_ALINA "Is Alina (linear algebra) component enabled?" OFF)
+if (ARCANE_ENABLE_ALINA)
+  add_subdirectory(src/arcane/alina)
 endif()
 
 # ----------------------------------------------------------------------------
