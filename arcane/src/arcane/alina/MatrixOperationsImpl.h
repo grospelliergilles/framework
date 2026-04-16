@@ -96,16 +96,16 @@ struct residual_impl<Matrix, Vector1, Vector2, Vector3,
                     Vector3& res)
   {
     typedef typename value_type<Vector3>::type V;
-
     const ptrdiff_t n = static_cast<ptrdiff_t>(nbRow(A));
 
-#pragma omp parallel for
-    for (ptrdiff_t i = 0; i < n; ++i) {
-      V sum = math::zero<V>();
-      for (typename row_iterator<Matrix>::type a = row_begin(A, i); a; ++a)
-        sum += a.value() * x[a.col()];
-      res[i] = rhs[i] - sum;
-    }
+    arccoreParallelFor(0, n, ForLoopRunInfo{}, [&](Int32 begin, Int32 size) {
+      for (ptrdiff_t i = begin; i < (begin+size); ++i) {
+        V sum = math::zero<V>();
+        for (typename row_iterator<Matrix>::type a = row_begin(A, i); a; ++a)
+          sum += a.value() * x[a.col()];
+        res[i] = rhs[i] - sum;
+      }
+    });
   }
 };
 
