@@ -9,8 +9,6 @@
 #include <vector>
 #include <tuple>
 
-//#include "sample_problem.h"
-
 using namespace Arcane;
 
 struct poisson_2d
@@ -77,12 +75,6 @@ int main(int argc, char* argv[])
   using Precond = Alina::AMG<Backend, Alina::SmoothedAggregationCoarserning, Alina::SPAI0Relaxation>;
   using Solver = Alina::PreconditionedSolver<Precond, Alina::BiCGStabSolver<Backend>>;
 
-  //  amgcl::make_solver<
-  //amgcl::amg<
-  //Backend,
-  //amgcl::coarsening::smoothed_aggregation,
-  //amgcl::relaxation::spai0>,
-  //amgcl::solver::bicgstab<Backend>>
   Solver solve(Alina::adapter::make_matrix(poisson_2d(m)));
   prof.toc("build");
 

@@ -1364,22 +1364,18 @@ struct SmoothedAggregationCoarserning
      * where \f$N_i\f$ is the set of variables, strongly coupled to
      * variable \f$i\f$, and \f$D\f$ denotes the diagonal of \f$A^F\f$.
      */
-    float relax;
+    float relax = 1.0f;
 
     // Estimate the matrix spectral radius.
     // This usually improves convergence rate and results in faster solves,
     // but costs some time during setup.
-    bool estimate_spectral_radius;
+    bool estimate_spectral_radius = false;
 
     // Number of power iterations to apply for the spectral radius
     // estimation. Use Gershgorin disk theorem when power_iters = 0.
-    int power_iters;
+    int power_iters = 0;
 
-    params()
-    : relax(1.0f)
-    , estimate_spectral_radius(false)
-    , power_iters(0)
-    {}
+    params() = default;
 
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
@@ -1388,7 +1384,7 @@ struct SmoothedAggregationCoarserning
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, estimate_spectral_radius)
     , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
     {
-      p.check_params( { "aggr", "nullspace", "relax", "estimate_spectral_radius", "power_iters" });
+      p.check_params({ "aggr", "nullspace", "relax", "estimate_spectral_radius", "power_iters" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
@@ -1399,7 +1395,7 @@ struct SmoothedAggregationCoarserning
       ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, estimate_spectral_radius);
       ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, power_iters);
     }
-  } prm;
+  };
 
   SmoothedAggregationCoarserning(const params& prm = params())
   : prm(prm)
@@ -1419,8 +1415,7 @@ struct SmoothedAggregationCoarserning
     prm.aggr.eps_strong *= 0.5;
     ARCANE_ALINA_TOC("aggregates");
 
-    auto P_tent = tentative_prolongation<Matrix>(
-    n, aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
+    auto P_tent = tentative_prolongation<Matrix>(n, aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
 
     auto P = std::make_shared<Matrix>();
     P->set_size(backend::nbRow(*P_tent), backend::nbColumn(*P_tent), true);
@@ -1522,6 +1517,8 @@ struct SmoothedAggregationCoarserning
   {
     return detail::galerkin(A, P, R);
   }
+
+  params prm;
 };
 
 /*---------------------------------------------------------------------------*/
