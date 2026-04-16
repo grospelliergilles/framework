@@ -28,7 +28,7 @@
 
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/SkylineLUSolver.h>
-#include <arcane/alina/util.h>
+#include <arcane/alina/AlinaUtils.h>
 
 #include <thrust/device_vector.h>
 #include <thrust/fill.h>
@@ -58,8 +58,8 @@ struct cuda_skyline_lu : SkylineLUSolver<T>
   template <class Matrix, class Params>
   cuda_skyline_lu(const Matrix& A, const Params&)
   : Base(*A)
-  , _rhs(backend::rows(*A))
-  , _x(backend::rows(*A))
+  , _rhs(backend::nbRow(*A))
+  , _x(backend::nbRow(*A))
   {}
 
   template <class Vec1, class Vec2>
@@ -279,7 +279,7 @@ class cuda_matrix
     sizeof(real) * nnz;
   }
 
- private:
+ public:
 
   size_t nrows, ncols, nnz;
 
@@ -329,21 +329,21 @@ struct cuda
   struct params
   {
     /// CUSPARSE handle.
-    cusparseHandle_t cusparse_handle;
+    cusparseHandle_t cusparse_handle = nullptr;
 
-    params(cusparseHandle_t handle = 0)
+    params(cusparseHandle_t handle = nullptr)
     : cusparse_handle(handle)
     {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, cusparse_handle)
+    //: ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, cusparse_handle)
     {
-      check_params(p, { "cusparse_handle" });
+      //check_params(p, { "cusparse_handle" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, cusparse_handle);
+      //ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, cusparse_handle);
     }
   };
 
@@ -353,7 +353,7 @@ struct cuda
   static std::shared_ptr<matrix>
   copy_matrix(std::shared_ptr<typename BuiltinBackend<real>::matrix> A, const params& prm)
   {
-    return std::make_shared<matrix>(rows(*A), cols(*A),
+    return std::make_shared<matrix>(backend::nbRow(*A), backend::nbColumn(*A),
                                     A->ptr, A->col, A->val, prm.cusparse_handle);
   }
 

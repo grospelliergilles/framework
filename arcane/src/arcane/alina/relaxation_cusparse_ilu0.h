@@ -55,16 +55,14 @@ struct ilu0<backend::cuda<real>>
   struct params
   {
     /// Damping factor.
-    float damping;
+    float damping = 1.0;
 
-    params()
-    : damping(1)
-    {}
+    params() = default;
 
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
     {
-      check_params(p, { "damping" });
+      p.check_params({ "damping" });
     }
 
     void get(Alina::PropertyTree& p, const std::string& path) const
@@ -73,12 +71,11 @@ struct ilu0<backend::cuda<real>>
     }
   } prm;
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::damped_jacobi
   template <class Matrix>
   ilu0(const Matrix& A, const params& prm, const typename Backend::params& bprm)
   : prm(prm)
   , handle(bprm.cusparse_handle)
-  , n(backend::rows(A))
+  , n(backend::nbRow(A))
   , nnz(backend::nonzeros(A))
   , ptr(A.ptr, A.ptr + n + 1)
   , col(A.col, A.col + nnz)
@@ -360,7 +357,6 @@ struct ilu0<backend::cuda<real>>
 #endif // CUDART_VERSION >= 11000
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_pre
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_pre(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {
@@ -369,7 +365,6 @@ struct ilu0<backend::cuda<real>>
     backend::axpby(prm.damping, tmp, 1, x);
   }
 
-  /// \copydoc amgcl::relaxation::damped_jacobi::apply_post
   template <class Matrix, class VectorRHS, class VectorX, class VectorTMP>
   void apply_post(const Matrix& A, const VectorRHS& rhs, VectorX& x, VectorTMP& tmp) const
   {

@@ -1573,7 +1573,7 @@ struct ILUTRelaxation
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      double p2 = p;
+      double p2 = this->p;
       ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, p2);
       ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tau);
       ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);

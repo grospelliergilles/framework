@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include <arcane/alina/BiCGStabSolver.h>
 
 #include <arcane/alina/IO.h>
-#include <arcane/alina/profiler.h>
+#include <arcane/alina/Profiler.h>
 
 using namespace Arcane;
 using namespace Arcane::Alina;
@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
   std::cout << prop.name << std::endl;
 
   // The profiler:
-  Alina::profiler<> prof("poisson3Db");
+  auto& prof = Alina::Profiler::globalProfiler();
 
   // Read the system matrix and the RHS:
   ptrdiff_t rows, cols;
