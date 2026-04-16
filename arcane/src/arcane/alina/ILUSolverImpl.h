@@ -85,7 +85,7 @@ class ILUSolver
 
   ILUSolver(std::shared_ptr<build_matrix> L,
             std::shared_ptr<build_matrix> U,
-            std::shared_ptr<backend::numa_vector<value_type>> D,
+            std::shared_ptr<numa_vector<value_type>> D,
             const params& prm = params(),
             const backend_params& bprm = backend_params())
   : prm(prm)
@@ -177,7 +177,7 @@ class ILUSolver<backend::BuiltinBackend<value_type, col_type, ptr_type>>
 
   ILUSolver(std::shared_ptr<build_matrix> L,
             std::shared_ptr<build_matrix> U,
-            std::shared_ptr<backend::numa_vector<value_type>> D,
+            std::shared_ptr<numa_vector<value_type>> D,
             const params& prm = params(),
             const backend_params& = backend_params())
   : prm(prm)
@@ -475,7 +475,7 @@ class ILUSolver<backend::BuiltinBackend<value_type, col_type, ptr_type>>
 
   void parallel_init(std::shared_ptr<build_matrix> L,
                      std::shared_ptr<build_matrix> U,
-                     std::shared_ptr<backend::numa_vector<value_type>> D)
+                     std::shared_ptr<numa_vector<value_type>> D)
   {
     lower = std::make_shared<sptr_solve<true>>(*L, D->data());
     upper = std::make_shared<sptr_solve<false>>(*U, D->data());

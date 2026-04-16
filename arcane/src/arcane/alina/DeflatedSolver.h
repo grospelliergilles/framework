@@ -23,9 +23,9 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/AlinaUtils.h>
-#include <arcane/alina/DenseMatrixInverseImpl.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/AlinaUtils.h"
+#include "arcane/alina/DenseMatrixInverseImpl.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -36,10 +36,9 @@ namespace Arcane::Alina
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*!
- * \brief Convenience class that bundles together a preconditioner and an iterative solver.
+ * \brief Iterative preconditioned solver with deflation.
  */
-template <class Precond,
-          class IterativeSolver>
+template <class Precond, class IterativeSolver>
 class DeflatedSolver
 : public detail::non_copyable
 {
@@ -60,21 +59,19 @@ class DeflatedSolver
 
   typedef typename math::scalar_of<value_type>::type scalar_type;
 
-  /** Combined parameters of the bundled preconditioner and the iterative
-   * solver.
+  /*!
+   * \brief Combined parameters of the bundled preconditioner
+   * and the iterative solver.
    */
   struct params
   {
-    int nvec; ///< The number of deflation vectors
-    scalar_type* vec; ///< Deflation vectors as a [nvec x n] matrix
+    int nvec = 0; ///< The number of deflation vectors
+    scalar_type* vec = nullptr; ///< Deflation vectors as a [nvec x n] matrix
 
     typename Precond::params precond; ///< Preconditioner parameters.
     typename IterativeSolver::params solver; ///< Iterative solver parameters.
 
-    params()
-    : nvec(0)
-    , vec(nullptr)
-    {}
+    params() = default;
 
     params(const PropertyTree& p)
     : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, nvec)
@@ -92,14 +89,13 @@ class DeflatedSolver
       ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, precond);
       ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solver);
     }
-
-  } prm;
+  };
 
   /** Sets up the preconditioner and creates the iterative solver. */
   template <class Matrix>
   DeflatedSolver(const Matrix& A,
-                  const params& prm = params(),
-                  const backend_params& bprm = backend_params())
+                 const params& prm = params(),
+                 const backend_params& bprm = backend_params())
   : prm(prm)
   , n(backend::nbRow(A))
   , P(A, prm.precond, bprm)
@@ -115,8 +111,8 @@ class DeflatedSolver
   // Constructs the preconditioner and creates iterative solver.
   // Takes shared pointer to the matrix in internal format.
   DeflatedSolver(std::shared_ptr<build_matrix> A,
-                  const params& prm = params(),
-                  const backend_params& bprm = backend_params())
+                 const params& prm = params(),
+                 const backend_params& bprm = backend_params())
   : prm(prm)
   , n(backend::nbRow(*A))
   , P(A, prm.precond, bprm)
@@ -136,7 +132,7 @@ class DeflatedSolver
 
     for (int i = 0; i < prm.nvec; ++i) {
       SmallSpan<scalar_type> irange(prm.vec + n * i, n);
-      Z[i] = backend_type::copy_vector(std::make_shared<backend::numa_vector<scalar_type>>(irange), bprm);
+      Z[i] = backend_type::copy_vector(std::make_shared<numa_vector<scalar_type>>(irange), bprm);
     }
 
     std::vector<scalar_type> AZ(prm.nvec);
@@ -274,6 +270,10 @@ class DeflatedSolver
               << "Preconditioner\n==============\n"
               << p.P;
   }
+
+ public:
+
+  params prm;
 
  private:
 

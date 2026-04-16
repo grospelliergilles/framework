@@ -33,7 +33,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-namespace Arcane::Alina::backend
+namespace Arcane::Alina
 {
 
 /*---------------------------------------------------------------------------*/
@@ -110,28 +110,26 @@ class numa_vector
     p = 0;
   }
 
-  inline size_t size() const
+  size_t size() const
   {
     return n;
   }
 
-  inline const T& operator[](size_t i) const
+  const T& operator[](size_t i) const
   {
     return p[i];
   }
 
-  inline T& operator[](size_t i)
+  T& operator[](size_t i)
   {
     return p[i];
   }
 
-  inline const T* data() const
-  {
+  const T* data() const  {
     return p;
   }
 
-  inline T* data()
-  {
+  T* data()  {
     return p;
   }
 
@@ -143,14 +141,14 @@ class numa_vector
 
  private:
 
-  size_t n;
-  T* p;
+  size_t n = 0;
+  T* p = nullptr;
 };
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-} // namespace Arcane::Alina::backend
+} // namespace Arcane::Alina
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

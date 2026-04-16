@@ -130,7 +130,7 @@ partition(Alina::mpi_communicator comm, const Matrix& Astrip,
   auto J = transpose(*I);
   A = product(*J, *product(*A, *I));
 
-  Alina::backend::numa_vector<rhs_type> new_rhs(J->loc_rows());
+  Alina::numa_vector<rhs_type> new_rhs(J->loc_rows());
 
   J->move_to_backend(bprm);
 
@@ -179,7 +179,7 @@ void solve_scalar(Alina::mpi_communicator comm,
 
   typename Backend::params bprm;
 
-  Alina::backend::numa_vector<double> rhs(f);
+  Alina::numa_vector<double> rhs(f);
 
   auto get_distributed_matrix = [&]() {
     auto t = prof.scoped_tic("distributed matrix");
@@ -228,7 +228,7 @@ void solve_scalar(Alina::mpi_communicator comm,
     }
   }
 
-  Alina::backend::numa_vector<double> x(chunk);
+  Alina::numa_vector<double> x(chunk);
 
   prof.tic("solve");
   Alina::SolverResult r = (*solve)(rhs, x);

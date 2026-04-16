@@ -1274,8 +1274,8 @@ spectral_radius(const DistributedMatrix<Backend>& A, int power_iters = 0)
     }
   }
   else {
-    backend::numa_vector<rhs_type> b0(n, false), b1(n, false);
-    backend::numa_vector<ptrdiff_t> rem_col(A_rem.nbNonZero(), false);
+    numa_vector<rhs_type> b0(n, false), b1(n, false);
+    numa_vector<ptrdiff_t> rem_col(A_rem.nbNonZero(), false);
 
     // Fill the initial vector with random values.
     // Also extract the inverted matrix diagonal values.

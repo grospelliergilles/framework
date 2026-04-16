@@ -413,11 +413,11 @@ pointwise_matrix(const CSRMatrix<value_type, col_type, ptr_type>& A, unsigned bl
 /*---------------------------------------------------------------------------*/
 
 /// Diagonal of a matrix
-template <typename V, typename C, typename P> std::shared_ptr<backend::numa_vector<V>>
+template <typename V, typename C, typename P> std::shared_ptr<numa_vector<V>>
 diagonal(const CSRMatrix<V, C, P>& A, bool invert = false)
 {
   const size_t n = A.nbRow();
-  auto dia = std::make_shared<backend::numa_vector<V>>(n, false);
+  auto dia = std::make_shared<numa_vector<V>>(n, false);
 
 #pragma omp parallel for
   for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i) {
@@ -490,7 +490,7 @@ spectral_radius(const Matrix& A, int power_iters = 0)
   }
   else {
     // Power method.
-    backend::numa_vector<rhs_type> b0(n, false), b1(n, false);
+    numa_vector<rhs_type> b0(n, false), b1(n, false);
 
     // Fill the initial vector with random values.
     // Also extract the inverted matrix diagonal values.

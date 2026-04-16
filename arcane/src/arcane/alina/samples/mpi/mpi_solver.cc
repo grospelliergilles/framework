@@ -212,7 +212,7 @@ partition(Alina::mpi_communicator comm, const Matrix& Astrip,
   A = product(*J, *product(*A, *I));
 
 #if defined(SOLVER_BACKEND_BUILTIN)
-  Alina::backend::numa_vector<rhs_type> new_rhs(J->loc_rows());
+  Alina::numa_vector<rhs_type> new_rhs(J->loc_rows());
 #elif defined(SOLVER_BACKEND_CUDA)
   thrust::device_vector<rhs_type> new_rhs(J->loc_rows());
 #endif
@@ -253,7 +253,7 @@ void solve_block(Alina::mpi_communicator comm,
 
   typename Backend::params bprm;
 
-  Alina::backend::numa_vector<rhs_type> rhs(reinterpret_cast<const rhs_type*>(&f[0]),
+  Alina::numa_vector<rhs_type> rhs(reinterpret_cast<const rhs_type*>(&f[0]),
                                             reinterpret_cast<const rhs_type*>(&f[0]) + chunk / B);
 
   auto get_distributed_matrix = [&]() {
@@ -305,7 +305,7 @@ void solve_block(Alina::mpi_communicator comm,
     }
   }
 
-  Alina::backend::numa_vector<rhs_type> x(chunk);
+  Alina::numa_vector<rhs_type> x(chunk);
 
   prof.tic("solve");
   Alina::SolverResult r = (*solve)(rhs, x);
@@ -350,7 +350,7 @@ void solve_scalar(Alina::mpi_communicator comm,
   typename Backend::params bprm;
 
 #if defined(SOLVER_BACKEND_BUILTIN)
-  Alina::backend::numa_vector<double> rhs(f);
+  Alina::numa_vector<double> rhs(f);
 #elif defined(SOLVER_BACKEND_CUDA)
   cusparseCreate(&bprm.cusparse_handle);
   thrust::device_vector<double> rhs(f);
@@ -404,7 +404,7 @@ void solve_scalar(Alina::mpi_communicator comm,
   }
 
 #if defined(SOLVER_BACKEND_BUILTIN)
-  Alina::backend::numa_vector<double> x(chunk);
+  Alina::numa_vector<double> x(chunk);
 #elif defined(SOLVER_BACKEND_CUDA)
   thrust::device_vector<double> x(chunk, 0.0);
 #endif

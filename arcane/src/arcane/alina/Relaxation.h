@@ -936,7 +936,7 @@ struct ILU0Relaxation
     size_t Lhead = 0;
     size_t Uhead = 0;
 
-    auto D = std::make_shared<backend::numa_vector<value_type>>(n, false);
+    auto D = std::make_shared<numa_vector<value_type>>(n, false);
 
     std::vector<value_type*> work(n, NULL);
 
@@ -1147,7 +1147,7 @@ struct ILUKRelaxation
     std::vector<int> Ulev;
     Ulev.reserve(Anz / 3);
 
-    auto D = std::make_shared<backend::numa_vector<value_type>>(n, false);
+    auto D = std::make_shared<numa_vector<value_type>>(n, false);
 
     sparse_vector w(n, prm.k);
 
@@ -1617,7 +1617,7 @@ struct ILUTRelaxation
     U->set_nonzeros(Unz);
     U->ptr[0] = 0;
 
-    auto D = std::make_shared<backend::numa_vector<value_type>>(n, false);
+    auto D = std::make_shared<numa_vector<value_type>>(n, false);
 
     sparse_vector w(n);
 
@@ -1844,7 +1844,7 @@ struct ILUTRelaxation
     void move_to(int lp, int up, scalar_type tol,
                  ptrdiff_t& Lhead, build_matrix& L,
                  ptrdiff_t& Uhead, build_matrix& U,
-                 backend::numa_vector<value_type>& D)
+                 numa_vector<value_type>& D)
     {
       typedef typename std::vector<nonzero>::iterator ptr;
 
@@ -1928,7 +1928,7 @@ struct SPAI0Relaxation
   {
     const size_t n = backend::nbRow(A);
 
-    auto m = std::make_shared<backend::numa_vector<value_type>>(n, false);
+    auto m = std::make_shared<numa_vector<value_type>>(n, false);
 
 #pragma omp parallel for
     for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i) {

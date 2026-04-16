@@ -432,10 +432,10 @@ class DistributedSchurPressureCorrection
     tmp = backend_type::create_vector(nu, bprm);
 
     if (prm.approx_schur) {
-      std::shared_ptr<backend::numa_vector<value_type>> Kuu_dia;
+      std::shared_ptr<numa_vector<value_type>> Kuu_dia;
       ARCANE_ALINA_TIC("Kuu diagonal");
       if (prm.simplec_dia) {
-        Kuu_dia = std::make_shared<backend::numa_vector<value_type>>(nu, false);
+        Kuu_dia = std::make_shared<numa_vector<value_type>>(nu, false);
 #pragma omp parallel
         for (ptrdiff_t i = 0; i < nu; ++i) {
           value_type s = math::zero<value_type>();

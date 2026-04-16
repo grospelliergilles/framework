@@ -207,7 +207,7 @@ struct DistributedSPAI0Relaxation
     const build_matrix& A_loc = *A.local();
     const build_matrix& A_rem = *A.remote();
 
-    auto m = std::make_shared<backend::numa_vector<value_type>>(n, false);
+    auto m = std::make_shared<numa_vector<value_type>>(n, false);
     typedef CSRMatrix<value_type> build_matrix;
 
 #pragma omp parallel for

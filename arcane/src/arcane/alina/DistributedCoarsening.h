@@ -355,7 +355,7 @@ struct DistributedPMISAggregation
     scalar_type eps_squared = eps_strong * eps_strong;
 
     auto d = diagonal(A_loc);
-    backend::numa_vector<val_type>& D = *d;
+    numa_vector<val_type>& D = *d;
 
     std::vector<val_type> D_loc(C.send.count());
     std::vector<val_type> D_rem(C.recv.count());
@@ -1335,8 +1335,8 @@ struct DistributedSmoothedAggregationCoarsening
     build_matrix& Af_loc = *af_loc;
     build_matrix& Af_rem = *af_rem;
 
-    backend::numa_vector<value_type> Af_loc_val(S_loc.nbNonZero(), false);
-    backend::numa_vector<value_type> Af_rem_val(S_rem.nbNonZero(), false);
+    numa_vector<value_type> Af_loc_val(S_loc.nbNonZero(), false);
+    numa_vector<value_type> Af_rem_val(S_rem.nbNonZero(), false);
 
     Af_loc.own_data = false;
     Af_loc.setNbRow(S_loc.nbRow());
@@ -1354,7 +1354,7 @@ struct DistributedSmoothedAggregationCoarsening
     Af_rem.col.setPointerZeroCopy(S_rem.col.data());
     Af_rem.val.setPointerZeroCopy(Af_rem_val.data());
 
-    backend::numa_vector<value_type> Df(n, false);
+    numa_vector<value_type> Df(n, false);
 
 #pragma omp parallel for
     for (ptrdiff_t i = 0; i < n; ++i) {

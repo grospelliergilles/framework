@@ -797,7 +797,7 @@ class reorder
  private:
 
   ptrdiff_t n;
-  backend::numa_vector<ptrdiff_t> perm, iperm;
+  numa_vector<ptrdiff_t> perm, iperm;
 };
 
 /*---------------------------------------------------------------------------*/

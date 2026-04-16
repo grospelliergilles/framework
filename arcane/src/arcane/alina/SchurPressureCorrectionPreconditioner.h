@@ -443,10 +443,10 @@ class SchurPressureCorrectionPreconditioner
       IO::mm_write("Kpp.mtx", *Kpp);
     }
 
-    std::shared_ptr<backend::numa_vector<value_type>> Kuu_dia;
+    std::shared_ptr<numa_vector<value_type>> Kuu_dia;
 
     if (prm.simplec_dia) {
-      Kuu_dia = std::make_shared<backend::numa_vector<value_type>>(nu);
+      Kuu_dia = std::make_shared<numa_vector<value_type>>(nu);
 #pragma omp parallel for
       for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nu); ++i) {
         value_type s = math::zero<value_type>();
@@ -463,7 +463,7 @@ class SchurPressureCorrectionPreconditioner
     if (prm.adjust_p == 1) {
       // Use (Kpp - dia(Kpu * dia(Kuu)^-1 * Kup))
       // to setup the P preconditioner.
-      auto L = std::make_shared<backend::numa_vector<value_type>>(np, false);
+      auto L = std::make_shared<numa_vector<value_type>>(np, false);
 
 #pragma omp parallel for
       for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(np); ++i) {
@@ -494,7 +494,7 @@ class SchurPressureCorrectionPreconditioner
 
       // Use (Kpp - Kpu * dia(Kuu)^-1 * Kup)
       // to setup the P preconditioner.
-      backend::numa_vector<value_type> val(Kup->nbNonZero());
+      numa_vector<value_type> val(Kup->nbNonZero());
 
 #pragma omp parallel for
       for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(nu); ++i) {
