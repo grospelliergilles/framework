@@ -21,6 +21,8 @@
 #include "arcane/utils/ITraceMng.h"
 #include "arcane/utils/IProfilingService.h"
 
+#include "arccore/base/ConcurrencyBase.h"
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -46,6 +48,7 @@ execMain(MainFunction f, int argc, char* argv[])
     ISubDomain* sd = launcher.subDomain();
     ITraceMng* tm = sd->traceMng();
     SampleMainContext ctx(tm, sd->acceleratorMng(), sd->parallelMng()->messagePassingMng());
+    std::cout << "ConcurrencyLevel=" << ConcurrencyBase::maxAllowedThread() << "\n";
     {
       ProfilingSentryWithInitialize ps_sentry(ps);
       ps_sentry.setPrintAtEnd(true);
