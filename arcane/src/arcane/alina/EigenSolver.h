@@ -23,6 +23,10 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+// Remove warnings for Eigen
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#pragma GCC diagnostic ignored "-Wint-in-bool-context"
+
 #include <Eigen/Dense>
 #include <Eigen/SparseCore>
 
