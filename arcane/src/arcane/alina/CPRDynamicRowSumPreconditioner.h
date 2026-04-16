@@ -233,15 +233,13 @@ class CPRDynamicRowSumPreconditioner
       App->set_size(np, np, true);
     }
 
-#pragma omp parallel
-    {
+    arccoreParallelFor(0, np, ForLoopRunInfo{}, [&](Int32 begin_ip, Int32 ip_size) {
       std::vector<value_type> a_dia(B), a_off(B), a_top(B);
       std::vector<row_iterator> k;
       k.reserve(B);
 
-#pragma omp for
-      for (ptrdiff_t ip = 0; ip < static_cast<ptrdiff_t>(np); ++ip) {
-        ptrdiff_t ik = ip * B;
+      for (Int32 ip = begin_ip; ip < (begin_ip + ip_size); ++ip) {
+        Int32 ik = ip * B;
         bool done = true;
         ptrdiff_t cur_col = 0;
 
@@ -327,7 +325,7 @@ class CPRDynamicRowSumPreconditioner
 
         fpp->ptr[ip + 1] = ik + B;
       }
-    }
+    });
 
     App->set_nonzeros(App->scan_row_sizes());
 
@@ -340,9 +338,8 @@ class CPRDynamicRowSumPreconditioner
     const int B = prm.block_size;
     const ptrdiff_t N = (prm.active_rows ? prm.active_rows : n);
 
-    precondition(
-    prm.weights.empty() || prm.weights.size() == static_cast<size_t>(N),
-    "CPR: weights size is not equal to number of active rows.");
+    precondition(prm.weights.empty() || prm.weights.size() == static_cast<size_t>(N),
+                 "CPR: weights size is not equal to number of active rows.");
 
     np = N / B;
 
@@ -354,13 +351,11 @@ class CPRDynamicRowSumPreconditioner
     scatter->set_nonzeros(np);
     scatter->ptr[0] = 0;
 
-#pragma omp parallel
-    {
+    arccoreParallelFor(0, np, ForLoopRunInfo{}, [&](Int32 begin_ip, Int32 ip_size) {
       std::vector<row_iterator> k;
       k.reserve(B);
 
-#pragma omp for
-      for (ptrdiff_t ip = 0; ip < static_cast<ptrdiff_t>(np); ++ip) {
+      for (ptrdiff_t ip = begin_ip; ip < (begin_ip + ip_size); ++ip) {
         ptrdiff_t ik = ip * B;
         ptrdiff_t head = App->ptr[ip];
         bool done = true;
@@ -426,7 +421,7 @@ class CPRDynamicRowSumPreconditioner
           scatter->ptr[ik + i + 1] = nnz;
         }
       }
-    }
+    });
 
     for (size_t i = N; i < n; ++i)
       scatter->ptr[i + 1] = scatter->ptr[i];
@@ -478,64 +473,65 @@ class CPRDynamicRowSumPreconditioner
     App->set_nonzeros(K->nbNonZero());
     App->ptr[0] = 0;
 
-#pragma omp parallel for
-    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(np); ++i) {
-      ptrdiff_t ik = i * B;
-      for (int k = 0; k < B; ++k, ++ik) {
-        fpp->col[ik] = ik;
-        scatter->ptr[ik + 1] = i + 1;
-      }
-      fpp->ptr[i + 1] = ik;
-      scatter->col[i] = i;
-      scatter->val[i] = math::identity<value_type_p>();
+    arccoreParallelFor(0, np, ForLoopRunInfo{}, [&](Int32 begin_ip, Int32 ip_size) {
+      for (ptrdiff_t i = begin_ip; i < (begin_ip + ip_size); ++i) {
+        ptrdiff_t ik = i * B;
+        for (int k = 0; k < B; ++k, ++ik) {
+          fpp->col[ik] = ik;
+          scatter->ptr[ik + 1] = i + 1;
+        }
+        fpp->ptr[i + 1] = ik;
+        scatter->col[i] = i;
+        scatter->val[i] = math::identity<value_type_p>();
 
-      ptrdiff_t row_beg = K->ptr[i];
-      ptrdiff_t row_end = K->ptr[i + 1];
-      App->ptr[i + 1] = row_end;
+        ptrdiff_t row_beg = K->ptr[i];
+        ptrdiff_t row_end = K->ptr[i + 1];
+        App->ptr[i + 1] = row_end;
 
-      value_type_p* d = &fpp->val[i * B];
-      const double* w = prm.weights.empty() ? nullptr : &prm.weights[i * B];
+        value_type_p* d = &fpp->val[i * B];
+        const double* w = prm.weights.empty() ? nullptr : &prm.weights[i * B];
 
-      std::array<value_type_p, B> a_dia{};
-      std::array<value_type_p, B> a_off{};
-      std::array<value_type_p, B> a_top{};
+        std::array<value_type_p, B> a_dia{};
+        std::array<value_type_p, B> a_off{};
+        std::array<value_type_p, B> a_top{};
 
-      for (ptrdiff_t j = row_beg; j < row_end; ++j) {
-        ptrdiff_t c = K->col[j];
-        value_type v = K->val[j];
+        for (ptrdiff_t j = row_beg; j < row_end; ++j) {
+          ptrdiff_t c = K->col[j];
+          value_type v = K->val[j];
+
+          for (int k = 0; k < B; ++k) {
+            a_top[k] += std::abs(v(0, k));
+            if (c == i) {
+              a_dia[k] = v(k, 0);
+            }
+            else {
+              a_off[k] += std::abs(v(k, 0));
+            }
+          }
+        }
 
         for (int k = 0; k < B; ++k) {
-          a_top[k] += std::abs(v(0, k));
-          if (c == i) {
-            a_dia[k] = v(k, 0);
+          if (k > 0 &&
+              (a_dia[k] < prm.eps_dd * a_off[k] ||
+               a_top[k] < prm.eps_ps * std::abs(a_dia[0]))) {
+            d[k] = 0;
           }
           else {
-            a_off[k] += std::abs(v(k, 0));
+            d[k] = w ? w[k] : 1.0;
           }
         }
-      }
 
-      for (int k = 0; k < B; ++k) {
-        if (k > 0 &&
-            (a_dia[k] < prm.eps_dd * a_off[k] ||
-             a_top[k] < prm.eps_ps * std::abs(a_dia[0]))) {
-          d[k] = 0;
+        for (ptrdiff_t j = row_beg; j < row_end; ++j) {
+          App->col[j] = K->col[j];
+
+          value_type_p app = 0;
+          for (int k = 0; k < B; ++k)
+            app += d[k] * K->val[j](k, 0);
+
+          App->val[j] = app;
         }
-        else {
-          d[k] = w ? w[k] : 1.0;
-        }
       }
-
-      for (ptrdiff_t j = row_beg; j < row_end; ++j) {
-        App->col[j] = K->col[j];
-
-        value_type_p app = 0;
-        for (int k = 0; k < B; ++k)
-          app += d[k] * K->val[j](k, 0);
-
-        App->val[j] = app;
-      }
-    }
+    });
 
     ARCANE_ALINA_TIC("pprecond");
     P = std::make_shared<PPrecond>(App, prm.pprecond, bprm);
@@ -557,9 +553,8 @@ class CPRDynamicRowSumPreconditioner
     const int B = math::static_rows<value_type>::value;
     const ptrdiff_t N = (prm.active_rows ? prm.active_rows : n);
 
-    precondition(
-    prm.weights.empty() || prm.weights.size() == static_cast<size_t>(N * B),
-    "CPR: weights size is not equal to number of active rows.");
+    precondition(prm.weights.empty() || prm.weights.size() == static_cast<size_t>(N * B),
+                 "CPR: weights size is not equal to number of active rows.");
 
     np = N;
 
@@ -568,51 +563,53 @@ class CPRDynamicRowSumPreconditioner
     fpp->set_nonzeros(np * B);
     fpp->ptr[0] = 0;
 
-#pragma omp parallel for
-    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(np); ++i) {
-      ptrdiff_t ik = i * B;
-      for (int k = 0; k < B; ++k, ++ik) {
-        fpp->col[ik] = ik;
-      }
-      fpp->ptr[i + 1] = ik;
+    arccoreParallelFor(0, np, ForLoopRunInfo{}, [&](Int32 begin_ip, Int32 ip_size) {
+      for (ptrdiff_t i = begin_ip; i < (begin_ip + ip_size); ++i) {
 
-      ptrdiff_t row_beg = K->ptr[i];
-      ptrdiff_t row_end = K->ptr[i + 1];
+        ptrdiff_t ik = i * B;
+        for (int k = 0; k < B; ++k, ++ik) {
+          fpp->col[ik] = ik;
+        }
+        fpp->ptr[i + 1] = ik;
 
-      value_type_p* d = &fpp->val[i * B];
-      const double* w = prm.weights.empty() ? nullptr : &prm.weights[i * B];
+        ptrdiff_t row_beg = K->ptr[i];
+        ptrdiff_t row_end = K->ptr[i + 1];
 
-      std::array<value_type_p, B> a_dia{};
-      std::array<value_type_p, B> a_off{};
-      std::array<value_type_p, B> a_top{};
+        value_type_p* d = &fpp->val[i * B];
+        const double* w = prm.weights.empty() ? nullptr : &prm.weights[i * B];
 
-      for (ptrdiff_t j = row_beg; j < row_end; ++j) {
-        ptrdiff_t c = K->col[j];
-        value_type v = K->val[j];
+        std::array<value_type_p, B> a_dia{};
+        std::array<value_type_p, B> a_off{};
+        std::array<value_type_p, B> a_top{};
+
+        for (ptrdiff_t j = row_beg; j < row_end; ++j) {
+          ptrdiff_t c = K->col[j];
+          value_type v = K->val[j];
+
+          for (int k = 0; k < B; ++k) {
+            a_top[k] += std::abs(v(0, k));
+            if (c == i) {
+              a_dia[k] = v(k, 0);
+            }
+            else {
+              a_off[k] += std::abs(v(k, 0));
+            }
+          }
+        }
 
         for (int k = 0; k < B; ++k) {
-          a_top[k] += std::abs(v(0, k));
-          if (c == i) {
-            a_dia[k] = v(k, 0);
+          if (k > 0 &&
+              (a_dia[k] < prm.eps_dd * a_off[k] ||
+               a_top[k] < prm.eps_ps * std::abs(a_dia[0]))) {
+            d[k] = 0;
           }
           else {
-            a_off[k] += std::abs(v(k, 0));
+            d[k] = w ? w[k] : 1.0;
           }
         }
       }
-
-      for (int k = 0; k < B; ++k) {
-        if (k > 0 &&
-            (a_dia[k] < prm.eps_dd * a_off[k] ||
-             a_top[k] < prm.eps_ps * std::abs(a_dia[0]))) {
-          d[k] = 0;
-        }
-        else {
-          d[k] = w ? w[k] : 1.0;
-        }
-      }
-    }
-    Fpp = backend_type_p::copy_matrix(fpp, bprm);
+      Fpp = backend_type_p::copy_matrix(fpp, bprm);
+    });
   }
 
   friend std::ostream& operator<<(std::ostream& os, const CPRDynamicRowSumPreconditioner& p)

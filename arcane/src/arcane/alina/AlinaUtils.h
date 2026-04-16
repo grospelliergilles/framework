@@ -31,6 +31,8 @@
 
 #include "arccore/base/Ref.h"
 #include "arccore/base/FatalErrorException.h"
+#include "arccore/base/ForLoopRunInfo.h"
+#include "arccore/concurrency/ParallelFor.h"
 
 #include <set>
 #include <complex>
