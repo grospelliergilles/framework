@@ -42,6 +42,9 @@
 #include "arcane/alina/SkylineLUSolver.h"
 #include "arcane/alina/MatrixOperationsImpl.h"
 
+#include "arccore/base/ConcurrencyBase.h"
+#include "arccore/common/SmallArray.h"
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -294,13 +297,10 @@ struct inner_product_impl<Vec1, Vec2,
 
   static return_type get(const Vec1& x, const Vec2& y)
   {
-#ifdef _OPENMP
-    if (omp_get_max_threads() > 1) {
+    if (ConcurrencyBase::maxAllowedThread() > 1) {
       return parallel(x, y);
     }
-    else
-#endif
-    {
+    else {
       return serial(x, y);
     }
   }
@@ -322,51 +322,38 @@ struct inner_product_impl<Vec1, Vec2,
     return s;
   }
 
-#ifdef _OPENMP
-#ifndef ARCANE_ALINA_MAX_OPENMP_THREADS
-#define ARCANE_ALINA_MAX_OPENMP_THREADS 64
-#endif
   static return_type parallel(const Vec1& x, const Vec2& y)
   {
     const size_t n = x.size();
-    return_type _sum_stat[ARCANE_ALINA_MAX_OPENMP_THREADS];
-    std::vector<return_type> _sum_dyna;
-    return_type* sum;
-
-    const int nt = omp_get_max_threads();
-
-    if (nt < 64) {
-      sum = _sum_stat;
-      for (int i = 0; i < nt; ++i) {
-        sum[i] = math::zero<return_type>();
-      }
-    }
-    else {
-      _sum_dyna.resize(nt, math::zero<return_type>());
-      sum = _sum_dyna.data();
-    }
-
-#pragma omp parallel
-    {
-      const int tid = omp_get_thread_num();
-
-      return_type s = math::zero<return_type>();
-      return_type c = math::zero<return_type>();
-
-#pragma omp for nowait
-      for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(n); ++i) {
+    // TODO: Use padding to avoir sharing cache line between threads
+    SmallArray<return_type, 256> sum_array;
+    Int32 nb_thread = ConcurrencyBase::maxAllowedThread();
+    const return_type zero = math::zero<return_type>();
+    sum_array.resize(nb_thread, zero);
+    SmallSpan<return_type> sum = sum_array.view();
+    for (Int32 i = 0; i < nb_thread; ++i)
+      sum[i] = zero;
+    // NOTE GG: NOT reproducible
+    
+    arccoreParallelFor(0, n, ForLoopRunInfo{}, [&](Int32 begin, Int32 size) {
+      const int tid = TaskFactory::currentTaskThreadIndex();
+      return_type s = zero;
+      return_type c = zero;
+      for (ptrdiff_t i = begin; i < (begin + size); ++i) {
         return_type d = math::inner_product(x[i], y[i]) - c;
         return_type t = s + d;
         c = (t - s) - d;
         s = t;
       }
 
-      sum[tid] = s;
+      sum[tid] += s;
+    });
+    return_type total = zero;
+    for (Int32 i = 0; i < nb_thread; ++i) {
+      total += sum[i];
     }
-
-    return std::accumulate(sum, sum + nt, math::zero<return_type>());
+    return total;
   }
-#endif
 };
 
 /*---------------------------------------------------------------------------*/
