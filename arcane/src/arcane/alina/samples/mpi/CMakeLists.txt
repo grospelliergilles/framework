@@ -58,13 +58,15 @@ add_mpi_example_no_test(solve_mm_mpi solve_mm_mpi.cc)
 # Exception dans boost lors du test
 add_mpi_example_no_test(cpr_mpi cpr_mpi.cc)
 
-if (TARGET Metis::metis)
-  add_executable(partition partition.cc)
-  target_link_libraries(partition
-    arcane_alina
-    Metis::metis
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
-  )
+if(Parmetis_FOUND)
+  message(STATUS "Found Parmetis for Alina")
+  target_compile_definitions(arcane_alina PUBLIC ARCANE_ALINA_HAVE_PARMETIS ARCANE_ALINA_HAVE_PARMETIS)
+  target_link_libraries(arcane_alina PUBLIC arccon::Parmetis)
+endif()
+
+if (TARGET arccon::Parmetis)
+  add_mpi_example_no_test(partition partition.cc 2)
+  target_link_libraries(partition PUBLIC arccon::Parmetis ${Boost_PROGRAM_OPTIONS_LIBRARY})
 endif()
 
 #target_link_libraries(call_mpi_lib PUBLIC arcane_alina_mpi_clib)

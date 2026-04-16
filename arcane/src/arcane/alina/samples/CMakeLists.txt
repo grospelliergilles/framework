@@ -66,6 +66,7 @@ add_arcane_alina_example(ns_search ns_search.cc ${SAMPLE_MATRIX_ARGS})
 add_arcane_alina_example_no_test(schur_pressure_correction schur_pressure_correction.cc)
 add_arcane_alina_example_no_test(schurpc_mixed schurpc_mixed.cc)
 add_arcane_alina_example_no_test(deflated_solver DeflatedSolver.cc)
+add_arcane_alina_example(poisson2d poisson2d.cc)
 
 if (TARGET eigen_target)
   add_arcane_alina_example(solver_eigen solver.cc)
