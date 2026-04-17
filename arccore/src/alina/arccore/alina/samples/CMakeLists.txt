@@ -39,46 +39,46 @@ function(add_arccore_alina_example EXAMPLE SOURCES)
   set_property(TEST ${TEST_NAME} APPEND PROPERTY ENVIRONMENT "OMP_NUM_THREADS=2")
 endfunction()
 
-add_arccore_alina_example_no_test(mm2bin mm2bin.cc)
-add_arccore_alina_example_no_test(bin2mm bin2mm.cc)
+add_arccore_alina_example_no_test(mm2bin MatrixMarkerToBinary.cc)
+add_arccore_alina_example_no_test(bin2mm BinaryToMatrixMarket.cc)
 
 arcane_find_package(Hypre)
 
-add_arccore_alina_example(basic_solver basic_solver.cc)
+add_arccore_alina_example(basic_solver BasicSolver.cc)
 target_sources(basic_solver PUBLIC HypreComparer.cc)
 arcane_add_arccon_packages(basic_solver PRIVATE Hypre)
 
-add_arccore_alina_example(solver solver.cc)
+add_arccore_alina_example(solver Solver.cc)
 target_sources(solver PUBLIC HypreComparer.cc)
 arcane_add_arccon_packages(solver PRIVATE Hypre)
 
-add_arccore_alina_example(solver_complex solver_complex.cc)
-add_arccore_alina_example(crs_builder adapter_crs_builder.cc)
-add_arccore_alina_example(custom_adapter custom_adapter.cc)
-add_arccore_alina_example(mixed_precision mixed_precision.cc)
+add_arccore_alina_example(solver_complex SolverComplex.cc)
+add_arccore_alina_example(crs_builder AdapterCSRBuilder.cc)
+add_arccore_alina_example(custom_adapter CustomAdapter.cc)
+add_arccore_alina_example(mixed_precision MixedPrecision.cc)
 
 set(SAMPLE_MATRIX_ARGS "--matrix" "${CMAKE_CURRENT_SOURCE_DIR}/../tests/bcsstk02.mtx")
 
-add_arccore_alina_example_no_test(block_crs backend_block_crs.cc)
-add_arccore_alina_example(cpr cpr.cc ${SAMPLE_MATRIX_ARGS})
-add_arccore_alina_example(cpr_drs cpr_drs.cc ${SAMPLE_MATRIX_ARGS})
-add_arccore_alina_example(ns_search ns_search.cc ${SAMPLE_MATRIX_ARGS})
-add_arccore_alina_example_no_test(schur_pressure_correction schur_pressure_correction.cc)
-add_arccore_alina_example_no_test(schurpc_mixed schurpc_mixed.cc)
+add_arccore_alina_example_no_test(block_crs BackendBlockCSR.cc)
+add_arccore_alina_example(cpr CPR.cc ${SAMPLE_MATRIX_ARGS})
+add_arccore_alina_example(cpr_drs CPRDynamicRowSum.cc ${SAMPLE_MATRIX_ARGS})
+add_arccore_alina_example(ns_search NonScalarSearch.cc ${SAMPLE_MATRIX_ARGS})
+add_arccore_alina_example_no_test(schur_pressure_correction SchurPressureCorrection.cc)
+add_arccore_alina_example_no_test(schurpc_mixed SCHURPreconditionerMixed.cc)
 add_arccore_alina_example_no_test(deflated_solver DeflatedSolver.cc)
-add_arccore_alina_example(poisson2d poisson2d.cc)
+add_arccore_alina_example(poisson2d Poisson2D.cc)
 
 if (TARGET eigen_target)
-  add_arccore_alina_example(solver_eigen solver.cc)
+  add_arccore_alina_example(solver_eigen Solver.cc)
   target_link_libraries(solver_eigen PUBLIC eigen_target)
   target_compile_definitions(solver_eigen PRIVATE SOLVER_BACKEND_EIGEN)
 
-  add_arccore_alina_example_no_test(schurpc_mixed_eigen schurpc_mixed.cc)
+  add_arccore_alina_example_no_test(schurpc_mixed_eigen SCHURPreconditionerMixed.cc)
   target_link_libraries(schurpc_mixed_eigen PUBLIC eigen_target)
   target_compile_definitions(schurpc_mixed_eigen PRIVATE BLOCK_TYPE_EIGEN)
 endif()
 
-add_arccore_alina_example(call_lib call_lib.cc)
+add_arccore_alina_example(call_lib AlinaLibraryUsage.cc)
 
 if (TARGET cuda_target)
   enable_language(CUDA)
@@ -130,35 +130,29 @@ endfunction()
 # car ils utilisent openmp et sinon on se retrouve avec trop
 # de processus
 
-add_mpi_example(check_direct check_direct.cc 4)
-add_mpi_example(runtime_sdd runtime_sdd.cc 2)
-add_mpi_example(runtime_sdd_3d runtime_sdd_3d.cc 2)
-add_mpi_example(runtime_bp runtime_bp.cc 2)
-add_mpi_example(call_mpi_lib call_mpi_lib.cc 2)
-add_mpi_example(test_transpose test_transpose.cc 4)
-add_mpi_example(test_spmm test_spmm.cc 4)
-add_mpi_example(spmm_scaling spmm_scaling.cc 4)
-add_mpi_example(mpi_solver mpi_solver.cc 2)
-add_mpi_example(mpi_basic_solver mpi_basic_solver.cc 2)
-add_mpi_example(mpi_complex mpi_complex.cc 2)
+add_mpi_example(check_direct DistributedCheckDirect.cc 4)
+add_mpi_example(runtime_sdd DistributedRuntimeSDD.cc 2)
+add_mpi_example(runtime_sdd_3d DistributedRuntimeSDD3D.cc 2)
+add_mpi_example(runtime_bp DistributedRuntimeBP.cc 2)
+add_mpi_example(call_mpi_lib DistributedAlinaLibraryUsage.cc 2)
+add_mpi_example(test_transpose DistributedTranspose.cc 4)
+add_mpi_example(test_spmm DistributedSPMM.cc 4)
+add_mpi_example(spmm_scaling DistributedSPMMScaling.cc 4)
+add_mpi_example(mpi_solver DistributedSolver.cc 2)
+add_mpi_example(mpi_basic_solver DistributedBasicSolver.cc 2)
+add_mpi_example(mpi_complex DistributedComplex.cc 2)
 
 # Il faut un argument 'matrix' pour le test
-add_mpi_example_no_test(schur_pc_mpi schur_pc_mpi.cc)
+add_mpi_example_no_test(schur_pc_mpi DistributedSCHUR.cc)
 
 # Il faut un fichir de partition pour le test
-add_mpi_example_no_test(solve_mm_mpi solve_mm_mpi.cc)
+add_mpi_example_no_test(solve_mm_mpi DistributedMatrixMarketSolver.cc)
 
 # Exception dans boost lors du test
-add_mpi_example_no_test(cpr_mpi cpr_mpi.cc)
-
-#if(Parmetis_FOUND)
-#  message(STATUS "Found Parmetis for Alina")
-#  target_compile_definitions(arccore_alina PUBLIC ARCCORE_ALINA_HAVE_PARMETIS ARCCORE_ALINA_HAVE_PARMETIS)
-#  target_link_libraries(arccore_alina PUBLIC arccon::Parmetis)
-#endif()
+add_mpi_example_no_test(cpr_mpi DistributedCPR.cc)
 
 if (TARGET arccon::Parmetis)
-  add_mpi_example_no_test(partition partition.cc 2)
+  add_mpi_example_no_test(partition DistributedPartition.cc 2)
   target_link_libraries(partition PUBLIC arccon::Parmetis ${Boost_PROGRAM_OPTIONS_LIBRARY})
 endif()
 

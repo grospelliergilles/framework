@@ -39,9 +39,9 @@ class rounding_error{};
 }
 #endif
 
-#include "domain_partition.h"
+#include "DomainPartition.h"
 
-#include "mba.h"
+#include "MBA.h"
 
 #include <boost/scope_exit.hpp>
 #include <memory>
@@ -83,7 +83,7 @@ struct partitioned_deflation
                         unsigned nparts)
   : nparts(nparts)
   {
-    domain_partition<2> part(LO, HI, nparts);
+    DomainPartition<2> part(LO, HI, nparts);
 
     ptrdiff_t nx = HI[0] - LO[0] + 1;
     ptrdiff_t ny = HI[1] - LO[1] + 1;
@@ -442,10 +442,10 @@ struct harmonic_deflation
 
 struct renumbering
 {
-  const domain_partition<2>& part;
+  const DomainPartition<2>& part;
   const std::vector<ptrdiff_t>& dom;
 
-  renumbering(const domain_partition<2>& p,
+  renumbering(const DomainPartition<2>& p,
               const std::vector<ptrdiff_t>& d)
   : part(p)
   , dom(d)
@@ -572,7 +572,7 @@ int main(int argc, char* argv[])
   boost::array<ptrdiff_t, 2> hi = { { n - 1, n - 1 } };
 
   prof.tic("partition");
-  domain_partition<2> part(lo, hi, world.size);
+  DomainPartition<2> part(lo, hi, world.size);
   ptrdiff_t chunk = part.size(world.rank);
 
   std::vector<ptrdiff_t> domain(world.size + 1);

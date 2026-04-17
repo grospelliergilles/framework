@@ -30,13 +30,13 @@
 BOOST_GEOMETRY_REGISTER_BOOST_ARRAY_CS(cs::cartesian)
 
 template <int NDIM>
-class domain_partition {
+class DomainPartition {
     public:
         typedef boost::array<ptrdiff_t, NDIM>      point;
         typedef boost::geometry::model::box<point> box;
         typedef std::pair<box, int>                process;
 
-        domain_partition(point lo, point hi, int num_processes) {
+        DomainPartition(point lo, point hi, int num_processes) {
             split(box(lo, hi), num_processes);
 
             for(int i = 0; i < num_processes; ++i)

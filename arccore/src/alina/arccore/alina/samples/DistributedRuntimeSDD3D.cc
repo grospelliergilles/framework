@@ -66,7 +66,7 @@ typedef Arcane::Alina::BuiltinBackend<double> Backend;
 using namespace Arcane;
 using namespace Arcane::Alina;
 
-#include "domain_partition.h"
+#include "DomainPartition.h"
 
 struct deflation_vectors
 {
@@ -102,10 +102,10 @@ struct deflation_vectors
 
 struct renumbering
 {
-  const domain_partition<3>& part;
+  const DomainPartition<3>& part;
   const std::vector<ptrdiff_t>& dom;
 
-  renumbering(const domain_partition<3>& p,
+  renumbering(const DomainPartition<3>& p,
               const std::vector<ptrdiff_t>& d)
   : part(p)
   , dom(d)
@@ -218,7 +218,7 @@ int main(int argc, char* argv[])
   boost::array<ptrdiff_t, 3> hi = { { n - 1, n - 1, n - 1 } };
 
   prof.tic("partition");
-  domain_partition<3> part(lo, hi, world.size);
+  DomainPartition<3> part(lo, hi, world.size);
   ptrdiff_t chunk = part.size(world.rank);
 
   std::vector<ptrdiff_t> domain(world.size + 1);

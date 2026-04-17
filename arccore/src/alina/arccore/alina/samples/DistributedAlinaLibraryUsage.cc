@@ -29,7 +29,7 @@
 #include "AlinaSamplesCommon.h"
 #include "arccore/trace/ITraceMng.h"
 
-#include "domain_partition.h"
+#include "DomainPartition.h"
 
 double constant_deflation(int, ptrdiff_t, void*)
 {
@@ -56,7 +56,7 @@ int main2(const Alina::SampleMainContext& ctx, int argc, char* argv[])
   boost::array<ptrdiff_t, 2> lo = { { 0, 0 } };
   boost::array<ptrdiff_t, 2> hi = { { n - 1, n - 1 } };
 
-  domain_partition<2> part(lo, hi, size);
+  DomainPartition<2> part(lo, hi, size);
   ptrdiff_t chunk = part.size(rank);
 
   std::vector<ptrdiff_t> domain(size + 1);
