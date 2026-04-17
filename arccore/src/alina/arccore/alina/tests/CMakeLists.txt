@@ -1,10 +1,10 @@
 ﻿#----------------------------------------------------------------------------
 # Tests for Alina
 #----------------------------------------------------------------------------
-add_library(arcane_alina_test INTERFACE)
+add_library(arccore_alina_test INTERFACE)
 
 if (NOT Boost_USE_STATIC_LIBS)
-  target_compile_definitions(arcane_alina_test INTERFACE BOOST_TEST_DYN_LINK)
+  target_compile_definitions(arccore_alina_test INTERFACE BOOST_TEST_DYN_LINK)
 endif ()
 
 # ----------------------------------------------------------------------------
@@ -32,12 +32,12 @@ endif()
 set(ACCELERATOR_FILES
 )
 
-arcane_add_component_test_executable(alina
+arccore_add_component_test_executable(alina
   FILES ${SOURCE_FILES} ${ACCELERATOR_FILES}
 )
-target_include_directories(arcane_alina.tests INTERFACE ${Boost_INCLUDE_DIRS})
+target_include_directories(arccore_alina.tests INTERFACE ${Boost_INCLUDE_DIRS})
 
-target_link_libraries(arcane_alina.tests PUBLIC
+target_link_libraries(arccore_alina.tests PUBLIC
   arccore_alina
   ${Boost_SYSTEM_LIBRARY}
   ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
@@ -46,7 +46,7 @@ target_link_libraries(arcane_alina.tests PUBLIC
 )
 
 if (TARGET eigen_target)
-  target_link_libraries(arcane_alina.tests PUBLIC eigen_target)
+  target_link_libraries(arccore_alina.tests PUBLIC eigen_target)
 endif()
 
 
@@ -55,7 +55,7 @@ endif()
 # On fixe en dur le nombre de threads sinon on utilise tous
 # les coeurs disponibles.
 
-gtest_discover_tests(arcane_alina.tests
+gtest_discover_tests(arccore_alina.tests
   DISCOVERY_TIMEOUT 30
   PROPERTIES ENVIRONMENT "OMP_NUM_THREADS=2"
 )
