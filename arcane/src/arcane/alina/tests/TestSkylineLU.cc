@@ -4,7 +4,7 @@
 #include <arcane/alina/SkylineLUSolver.h>
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/Profiler.h>
-#include "sample_problem.h"
+#include "SampleProblemCommon.h"
 
 namespace
 {

@@ -3,7 +3,7 @@
 #include <arcane/alina/ValueTypeComplex.h>
 #include <arcane/alina/BuiltinBackend.h>
 
-#include "test_solver.h"
+#include "TestSolverCommon.h"
 
 TEST(alina_test_solvers, test_builtin_complex_backend)
 {

@@ -11,7 +11,7 @@
 #include <arcane/alina/ConjugateGradientSolver.h>
 #include <arcane/alina/Profiler.h>
 
-#include "sample_problem.h"
+#include "SampleProblemCommon.h"
 
 using namespace Arcane;
 using namespace Arcane::Alina;

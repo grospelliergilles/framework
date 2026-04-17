@@ -2,7 +2,7 @@
 #include <vector>
 
 #include <../AlinaLib.h>
-#include "sample_problem.h"
+#include "SampleProblemCommon.h"
 
 int main()
 {

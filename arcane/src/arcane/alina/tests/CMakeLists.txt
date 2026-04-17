@@ -10,21 +10,22 @@ endif ()
 # ----------------------------------------------------------------------------
 
 set(SOURCE_FILES
-  test_qr.cc
-  test_skyline_lu.cc
-  test_complex_erf.cc
-  test_solver_builtin.cc
-  test_solver_complex.cc
-  test_solver_block_crs.cc
-  test_solver_ns_builtin.cc
-  test_io.cc
-  test_static_matrix.cc
+  SampleProblemCommon.h
+  TestQR.cc
+  TestSkylineLU.cc
+  TestComplexErf.cc
+  TestSolverBuiltin.cc
+  TestSolverComplex.cc
+  TestSolverBlockCSR.cc
+  TestSolverBuiltinNonScalar.cc
+  TestIO.cc
+  TestStaticMatrix.cc
 )
 if (TARGET eigen_target)
   list(APPEND SOURCE_FILES
-    test_eigen_solver.cc
-    test_solver_eigen.cc
-    test_solver_ns_eigen.cc
+    TestEigenSolver.cc
+    TestSolverEigen.cc
+    TestSolverEigenNonScalar.cc
   )
 endif()
 

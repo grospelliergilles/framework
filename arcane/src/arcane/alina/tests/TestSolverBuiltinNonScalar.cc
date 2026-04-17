@@ -3,7 +3,7 @@
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/StaticMatrix.h>
 
-#include "test_solver.h"
+#include "TestSolverCommon.h"
 
 TEST(alina_test_solvers, test_nonscalar_backend)
 {

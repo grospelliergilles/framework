@@ -13,7 +13,7 @@
 #include <boost/assign/std/vector.hpp>
 using namespace boost::assign;
 
-#include "sample_problem.h"
+#include "SampleProblemCommon.h"
 
 using namespace Arcane;
 

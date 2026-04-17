@@ -27,7 +27,7 @@
 #include "AlinaSamplesCommon.h"
 #include "arccore/trace/ITraceMng.h"
 
-#include "sample_problem.h"
+#include "SampleProblemCommon.h"
 
 using namespace Arcane;
 using Alina::precondition;

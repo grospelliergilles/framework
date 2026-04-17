@@ -6,7 +6,7 @@
 
 #include <arcane/alina/EigenBackend.h>
 
-#include "test_solver.h"
+#include "TestSolverCommon.h"
 
 TEST(alina_test_solvers, test_eigen_backend)
 {

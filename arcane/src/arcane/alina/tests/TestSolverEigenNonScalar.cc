@@ -7,7 +7,7 @@
 #include <arcane/alina/BuiltinBackend.h>
 #include <arcane/alina/ValueTypeEigen.h>
 
-#include "test_solver.h"
+#include "TestSolverCommon.h"
 
 TEST(alina_test_solvers, test_nonscalar_backend_eigen)
 {

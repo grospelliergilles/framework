@@ -44,7 +44,7 @@ using Backend = Arcane::Alina::BuiltinBackend<double, Arcane::Int32>;
 
 #include <arcane/alina/Profiler.h>
 
-#include "sample_problem.h"
+#include "SampleProblemCommon.h"
 
 #ifndef ARCANE_ALINA_BLOCK_SIZES
 #define ARCANE_ALINA_BLOCK_SIZES (3)(4)
