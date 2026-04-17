@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Profiler class.                                                           */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_PROFILER_H
-#define ARCANE_ALINA_PROFILER_H
+#ifndef ARCCORE_ALINA_PROFILER_H
+#define ARCCORE_ALINA_PROFILER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -46,7 +46,7 @@ namespace Arcane::Alina
  *
  * Provides simple to use, hierarchical profile with nicely formatted output.
  */
-class ARCANE_ALINA_EXPORT Profiler
+class ARCCORE_ALINA_EXPORT Profiler
 {
   static constexpr unsigned int SHIFT_WIDTH = 2;
 

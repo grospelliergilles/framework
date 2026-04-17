@@ -9,8 +9,8 @@
 /*                                                                           */
 /* backend using Cuda runtime.                                               */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_CUDABACKEND_H
-#define ARCANE_ALINA_CUDABACKEND_H
+#ifndef ARCCORE_ALINA_CUDABACKEND_H
+#define ARCCORE_ALINA_CUDABACKEND_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -103,39 +103,39 @@ cuda_check(cudaError_t rc, const char* file, int line)
   }
 }
 
-#define ARCANE_ALINA_CALL_CUDA(rc) \
+#define ARCCORE_ALINA_CALL_CUDA(rc) \
   Arcane::Alina::backend::detail::cuda_check(rc, __FILE__, __LINE__)
 
 struct cuda_deleter
 {
   void operator()(cusparseMatDescr_t handle)
   {
-    ARCANE_ALINA_CALL_CUDA(cusparseDestroyMatDescr(handle));
+    ARCCORE_ALINA_CALL_CUDA(cusparseDestroyMatDescr(handle));
   }
 
   void operator()(cusparseSpMatDescr_t handle)
   {
-    ARCANE_ALINA_CALL_CUDA(cusparseDestroySpMat(handle));
+    ARCCORE_ALINA_CALL_CUDA(cusparseDestroySpMat(handle));
   }
 
   void operator()(cusparseDnVecDescr_t handle)
   {
-    ARCANE_ALINA_CALL_CUDA(cusparseDestroyDnVec(handle));
+    ARCCORE_ALINA_CALL_CUDA(cusparseDestroyDnVec(handle));
   }
 
   void operator()(cudaEvent_t handle)
   {
-    ARCANE_ALINA_CALL_CUDA(cudaEventDestroy(handle));
+    ARCCORE_ALINA_CALL_CUDA(cudaEventDestroy(handle));
   }
 
   void operator()(csrilu02Info_t handle)
   {
-    ARCANE_ALINA_CALL_CUDA(cusparseDestroyCsrilu02Info(handle));
+    ARCCORE_ALINA_CALL_CUDA(cusparseDestroyCsrilu02Info(handle));
   }
 
   void operator()(cusparseSpSVDescr_t handle)
   {
-    ARCANE_ALINA_CALL_CUDA(cusparseSpSV_destroyDescr(handle));
+    ARCCORE_ALINA_CALL_CUDA(cusparseSpSV_destroyDescr(handle));
   }
 };
 
@@ -152,7 +152,7 @@ template <typename real>
 cusparseDnVecDescr_t cuda_vector_description(thrust::device_vector<real>& x)
 {
   cusparseDnVecDescr_t desc;
-  ARCANE_ALINA_CALL_CUDA(cusparseCreateDnVec(&desc,
+  ARCCORE_ALINA_CALL_CUDA(cusparseCreateDnVec(&desc,
                                              x.size(),
                                              thrust::raw_pointer_cast(&x[0]),
                                              cuda_datatype<real>()));
@@ -163,7 +163,7 @@ template <typename real> cusparseDnVecDescr_t
 cuda_vector_description(const thrust::device_vector<real>&& x)
 {
   cusparseDnVecDescr_t desc;
-  ARCANE_ALINA_CALL_CUDA(
+  ARCCORE_ALINA_CALL_CUDA(
   cusparseCreateDnVec(&desc,
                       x.size(),
                       thrust::raw_pointer_cast(&x[0]),
@@ -180,7 +180,7 @@ cuda_matrix_description(size_t nrows,
                         thrust::device_vector<real>& val)
 {
   cusparseSpMatDescr_t desc;
-  ARCANE_ALINA_CALL_CUDA(
+  ARCCORE_ALINA_CALL_CUDA(
   cusparseCreateCsr(&desc,
                     nrows,
                     ncols,
@@ -241,7 +241,7 @@ class cuda_matrix
     backend::detail::cuda_deleter());
 
     size_t buf_size;
-    ARCANE_ALINA_CALL_CUDA(
+    ARCCORE_ALINA_CALL_CUDA(
     cusparseSpMV_bufferSize(handle,
                             CUSPARSE_OPERATION_NON_TRANSPOSE,
                             &alpha,
@@ -256,7 +256,7 @@ class cuda_matrix
     if (buf.size() < buf_size)
       buf.resize(buf_size);
 
-    ARCANE_ALINA_CALL_CUDA(
+    ARCCORE_ALINA_CALL_CUDA(
     cusparseSpMV(handle,
                  CUSPARSE_OPERATION_NON_TRANSPOSE,
                  &alpha,
@@ -336,14 +336,14 @@ struct cuda
     {}
 
     params(const PropertyTree& p)
-    //: ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, cusparse_handle)
+    //: ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, cusparse_handle)
     {
       //check_params(p, { "cusparse_handle" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      //ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, cusparse_handle);
+      //ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, cusparse_handle);
     }
   };
 

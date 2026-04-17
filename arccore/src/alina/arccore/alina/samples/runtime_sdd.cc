@@ -497,7 +497,7 @@ int main(int argc, char* argv[])
   "dir_solver,d",
   po::value<Alina::eDistributedDirectSolverType>(&direct_solver)->default_value(direct_solver),
   "skyline_lu"
-#ifdef ARCANE_ALINA_HAVE_PASTIX
+#ifdef ARCCORE_ALINA_HAVE_PASTIX
   ", pastix"
 #endif
   )(

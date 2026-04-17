@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Runtime-configurable solvers.                                             */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_SOLVERRUNTIME_H
-#define ARCANE_ALINA_SOLVERRUNTIME_H
+#ifndef ARCCORE_ALINA_SOLVERRUNTIME_H
+#define ARCCORE_ALINA_SOLVERRUNTIME_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -125,16 +125,16 @@ inline std::istream& operator>>(std::istream& in, eSolverType& s)
   return in;
 }
 
-#define ARCANE_ALINA_ALL_RUNTIME_SOLVER() \
-  ARCANE_ALINA_RUNTIME_SOLVER(ConjugateGradientSolver); \
-  ARCANE_ALINA_RUNTIME_SOLVER(BiCGStabSolver); \
-  ARCANE_ALINA_RUNTIME_SOLVER(BiCGStabLSolver); \
-  ARCANE_ALINA_RUNTIME_SOLVER(GMRESSolver); \
-  ARCANE_ALINA_RUNTIME_SOLVER(LooseGMRESSolver); \
-  ARCANE_ALINA_RUNTIME_SOLVER(FlexibleGMRESSolver); \
-  ARCANE_ALINA_RUNTIME_SOLVER(IDRSSolver); \
-  ARCANE_ALINA_RUNTIME_SOLVER(RichardsonSolver); \
-  ARCANE_ALINA_RUNTIME_SOLVER(PreconditionerOnlySolver)
+#define ARCCORE_ALINA_ALL_RUNTIME_SOLVER() \
+  ARCCORE_ALINA_RUNTIME_SOLVER(ConjugateGradientSolver); \
+  ARCCORE_ALINA_RUNTIME_SOLVER(BiCGStabSolver); \
+  ARCCORE_ALINA_RUNTIME_SOLVER(BiCGStabLSolver); \
+  ARCCORE_ALINA_RUNTIME_SOLVER(GMRESSolver); \
+  ARCCORE_ALINA_RUNTIME_SOLVER(LooseGMRESSolver); \
+  ARCCORE_ALINA_RUNTIME_SOLVER(FlexibleGMRESSolver); \
+  ARCCORE_ALINA_RUNTIME_SOLVER(IDRSSolver); \
+  ARCCORE_ALINA_RUNTIME_SOLVER(RichardsonSolver); \
+  ARCCORE_ALINA_RUNTIME_SOLVER(PreconditionerOnlySolver)
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -160,18 +160,18 @@ struct SolverRuntime
   : m_solver_type(prm.get("type", eSolverType::bicgstab))
   {
     if (!prm.erase("type"))
-      ARCANE_ALINA_PARAM_MISSING("type");
+      ARCCORE_ALINA_PARAM_MISSING("type");
 
     switch (m_solver_type) {
 
-#define ARCANE_ALINA_RUNTIME_SOLVER(type) \
+#define ARCCORE_ALINA_RUNTIME_SOLVER(type) \
   case eSolverType::type: \
     m_solver = new type<Backend, InnerProduct>(n, prm, bprm, inner_product); \
     break
 
-      ARCANE_ALINA_ALL_RUNTIME_SOLVER();
+      ARCCORE_ALINA_ALL_RUNTIME_SOLVER();
 
-#undef ARCANE_ALINA_RUNTIME_SOLVER
+#undef ARCCORE_ALINA_RUNTIME_SOLVER
 
     default:
       ARCCORE_FATAL("Unsupported solver type type={0}", m_solver_type);
@@ -188,13 +188,13 @@ struct SolverRuntime
   {
     switch (m_solver_type) {
 
-#define ARCANE_ALINA_RUNTIME_SOLVER(type) \
+#define ARCCORE_ALINA_RUNTIME_SOLVER(type) \
   case eSolverType::type: \
     return static_cast<type<Backend, InnerProduct>*>(m_solver)->operator()(A, P, rhs, x)
 
-      ARCANE_ALINA_ALL_RUNTIME_SOLVER();
+      ARCCORE_ALINA_ALL_RUNTIME_SOLVER();
 
-#undef ARCANE_ALINA_RUNTIME_SOLVER
+#undef ARCCORE_ALINA_RUNTIME_SOLVER
 
     default:
       ARCCORE_FATAL("Unsupported solver type type={0}", m_solver_type);
@@ -211,13 +211,13 @@ struct SolverRuntime
   {
     switch (w.m_solver_type) {
 
-#define ARCANE_ALINA_RUNTIME_SOLVER(type) \
+#define ARCCORE_ALINA_RUNTIME_SOLVER(type) \
   case eSolverType::type: \
     return os << *static_cast<type<Backend, InnerProduct>*>(w.m_solver)
 
-      ARCANE_ALINA_ALL_RUNTIME_SOLVER();
+      ARCCORE_ALINA_ALL_RUNTIME_SOLVER();
 
-#undef ARCANE_ALINA_RUNTIME_SOLVER
+#undef ARCCORE_ALINA_RUNTIME_SOLVER
 
     default:
       ARCCORE_FATAL("Unsupported solver type type={0}", w.m_solver_type);
@@ -230,7 +230,7 @@ struct SolverRuntime
   }
 };
 
-#undef ARCANE_ALINA_ALL_RUNTIME_SOLVER
+#undef ARCCORE_ALINA_ALL_RUNTIME_SOLVER
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

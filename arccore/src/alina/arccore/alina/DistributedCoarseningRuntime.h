@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Runtime wrapper for distributed coarsening schemes.                       */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDCOARSENINGRUNTIME_H
-#define ARCANE_ALINA_MPI_DISTRIBUTEDCOARSENINGRUNTIME_H
+#ifndef ARCCORE_ALINA_MPI_DISTRIBUTEDCOARSENINGRUNTIME_H
+#define ARCCORE_ALINA_MPI_DISTRIBUTEDCOARSENINGRUNTIME_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -82,7 +82,7 @@ struct DistributedCoarseningRuntime
   : c(prm.get("type", eDistributedCoarseningType::smoothed_aggregation))
   {
     if (!prm.erase("type"))
-      ARCANE_ALINA_PARAM_MISSING("type");
+      ARCCORE_ALINA_PARAM_MISSING("type");
 
     switch (c) {
     case eDistributedCoarseningType::aggregation: {

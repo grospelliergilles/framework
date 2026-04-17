@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Distributed coarsening algorithms.                                        */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDCOARSENING_H
-#define ARCANE_ALINA_MPI_DISTRIBUTEDCOARSENING_H
+#ifndef ARCCORE_ALINA_MPI_DISTRIBUTEDCOARSENING_H
+#define ARCCORE_ALINA_MPI_DISTRIBUTEDCOARSENING_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -72,18 +72,18 @@ struct DistributedPMISAggregation
     params() = default;
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_strong)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, eps_strong)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
     {
       p.check_params({ "nullspace", "eps_strong", "block_size" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, nullspace);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_strong);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, block_size);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, nullspace);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_strong);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, block_size);
     }
 
   } & prm;
@@ -191,7 +191,7 @@ struct DistributedPMISAggregation
     S_loc.ptr[0] = 0;
     S_rem.ptr[0] = 0;
 
-    ARCANE_ALINA_TIC("analyze");
+    ARCCORE_ALINA_TIC("analyze");
 #pragma omp parallel
     {
       std::vector<ptrdiff_t> loc_marker(A_rows, -1);
@@ -259,12 +259,12 @@ struct DistributedPMISAggregation
         S_loc.ptr[ia + 1] = rem_cols ? loc_cols : 0;
       }
     }
-    ARCANE_ALINA_TOC("analyze");
+    ARCCORE_ALINA_TOC("analyze");
 
     S_loc.set_nonzeros(S_loc.scan_row_sizes(), false);
     S_rem.set_nonzeros(S_rem.scan_row_sizes(), false);
 
-    ARCANE_ALINA_TIC("compute");
+    ARCCORE_ALINA_TIC("compute");
 #pragma omp parallel
     {
       std::vector<ptrdiff_t> loc_marker(A_rows, -1);
@@ -333,7 +333,7 @@ struct DistributedPMISAggregation
         }
       }
     }
-    ARCANE_ALINA_TOC("compute");
+    ARCCORE_ALINA_TOC("compute");
 
     return std::make_shared<DistributedMatrix<bool_backend>>(A.comm(), s_loc, s_rem);
   }
@@ -345,7 +345,7 @@ struct DistributedPMISAggregation
     typedef typename B::value_type val_type;
     typedef CSRMatrix<val_type> B_matrix;
 
-    ARCANE_ALINA_TIC("conn_strength");
+    ARCCORE_ALINA_TIC("conn_strength");
     ptrdiff_t n = A.loc_rows();
 
     const B_matrix& A_loc = *A.local();
@@ -417,7 +417,7 @@ struct DistributedPMISAggregation
         if (S_rem.val[j])
           S_rem.col[rem_head++] = A_rem.col[j];
     }
-    ARCANE_ALINA_TOC("conn_strength");
+    ARCCORE_ALINA_TOC("conn_strength");
 
     return std::make_shared<DistributedMatrix<bool_backend>>(A.comm(), s_loc, s_rem);
   }
@@ -426,7 +426,7 @@ struct DistributedPMISAggregation
                        std::vector<ptrdiff_t>& loc_state,
                        std::vector<int>& loc_owner)
   {
-    ARCANE_ALINA_TIC("PMIS");
+    ARCCORE_ALINA_TIC("PMIS");
     static const int tag_exc_cnt = 4001;
     static const int tag_exc_pts = 4002;
 
@@ -438,12 +438,12 @@ struct DistributedPMISAggregation
     mpi_communicator comm = A.comm();
 
     // 1. Get symbolic square of the connectivity matrix.
-    ARCANE_ALINA_TIC("symbolic square");
+    ARCCORE_ALINA_TIC("symbolic square");
     auto S = squared_interface(A);
     const bool_matrix& S_loc = *S->local();
     const bool_matrix& S_rem = *S->remote();
     const CommunicationPattern<bool_backend>& Sp = S->cpat();
-    ARCANE_ALINA_TOC("symbolic square");
+    ARCCORE_ALINA_TOC("symbolic square");
 
     // 2. Apply PMIS algorithm to the symbolic square.
     ptrdiff_t n_undone = 0;
@@ -643,7 +643,7 @@ struct DistributedPMISAggregation
 
     // Some of the aggregates could potentially vanish during expansion
     // step (*) above. We need to exclude those and renumber the rest.
-    ARCANE_ALINA_TIC("drop empty aggregates");
+    ARCCORE_ALINA_TIC("drop empty aggregates");
     for (ptrdiff_t i = 0, m = Sp.send.count(); i < m; ++i)
       send_owner[i] = loc_owner[Sp.send.col[i]];
     Sp.exchange(&send_owner[0], &rem_owner[0]);
@@ -721,8 +721,8 @@ struct DistributedPMISAggregation
       }
     }
 
-    ARCANE_ALINA_TOC("drop empty aggregates");
-    ARCANE_ALINA_TOC("PMIS");
+    ARCCORE_ALINA_TOC("drop empty aggregates");
+    ARCCORE_ALINA_TOC("PMIS");
 
     return naggr;
   }
@@ -736,7 +736,7 @@ struct DistributedPMISAggregation
     build_matrix& P_loc = *p_loc;
     build_matrix& P_rem = *p_rem;
 
-    ARCANE_ALINA_TIC("tentative prolongation");
+    ARCCORE_ALINA_TIC("tentative prolongation");
 
     if (int null_cols = prm.nullspace.cols) {
       ptrdiff_t nba = naggr / prm.block_size;
@@ -871,10 +871,10 @@ struct DistributedPMISAggregation
         req[2] = comm.doISend(&send_row[null_cols * p], null_cols * w, n, tag_exc_row);
       }
 
-      ARCANE_ALINA_TIC("MPI Wait");
+      ARCCORE_ALINA_TIC("MPI Wait");
       comm.waitAll(recv_req);
       comm.waitAll(send_req);
-      ARCANE_ALINA_TOC("MPI Wait");
+      ARCCORE_ALINA_TOC("MPI Wait");
 
       // Sort the fine-level points by the aggregate number.
       // The order vector contains tuples of (aggr, dof, src, dst),
@@ -990,10 +990,10 @@ struct DistributedPMISAggregation
         }
       }
 
-      ARCANE_ALINA_TIC("MPI Wait");
+      ARCCORE_ALINA_TIC("MPI Wait");
       comm.waitAll(send_req);
       comm.waitAll(recv_req);
-      ARCANE_ALINA_TOC("MPI Wait");
+      ARCCORE_ALINA_TOC("MPI Wait");
 
       // Use the P rows computed by the neighbors
       for (ptrdiff_t k = 0; k < send_dofs; ++k) {
@@ -1047,7 +1047,7 @@ struct DistributedPMISAggregation
         }
       }
     }
-    ARCANE_ALINA_TOC("tentative prolongation");
+    ARCCORE_ALINA_TOC("tentative prolongation");
 
     return std::make_shared<matrix>(comm, p_loc, p_rem);
   }
@@ -1196,16 +1196,16 @@ struct DistributedAggregationCoarsening
     params() = default;
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, over_interp)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, over_interp)
     {
       p.check_params({ "aggr", "over_interp" });
     }
 
     void get(Alina::PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, over_interp);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, over_interp);
     }
   } prm;
 
@@ -1280,20 +1280,20 @@ struct DistributedSmoothedAggregationCoarsening
     {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, relax)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, estimate_spectral_radius)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, relax)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, estimate_spectral_radius)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
     {
       p.check_params({ "aggr", "relax", "estimate_spectral_radius", "power_iters" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, relax);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, estimate_spectral_radius);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, power_iters);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, relax);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, estimate_spectral_radius);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, power_iters);
     }
   } prm;
 
@@ -1318,7 +1318,7 @@ struct DistributedSmoothedAggregationCoarsening
     bool_matrix& S_loc = *aggr.conn->local();
     bool_matrix& S_rem = *aggr.conn->remote();
 
-    ARCANE_ALINA_TIC("filtered matrix");
+    ARCCORE_ALINA_TIC("filtered matrix");
     ptrdiff_t n = A.loc_rows();
 
     scalar_type omega = prm.relax;
@@ -1390,12 +1390,12 @@ struct DistributedSmoothedAggregationCoarsening
     }
 
     auto Af = std::make_shared<DM>(comm, af_loc, af_rem);
-    ARCANE_ALINA_TOC("filtered matrix");
+    ARCCORE_ALINA_TOC("filtered matrix");
 
     // 5. Smooth tentative prolongation with the filtered matrix.
-    ARCANE_ALINA_TIC("smoothing");
+    ARCCORE_ALINA_TIC("smoothing");
     auto P = product(*Af, *aggr.p_tent);
-    ARCANE_ALINA_TOC("smoothing");
+    ARCCORE_ALINA_TOC("smoothing");
 
     return std::make_tuple(P, transpose(*P));
   }

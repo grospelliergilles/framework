@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Coarsening strategies for AMG hierarchy construction.                     */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_COARSENING_H
-#define ARCANE_ALINA_COARSENING_H
+#ifndef ARCCORE_ALINA_COARSENING_H
+#define ARCCORE_ALINA_COARSENING_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -166,14 +166,14 @@ struct plain_aggregates
     {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_strong)
+    : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, eps_strong)
     {
       p.check_params( { "eps_strong", "block_size" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_strong);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_strong);
     }
   };
 
@@ -353,7 +353,7 @@ tentative_prolongation(size_t n,
 
   auto P = std::make_shared<Matrix>();
 
-  ARCANE_ALINA_TIC("tentative");
+  ARCCORE_ALINA_TIC("tentative");
   if (nullspace.cols > 0) {
     ptrdiff_t nba = naggr / block_size;
 
@@ -448,7 +448,7 @@ tentative_prolongation(size_t n,
       }
     }
   }
-  ARCANE_ALINA_TOC("tentative");
+  ARCCORE_ALINA_TOC("tentative");
 
   return P;
 }
@@ -482,7 +482,7 @@ class pointwise_aggregates
 
     params(const PropertyTree& p)
     : plain_aggregates::params(p)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
     {
       p.check_params( { "eps_strong", "block_size" });
     }
@@ -490,7 +490,7 @@ class pointwise_aggregates
     void get(Alina::PropertyTree& p, const std::string& path) const
     {
       plain_aggregates::params::get(p, path);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, block_size);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, block_size);
     }
   };
 
@@ -669,18 +669,18 @@ struct AggregationCoarsening
     {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, over_interp)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, over_interp)
     {
       p.check_params( { "aggr", "nullspace", "over_interp" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, nullspace);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, over_interp);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, nullspace);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, over_interp);
     }
   } prm;
 
@@ -701,14 +701,14 @@ struct AggregationCoarsening
   {
     const size_t n = backend::nbRow(A);
 
-    ARCANE_ALINA_TIC("aggregates");
+    ARCCORE_ALINA_TIC("aggregates");
     Aggregates aggr(A, prm.aggr, prm.nullspace.cols);
-    ARCANE_ALINA_TOC("aggregates");
+    ARCCORE_ALINA_TOC("aggregates");
 
-    ARCANE_ALINA_TIC("interpolation");
+    ARCCORE_ALINA_TIC("interpolation");
     auto P = tentative_prolongation<Matrix>(
     n, aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
-    ARCANE_ALINA_TOC("interpolation");
+    ARCCORE_ALINA_TOC("interpolation");
 
     return std::make_tuple(P, transpose(*P));
   }
@@ -940,18 +940,18 @@ struct RugeStubenCoarsening
     params() = default;
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_strong)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, do_trunc)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_trunc)
+    : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, eps_strong)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, do_trunc)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, eps_trunc)
     {
       p.check_params( { "eps_strong", "do_trunc", "eps_trunc" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_strong);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, do_trunc);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_trunc);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_strong);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, do_trunc);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_trunc);
     }
   } prm;
 
@@ -977,12 +977,12 @@ struct RugeStubenCoarsening
     std::vector<char> cf(n, 'U');
     CSRMatrix<char, Col, Ptr> S;
 
-    ARCANE_ALINA_TIC("C/F split");
+    ARCCORE_ALINA_TIC("C/F split");
     connect(A, prm.eps_strong, S, cf);
     cfsplit(A, S, cf);
-    ARCANE_ALINA_TOC("C/F split");
+    ARCCORE_ALINA_TOC("C/F split");
 
-    ARCANE_ALINA_TIC("interpolation");
+    ARCCORE_ALINA_TIC("interpolation");
     size_t nc = 0;
     std::vector<ptrdiff_t> cidx(n);
     for (size_t i = 0; i < n; ++i)
@@ -1113,7 +1113,7 @@ struct RugeStubenCoarsening
         ++row_head;
       }
     }
-    ARCANE_ALINA_TOC("interpolation");
+    ARCCORE_ALINA_TOC("interpolation");
 
     return std::make_tuple(P, transpose(*P));
   }
@@ -1378,22 +1378,22 @@ struct SmoothedAggregationCoarserning
     params() = default;
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, relax)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, estimate_spectral_radius)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, relax)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, estimate_spectral_radius)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
     {
       p.check_params({ "aggr", "nullspace", "relax", "estimate_spectral_radius", "power_iters" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, nullspace);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, relax);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, estimate_spectral_radius);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, power_iters);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, nullspace);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, relax);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, estimate_spectral_radius);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, power_iters);
     }
   };
 
@@ -1410,10 +1410,10 @@ struct SmoothedAggregationCoarserning
 
     const size_t n = backend::nbRow(A);
 
-    ARCANE_ALINA_TIC("aggregates");
+    ARCCORE_ALINA_TIC("aggregates");
     Aggregates aggr(A, prm.aggr, prm.nullspace.cols);
     prm.aggr.eps_strong *= 0.5;
-    ARCANE_ALINA_TOC("aggregates");
+    ARCCORE_ALINA_TOC("aggregates");
 
     auto P_tent = tentative_prolongation<Matrix>(n, aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
 
@@ -1428,7 +1428,7 @@ struct SmoothedAggregationCoarserning
       omega *= static_cast<scalar_type>(2.0 / 3);
     }
 
-    ARCANE_ALINA_TIC("smoothing");
+    ARCCORE_ALINA_TIC("smoothing");
 #pragma omp parallel
     {
       std::vector<ptrdiff_t> marker(P->ncols, -1);
@@ -1506,7 +1506,7 @@ struct SmoothedAggregationCoarserning
         }
       }
     }
-    ARCANE_ALINA_TOC("smoothing");
+    ARCCORE_ALINA_TOC("smoothing");
 
     return std::make_tuple(P, transpose(*P));
   }
@@ -1546,16 +1546,16 @@ struct SmoothedAggregationEnergyMinCoarsening
     params() {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, aggr)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, nullspace)
     {
       p.check_params( { "aggr", "nullspace" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, nullspace);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, aggr);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, nullspace);
     }
   } prm;
 
@@ -1572,12 +1572,12 @@ struct SmoothedAggregationEnergyMinCoarsening
     typedef typename backend::ptr_type<Matrix>::type Ptr;
     typedef ptrdiff_t Idx;
 
-    ARCANE_ALINA_TIC("aggregates");
+    ARCCORE_ALINA_TIC("aggregates");
     Aggregates aggr(A, prm.aggr, prm.nullspace.cols);
     prm.aggr.eps_strong *= 0.5;
-    ARCANE_ALINA_TOC("aggregates");
+    ARCCORE_ALINA_TOC("aggregates");
 
-    ARCANE_ALINA_TIC("interpolation");
+    ARCCORE_ALINA_TIC("interpolation");
     auto P_tent = tentative_prolongation<Matrix>(backend::nbRow(A), aggr.count, aggr.id, prm.nullspace, prm.aggr.block_size);
 
     // Filter the system matrix
@@ -1638,7 +1638,7 @@ struct SmoothedAggregationEnergyMinCoarsening
 
     auto P = interpolation(Af, dia, *P_tent, omega);
     auto R = restriction(Af, dia, *P_tent, omega);
-    ARCANE_ALINA_TOC("interpolation");
+    ARCCORE_ALINA_TOC("interpolation");
 
     return std::make_tuple(P, R);
   }

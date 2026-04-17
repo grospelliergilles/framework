@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Utils for matrix repartitioning.                                          */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MATRIXPARTITIONUTILS_H
-#define ARCANE_ALINA_MATRIXPARTITIONUTILS_H
+#ifndef ARCCORE_ALINA_MATRIXPARTITIONUTILS_H
+#define ARCCORE_ALINA_MATRIXPARTITIONUTILS_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -47,7 +47,7 @@ mpi_symm_graph(const DistributedMatrix<Backend>& A,
 {
   using build_matrix = Backend::matrix;
 
-  ARCANE_ALINA_TIC("symm graph");
+  ARCCORE_ALINA_TIC("symm graph");
 
   build_matrix& A_loc = *A.local();
   build_matrix& A_rem = *A.remote();
@@ -232,7 +232,7 @@ mpi_symm_graph(const DistributedMatrix<Backend>& A,
     }
   }
 
-  ARCANE_ALINA_TOC("symm graph");
+  ARCCORE_ALINA_TOC("symm graph");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -242,7 +242,7 @@ template <class Idx> std::tuple<ptrdiff_t, ptrdiff_t>
 mpi_graph_perm_index(mpi_communicator comm, int npart, const std::vector<Idx>& part,
                      std::vector<ptrdiff_t>& perm)
 {
-  ARCANE_ALINA_TIC("perm index");
+  ARCCORE_ALINA_TIC("perm index");
   ptrdiff_t n = part.size();
   perm.resize(n);
 
@@ -266,7 +266,7 @@ mpi_graph_perm_index(mpi_communicator comm, int npart, const std::vector<Idx>& p
     perm[i] = glo_part_beg[p] + loc_part_beg[p] + cnt[p]++;
   }
 
-  ARCANE_ALINA_TOC("perm index");
+  ARCCORE_ALINA_TOC("perm index");
   return std::make_tuple(
   glo_part_beg[std::min(npart, comm.rank)],
   glo_part_beg[std::min(npart, comm.rank + 1)]);
@@ -283,7 +283,7 @@ mpi_graph_perm_matrix(mpi_communicator comm, ptrdiff_t col_beg, ptrdiff_t col_en
   typedef typename Backend::value_type value_type;
   using build_matrix = Backend::matrix;
 
-  ARCANE_ALINA_TIC("perm matrix");
+  ARCCORE_ALINA_TIC("perm matrix");
 
   ptrdiff_t n = perm.size();
   ptrdiff_t ncols = col_end - col_beg;
@@ -333,7 +333,7 @@ mpi_graph_perm_matrix(mpi_communicator comm, ptrdiff_t col_beg, ptrdiff_t col_en
     }
   }
 
-  ARCANE_ALINA_TOC("perm matrix");
+  ARCCORE_ALINA_TOC("perm matrix");
   return std::make_shared<DistributedMatrix<Backend>>(comm, i_loc, i_rem);
 }
 

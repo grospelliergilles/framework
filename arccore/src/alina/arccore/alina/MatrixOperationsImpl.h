@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Sparse matrix operations for matrices that provide row_iterator.          */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MATRIXOPERATIONSIMPL_H
-#define ARCANE_ALINA_MATRIXOPERATIONSIMPL_H
+#ifndef ARCCORE_ALINA_MATRIXOPERATIONSIMPL_H
+#define ARCCORE_ALINA_MATRIXOPERATIONSIMPL_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Solver for obtained as a result of an incomplete LU factorization.        */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_ILUSOLVERIMPL_H
-#define ARCANE_ALINA_ILUSOLVERIMPL_H
+#ifndef ARCCORE_ALINA_ILUSOLVERIMPL_H
+#define ARCCORE_ALINA_ILUSOLVERIMPL_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -67,16 +67,16 @@ class ILUSolver
     params() = default;
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, iters)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
+    : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, iters)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
     {
       p.check_params( { "iters", "damping" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, iters);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, iters);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
     }
 
   } prm;
@@ -164,14 +164,14 @@ class ILUSolver<BuiltinBackend<value_type, col_type, ptr_type>>
     {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, serial)
+    : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, serial)
     {
       p.check_params({ "serial" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, serial);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, serial);
     }
   } prm;
 

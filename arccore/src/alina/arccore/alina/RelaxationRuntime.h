@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Runtime configurable relaxation.                                          */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_RELAXATIONRUNTIME_H
-#define ARCANE_ALINA_RELAXATIONRUNTIME_H
+#ifndef ARCCORE_ALINA_RELAXATIONRUNTIME_H
+#define ARCCORE_ALINA_RELAXATIONRUNTIME_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -62,25 +62,25 @@ enum class eRelaxationType
   ChebyshevRelaxation = chebyshev
 };
 
-extern "C++" ARCANE_ALINA_EXPORT
+extern "C++" ARCCORE_ALINA_EXPORT
 std::ostream& operator<<(std::ostream& os, eRelaxationType r);
 
-extern "C++" ARCANE_ALINA_EXPORT
+extern "C++" ARCCORE_ALINA_EXPORT
 std::istream& operator>>(std::istream& in, eRelaxationType& r);
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#define ARCANE_ALINA_ALL_RUNTIME_RELAXATION() \
-  ARCANE_ALINA_RUNTIME_RELAXATION(GaussSeidelRelaxation); \
-  ARCANE_ALINA_RUNTIME_RELAXATION(ILU0Relaxation); \
-  ARCANE_ALINA_RUNTIME_RELAXATION(ILUKRelaxation); \
-  ARCANE_ALINA_RUNTIME_RELAXATION(ILUPRelaxation); \
-  ARCANE_ALINA_RUNTIME_RELAXATION(ILUTRelaxation); \
-  ARCANE_ALINA_RUNTIME_RELAXATION(DampedJacobiRelaxation); \
-  ARCANE_ALINA_RUNTIME_RELAXATION(SPAI0Relaxation); \
-  ARCANE_ALINA_RUNTIME_RELAXATION(SPAI1Relaxation); \
-  ARCANE_ALINA_RUNTIME_RELAXATION(ChebyshevRelaxation)
+#define ARCCORE_ALINA_ALL_RUNTIME_RELAXATION() \
+  ARCCORE_ALINA_RUNTIME_RELAXATION(GaussSeidelRelaxation); \
+  ARCCORE_ALINA_RUNTIME_RELAXATION(ILU0Relaxation); \
+  ARCCORE_ALINA_RUNTIME_RELAXATION(ILUKRelaxation); \
+  ARCCORE_ALINA_RUNTIME_RELAXATION(ILUPRelaxation); \
+  ARCCORE_ALINA_RUNTIME_RELAXATION(ILUTRelaxation); \
+  ARCCORE_ALINA_RUNTIME_RELAXATION(DampedJacobiRelaxation); \
+  ARCCORE_ALINA_RUNTIME_RELAXATION(SPAI0Relaxation); \
+  ARCCORE_ALINA_RUNTIME_RELAXATION(SPAI1Relaxation); \
+  ARCCORE_ALINA_RUNTIME_RELAXATION(ChebyshevRelaxation)
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -99,17 +99,17 @@ struct RelaxationRuntime
   : m_relaxation_type(prm.get("type", eRelaxationType::spai0))
   {
     if (!prm.erase("type"))
-      ARCANE_ALINA_PARAM_MISSING("type");
+      ARCCORE_ALINA_PARAM_MISSING("type");
     switch (m_relaxation_type) {
 
-#define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
+#define ARCCORE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
     m_relaxation = call_constructor<type>(A, prm, bprm); \
     break
 
-      ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
+      ARCCORE_ALINA_ALL_RUNTIME_RELAXATION();
 
-#undef ARCANE_ALINA_RUNTIME_RELAXATION
+#undef ARCCORE_ALINA_RUNTIME_RELAXATION
 
     default:
       _throwBadTypeType();
@@ -126,14 +126,14 @@ struct RelaxationRuntime
   {
     switch (m_relaxation_type) {
 
-#define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
+#define ARCCORE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
     call_apply_pre<type>(A, rhs, x, tmp); \
     break
 
-      ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
+      ARCCORE_ALINA_ALL_RUNTIME_RELAXATION();
 
-#undef ARCANE_ALINA_RUNTIME_RELAXATION
+#undef ARCCORE_ALINA_RUNTIME_RELAXATION
 
     default:
       _throwBadTypeType();
@@ -145,14 +145,14 @@ struct RelaxationRuntime
   {
     switch (m_relaxation_type) {
 
-#define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
+#define ARCCORE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
     call_apply_post<type>(A, rhs, x, tmp); \
     break
 
-      ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
+      ARCCORE_ALINA_ALL_RUNTIME_RELAXATION();
 
-#undef ARCANE_ALINA_RUNTIME_RELAXATION
+#undef ARCCORE_ALINA_RUNTIME_RELAXATION
 
     default:
       _throwBadTypeType();
@@ -164,14 +164,14 @@ struct RelaxationRuntime
   {
     switch (m_relaxation_type) {
 
-#define ARCANE_ALINA_RUNTIME_RELAXATION(type) \
+#define ARCCORE_ALINA_RUNTIME_RELAXATION(type) \
   case eRelaxationType::type: \
     call_apply<type>(A, rhs, x); \
     break
 
-      ARCANE_ALINA_ALL_RUNTIME_RELAXATION();
+      ARCCORE_ALINA_ALL_RUNTIME_RELAXATION();
 
-#undef ARCANE_ALINA_RUNTIME_RELAXATION
+#undef ARCCORE_ALINA_RUNTIME_RELAXATION
 
     default:
       _throwBadTypeType();

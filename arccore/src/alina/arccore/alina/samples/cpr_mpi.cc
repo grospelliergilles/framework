@@ -171,7 +171,7 @@ int main(int argc, char* argv[])
   "The block size of the system matrix. ")(
   "partitioner,r",
   po::value<Alina::eMatrixPartitionerType>()->default_value(
-#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+#if defined(ARCCORE_ALINA_HAVE_PARMETIS)
   Alina::eMatrixPartitionerType::parmetis
 #endif
   ),

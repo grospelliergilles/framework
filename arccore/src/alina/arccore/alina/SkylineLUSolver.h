@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Direct solver that uses Skyline LU factorization.                         */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_SKYLINELUSOLVER_H
-#define ARCANE_ALINA_SKYLINELUSOLVER_H
+#ifndef ARCCORE_ALINA_SKYLINELUSOLVER_H
+#define ARCCORE_ALINA_SKYLINELUSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

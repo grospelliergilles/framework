@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Distributed wrapper for Eigen::SparseLU solver.                           */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_DISTRIBUTEDEIGENSPARSELUDIRECTSOLVER_H
-#define ARCANE_ALINA_DISTRIBUTEDEIGENSPARSELUDIRECTSOLVER_H
+#ifndef ARCCORE_ALINA_DISTRIBUTEDEIGENSPARSELUDIRECTSOLVER_H
+#define ARCCORE_ALINA_DISTRIBUTEDEIGENSPARSELUDIRECTSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

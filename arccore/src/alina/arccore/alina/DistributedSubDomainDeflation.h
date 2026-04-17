@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Distributed solver based on subdomain deflation.                          */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_DISTRIBUTEDSUBDOMAINDEFLATION_H
-#define ARCANE_ALINA_DISTRIBUTEDSUBDOMAINDEFLATION_H
+#ifndef ARCCORE_ALINA_DISTRIBUTEDSUBDOMAINDEFLATION_H
+#define ARCCORE_ALINA_DISTRIBUTEDSUBDOMAINDEFLATION_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -87,9 +87,9 @@ struct sdd_projected_matrix
   template <class T, class Vec1, class Vec2>
   void mul(T alpha, const Vec1& x, T beta, Vec2& y) const
   {
-    ARCANE_ALINA_TIC("top/spmv");
+    ARCCORE_ALINA_TIC("top/spmv");
     backend::spmv(alpha, A, x, beta, y);
-    ARCANE_ALINA_TOC("top/spmv");
+    ARCCORE_ALINA_TOC("top/spmv");
 
     S.project(y);
   }
@@ -97,9 +97,9 @@ struct sdd_projected_matrix
   template <class Vec1, class Vec2, class Vec3>
   void residual(const Vec1& f, const Vec2& x, Vec3& r) const
   {
-    ARCANE_ALINA_TIC("top/residual");
+    ARCCORE_ALINA_TIC("top/residual");
     backend::residual(f, A, x, r);
-    ARCANE_ALINA_TOC("top/residual");
+    ARCCORE_ALINA_TOC("top/residual");
 
     S.project(r);
   }
@@ -147,10 +147,10 @@ class DistributedSubDomainDeflation
     params() {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, local)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, isolver)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, dsolver)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, num_def_vec)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, local)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, isolver)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, dsolver)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, num_def_vec)
     {
       void* ptr = 0;
       ptr = p.get("def_vec", ptr);
@@ -164,10 +164,10 @@ class DistributedSubDomainDeflation
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, local);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, isolver);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, dsolver);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, num_def_vec);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, local);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, isolver);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, dsolver);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, num_def_vec);
     }
   };
 
@@ -213,7 +213,7 @@ class DistributedSubDomainDeflation
   void init(const params& prm = params(),
             const backend_params& bprm = backend_params())
   {
-    ARCANE_ALINA_TIC("setup deflation");
+    ARCCORE_ALINA_TIC("setup deflation");
     typedef CSRMatrix<value_type, ptrdiff_t> build_matrix;
 
     // Lets see how many deflation vectors are there.
@@ -236,7 +236,7 @@ class DistributedSubDomainDeflation
     const CommunicationPattern<backend_type>& Acp = A->cpat();
 
     // Fill deflation vectors.
-    ARCANE_ALINA_TIC("copy deflation vectors");
+    ARCCORE_ALINA_TIC("copy deflation vectors");
     {
       std::vector<value_type> z(nrows);
       for (int j = 0; j < ndv; ++j) {
@@ -246,9 +246,9 @@ class DistributedSubDomainDeflation
         Z[j] = backend_type::copy_vector(z, bprm);
       }
     }
-    ARCANE_ALINA_TOC("copy deflation vectors");
+    ARCCORE_ALINA_TOC("copy deflation vectors");
 
-    ARCANE_ALINA_TIC("first pass");
+    ARCCORE_ALINA_TIC("first pass");
     az_loc->set_size(nrows, ndv, true);
     az_loc->set_nonzeros(nrows * dv_size[comm.rank]);
     az_rem->set_size(nrows, 0, true);
@@ -287,17 +287,17 @@ class DistributedSubDomainDeflation
       }
     }
     az_rem->set_nonzeros(az_rem->scan_row_sizes());
-    ARCANE_ALINA_TOC("first pass");
+    ARCCORE_ALINA_TOC("first pass");
 
     // Create local preconditioner.
-    ARCANE_ALINA_TIC("local preconditioner");
+    ARCCORE_ALINA_TIC("local preconditioner");
     P = std::make_shared<LocalPrecond>(*a_loc, prm.local, bprm);
-    ARCANE_ALINA_TOC("local preconditioner");
+    ARCCORE_ALINA_TOC("local preconditioner");
 
     A->set_local(P->system_matrix_ptr());
     A->move_to_backend(bprm);
 
-    ARCANE_ALINA_TIC("remote(A*Z)");
+    ARCCORE_ALINA_TIC("remote(A*Z)");
     /* Construct remote part of AZ */
     // Exchange deflation vectors
     std::vector<ptrdiff_t> zrecv_ptr(Acp.recv.nbr.size() + 1, 0);
@@ -369,10 +369,10 @@ class DistributedSubDomainDeflation
         }
       }
     }
-    ARCANE_ALINA_TOC("remote(A*Z)");
+    ARCCORE_ALINA_TOC("remote(A*Z)");
 
     /* Build solver for the deflated matrix E. */
-    ARCANE_ALINA_TIC("assemble E");
+    ARCCORE_ALINA_TIC("assemble E");
 
     // Count nonzeros in E.
     std::vector<int> nbrs; // processes we are talking to
@@ -456,17 +456,17 @@ class DistributedSubDomainDeflation
         }
       }
     }
-    ARCANE_ALINA_TOC("assemble E");
+    ARCCORE_ALINA_TOC("assemble E");
 
-    ARCANE_ALINA_TIC("factorize E");
+    ARCCORE_ALINA_TIC("factorize E");
     this->E = std::make_shared<DirectSolver>(comm, E, prm.dsolver);
-    ARCANE_ALINA_TOC("factorize E");
+    ARCCORE_ALINA_TOC("factorize E");
 
-    ARCANE_ALINA_TIC("finish(A*Z)");
+    ARCCORE_ALINA_TIC("finish(A*Z)");
     AZ = std::make_shared<matrix>(comm, az_loc, az_rem);
     AZ->move_to_backend(bprm);
-    ARCANE_ALINA_TOC("finish(A*Z)");
-    ARCANE_ALINA_TOC("setup deflation");
+    ARCCORE_ALINA_TOC("finish(A*Z)");
+    ARCCORE_ALINA_TOC("setup deflation");
   }
 
   template <class Vec1, class Vec2>
@@ -516,21 +516,21 @@ class DistributedSubDomainDeflation
   {
     const auto one = math::identity<scalar_type>();
 
-    ARCANE_ALINA_TIC("project");
+    ARCCORE_ALINA_TIC("project");
 
-    ARCANE_ALINA_TIC("local inner product");
+    ARCCORE_ALINA_TIC("local inner product");
     for (ptrdiff_t j = 0; j < ndv; ++j)
       df[j] = backend::inner_product(x, *Z[j]);
-    ARCANE_ALINA_TOC("local inner product");
+    ARCCORE_ALINA_TOC("local inner product");
 
     coarse_solve(df, dx);
 
-    ARCANE_ALINA_TIC("spmv");
+    ARCCORE_ALINA_TIC("spmv");
     backend::copy(dx, *dd);
     backend::spmv(-one, *AZ, *dd, one, x);
-    ARCANE_ALINA_TOC("spmv");
+    ARCCORE_ALINA_TOC("spmv");
 
-    ARCANE_ALINA_TOC("project");
+    ARCCORE_ALINA_TOC("project");
   }
 
  private:
@@ -560,9 +560,9 @@ class DistributedSubDomainDeflation
 
   void coarse_solve(std::vector<value_type>& f, std::vector<value_type>& x) const
   {
-    ARCANE_ALINA_TIC("coarse solve");
+    ARCCORE_ALINA_TIC("coarse solve");
     (*E)(f, x);
-    ARCANE_ALINA_TOC("coarse solve");
+    ARCCORE_ALINA_TOC("coarse solve");
   }
 
   template <class Vec1, class Vec2>
@@ -570,17 +570,17 @@ class DistributedSubDomainDeflation
   {
     const auto one = math::identity<scalar_type>();
 
-    ARCANE_ALINA_TIC("postprocess");
+    ARCCORE_ALINA_TIC("postprocess");
 
     // q = rhs - Ax
     backend::copy(rhs, *q);
     backend::spmv(-one, *A, x, one, *q);
 
     // df = transp(Z) * (rhs - Ax)
-    ARCANE_ALINA_TIC("local inner product");
+    ARCCORE_ALINA_TIC("local inner product");
     for (ptrdiff_t j = 0; j < ndv; ++j)
       df[j] = backend::inner_product(*q, *Z[j]);
-    ARCANE_ALINA_TOC("local inner product");
+    ARCCORE_ALINA_TOC("local inner product");
 
     // dx = inv(E) * df
     coarse_solve(df, dx);
@@ -588,7 +588,7 @@ class DistributedSubDomainDeflation
     // x += Z * dx
     backend::lin_comb(ndv, dx, Z, one, x);
 
-    ARCANE_ALINA_TOC("postprocess");
+    ARCCORE_ALINA_TOC("postprocess");
   }
 };
 

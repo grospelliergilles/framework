@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Enable std::complex<T> as value type.                                     */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_VALUETYPECOMPLEX_H
-#define ARCANE_ALINA_VALUETYPECOMPLEX_H
+#ifndef ARCCORE_ALINA_VALUETYPECOMPLEX_H
+#define ARCCORE_ALINA_VALUETYPECOMPLEX_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

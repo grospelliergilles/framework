@@ -9,8 +9,8 @@
 /*                                                                           */
 /* (Reverse) Cuthill-McKee matrix reorder algorithm.                         */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_CUTHILLMCKEEREORDERER_H
-#define ARCANE_ALINA_CUTHILLMCKEEREORDERER_H
+#ifndef ARCCORE_ALINA_CUTHILLMCKEEREORDERER_H
+#define ARCCORE_ALINA_CUTHILLMCKEEREORDERER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

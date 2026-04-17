@@ -9,8 +9,8 @@
 /*                                                                           */
 /* NUMA-aware vector container.                                              */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_NUMAVECTOR_H
-#define ARCANE_ALINA_NUMAVECTOR_H
+#ifndef ARCCORE_ALINA_NUMAVECTOR_H
+#define ARCCORE_ALINA_NUMAVECTOR_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

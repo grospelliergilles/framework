@@ -40,8 +40,8 @@ template <class T> using Backend = Arcane::Alina::BuiltinBackend<T>;
 #include "arccore/alina/IO.h"
 #include "arccore/alina/Profiler.h"
 
-#ifndef ARCANE_ALINA_BLOCK_SIZES
-#  define ARCANE_ALINA_BLOCK_SIZES (3)(4)
+#ifndef ARCCORE_ALINA_BLOCK_SIZES
+#  define ARCCORE_ALINA_BLOCK_SIZES (3)(4)
 #endif
 
 using namespace Arcane;
@@ -79,7 +79,7 @@ void solve_schur(const Matrix& K, const std::vector<double>& rhs, Alina::Propert
             << "Error:      " << r.residual() << std::endl;
 }
 
-#define ARCANE_ALINA_BLOCK_PSOLVER(z, data, B)                 \
+#define ARCCORE_ALINA_BLOCK_PSOLVER(z, data, B)                 \
   case B: {                                             \
     typedef Backend<BlockMatrix<float, B, B>> BBackend; \
     typedef ::Arcane::Alina::make_block_solver<                   \
@@ -102,14 +102,14 @@ void solve_schur(int pb, const Matrix& K, const std::vector<double>& rhs, Alina:
     solve_schur<USolver, PSolver>(K, rhs, prm);
   } break;
 #if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
-    BOOST_PP_SEQ_FOR_EACH(ARCANE_ALINA_BLOCK_PSOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
+    BOOST_PP_SEQ_FOR_EACH(ARCCORE_ALINA_BLOCK_PSOLVER, ~, ARCCORE_ALINA_BLOCK_SIZES)
 #endif
   default:
     precondition(false, "Unsupported block size for pressure");
   }
 }
 
-#define ARCANE_ALINA_BLOCK_USOLVER(z, data, B) \
+#define ARCCORE_ALINA_BLOCK_USOLVER(z, data, B) \
   case B: { \
     typedef Backend<BlockMatrix<float, B, B>> BBackend; \
     typedef ::Arcane::Alina::make_block_solver< \
@@ -130,7 +130,7 @@ void solve_schur(int ub, int pb, const Matrix& K, const std::vector<double>& rhs
     solve_schur<USolver>(pb, K, rhs, prm);
   } break;
 #if defined(SOLVER_BACKEND_BUILTIN) || defined(SOLVER_BACKEND_VEXCL)
-    BOOST_PP_SEQ_FOR_EACH(ARCANE_ALINA_BLOCK_USOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
+    BOOST_PP_SEQ_FOR_EACH(ARCCORE_ALINA_BLOCK_USOLVER, ~, ARCCORE_ALINA_BLOCK_SIZES)
 #endif
   default:
     precondition(false, "Unsupported block size for flow");

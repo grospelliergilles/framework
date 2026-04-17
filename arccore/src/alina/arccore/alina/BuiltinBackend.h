@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Builtin backend using CSR matrix.                                         */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_BUILTINBACKEND_H
-#define ARCANE_ALINA_BUILTINBACKEND_H
+#ifndef ARCCORE_ALINA_BUILTINBACKEND_H
+#define ARCCORE_ALINA_BUILTINBACKEND_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

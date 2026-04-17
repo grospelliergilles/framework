@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Base class for distributed direct solver.                                 */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDDIRECTSOLVERBASE_H
-#define ARCANE_ALINA_MPI_DISTRIBUTEDDIRECTSOLVERBASE_H
+#ifndef ARCCORE_ALINA_MPI_DISTRIBUTEDDIRECTSOLVERBASE_H
+#define ARCCORE_ALINA_MPI_DISTRIBUTEDDIRECTSOLVERBASE_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

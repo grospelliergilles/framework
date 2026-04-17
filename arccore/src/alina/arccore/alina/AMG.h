@@ -9,8 +9,8 @@
 /*                                                                           */
 /* An AMG preconditioner.                                     .              */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_AMG_H
-#define ARCANE_ALINA_AMG_H
+#ifndef ARCCORE_ALINA_AMG_H
+#define ARCCORE_ALINA_AMG_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -147,16 +147,16 @@ class AMG
     params() = default;
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, coarsening)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, relax)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, coarse_enough)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, direct_coarse)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, max_levels)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, npre)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, npost)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ncycle)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, pre_cycles)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, allow_rebuild)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, coarsening)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, relax)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, coarse_enough)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, direct_coarse)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, max_levels)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, npre)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, npost)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, ncycle)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, pre_cycles)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, allow_rebuild)
     {
       p.check_params( { "coarsening", "relax", "coarse_enough", "direct_coarse", "max_levels", "npre", "npost", "ncycle", "pre_cycles", "allow_rebuild" });
 
@@ -165,16 +165,16 @@ class AMG
 
     void get(PropertyTree& p, const std::string& path = "") const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, coarsening);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, relax);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, coarse_enough);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, direct_coarse);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, max_levels);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, npre);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, npost);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ncycle);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, pre_cycles);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, allow_rebuild);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, coarsening);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, relax);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, coarse_enough);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, direct_coarse);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, max_levels);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, npre);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, npost);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, ncycle);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, pre_cycles);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, allow_rebuild);
     }
   };
 
@@ -246,12 +246,12 @@ class AMG
                  backend::nbColumn(*A) == backend::nbRow(*A),
                  "Matrix dimensions differ from the original ones!");
 
-    ARCANE_ALINA_TIC("rebuild");
+    ARCCORE_ALINA_TIC("rebuild");
     coarsening_type C(prm.coarsening);
     for (auto& level : levels) {
       A = level.rebuild(A, C, prm, bprm);
     }
-    ARCANE_ALINA_TOC("rebuild");
+    ARCCORE_ALINA_TOC("rebuild");
   }
 
   /*!
@@ -364,30 +364,30 @@ class AMG
     : m_rows(backend::nbRow(*A))
     , m_nonzeros(backend::nonzeros(*A))
     {
-      ARCANE_ALINA_TIC("move to backend");
+      ARCCORE_ALINA_TIC("move to backend");
       f = Backend::create_vector(m_rows, bprm);
       u = Backend::create_vector(m_rows, bprm);
       t = Backend::create_vector(m_rows, bprm);
       this->A = Backend::copy_matrix(A, bprm);
-      ARCANE_ALINA_TOC("move to backend");
+      ARCCORE_ALINA_TOC("move to backend");
 
-      ARCANE_ALINA_TIC("relaxation");
+      ARCCORE_ALINA_TIC("relaxation");
       relax = std::make_shared<relax_type>(*A, prm.relax, bprm);
-      ARCANE_ALINA_TOC("relaxation");
+      ARCCORE_ALINA_TOC("relaxation");
     }
 
     std::shared_ptr<build_matrix>
     step_down(std::shared_ptr<build_matrix> A, coarsening_type& C,
               const backend_params& bprm, bool allow_rebuild)
     {
-      ARCANE_ALINA_TIC("transfer operators");
+      ARCCORE_ALINA_TIC("transfer operators");
       std::shared_ptr<build_matrix> P, R;
 
       try {
         std::tie(P, R) = C.transfer_operators(*A);
       }
       catch (error::empty_level) {
-        ARCANE_ALINA_TOC("transfer operators");
+        ARCCORE_ALINA_TOC("transfer operators");
         return std::shared_ptr<build_matrix>();
       }
 
@@ -398,17 +398,17 @@ class AMG
         bP = P;
         bR = R;
       }
-      ARCANE_ALINA_TOC("transfer operators");
+      ARCCORE_ALINA_TOC("transfer operators");
 
-      ARCANE_ALINA_TIC("move to backend");
+      ARCCORE_ALINA_TIC("move to backend");
       this->P = Backend::copy_matrix(P, bprm);
       this->R = Backend::copy_matrix(R, bprm);
-      ARCANE_ALINA_TOC("move to backend");
+      ARCCORE_ALINA_TOC("move to backend");
 
-      ARCANE_ALINA_TIC("coarse operator");
+      ARCCORE_ALINA_TIC("coarse operator");
       A = C.coarse_operator(*A, *P, *R);
       sort_rows(*A);
-      ARCANE_ALINA_TOC("coarse operator");
+      ARCCORE_ALINA_TOC("coarse operator");
 
       return A;
     }
@@ -434,28 +434,28 @@ class AMG
             const backend_params& bprm)
     {
       if (this->A) {
-        ARCANE_ALINA_TIC("move to backend");
+        ARCCORE_ALINA_TIC("move to backend");
         this->A = Backend::copy_matrix(A, bprm);
-        ARCANE_ALINA_TOC("move to backend");
+        ARCCORE_ALINA_TOC("move to backend");
       }
 
       if (relax) {
-        ARCANE_ALINA_TIC("relaxation");
+        ARCCORE_ALINA_TIC("relaxation");
         relax = std::make_shared<relax_type>(*A, prm.relax, bprm);
-        ARCANE_ALINA_TOC("relaxation");
+        ARCCORE_ALINA_TOC("relaxation");
       }
 
       if (solve) {
-        ARCANE_ALINA_TIC("coarsest level");
+        ARCCORE_ALINA_TIC("coarsest level");
         solve = Backend::create_solver(A, bprm);
-        ARCANE_ALINA_TOC("coarsest level");
+        ARCCORE_ALINA_TOC("coarsest level");
       }
 
       if (bP && bR) {
-        ARCANE_ALINA_TIC("coarse operator");
+        ARCCORE_ALINA_TIC("coarse operator");
         A = C.coarse_operator(*A, *bP, *bR);
         sort_rows(*A);
-        ARCANE_ALINA_TOC("coarse operator");
+        ARCCORE_ALINA_TOC("coarse operator");
       }
 
       return A;
@@ -508,7 +508,7 @@ class AMG
     }
 
     if (direct_coarse_solve) {
-      ARCANE_ALINA_TIC("coarsest level");
+      ARCCORE_ALINA_TIC("coarsest level");
       if (prm.direct_coarse) {
         AMGLevel l;
         l.create_coarse(A, bprm, levels.empty());
@@ -517,7 +517,7 @@ class AMG
       else {
         levels.push_back(AMGLevel(A, prm, bprm));
       }
-      ARCANE_ALINA_TOC("coarsest level");
+      ARCCORE_ALINA_TOC("coarsest level");
     }
   }
 
@@ -529,25 +529,25 @@ class AMG
 
     if (nxt == end) {
       if (lvl->solve) {
-        ARCANE_ALINA_TIC("coarse");
+        ARCCORE_ALINA_TIC("coarse");
         (*lvl->solve)(rhs, x);
-        ARCANE_ALINA_TOC("coarse");
+        ARCCORE_ALINA_TOC("coarse");
       }
       else {
-        ARCANE_ALINA_TIC("relax");
+        ARCCORE_ALINA_TIC("relax");
         for (size_t i = 0; i < prm.npre; ++i)
           lvl->relax->apply_pre(*lvl->A, rhs, x, *lvl->t);
         for (size_t i = 0; i < prm.npost; ++i)
           lvl->relax->apply_post(*lvl->A, rhs, x, *lvl->t);
-        ARCANE_ALINA_TOC("relax");
+        ARCCORE_ALINA_TOC("relax");
       }
     }
     else {
       for (size_t j = 0; j < prm.ncycle; ++j) {
-        ARCANE_ALINA_TIC("relax");
+        ARCCORE_ALINA_TIC("relax");
         for (size_t i = 0; i < prm.npre; ++i)
           lvl->relax->apply_pre(*lvl->A, rhs, x, *lvl->t);
-        ARCANE_ALINA_TOC("relax");
+        ARCCORE_ALINA_TOC("relax");
 
         backend::residual(rhs, *lvl->A, x, *lvl->t);
 
@@ -558,10 +558,10 @@ class AMG
 
         backend::spmv(math::identity<scalar_type>(), *lvl->P, *nxt->u, math::identity<scalar_type>(), x);
 
-        ARCANE_ALINA_TIC("relax");
+        ARCCORE_ALINA_TIC("relax");
         for (size_t i = 0; i < prm.npost; ++i)
           lvl->relax->apply_post(*lvl->A, rhs, x, *lvl->t);
-        ARCANE_ALINA_TOC("relax");
+        ARCCORE_ALINA_TOC("relax");
       }
     }
   }

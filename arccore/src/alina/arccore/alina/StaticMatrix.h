@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Enable statically sized matrices as value types.                          */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_STATICMATRIX_H
-#define ARCANE_ALINA_STATICMATRIX_H
+#ifndef ARCCORE_ALINA_STATICMATRIX_H
+#define ARCCORE_ALINA_STATICMATRIX_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

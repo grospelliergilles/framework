@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Runtime wrapper for distributed direct solvers.                           */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDDIRECTSOLVERRUNTIME_H
-#define ARCANE_ALINA_MPI_DISTRIBUTEDDIRECTSOLVERRUNTIME_H
+#ifndef ARCCORE_ALINA_MPI_DISTRIBUTEDDIRECTSOLVERRUNTIME_H
+#define ARCCORE_ALINA_MPI_DISTRIBUTEDDIRECTSOLVERRUNTIME_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -24,7 +24,7 @@
 /*---------------------------------------------------------------------------*/
 
 #include "arccore/alina/DistributedSkylineLUDirectSolver.h"
-#ifdef ARCANE_ALINA_HAVE_EIGEN
+#ifdef ARCCORE_ALINA_HAVE_EIGEN
 #include "arccore/alina/DistributedEigenSparseLUDirectSolver.h"
 #endif
 
@@ -39,7 +39,7 @@ namespace Arcane::Alina
 enum class eDistributedDirectSolverType
 {
   skyline_lu
-#ifdef ARCANE_ALINA_HAVE_EIGEN
+#ifdef ARCCORE_ALINA_HAVE_EIGEN
   ,
   eigen_splu
 #endif
@@ -53,7 +53,7 @@ inline std::ostream& operator<<(std::ostream& os, eDistributedDirectSolverType s
   switch (s) {
   case eDistributedDirectSolverType::skyline_lu:
     return os << "skyline_lu";
-#ifdef ARCANE_ALINA_HAVE_EIGEN
+#ifdef ARCCORE_ALINA_HAVE_EIGEN
   case eDistributedDirectSolverType::eigen_splu:
     return os << "eigen_splu";
 #endif
@@ -72,14 +72,14 @@ inline std::istream& operator>>(std::istream& in, eDistributedDirectSolverType& 
 
   if (val == "skyline_lu")
     s = eDistributedDirectSolverType::skyline_lu;
-#ifdef ARCANE_ALINA_HAVE_EIGEN
+#ifdef ARCCORE_ALINA_HAVE_EIGEN
   else if (val == "eigen_splu")
     s = eDistributedDirectSolverType::eigen_splu;
 #endif
   else
     throw std::invalid_argument("Invalid direct solver value. Valid choices are: "
                                 "skyline_lu"
-#ifdef ARCANE_ALINA_HAVE_EIGEN
+#ifdef ARCCORE_ALINA_HAVE_EIGEN
                                 ", eigen_splu"
 #endif
                                 ".");
@@ -104,14 +104,14 @@ class DistributedDirectSolverRuntime
   : s(prm.get("type", eDistributedDirectSolverType::skyline_lu))
   {
     if (!prm.erase("type"))
-      ARCANE_ALINA_PARAM_MISSING("type");
+      ARCCORE_ALINA_PARAM_MISSING("type");
 
     switch (s) {
     case eDistributedDirectSolverType::skyline_lu: {
       typedef DistributedSkylineLUDirectSolver<value_type> S;
       handle = static_cast<void*>(new S(comm, A, prm));
     } break;
-#ifdef ARCANE_ALINA_HAVE_EIGEN
+#ifdef ARCCORE_ALINA_HAVE_EIGEN
     case eDistributedDirectSolverType::eigen_splu: {
       typedef DistributedEigenSparseLUDirectSolver<value_type> S;
       do_construct<S, value_type>(comm, A, prm);
@@ -135,7 +135,7 @@ class DistributedDirectSolverRuntime
       typedef DistributedSkylineLUDirectSolver<value_type> S;
       static_cast<const S*>(handle)->operator()(rhs, x);
     } break;
-#ifdef ARCANE_ALINA_HAVE_EIGEN
+#ifdef ARCCORE_ALINA_HAVE_EIGEN
     case eDistributedDirectSolverType::eigen_splu: {
       typedef DistributedEigenSparseLUDirectSolver<value_type> S;
       do_solve<S, value_type>(rhs, x);
@@ -153,7 +153,7 @@ class DistributedDirectSolverRuntime
       typedef DistributedSkylineLUDirectSolver<value_type> S;
       delete static_cast<S*>(handle);
     } break;
-#ifdef ARCANE_ALINA_HAVE_EIGEN
+#ifdef ARCCORE_ALINA_HAVE_EIGEN
     case eDistributedDirectSolverType::eigen_splu: {
       typedef DistributedEigenSparseLUDirectSolver<value_type> S;
       do_destruct<S, value_type>();

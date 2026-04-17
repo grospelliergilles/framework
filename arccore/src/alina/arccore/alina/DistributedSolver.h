@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Adapters to handle distribution other standard solvers.                   */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDSOLVER_H
-#define ARCANE_ALINA_MPI_DISTRIBUTEDSOLVER_H
+#ifndef ARCCORE_ALINA_MPI_DISTRIBUTEDSOLVER_H
+#define ARCCORE_ALINA_MPI_DISTRIBUTEDSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

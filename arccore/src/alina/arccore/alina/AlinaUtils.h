@@ -10,8 +10,8 @@
 /* Various utilities.                                                        */
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_ALINAUTILS_H
-#define ARCANE_ALINA_ALINAUTILS_H
+#ifndef ARCCORE_ALINA_ALINAUTILS_H
+#define ARCCORE_ALINA_ALINAUTILS_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -48,7 +48,7 @@ namespace Arcane::Alina
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 //! Result of a solving.
-class ARCANE_ALINA_EXPORT SolverResult
+class ARCCORE_ALINA_EXPORT SolverResult
 {
  public:
 
@@ -86,7 +86,7 @@ namespace detail
 {
   class PropertyWrapper;
   //! Class to handle empty parameters list
-  class ARCANE_ALINA_EXPORT empty_params
+  class ARCCORE_ALINA_EXPORT empty_params
   {
    public:
 
@@ -102,7 +102,7 @@ namespace detail
 /*---------------------------------------------------------------------------*/
 
 // Class to wrap 'boost::property_tree::ptree' to ease removing it
-class ARCANE_ALINA_EXPORT PropertyTree
+class ARCCORE_ALINA_EXPORT PropertyTree
 {
  public:
 
@@ -202,31 +202,31 @@ class ARCANE_ALINA_EXPORT PropertyTree
 /*!
  * \brief Performance measurement macros.
  *
- * If ARCANE_ALINA_PROFILING macro is defined at compilation, then ARCANE_ALINA_TIC(name) and
- * ARCANE_ALINA_TOC(name) macros correspond to prof.tic(name) and prof.toc(name).
+ * If ARCCORE_ALINA_PROFILING macro is defined at compilation, then ARCCORE_ALINA_TIC(name) and
+ * ARCCORE_ALINA_TOC(name) macros correspond to prof.tic(name) and prof.toc(name).
  * Arcane::Alina::prof should be an instance of Arcane::Alina::profiler defined in a user
  * code similar to:
  * \code
  * namespace Arcane::Alina { profiler prof; }
  * \endcode
- * If ARCANE_ALINA_PROFILING is undefined, then ARCANE_ALINA_TIC and ARCANE_ALINA_TOC are noop macros.
+ * If ARCCORE_ALINA_PROFILING is undefined, then ARCCORE_ALINA_TIC and ARCCORE_ALINA_TOC are noop macros.
  */
-#ifdef ARCANE_ALINA_PROFILING
-#if !defined(ARCANE_ALINA_TIC) || !defined(ARCANE_ALINA_TOC)
+#ifdef ARCCORE_ALINA_PROFILING
+#if !defined(ARCCORE_ALINA_TIC) || !defined(ARCCORE_ALINA_TOC)
 #include "arccore/alina/Profiler.h"
-#define ARCANE_ALINA_TIC(name) ::Arcane::Alina::Profiler::globalTic(name);
-#define ARCANE_ALINA_TOC(name) ::Arcane::Alina::Profiler::globalToc(name);
+#define ARCCORE_ALINA_TIC(name) ::Arcane::Alina::Profiler::globalTic(name);
+#define ARCCORE_ALINA_TOC(name) ::Arcane::Alina::Profiler::globalToc(name);
 #endif
 #endif
 
-#ifndef ARCANE_ALINA_TIC
-#define ARCANE_ALINA_TIC(name)
+#ifndef ARCCORE_ALINA_TIC
+#define ARCCORE_ALINA_TIC(name)
 #endif
-#ifndef ARCANE_ALINA_TOC
-#define ARCANE_ALINA_TOC(name)
+#ifndef ARCCORE_ALINA_TOC
+#define ARCCORE_ALINA_TOC(name)
 #endif
 
-#define ARCANE_ALINA_DEBUG_SHOW(x) \
+#define ARCCORE_ALINA_DEBUG_SHOW(x) \
   std::cout << std::setw(20) << #x << ": " \
             << std::setw(15) << std::setprecision(8) << std::scientific \
             << (x) << std::endl
@@ -258,13 +258,13 @@ void precondition(const Condition& condition, const Message& message)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#define ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, name) \
+#define ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, name) \
   name(p.get(#name, params().name))
 
-#define ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, name) \
+#define ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, name) \
   name(p.get_child_empty(#name))
 
-#define ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, name) \
+#define ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, name) \
   p.put(std::string(path) + #name, name)
 
 namespace detail
@@ -289,17 +289,17 @@ namespace detail
 
 } // namespace detail
 
-#define ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, name) \
+#define ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, name) \
   ::Arcane::Alina::detail::params_export_child(p, path, #name, name)
 
 // Missing parameter action
-#ifndef ARCANE_ALINA_PARAM_MISSING
-#define ARCANE_ALINA_PARAM_MISSING(name) (void)0
+#ifndef ARCCORE_ALINA_PARAM_MISSING
+#define ARCCORE_ALINA_PARAM_MISSING(name) (void)0
 #endif
 
 // Unknown parameter action
-#ifndef ARCANE_ALINA_PARAM_UNKNOWN
-#define ARCANE_ALINA_PARAM_UNKNOWN(name) \
+#ifndef ARCCORE_ALINA_PARAM_UNKNOWN
+#define ARCCORE_ALINA_PARAM_UNKNOWN(name) \
   std::cerr << "AMGCL WARNING: unknown parameter " << name << std::endl
 #endif
 

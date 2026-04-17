@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Runtime wrapper around mpi preconditioners.                               */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDPRECONDITIONER_H
-#define ARCANE_ALINA_MPI_DISTRIBUTEDPRECONDITIONER_H
+#ifndef ARCCORE_ALINA_MPI_DISTRIBUTEDPRECONDITIONER_H
+#define ARCCORE_ALINA_MPI_DISTRIBUTEDPRECONDITIONER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -217,7 +217,7 @@ class DistributedPreconditioner
   void init(std::shared_ptr<matrix> A, params& prm, const backend_params& bprm)
   {
     if (!prm.erase("class"))
-      ARCANE_ALINA_PARAM_MISSING("class");
+      ARCCORE_ALINA_PARAM_MISSING("class");
 
     switch (_class) {
     case eDistributedPreconditionerType::amg: {

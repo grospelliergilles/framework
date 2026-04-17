@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Readers for Matrix Market sparse matrices and dense vectors.              */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_IO_H
-#define ARCANE_ALINA_IO_H
+#ifndef ARCCORE_ALINA_IO_H
+#define ARCCORE_ALINA_IO_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 

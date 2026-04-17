@@ -9,8 +9,8 @@
 /*                                                                           */
 /* IDR(s) (Induced Dimension Reduction) method.                              */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_IDRSSOLVER_H
-#define ARCANE_ALINA_IDRSSOLVER_H
+#ifndef ARCCORE_ALINA_IDRSSOLVER_H
+#define ARCCORE_ALINA_IDRSSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -107,30 +107,30 @@ struct IDRSSolverParams
   IDRSSolverParams() = default;
 
   IDRSSolverParams(const PropertyTree& p)
-  : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, s)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, omega)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, smoothing)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, replacement)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
+  : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, s)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, omega)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, smoothing)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, replacement)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
   {
     p.check_params({ "s", "omega", "smoothing", "replacement", "maxiter", "tol", "abstol", "ns_search", "verbose" });
   }
 
   void get(PropertyTree& p, const std::string& path) const
   {
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, s);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, omega);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, smoothing);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, replacement);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, s);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, omega);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, smoothing);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, replacement);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
   }
 };
 

@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Iterative solver wrapper for distributed linear systems.                  */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_DISTRIBUTEDPRECONDITIONEDSOLVER_H
-#define ARCANE_ALINA_DISTRIBUTEDPRECONDITIONEDSOLVER_H
+#ifndef ARCCORE_ALINA_DISTRIBUTEDPRECONDITIONEDSOLVER_H
+#define ARCCORE_ALINA_DISTRIBUTEDPRECONDITIONEDSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -67,16 +67,16 @@ class DistributedPreconditionedSolver
     params() {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, precond)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solver)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, precond)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, solver)
     {
       p.check_params({ "precond", "solver" });
     }
 
     void get(PropertyTree& p, const std::string& path = "") const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, precond);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solver);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, precond);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, solver);
     }
   } prm;
 

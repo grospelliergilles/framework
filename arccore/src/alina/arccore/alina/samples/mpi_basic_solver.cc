@@ -257,7 +257,7 @@ int main2(const Alina::SampleMainContext& ctx, int argc, char* argv[])
   po::options_description desc("Options");
 
   auto default_partitioner_type = Alina::eMatrixPartitionerType::merge;
-#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+#if defined(ARCCORE_ALINA_HAVE_PARMETIS)
   default_partitioner_type = Alina::eMatrixPartitionerType::parmetis;
 #endif
 

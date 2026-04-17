@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Loose GMRES method solver.                                                */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_LOOSEGMRESSOLVER_H
-#define ARCANE_ALINA_LOOSEGMRESSOLVER_H
+#ifndef ARCCORE_ALINA_LOOSEGMRESSOLVER_H
+#define ARCCORE_ALINA_LOOSEGMRESSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -124,30 +124,30 @@ struct LooseGMRESSolverParams
   LooseGMRESSolverParams() = default;
 
   LooseGMRESSolverParams(const PropertyTree& p)
-  : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, M)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, K)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, always_reset)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, pside)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
+  : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, M)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, K)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, always_reset)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, pside)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
   {
     p.check_params({ "pside", "M", "K", "always_reset", "maxiter", "tol", "abstol", "ns_search", "verbose" });
   }
 
   void get(PropertyTree& p, const std::string& path) const
   {
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, M);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, K);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, always_reset);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, pside);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, M);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, K);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, always_reset);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, pside);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
   }
 };
 

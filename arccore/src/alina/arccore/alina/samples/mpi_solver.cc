@@ -30,8 +30,8 @@
 #include "arccore/alina/IO.h"
 #include "arccore/alina/Profiler.h"
 
-#ifndef ARCANE_ALINA_BLOCK_SIZES
-#  define ARCANE_ALINA_BLOCK_SIZES (3)(4)
+#ifndef ARCCORE_ALINA_BLOCK_SIZES
+#  define ARCCORE_ALINA_BLOCK_SIZES (3)(4)
 #endif
 
 using namespace Arcane;
@@ -462,7 +462,7 @@ int main(int argc, char* argv[])
   "for coupled systems of PDE (such as Navier-Stokes equations), etc. ")(
   "partitioner,r",
   po::value<Alina::eMatrixPartitionerType>()->default_value(
-#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+#if defined(ARCCORE_ALINA_HAVE_PARMETIS)
   Alina::eMatrixPartitionerType::parmetis
 #else
   Alina::eMatrixPartitionerType::merge
@@ -589,14 +589,14 @@ int main(int argc, char* argv[])
   switch (block_size) {
 
 #if defined(SOLVER_BACKEND_BUILTIN)
-#define ARCANE_ALINA_CALL_BLOCK_SOLVER(z, data, B) \
+#define ARCCORE_ALINA_CALL_BLOCK_SOLVER(z, data, B) \
   case B: \
     solve_block<B>(comm, n, ptr, col, val, prm, rhs, ptype); \
     break;
 
-    BOOST_PP_SEQ_FOR_EACH(ARCANE_ALINA_CALL_BLOCK_SOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
+    BOOST_PP_SEQ_FOR_EACH(ARCCORE_ALINA_CALL_BLOCK_SOLVER, ~, ARCCORE_ALINA_BLOCK_SIZES)
 
-#undef ARCANE_ALINA_CALL_BLOCK_SOLVER
+#undef ARCCORE_ALINA_CALL_BLOCK_SOLVER
 #endif
 
   case 1:

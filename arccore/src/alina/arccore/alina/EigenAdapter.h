@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Adapters for Eigen types to be used with builtin backend.                 */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_EIGENADAPTER_H
-#define ARCANE_ALINA_EIGENADAPTER_H
+#ifndef ARCCORE_ALINA_EIGENADAPTER_H
+#define ARCCORE_ALINA_EIGENADAPTER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

@@ -45,7 +45,7 @@ THE SOFTWARE.
 #include "arccore/alina/IO.h"
 #include "arccore/alina/Profiler.h"
 
-#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+#if defined(ARCCORE_ALINA_HAVE_PARMETIS)
 #include "arccore/alina/ParmetisMatrixPartitioner.h"
 #endif
 
@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
   // Partition the matrix and the RHS vector.
   // If neither ParMETIS not PT-SCOTCH are not available,
   // just keep the current naive partitioning.
-#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+#if defined(ARCCORE_ALINA_HAVE_PARMETIS)
   typedef Alina::ParmetisMatrixPartitioner<DBackend> Partition;
 
   if (world.size > 1) {

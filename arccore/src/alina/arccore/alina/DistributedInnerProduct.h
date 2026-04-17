@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Distributed inner products of two vectors.                                */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDINNERPRODUCT_H
-#define ARCANE_ALINA_MPI_DISTRIBUTEDINNERPRODUCT_H
+#ifndef ARCCORE_ALINA_MPI_DISTRIBUTEDINNERPRODUCT_H
+#define ARCCORE_ALINA_MPI_DISTRIBUTEDINNERPRODUCT_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -53,9 +53,9 @@ struct DistributedInnerProduct
     typedef typename backend::value_type<Vec1>::type value_type;
     typedef typename math::inner_product_impl<value_type>::return_type coef_type;
 
-    ARCANE_ALINA_TIC("inner product");
+    ARCCORE_ALINA_TIC("inner product");
     coef_type sum = comm.reduceSum(backend::inner_product(x, y));
-    ARCANE_ALINA_TOC("inner product");
+    ARCCORE_ALINA_TOC("inner product");
 
     return sum;
   }

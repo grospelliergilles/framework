@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Builtin backend that uses scalar and block format matrix.                 */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_HYBRIDBUILTINBACKEND_H
-#define ARCANE_ALINA_HYBRIDBUILTINBACKEND_H
+#ifndef ARCCORE_ALINA_HYBRIDBUILTINBACKEND_H
+#define ARCCORE_ALINA_HYBRIDBUILTINBACKEND_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

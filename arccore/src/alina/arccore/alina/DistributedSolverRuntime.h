@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Runtime-configurable MPI wrapper around iterative solvers.                */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_DISTRIBUTEDSOLVERRUNTIME_H
-#define ARCANE_ALINA_DISTRIBUTEDSOLVERRUNTIME_H
+#ifndef ARCCORE_ALINA_DISTRIBUTEDSOLVERRUNTIME_H
+#define ARCCORE_ALINA_DISTRIBUTEDSOLVERRUNTIME_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

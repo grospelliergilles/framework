@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Utilitary functions used by all samples.                                  */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_ALINASAMPLESCOMMON_H
-#define ARCANE_ALINA_ALINASAMPLESCOMMON_H
+#ifndef ARCCORE_ALINA_ALINASAMPLESCOMMON_H
+#define ARCCORE_ALINA_ALINASAMPLESCOMMON_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -23,9 +23,9 @@
 /*---------------------------------------------------------------------------*/
 
 #ifdef ARCANE_COMPONENT_arcane_alina
-#define ARCANE_ALINA_SAMPLES_EXPORT ARCANE_EXPORT
+#define ARCCORE_ALINA_SAMPLES_EXPORT ARCANE_EXPORT
 #else
-#define ARCANE_ALINA_SAMPLES_EXPORT ARCANE_IMPORT
+#define ARCCORE_ALINA_SAMPLES_EXPORT ARCANE_IMPORT
 #endif
 
 /*---------------------------------------------------------------------------*/
@@ -42,7 +42,7 @@ class SampleMainContext;
 // Prototype for main functor
 typedef int (*MainFunction)(const SampleMainContext& ctx, int argc, char* argv[]);
 
-class ARCANE_ALINA_SAMPLES_EXPORT SampleMainContext
+class ARCCORE_ALINA_SAMPLES_EXPORT SampleMainContext
 {
  private:
 

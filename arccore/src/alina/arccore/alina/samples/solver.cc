@@ -46,8 +46,8 @@ using Backend = Arcane::Alina::BuiltinBackend<double, Arcane::Int32>;
 
 #include "SampleProblemCommon.h"
 
-#ifndef ARCANE_ALINA_BLOCK_SIZES
-#define ARCANE_ALINA_BLOCK_SIZES (3)(4)
+#ifndef ARCCORE_ALINA_BLOCK_SIZES
+#define ARCCORE_ALINA_BLOCK_SIZES (3)(4)
 #endif
 
 using namespace Arcane;
@@ -228,7 +228,7 @@ scalar_solve(const Alina::PropertyTree& prm,
   return info;
 }
 
-#define ARCANE_ALINA_CALL_BLOCK_SOLVER(z, data, B)                                    \
+#define ARCCORE_ALINA_CALL_BLOCK_SOLVER(z, data, B)                                    \
   case B:                                                                      \
     return block_solve<B>(prm, rows, ptr, col, val, rhs, x, reorder);
 
@@ -248,7 +248,7 @@ solve(const Alina::PropertyTree& prm,
   case 1:
     return scalar_solve(prm, rows, ptr, col, val, rhs, x, reorder);
 #if defined(SOLVER_BACKEND_BUILTIN)
-    BOOST_PP_SEQ_FOR_EACH(ARCANE_ALINA_CALL_BLOCK_SOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
+    BOOST_PP_SEQ_FOR_EACH(ARCCORE_ALINA_CALL_BLOCK_SOLVER, ~, ARCCORE_ALINA_BLOCK_SIZES)
 #endif
   default:
     precondition(false, "Unsupported block size");

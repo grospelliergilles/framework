@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Runtime-configurable wrapper around matrix partitioner.                   */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MATRIXPARTITIONERRUNTIME_H
-#define ARCANE_ALINA_MATRIXPARTITIONERRUNTIME_H
+#ifndef ARCCORE_ALINA_MATRIXPARTITIONERRUNTIME_H
+#define ARCCORE_ALINA_MATRIXPARTITIONERRUNTIME_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -27,7 +27,7 @@
 
 #include "arccore/alina/AlinaUtils.h"
 #include "arccore/alina/SimpleMatrixPartitioner.h"
-#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+#if defined(ARCCORE_ALINA_HAVE_PARMETIS)
 #include "arccore/alina/ParmetisMatrixPartitioner.h"
 #endif
 
@@ -43,7 +43,7 @@ namespace Arcane::Alina
 enum class eMatrixPartitionerType
 {
   merge
-#ifdef ARCANE_ALINA_HAVE_PARMETIS
+#ifdef ARCCORE_ALINA_HAVE_PARMETIS
   ,
   parmetis
 #endif
@@ -55,7 +55,7 @@ operator<<(std::ostream& os, eMatrixPartitionerType s)
   switch (s) {
   case eMatrixPartitionerType::merge:
     return os << "merge";
-#ifdef ARCANE_ALINA_HAVE_PARMETIS
+#ifdef ARCCORE_ALINA_HAVE_PARMETIS
   case eMatrixPartitionerType::parmetis:
     return os << "parmetis";
 #endif
@@ -72,14 +72,14 @@ operator>>(std::istream& in, eMatrixPartitionerType& s)
 
   if (val == "merge")
     s = eMatrixPartitionerType::merge;
-#ifdef ARCANE_ALINA_HAVE_PARMETIS
+#ifdef ARCCORE_ALINA_HAVE_PARMETIS
   else if (val == "parmetis")
     s = eMatrixPartitionerType::parmetis;
 #endif
   else
     throw std::invalid_argument("Invalid partitioner value. Valid choices are: "
                                 "merge"
-#ifdef ARCANE_ALINA_HAVE_PARMETIS
+#ifdef ARCCORE_ALINA_HAVE_PARMETIS
                                 ", parmetis"
 #endif
                                 ".");
@@ -103,7 +103,7 @@ struct MatrixPartitionerRuntime
 
   MatrixPartitionerRuntime(params prm = params())
   : t(prm.get("type",
-#if defined(ARCANE_ALINA_HAVE_PARMETIS)
+#if defined(ARCCORE_ALINA_HAVE_PARMETIS)
               eMatrixPartitionerType::parmetis
 #else
               merge
@@ -112,14 +112,14 @@ struct MatrixPartitionerRuntime
   , handle(0)
   {
     if (!prm.erase("type"))
-      ARCANE_ALINA_PARAM_MISSING("type");
+      ARCCORE_ALINA_PARAM_MISSING("type");
 
     switch (t) {
     case eMatrixPartitionerType::merge: {
       typedef SimpleMatrixPartitioner<Backend> R;
       handle = static_cast<void*>(new R(prm));
     } break;
-#ifdef ARCANE_ALINA_HAVE_PARMETIS
+#ifdef ARCCORE_ALINA_HAVE_PARMETIS
     case eMatrixPartitionerType::parmetis: {
       typedef ParmetisMatrixPartitioner<Backend> R;
       handle = static_cast<void*>(new R(prm));
@@ -137,7 +137,7 @@ struct MatrixPartitionerRuntime
       typedef SimpleMatrixPartitioner<Backend> R;
       delete static_cast<R*>(handle);
     } break;
-#ifdef ARCANE_ALINA_HAVE_PARMETIS
+#ifdef ARCCORE_ALINA_HAVE_PARMETIS
     case eMatrixPartitionerType::parmetis: {
       typedef ParmetisMatrixPartitioner<Backend> R;
       delete static_cast<R*>(handle);
@@ -155,7 +155,7 @@ struct MatrixPartitionerRuntime
       typedef SimpleMatrixPartitioner<Backend> R;
       return static_cast<const R*>(handle)->is_needed(A);
     }
-#ifdef ARCANE_ALINA_HAVE_PARMETIS
+#ifdef ARCCORE_ALINA_HAVE_PARMETIS
     case eMatrixPartitionerType::parmetis: {
       typedef ParmetisMatrixPartitioner<Backend> R;
       return static_cast<const R*>(handle)->is_needed(A);
@@ -173,7 +173,7 @@ struct MatrixPartitionerRuntime
       typedef SimpleMatrixPartitioner<Backend> R;
       return static_cast<const R*>(handle)->operator()(A, block_size);
     }
-#ifdef ARCANE_ALINA_HAVE_PARMETIS
+#ifdef ARCCORE_ALINA_HAVE_PARMETIS
     case eMatrixPartitionerType::parmetis: {
       typedef ParmetisMatrixPartitioner<Backend> R;
       return static_cast<const R*>(handle)->operator()(A, block_size);

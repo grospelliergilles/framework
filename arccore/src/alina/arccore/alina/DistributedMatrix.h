@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Distributed Matrix using message passing.                                 */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_DISTRIBUTED_MATRIX_H
-#define ARCANE_ALINA_MPI_DISTRIBUTED_MATRIX_H
+#ifndef ARCCORE_ALINA_MPI_DISTRIBUTED_MATRIX_H
+#define ARCCORE_ALINA_MPI_DISTRIBUTED_MATRIX_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -98,7 +98,7 @@ class CommunicationPattern
   : comm(comm)
   , loc_cols(n_loc_cols)
   {
-    ARCANE_ALINA_TIC("communication pattern");
+    ARCCORE_ALINA_TIC("communication pattern");
     // Get domain boundaries
     std::vector<ptrdiff_t> domain = comm.exclusive_sum(n_loc_cols);
     loc_beg = domain[comm.rank];
@@ -183,16 +183,16 @@ class CommunicationPattern
       recv.req[i] = comm.doISend(&rem_cols[recv.ptr[i]], recv.ptr[i + 1] - recv.ptr[i],
                               recv.nbr[i], tag_exc_cols);
 
-    ARCANE_ALINA_TIC("MPI Wait");
+    ARCCORE_ALINA_TIC("MPI Wait");
     comm.waitAll(recv.req);
     comm.waitAll(send.req);
-    ARCANE_ALINA_TOC("MPI Wait");
+    ARCCORE_ALINA_TOC("MPI Wait");
 
     // Shift columns to send to local numbering:
     for (col_type& c : send.col)
       c -= loc_beg;
 
-    ARCANE_ALINA_TOC("communication pattern");
+    ARCCORE_ALINA_TOC("communication pattern");
   }
 
   template <class OtherBackend>
@@ -284,10 +284,10 @@ class CommunicationPattern
 
   void finish_exchange() const
   {
-    ARCANE_ALINA_TIC("MPI Wait");
+    ARCCORE_ALINA_TIC("MPI Wait");
     comm.waitAll(recv.req);
     comm.waitAll(send.req);
-    ARCANE_ALINA_TOC("MPI Wait");
+    ARCCORE_ALINA_TOC("MPI Wait");
 
     if (!recv.val.empty())
       backend::copy(recv.val, *x_rem);
@@ -304,10 +304,10 @@ class CommunicationPattern
       send.req[i] = comm.doISend(const_cast<T*>(&send_val[send.ptr[i]]), send.ptr[i + 1] - send.ptr[i],
                               send.nbr[i], tag_exc_vals);
 
-    ARCANE_ALINA_TIC("MPI Wait");
+    ARCCORE_ALINA_TIC("MPI Wait");
     comm.waitAll(recv.req);
     comm.waitAll(send.req);
-    ARCANE_ALINA_TOC("MPI Wait");
+    ARCCORE_ALINA_TOC("MPI Wait");
   }
 
   mpi_communicator mpi_comm() const
@@ -540,7 +540,7 @@ class DistributedMatrix
 
   void move_to_backend(const backend_params& bprm = backend_params(), bool keep_src = false)
   {
-    ARCANE_ALINA_TIC("move to backend");
+    ARCCORE_ALINA_TIC("move to backend");
     if (!A_loc) {
       A_loc = Backend::copy_matrix(a_loc, bprm);
     }
@@ -563,7 +563,7 @@ class DistributedMatrix
       a_loc.reset();
       a_rem.reset();
     }
-    ARCANE_ALINA_TOC("move to backend");
+    ARCCORE_ALINA_TOC("move to backend");
   }
 
   template <class A, class VecX, class B, class VecY>
@@ -615,7 +615,7 @@ template <class Backend>
 std::shared_ptr<DistributedMatrix<Backend>>
 transpose(const DistributedMatrix<Backend>& A)
 {
-  ARCANE_ALINA_TIC("MPI Transpose");
+  ARCCORE_ALINA_TIC("MPI Transpose");
   typedef typename Backend::value_type value_type;
   typedef CommunicationPattern<Backend> CommPattern;
   typedef typename Backend::matrix build_matrix;
@@ -692,9 +692,9 @@ transpose(const DistributedMatrix<Backend>& A)
     send_cnt_req[i] = comm.doISend(&row_size[beg], end - beg, C.recv.nbr[i], tag_cnt);
   }
 
-  ARCANE_ALINA_TIC("MPI Wait");
+  ARCCORE_ALINA_TIC("MPI Wait");
   comm.waitAll(recv_cnt_req);
-  ARCANE_ALINA_TOC("MPI Wait");
+  ARCCORE_ALINA_TOC("MPI Wait");
   std::partial_sum(rem_ptr.begin(), rem_ptr.end(), rem_ptr.begin());
 
   // 2. Start exchange of rem_col, rem_val
@@ -737,10 +737,10 @@ transpose(const DistributedMatrix<Backend>& A)
 
   // 4. Finish rem_col and rem_val exchange, and
   //    finish contruction of our remote part.
-  ARCANE_ALINA_TIC("MPI Wait");
+  ARCCORE_ALINA_TIC("MPI Wait");
   comm.waitAll(recv_col_req);
   comm.waitAll(recv_val_req);
-  ARCANE_ALINA_TOC("MPI Wait");
+  ARCCORE_ALINA_TOC("MPI Wait");
 
   for (size_t i = 0; i < C.send.count(); ++i) {
     ptrdiff_t row = C.send.col[i];
@@ -757,13 +757,13 @@ transpose(const DistributedMatrix<Backend>& A)
   std::rotate(T_rem.ptr.data(), T_rem.ptr.data() + nrows, T_rem.ptr.data() + nrows + 1);
   T_rem.ptr[0] = 0;
 
-  ARCANE_ALINA_TIC("MPI Wait");
+  ARCCORE_ALINA_TIC("MPI Wait");
   comm.waitAll(send_cnt_req);
   comm.waitAll(send_col_req);
   comm.waitAll(send_val_req);
-  ARCANE_ALINA_TOC("MPI Wait");
+  ARCCORE_ALINA_TOC("MPI Wait");
 
-  ARCANE_ALINA_TOC("MPI Transpose");
+  ARCCORE_ALINA_TOC("MPI Transpose");
 
   return std::make_shared<DistributedMatrix<Backend>>(comm, transpose(A_loc), T_ptr);
 }
@@ -783,7 +783,7 @@ remote_rows(const CommunicationPattern<Backend>& C,
   static const int tag_col = 3002;
   static const int tag_val = 3003;
 
-  ARCANE_ALINA_TIC("remote_rows");
+  ARCCORE_ALINA_TIC("remote_rows");
   mpi_communicator comm = C.mpi_comm();
 
   build_matrix& B_loc = *B.local();
@@ -868,9 +868,9 @@ remote_rows(const CommunicationPattern<Backend>& C,
     recv_ptr_req[k] = comm.doIReceive(&B_nbr->ptr[beg + 1], end - beg, C.recv.nbr[k], tag_ptr);
   }
 
-  ARCANE_ALINA_TIC("MPI Wait");
+  ARCCORE_ALINA_TIC("MPI Wait");
   comm.waitAll(recv_ptr_req);
-  ARCANE_ALINA_TOC("MPI Wait");
+  ARCCORE_ALINA_TOC("MPI Wait");
 
   B_nbr->set_nonzeros(B_nbr->scan_row_sizes(), need_values);
 
@@ -887,7 +887,7 @@ remote_rows(const CommunicationPattern<Backend>& C,
       recv_val_req[k] = comm.doIReceive(&B_nbr->val[cbeg], cend - cbeg, C.recv.nbr[k], tag_val);
   }
 
-  ARCANE_ALINA_TIC("MPI Wait");
+  ARCCORE_ALINA_TIC("MPI Wait");
   comm.waitAll(send_ptr_req);
   comm.waitAll(send_col_req);
   comm.waitAll(recv_col_req);
@@ -896,9 +896,9 @@ remote_rows(const CommunicationPattern<Backend>& C,
     comm.waitAll(send_val_req);
     comm.waitAll(recv_val_req);
   }
-  ARCANE_ALINA_TOC("MPI Wait");
+  ARCCORE_ALINA_TOC("MPI Wait");
 
-  ARCANE_ALINA_TOC("remote_rows");
+  ARCCORE_ALINA_TOC("remote_rows");
   return B_nbr;
 }
 
@@ -912,7 +912,7 @@ product(const DistributedMatrix<Backend>& A, const DistributedMatrix<Backend>& B
   typedef typename Backend::value_type value_type;
   using build_matrix = Backend::matrix;
   typedef typename Backend::col_type col_type;
-  ARCANE_ALINA_TIC("product");
+  ARCCORE_ALINA_TIC("product");
 
   const CommunicationPattern<Backend>& Acp = A.cpat();
 
@@ -961,7 +961,7 @@ product(const DistributedMatrix<Backend>& A, const DistributedMatrix<Backend>& B
   C_loc.ptr[0] = 0;
   C_rem.ptr[0] = 0;
 
-  ARCANE_ALINA_TIC("analyze");
+  ARCCORE_ALINA_TIC("analyze");
 #pragma omp parallel
   {
     std::vector<ptrdiff_t> loc_marker(B_end - B_beg, -1);
@@ -1023,12 +1023,12 @@ product(const DistributedMatrix<Backend>& A, const DistributedMatrix<Backend>& B
       C_rem.ptr[ia + 1] = rem_cols;
     }
   }
-  ARCANE_ALINA_TOC("analyze");
+  ARCCORE_ALINA_TOC("analyze");
 
   C_loc.set_nonzeros(C_loc.scan_row_sizes());
   C_rem.set_nonzeros(C_rem.scan_row_sizes());
 
-  ARCANE_ALINA_TIC("compute");
+  ARCCORE_ALINA_TIC("compute");
 #pragma omp parallel
   {
     std::vector<ptrdiff_t> loc_marker(B_end - B_beg, -1);
@@ -1123,8 +1123,8 @@ product(const DistributedMatrix<Backend>& A, const DistributedMatrix<Backend>& B
       }
     }
   }
-  ARCANE_ALINA_TOC("compute");
-  ARCANE_ALINA_TOC("product");
+  ARCCORE_ALINA_TOC("compute");
+  ARCCORE_ALINA_TOC("product");
 
   return std::make_shared<DistributedMatrix<Backend>>(A.comm(), c_loc, c_rem);
 }
@@ -1235,7 +1235,7 @@ template <bool scale, class Backend>
 typename math::scalar_of<typename Backend::value_type>::type
 spectral_radius(const DistributedMatrix<Backend>& A, int power_iters = 0)
 {
-  ARCANE_ALINA_TIC("spectral radius");
+  ARCCORE_ALINA_TIC("spectral radius");
   typedef typename Backend::value_type value_type;
   typedef typename math::rhs_of<value_type>::type rhs_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
@@ -1400,7 +1400,7 @@ spectral_radius(const DistributedMatrix<Backend>& A, int power_iters = 0)
       }
     }
   }
-  ARCANE_ALINA_TOC("spectral radius");
+  ARCCORE_ALINA_TOC("spectral radius");
 
   return radius < 0 ? static_cast<scalar_type>(2) : radius;
 }

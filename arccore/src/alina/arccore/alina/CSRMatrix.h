@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Sparse matrix stored in CSR (Compressed Sparse Row) format.               */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_CSRMATRIX_H
-#define ARCANE_ALINA_CSRMATRIX_H
+#ifndef ARCCORE_ALINA_CSRMATRIX_H
+#define ARCCORE_ALINA_CSRMATRIX_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -127,7 +127,7 @@ public:
   : m_nb_row(nrows)
   , ncols(ncols)
   {
-    ARCANE_ALINA_TIC("CSR copy");
+    ARCCORE_ALINA_TIC("CSR copy");
     precondition(static_cast<ptrdiff_t>(nrows + 1) == std::distance(std::begin(ptr_range), std::end(ptr_range)),
                  "ptr_range has wrong size in crs constructor");
 
@@ -152,7 +152,7 @@ public:
         val[j] = val_range[j];
       }
     }
-    ARCANE_ALINA_TOC("CSR copy");
+    ARCCORE_ALINA_TOC("CSR copy");
   }
 
   // TODO: A supprimer. Mettre cela dans une function externe pour ne pas dépendre de backend
@@ -161,7 +161,7 @@ public:
   : m_nb_row(backend::nbRow(A))
   , ncols(backend::nbColumn(A))
   {
-    ARCANE_ALINA_TIC("CSR copy");
+    ARCCORE_ALINA_TIC("CSR copy");
     ptr.resize(m_nb_row + 1);
     ptr[0] = 0;
 
@@ -187,7 +187,7 @@ public:
         ++row_head;
       }
     }
-    ARCANE_ALINA_TOC("CSR copy");
+    ARCCORE_ALINA_TOC("CSR copy");
   }
 
   CSRMatrix(const CSRMatrix& other)

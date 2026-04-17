@@ -36,23 +36,23 @@ int main()
 
   dBackend::params bprm;
 
-  ARCANE_ALINA_TIC("assemble");
+  ARCCORE_ALINA_TIC("assemble");
   int n = sample_problem(128, val, col, ptr, rhs);
-  ARCANE_ALINA_TOC("assemble");
+  ARCCORE_ALINA_TOC("assemble");
 
   auto A_d = std::tie(n, ptr, col, val);
   std::vector<double>& f = rhs;
   std::vector<double> x(n, 0.0);
 
-  ARCANE_ALINA_TIC("setup");
+  ARCCORE_ALINA_TIC("setup");
   Solver S(std::tie(n, ptr, col, val), Solver::params(), bprm);
-  ARCANE_ALINA_TIC("setup");
+  ARCCORE_ALINA_TIC("setup");
 
   std::cout << S << std::endl;
 
-  ARCANE_ALINA_TIC("solve");
+  ARCCORE_ALINA_TIC("solve");
   SolverResult r = S(A_d, f, x);
-  ARCANE_ALINA_TIC("solve");
+  ARCCORE_ALINA_TIC("solve");
 
   std::cout << "Iterations: " << r.nbIteration() << std::endl
             << "Error:      " << r.residual() << std::endl

@@ -1,5 +1,5 @@
-#ifndef ARCANE_ALINA_MAKE_BLOCK_SOLVER_HPP
-#define ARCANE_ALINA_MAKE_BLOCK_SOLVER_HPP
+#ifndef ARCCORE_ALINA_MAKE_BLOCK_SOLVER_HPP
+#define ARCCORE_ALINA_MAKE_BLOCK_SOLVER_HPP
 
 #include "arccore/alina/BackendInterface.h"
 #include "arccore/alina/Adapters.h"

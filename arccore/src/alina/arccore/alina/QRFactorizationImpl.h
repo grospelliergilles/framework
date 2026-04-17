@@ -9,8 +9,8 @@
 /*                                                                           */
 /* QR factorization of a dense matrix.                                       */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_QRFACTORIZATIONIMPL_H
-#define ARCANE_ALINA_QRFACTORIZATIONIMPL_H
+#ifndef ARCCORE_ALINA_QRFACTORIZATIONIMPL_H
+#define ARCCORE_ALINA_QRFACTORIZATIONIMPL_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

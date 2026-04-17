@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Save/Restore std::stream flags.                                           */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_SCOPEDSTREAMMODIFIER_H
-#define ARCANE_ALINA_SCOPEDSTREAMMODIFIER_H
+#ifndef ARCCORE_ALINA_SCOPEDSTREAMMODIFIER_H
+#define ARCCORE_ALINA_SCOPEDSTREAMMODIFIER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

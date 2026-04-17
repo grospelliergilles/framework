@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Distributed Schur complement pressure correction preconditioner.          */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDSCHURPRESSURECORRECTION_H
-#define ARCANE_ALINA_MPI_DISTRIBUTEDSCHURPRESSURECORRECTION_H
+#ifndef ARCCORE_ALINA_MPI_DISTRIBUTEDSCHURPRESSURECORRECTION_H
+#define ARCCORE_ALINA_MPI_DISTRIBUTEDSCHURPRESSURECORRECTION_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -96,12 +96,12 @@ class DistributedSchurPressureCorrection
     params() = default;
 
     params(const Alina::PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, usolver)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, psolver)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, type)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, approx_schur)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, simplec_dia)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, usolver)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, psolver)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, type)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, approx_schur)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, simplec_dia)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
     {
       size_t n = 0;
 
@@ -149,12 +149,12 @@ class DistributedSchurPressureCorrection
 
     void get(PropertyTree& p, const std::string& path = "") const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, usolver);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, psolver);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, type);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, approx_schur);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, simplec_dia);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, usolver);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, psolver);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, type);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, approx_schur);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, simplec_dia);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
     }
   };
 
@@ -197,15 +197,15 @@ class DistributedSchurPressureCorrection
     ptrdiff_t n = K->loc_rows();
 
     // Count pressure and flow variables.
-    ARCANE_ALINA_TIC("count pressure/flow vars");
+    ARCCORE_ALINA_TIC("count pressure/flow vars");
     std::vector<ptrdiff_t> idx(n);
     ptrdiff_t np = 0, nu = 0;
 
     for (ptrdiff_t i = 0; i < n; ++i)
       idx[i] = (prm.pmask[i] ? np++ : nu++);
-    ARCANE_ALINA_TOC("count pressure/flow vars");
+    ARCCORE_ALINA_TOC("count pressure/flow vars");
 
-    ARCANE_ALINA_TIC("setup communication");
+    ARCCORE_ALINA_TIC("setup communication");
     // We know what points each of our neighbors needs from us;
     // and we know if those points are pressure or flow.
     // We can immediately provide them with our renumbering scheme.
@@ -227,11 +227,11 @@ class DistributedSchurPressureCorrection
 
     C.exchange(&smask[0], &rmask[0]);
     C.exchange(&s_idx[0], &r_idx[0]);
-    ARCANE_ALINA_TOC("setup communication");
+    ARCCORE_ALINA_TOC("setup communication");
 
     // Fill the subblocks of the system matrix.
     // K_rem->col may be used as direct indices into rmask and r_idx.
-    ARCANE_ALINA_TIC("schur blocks");
+    ARCCORE_ALINA_TIC("schur blocks");
     this->K->move_to_backend(bprm);
 
     auto Kpp_loc = make_shared<build_matrix>();
@@ -413,16 +413,16 @@ class DistributedSchurPressureCorrection
 
     Kpu->move_to_backend(bprm);
     Kup->move_to_backend(bprm);
-    ARCANE_ALINA_TOC("schur blocks");
+    ARCCORE_ALINA_TOC("schur blocks");
 
-    ARCANE_ALINA_TIC("usolver")
+    ARCCORE_ALINA_TIC("usolver")
     U = make_shared<USolver>(comm, Kuu, prm.usolver, bprm);
-    ARCANE_ALINA_TOC("usolver")
-    ARCANE_ALINA_TIC("psolver")
+    ARCCORE_ALINA_TOC("usolver")
+    ARCCORE_ALINA_TIC("psolver")
     P = make_shared<PSolver>(comm, Kpp, prm.psolver, bprm);
-    ARCANE_ALINA_TOC("psolver")
+    ARCCORE_ALINA_TOC("psolver")
 
-    ARCANE_ALINA_TIC("other");
+    ARCCORE_ALINA_TIC("other");
     rhs_u = backend_type::create_vector(nu, bprm);
     rhs_p = backend_type::create_vector(np, bprm);
 
@@ -433,7 +433,7 @@ class DistributedSchurPressureCorrection
 
     if (prm.approx_schur) {
       std::shared_ptr<numa_vector<value_type>> Kuu_dia;
-      ARCANE_ALINA_TIC("Kuu diagonal");
+      ARCCORE_ALINA_TIC("Kuu diagonal");
       if (prm.simplec_dia) {
         Kuu_dia = std::make_shared<numa_vector<value_type>>(nu, false);
 #pragma omp parallel
@@ -453,11 +453,11 @@ class DistributedSchurPressureCorrection
       }
 
       M = backend_type::copy_vector(Kuu_dia, bprm);
-      ARCANE_ALINA_TOC("Kuu diagonal");
+      ARCCORE_ALINA_TOC("Kuu diagonal");
     }
 
     // Scatter/Gather matrices
-    ARCANE_ALINA_TIC("scatter/gather");
+    ARCCORE_ALINA_TIC("scatter/gather");
     auto x2u = std::make_shared<build_matrix>();
     auto x2p = std::make_shared<build_matrix>();
     auto u2x = std::make_shared<build_matrix>();
@@ -528,7 +528,7 @@ class DistributedSchurPressureCorrection
     this->x2p = backend_type::copy_matrix(x2p, bprm);
     this->u2x = backend_type::copy_matrix(u2x, bprm);
     this->p2x = backend_type::copy_matrix(p2x, bprm);
-    ARCANE_ALINA_TOC("scatter/gather");
+    ARCCORE_ALINA_TOC("scatter/gather");
   }
 
   std::shared_ptr<matrix> system_matrix_ptr() const
@@ -547,55 +547,55 @@ class DistributedSchurPressureCorrection
     const auto one = math::identity<scalar_type>();
     const auto zero = math::zero<scalar_type>();
 
-    ARCANE_ALINA_TIC("split variables");
+    ARCCORE_ALINA_TIC("split variables");
     backend::spmv(one, *x2u, rhs, zero, *rhs_u);
     backend::spmv(one, *x2p, rhs, zero, *rhs_p);
-    ARCANE_ALINA_TOC("split variables");
+    ARCCORE_ALINA_TOC("split variables");
 
     if (prm.type == 1) {
       // Ai u = rhs_u
-      ARCANE_ALINA_TIC("solve U");
+      ARCCORE_ALINA_TIC("solve U");
       backend::clear(*u);
       report("U1", (*U)(*rhs_u, *u));
-      ARCANE_ALINA_TOC("solve U");
+      ARCCORE_ALINA_TOC("solve U");
 
       // rhs_p -= Kpu u
-      ARCANE_ALINA_TIC("solve P");
+      ARCCORE_ALINA_TIC("solve P");
       backend::spmv(-one, *Kpu, *u, one, *rhs_p);
 
       // S p = rhs_p
       backend::clear(*p);
       report("P", (*P)(*this, *rhs_p, *p));
-      ARCANE_ALINA_TOC("solve P");
+      ARCCORE_ALINA_TOC("solve P");
 
       // rhs_u -= Kup p
-      ARCANE_ALINA_TIC("Update U");
+      ARCCORE_ALINA_TIC("Update U");
       backend::spmv(-one, *Kup, *p, one, *rhs_u);
 
       // Ai u = rhs_u
       backend::clear(*u);
       report("U2", (*U)(*rhs_u, *u));
-      ARCANE_ALINA_TOC("Update U");
+      ARCCORE_ALINA_TOC("Update U");
     }
     else if (prm.type == 2) {
       // S p = rhs_p
-      ARCANE_ALINA_TIC("solve P");
+      ARCCORE_ALINA_TIC("solve P");
       backend::clear(*p);
       report("P", (*P)(*this, *rhs_p, *p));
-      ARCANE_ALINA_TOC("solve P");
+      ARCCORE_ALINA_TOC("solve P");
 
       // Ai u = fu - Kup p
-      ARCANE_ALINA_TIC("solve U");
+      ARCCORE_ALINA_TIC("solve U");
       backend::spmv(-one, *Kup, *p, one, *rhs_u);
       backend::clear(*u);
       report("U", (*U)(*rhs_u, *u));
-      ARCANE_ALINA_TOC("solve U");
+      ARCCORE_ALINA_TOC("solve U");
     }
 
-    ARCANE_ALINA_TIC("merge variables");
+    ARCCORE_ALINA_TIC("merge variables");
     backend::spmv(one, *u2x, *u, zero, x);
     backend::spmv(one, *p2x, *p, one, x);
-    ARCANE_ALINA_TOC("merge variables");
+    ARCCORE_ALINA_TOC("merge variables");
   }
 
   template <class Alpha, class Vec1, class Beta, class Vec2>
@@ -605,7 +605,7 @@ class DistributedSchurPressureCorrection
     const auto zero = math::zero<scalar_type>();
 
     // y = beta y + alpha S x, where S = Kpp - Kpu Kuu^-1 Kup
-    ARCANE_ALINA_TIC("matrix-free spmv");
+    ARCCORE_ALINA_TIC("matrix-free spmv");
     backend::spmv(alpha, P->system_matrix(), x, beta, y);
 
     backend::spmv(one, *Kup, x, zero, *tmp);
@@ -618,7 +618,7 @@ class DistributedSchurPressureCorrection
       (*U)(*tmp, *u);
     }
     backend::spmv(-alpha, *Kpu, *u, one, y);
-    ARCANE_ALINA_TOC("matrix-free spmv");
+    ARCCORE_ALINA_TOC("matrix-free spmv");
   }
 
  public:
@@ -638,7 +638,7 @@ class DistributedSchurPressureCorrection
   std::shared_ptr<USolver> U;
   std::shared_ptr<PSolver> P;
 
-#ifdef ARCANE_ALINA_DEBUG
+#ifdef ARCCORE_ALINA_DEBUG
   void report(const std::string& name, const SolverResult& sr) const
   {
     if (comm.rank == 0 && prm.report >= 1) {

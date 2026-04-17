@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Solver which only apply preconditioner once.                              */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_PRECONDITIONERONLYSOLVER_H
-#define ARCANE_ALINA_PRECONDITIONERONLYSOLVER_H
+#ifndef ARCCORE_ALINA_PRECONDITIONERONLYSOLVER_H
+#define ARCCORE_ALINA_PRECONDITIONERONLYSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

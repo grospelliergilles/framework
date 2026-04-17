@@ -10,8 +10,8 @@
 /* Execution context for linear solver operations.                           */
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_EXECUTIONCONTEXT_H
-#define ARCANE_ALINA_EXECUTIONCONTEXT_H
+#ifndef ARCCORE_ALINA_EXECUTIONCONTEXT_H
+#define ARCCORE_ALINA_EXECUTIONCONTEXT_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -29,7 +29,7 @@ namespace Arcane::Alina
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-class ARCANE_ALINA_EXPORT ExecutionContext
+class ARCCORE_ALINA_EXPORT ExecutionContext
 {
  public:
 

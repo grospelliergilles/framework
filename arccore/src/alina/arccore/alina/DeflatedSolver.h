@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Iterative preconditioned solver with deflation.                           */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_DEFLATEDSOLVER_H
-#define ARCANE_ALINA_DEFLATEDSOLVER_H
+#ifndef ARCCORE_ALINA_DEFLATEDSOLVER_H
+#define ARCCORE_ALINA_DEFLATEDSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -74,20 +74,20 @@ class DeflatedSolver
     params() = default;
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, nvec)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, vec)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, precond)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solver)
+    : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, nvec)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, vec)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, precond)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, solver)
     {
       p.check_params({ "nvec", "vec", "precond", "solver" });
     }
 
     void get(PropertyTree& p, const std::string& path = "") const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, nvec);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, vec);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, precond);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solver);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, nvec);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, vec);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, precond);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, solver);
     }
   };
 

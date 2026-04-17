@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Matrix partitioning using ParMetis.                                       */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_PARMETISMATRIXPARTITIONER_H
-#define ARCANE_ALINA_PARMETISMATRIXPARTITIONER_H
+#ifndef ARCCORE_ALINA_PARMETISMATRIXPARTITIONER_H
+#define ARCCORE_ALINA_PARMETISMATRIXPARTITIONER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -63,18 +63,18 @@ struct ParmetisMatrixPartitioner
     {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, shrink)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, min_per_proc)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, shrink_ratio)
+    : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, shrink)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, min_per_proc)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, shrink_ratio)
     {
       p.check_params({ "shrink", "min_per_proc", "shrink_ratio" });
     }
 
     void get(PropertyTree& p, const std::string& path = "") const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, shrink);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, min_per_proc);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, shrink_ratio);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, shrink);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, min_per_proc);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, shrink_ratio);
     }
 
   } prm;

@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Sparse matrix in block-CSR format.                         .              */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_BLOCKCSRMATRIX_H
-#define ARCANE_ALINA_BLOCKCSRMATRIX_H
+#ifndef ARCCORE_ALINA_BLOCKCSRMATRIX_H
+#define ARCCORE_ALINA_BLOCKCSRMATRIX_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

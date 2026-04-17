@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Distributed direct solver that uses Skyline LU factorization.             */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDSKYLINELUDIRECTSOLVER_H
-#define ARCANE_ALINA_MPI_DISTRIBUTEDSKYLINELUDIRECTSOLVER_H
+#ifndef ARCCORE_ALINA_MPI_DISTRIBUTEDSKYLINELUDIRECTSOLVER_H
+#define ARCCORE_ALINA_MPI_DISTRIBUTEDSKYLINELUDIRECTSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

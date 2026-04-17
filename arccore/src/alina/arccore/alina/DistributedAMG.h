@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Distributed memory AMG preconditioner.                                    */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_DISTRIBUTEDAMG_H
-#define ARCANE_ALINA_DISTRIBUTEDAMG_H
+#ifndef ARCCORE_ALINA_DISTRIBUTEDAMG_H
+#define ARCCORE_ALINA_DISTRIBUTEDAMG_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -117,18 +117,18 @@ class DistributedAMG
     params() = default;
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, coarsening)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, relax)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, direct)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, repart)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, coarse_enough)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, direct_coarse)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, max_levels)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, npre)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, npost)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ncycle)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, pre_cycles)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, allow_rebuild)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, coarsening)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, relax)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, direct)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, repart)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, coarse_enough)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, direct_coarse)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, max_levels)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, npre)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, npost)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, ncycle)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, pre_cycles)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, allow_rebuild)
     {
       p.check_params({ "coarsening", "relax", "direct", "repart", "coarse_enough", "direct_coarse", "max_levels", "npre", "npost", "ncycle", "pre_cycles", "allow_rebuild" });
 
@@ -137,18 +137,18 @@ class DistributedAMG
 
     void get(Alina::PropertyTree& p, const std::string& path = "") const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, coarsening);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, relax);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, direct);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, repart);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, coarse_enough);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, direct_coarse);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, max_levels);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, npre);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, npost);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ncycle);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, pre_cycles);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, allow_rebuild);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, coarsening);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, relax);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, direct);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, repart);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, coarse_enough);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, direct_coarse);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, max_levels);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, npre);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, npost);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, ncycle);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, pre_cycles);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, allow_rebuild);
     }
   } prm;
 
@@ -204,14 +204,14 @@ class DistributedAMG
                  A->glob_cols() == system_matrix().glob_cols(),
                  "Matrix dimensions differ from the original ones!");
 
-    ARCANE_ALINA_TIC("rebuild");
+    ARCCORE_ALINA_TIC("rebuild");
     this->A = A;
     Coarsening C(prm.coarsening);
     for (auto& level : levels) {
       A = level.rebuild(A, C, prm, bprm);
     }
     this->A->move_to_backend(bprm);
-    ARCANE_ALINA_TOC("rebuild");
+    ARCCORE_ALINA_TOC("rebuild");
   }
 
   template <class Vec1, class Vec2>
@@ -273,50 +273,50 @@ class DistributedAMG
       sort_rows(*a);
 
       if (direct) {
-        ARCANE_ALINA_TIC("direct solver");
+        ARCCORE_ALINA_TIC("direct solver");
         solve = std::make_shared<DirectSolver>(a->comm(), *a, prm.direct);
-        ARCANE_ALINA_TOC("direct solver");
+        ARCCORE_ALINA_TOC("direct solver");
       }
       else {
         A = a;
         t = Backend::create_vector(a->loc_rows(), bprm);
 
-        ARCANE_ALINA_TIC("relaxation");
+        ARCCORE_ALINA_TIC("relaxation");
         relax = std::make_shared<Relaxation>(*a, prm.relax, bprm);
-        ARCANE_ALINA_TOC("relaxation");
+        ARCCORE_ALINA_TOC("relaxation");
       }
     }
 
     std::shared_ptr<matrix> step_down(Coarsening& C, const Repartition& repart)
     {
-      ARCANE_ALINA_TIC("transfer operators");
+      ARCCORE_ALINA_TIC("transfer operators");
       std::tie(P, R) = C.transfer_operators(*A);
 
-      ARCANE_ALINA_TIC("sort");
+      ARCCORE_ALINA_TIC("sort");
       sort_rows(*P);
       sort_rows(*R);
-      ARCANE_ALINA_TOC("sort");
+      ARCCORE_ALINA_TOC("sort");
 
-      ARCANE_ALINA_TOC("transfer operators");
+      ARCCORE_ALINA_TOC("transfer operators");
 
       if (P->glob_cols() == 0) {
         // Zero-sized coarse level in AMG (diagonal matrix?)
         return std::shared_ptr<matrix>();
       }
 
-      ARCANE_ALINA_TIC("coarse operator");
+      ARCCORE_ALINA_TIC("coarse operator");
       auto Ac = C.coarse_operator(*A, *P, *R);
-      ARCANE_ALINA_TOC("coarse operator");
+      ARCCORE_ALINA_TOC("coarse operator");
 
       if (repart.is_needed(*Ac)) {
-        ARCANE_ALINA_TIC("partition");
+        ARCCORE_ALINA_TIC("partition");
         auto I = repart(*Ac, block_size(C));
         auto J = transpose(*I);
 
         P = product(*P, *I);
         R = product(*J, *R);
         Ac = product(*J, *product(*Ac, *I));
-        ARCANE_ALINA_TOC("partition");
+        ARCCORE_ALINA_TOC("partition");
       }
 
       return Ac;
@@ -353,14 +353,14 @@ class DistributedAMG
 
     void move_to_backend(const backend_params& bprm, bool keep_src = false)
     {
-      ARCANE_ALINA_TIC("move to backend");
+      ARCCORE_ALINA_TIC("move to backend");
       if (A)
         A->move_to_backend(bprm);
       if (P)
         P->move_to_backend(bprm, keep_src);
       if (R)
         R->move_to_backend(bprm, keep_src);
-      ARCANE_ALINA_TOC("move to backend");
+      ARCCORE_ALINA_TOC("move to backend");
     }
 
     ptrdiff_t rows() const
@@ -420,9 +420,9 @@ class DistributedAMG
       levels.back().move_to_backend(bprm, prm.allow_rebuild);
     }
 
-    ARCANE_ALINA_TIC("move to backend");
+    ARCCORE_ALINA_TIC("move to backend");
     this->A->move_to_backend(bprm, prm.allow_rebuild);
-    ARCANE_ALINA_TOC("move to backend");
+    ARCCORE_ALINA_TOC("move to backend");
   }
 
   template <class Vec1, class Vec2>
@@ -433,25 +433,25 @@ class DistributedAMG
 
     if (nxt == end) {
       if (lvl->solve) {
-        ARCANE_ALINA_TIC("direct solver");
+        ARCCORE_ALINA_TIC("direct solver");
         (*lvl->solve)(rhs, x);
-        ARCANE_ALINA_TOC("direct solver");
+        ARCCORE_ALINA_TOC("direct solver");
       }
       else {
-        ARCANE_ALINA_TIC("relax");
+        ARCCORE_ALINA_TIC("relax");
         for (size_t i = 0; i < prm.npre; ++i)
           lvl->relax->apply_pre(*lvl->A, rhs, x, *lvl->t);
         for (size_t i = 0; i < prm.npost; ++i)
           lvl->relax->apply_post(*lvl->A, rhs, x, *lvl->t);
-        ARCANE_ALINA_TOC("relax");
+        ARCCORE_ALINA_TOC("relax");
       }
     }
     else {
       for (size_t j = 0; j < prm.ncycle; ++j) {
-        ARCANE_ALINA_TIC("relax");
+        ARCCORE_ALINA_TIC("relax");
         for (size_t i = 0; i < prm.npre; ++i)
           lvl->relax->apply_pre(*lvl->A, rhs, x, *lvl->t);
-        ARCANE_ALINA_TOC("relax");
+        ARCCORE_ALINA_TOC("relax");
 
         backend::residual(rhs, *lvl->A, x, *lvl->t);
 
@@ -462,10 +462,10 @@ class DistributedAMG
 
         backend::spmv(math::identity<scalar_type>(), *lvl->P, *nxt->u, math::identity<scalar_type>(), x);
 
-        ARCANE_ALINA_TIC("relax");
+        ARCCORE_ALINA_TIC("relax");
         for (size_t i = 0; i < prm.npost; ++i)
           lvl->relax->apply_post(*lvl->A, rhs, x, *lvl->t);
-        ARCANE_ALINA_TOC("relax");
+        ARCCORE_ALINA_TOC("relax");
       }
     }
   }

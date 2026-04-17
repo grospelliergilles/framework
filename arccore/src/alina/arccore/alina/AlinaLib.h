@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Public API for Alina.                                      .              */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_ALINALIB_H
-#define ARCANE_ALINA_ALINALIB_H
+#ifndef ARCCORE_ALINA_ALINALIB_H
+#define ARCCORE_ALINA_ALINALIB_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -28,7 +28,7 @@
 #include <mpi.h>
 
 // Convergence info
-struct ARCANE_ALINA_EXPORT AlinaConvergenceInfo
+struct ARCCORE_ALINA_EXPORT AlinaConvergenceInfo
 {
   int iterations;
   double residual;
@@ -48,7 +48,7 @@ struct AlinaSequentialSolver;
 //! Distributed solver;
 struct AlinaDistributedSolver;
 
-class ARCANE_ALINA_EXPORT AlinaLib
+class ARCCORE_ALINA_EXPORT AlinaLib
 {
  public:
 

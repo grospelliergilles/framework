@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Backend interface required for AMG.                        .              */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_BACKENDINTERFACE_H
-#define ARCANE_ALINA_BACKENDINTERFACE_H
+#ifndef ARCCORE_ALINA_BACKENDINTERFACE_H
+#define ARCCORE_ALINA_BACKENDINTERFACE_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -428,9 +428,9 @@ template <class Alpha, class Matrix, class Vector1, class Beta, class Vector2>
 void spmv(Alpha alpha, const Matrix& A, const Vector1& x,
           Beta beta, Vector2& y)
 {
-  ARCANE_ALINA_TIC("spmv");
+  ARCCORE_ALINA_TIC("spmv");
   spmv_impl<Alpha, Matrix, Vector1, Beta, Vector2>::apply(alpha, A, x, beta, y);
-  ARCANE_ALINA_TOC("spmv");
+  ARCCORE_ALINA_TOC("spmv");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -443,9 +443,9 @@ void spmv(Alpha alpha, const Matrix& A, const Vector1& x,
 template <class Matrix, class Vector1, class Vector2, class Vector3>
 void residual(const Vector1& rhs, const Matrix& A, const Vector2& x, Vector3& r)
 {
-  ARCANE_ALINA_TIC("residual");
+  ARCCORE_ALINA_TIC("residual");
   residual_impl<Matrix, Vector1, Vector2, Vector3>::apply(rhs, A, x, r);
-  ARCANE_ALINA_TOC("residual");
+  ARCCORE_ALINA_TOC("residual");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -454,9 +454,9 @@ void residual(const Vector1& rhs, const Matrix& A, const Vector2& x, Vector3& r)
 template <class Vector>
 void clear(Vector& x)
 {
-  ARCANE_ALINA_TIC("clear");
+  ARCCORE_ALINA_TIC("clear");
   clear_impl<Vector>::apply(x);
-  ARCANE_ALINA_TOC("clear");
+  ARCCORE_ALINA_TOC("clear");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -466,9 +466,9 @@ void clear(Vector& x)
 template <class Vector1, class Vector2>
 void copy(const Vector1& x, Vector2& y)
 {
-  ARCANE_ALINA_TIC("copy");
+  ARCCORE_ALINA_TIC("copy");
   copy_impl<Vector1, Vector2>::apply(x, y);
-  ARCANE_ALINA_TOC("copy");
+  ARCCORE_ALINA_TOC("copy");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -482,9 +482,9 @@ inner_product(const Vector1& x, const Vector2& y)
   typedef typename math::inner_product_impl<
   typename value_type<Vector1>::type>::return_type result_type;
 
-  ARCANE_ALINA_TIC("inner_product");
+  ARCCORE_ALINA_TIC("inner_product");
   result_type p = inner_product_impl<Vector1, Vector2>::get(x, y);
-  ARCANE_ALINA_TOC("inner_product");
+  ARCCORE_ALINA_TOC("inner_product");
 
   return p;
 }
@@ -498,9 +498,9 @@ inner_product(const Vector1& x, const Vector2& y)
 template <class A, class Vector1, class B, class Vector2>
 void axpby(A a, Vector1 const& x, B b, Vector2& y)
 {
-  ARCANE_ALINA_TIC("axpby");
+  ARCCORE_ALINA_TIC("axpby");
   axpby_impl<A, Vector1, B, Vector2>::apply(a, x, b, y);
-  ARCANE_ALINA_TOC("axpby");
+  ARCCORE_ALINA_TOC("axpby");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -513,9 +513,9 @@ void axpby(A a, Vector1 const& x, B b, Vector2& y)
 template <class A, class Vector1, class B, class Vector2, class C, class Vector3>
 void axpbypcz(A a, Vector1 const& x, B b, Vector2 const& y, C c, Vector3& z)
 {
-  ARCANE_ALINA_TIC("axpbypcz");
+  ARCCORE_ALINA_TIC("axpbypcz");
   axpbypcz_impl<A, Vector1, B, Vector2, C, Vector3>::apply(a, x, b, y, c, z);
-  ARCANE_ALINA_TOC("axpbypcz");
+  ARCCORE_ALINA_TOC("axpbypcz");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -528,9 +528,9 @@ void axpbypcz(A a, Vector1 const& x, B b, Vector2 const& y, C c, Vector3& z)
 template <class Alpha, class Vector1, class Vector2, class Beta, class Vector3>
 void vmul(Alpha alpha, const Vector1& x, const Vector2& y, Beta beta, Vector3& z)
 {
-  ARCANE_ALINA_TIC("vmul");
+  ARCCORE_ALINA_TIC("vmul");
   vmul_impl<Alpha, Vector1, Vector2, Beta, Vector3>::apply(alpha, x, y, beta, z);
-  ARCANE_ALINA_TOC("vmul");
+  ARCCORE_ALINA_TOC("vmul");
 }
 
 /*---------------------------------------------------------------------------*/

@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Operations on CSRMatrix.                                                  */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_CSRMATRIXOPERATIONS_H
-#define ARCANE_ALINA_CSRMATRIXOPERATIONS_H
+#ifndef ARCCORE_ALINA_CSRMATRIXOPERATIONS_H
+#define ARCCORE_ALINA_CSRMATRIXOPERATIONS_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -249,7 +249,7 @@ pointwise_matrix(const CSRMatrix<value_type, col_type, ptr_type>& A, unsigned bl
   typedef value_type V;
   typedef typename math::scalar_of<V>::type S;
 
-  ARCANE_ALINA_TIC("pointwise_matrix");
+  ARCCORE_ALINA_TIC("pointwise_matrix");
   const ptrdiff_t n = A.nbRow();
   const ptrdiff_t m = A.ncols;
   const ptrdiff_t np = n / block_size;
@@ -405,7 +405,7 @@ pointwise_matrix(const CSRMatrix<value_type, col_type, ptr_type>& A, unsigned bl
     }
   }
 
-  ARCANE_ALINA_TOC("pointwise_matrix");
+  ARCCORE_ALINA_TOC("pointwise_matrix");
   return ap;
 }
 
@@ -447,7 +447,7 @@ template <bool scale, class Matrix>
 static typename math::scalar_of<typename backend::value_type<Matrix>::type>::type
 spectral_radius(const Matrix& A, int power_iters = 0)
 {
-  ARCANE_ALINA_TIC("spectral radius");
+  ARCCORE_ALINA_TIC("spectral radius");
   typedef typename backend::value_type<Matrix>::type value_type;
   typedef typename math::rhs_of<value_type>::type rhs_type;
   typedef typename math::scalar_of<value_type>::type scalar_type;
@@ -576,7 +576,7 @@ spectral_radius(const Matrix& A, int power_iters = 0)
       }
     }
   }
-  ARCANE_ALINA_TOC("spectral radius");
+  ARCCORE_ALINA_TOC("spectral radius");
 
   return radius < 0 ? static_cast<scalar_type>(2) : radius;
 }

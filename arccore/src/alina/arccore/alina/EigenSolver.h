@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Wrapper around eigen direct solvers.                                      */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_EIGENSOLVER_H
-#define ARCANE_ALINA_EIGENSOLVER_H
+#ifndef ARCCORE_ALINA_EIGENSOLVER_H
+#define ARCCORE_ALINA_EIGENSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

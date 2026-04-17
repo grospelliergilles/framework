@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Various relaxation algorithms.                                            */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_RELAXATION_H
-#define ARCANE_ALINA_RELAXATION_H
+#ifndef ARCCORE_ALINA_RELAXATION_H
+#define ARCCORE_ALINA_RELAXATION_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -289,22 +289,22 @@ class ChebyshevRelaxation
     params() = default;
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, degree)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, higher)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, lower)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, scale)
+    : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, degree)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, higher)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, lower)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, power_iters)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, scale)
     {
       p.check_params( { "degree", "higher", "lower", "power_iters", "scale" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, degree);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, higher);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, lower);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, power_iters);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, scale);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, degree);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, higher);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, lower);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, power_iters);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, scale);
     }
   } prm;
 
@@ -431,14 +431,14 @@ struct DampedJacobiRelaxation
     {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
+    : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
     {
       p.check_params( { "damping" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
     }
   } prm;
 
@@ -527,14 +527,14 @@ struct GaussSeidelRelaxation
     {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, serial)
+    : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, serial)
     {
       p.check_params( { "serial" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, serial);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, serial);
     }
   };
 
@@ -887,16 +887,16 @@ struct ILU0Relaxation
     {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solve)
+    : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, solve)
     {
       p.check_params( { "damping", "solve" }, { "k" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solve);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, solve);
     }
   } prm;
 
@@ -1102,18 +1102,18 @@ struct ILUKRelaxation
     {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, k)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solve)
+    : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, k)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, solve)
     {
       p.check_params( { "k", "damping", "solve" });
     }
 
     void get(PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, k);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solve);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, k);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, solve);
     }
   } prm;
 
@@ -1439,7 +1439,7 @@ struct ILUPRelaxation
 
     params(const PropertyTree& p)
     : BasePrm(p)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, k)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, k)
     {
       p.check_params( { "k", "damping", "solve" });
     }
@@ -1447,7 +1447,7 @@ struct ILUPRelaxation
     void get(PropertyTree& p, const std::string& path) const
     {
       BasePrm::get(p, path);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, k);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, k);
     }
   } prm;
 
@@ -1563,10 +1563,10 @@ struct ILUTRelaxation
     params() = default;
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, p)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tau)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, solve)
+    : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, p)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, tau)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, solve)
     {
       p.check_params( { "p", "tau", "damping", "solve" });
     }
@@ -1574,10 +1574,10 @@ struct ILUTRelaxation
     void get(PropertyTree& p, const std::string& path) const
     {
       double p2 = this->p;
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, p2);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tau);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, solve);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, p2);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, tau);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, solve);
     }
   } prm;
 

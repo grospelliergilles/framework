@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Backend to use types defines in the Eigen library.                        */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_EIGENBACKEND_H
-#define ARCANE_ALINA_EIGENBACKEND_H
+#ifndef ARCCORE_ALINA_EIGENBACKEND_H
+#define ARCCORE_ALINA_EIGENBACKEND_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Sparse matrix-matrix product algorithms.                                  */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_SPARSEMATRIXMATRIXPRODUCT_H
-#define ARCANE_ALINA_SPARSEMATRIXMATRIXPRODUCT_H
+#ifndef ARCCORE_ALINA_SPARSEMATRIXMATRIXPRODUCT_H
+#define ARCCORE_ALINA_SPARSEMATRIXMATRIXPRODUCT_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

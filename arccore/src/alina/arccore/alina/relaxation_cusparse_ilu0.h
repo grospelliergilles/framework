@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Implementation of ILU0 smoother for CUDA backend.                         */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_RELAXATION_CUSPARSEILU0_H
-#define ARCANE_ALINA_RELAXATION_CUSPARSEILU0_H
+#ifndef ARCCORE_ALINA_RELAXATION_CUSPARSEILU0_H
+#define ARCCORE_ALINA_RELAXATION_CUSPARSEILU0_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -60,14 +60,14 @@ struct ilu0<backend::cuda<real>>
     params() = default;
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
+    : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
     {
       p.check_params({ "damping" });
     }
 
     void get(Alina::PropertyTree& p, const std::string& path) const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
     }
   } prm;
 
@@ -90,18 +90,18 @@ struct ilu0<backend::cuda<real>>
       cusparseMatDescr_t descr;
       csrilu02Info_t info;
 
-      ARCANE_ALINA_CALL_CUDA(cusparseCreateMatDescr(&descr));
-      ARCANE_ALINA_CALL_CUDA(cusparseSetMatIndexBase(descr, CUSPARSE_INDEX_BASE_ZERO));
-      ARCANE_ALINA_CALL_CUDA(cusparseSetMatType(descr, CUSPARSE_MATRIX_TYPE_GENERAL));
+      ARCCORE_ALINA_CALL_CUDA(cusparseCreateMatDescr(&descr));
+      ARCCORE_ALINA_CALL_CUDA(cusparseSetMatIndexBase(descr, CUSPARSE_INDEX_BASE_ZERO));
+      ARCCORE_ALINA_CALL_CUDA(cusparseSetMatType(descr, CUSPARSE_MATRIX_TYPE_GENERAL));
 
-      ARCANE_ALINA_CALL_CUDA(cusparseCreateCsrilu02Info(&info));
+      ARCCORE_ALINA_CALL_CUDA(cusparseCreateCsrilu02Info(&info));
 
       descr_M.reset(descr, backend::detail::cuda_deleter());
       info_M.reset(info, backend::detail::cuda_deleter());
 
       int buf_size;
 
-      ARCANE_ALINA_CALL_CUDA(
+      ARCCORE_ALINA_CALL_CUDA(
       cusparseXcsrilu02_bufferSize(handle, n, nnz, descr_M.get(),
                                    thrust::raw_pointer_cast(&val[0]),
                                    thrust::raw_pointer_cast(&ptr[0]),
@@ -114,7 +114,7 @@ struct ilu0<backend::cuda<real>>
       int structural_zero;
       int numerical_zero;
 
-      ARCANE_ALINA_CALL_CUDA(
+      ARCCORE_ALINA_CALL_CUDA(
       cusparseXcsrilu02_analysis(handle,
                                  n,
                                  nnz,
@@ -130,7 +130,7 @@ struct ilu0<backend::cuda<real>>
       CUSPARSE_STATUS_ZERO_PIVOT != cusparseXcsrilu02_zeroPivot(handle, info_M.get(), &structural_zero),
       "Zero pivot in cuSPARSE ILU0");
 
-      ARCANE_ALINA_CALL_CUDA(
+      ARCCORE_ALINA_CALL_CUDA(
       cusparseXcsrilu02(handle,
                         n,
                         nnz,
@@ -170,13 +170,13 @@ struct ilu0<backend::cuda<real>>
       backend::detail::cuda_matrix_description(n, n, nnz, ptr, col, val),
       backend::detail::cuda_deleter());
 
-      ARCANE_ALINA_CALL_CUDA(
+      ARCCORE_ALINA_CALL_CUDA(
       cusparseSpMatSetAttribute(descr_L.get(),
                                 CUSPARSE_SPMAT_FILL_MODE,
                                 &fill_lower,
                                 sizeof(fill_lower)));
 
-      ARCANE_ALINA_CALL_CUDA(
+      ARCCORE_ALINA_CALL_CUDA(
       cusparseSpMatSetAttribute(descr_L.get(),
                                 CUSPARSE_SPMAT_DIAG_TYPE,
                                 &diag_unit,
@@ -185,10 +185,10 @@ struct ilu0<backend::cuda<real>>
       size_t buf_size;
 
       cusparseSpSVDescr_t desc;
-      ARCANE_ALINA_CALL_CUDA(cusparseSpSV_createDescr(&desc));
+      ARCCORE_ALINA_CALL_CUDA(cusparseSpSV_createDescr(&desc));
       descr_SL.reset(desc, backend::detail::cuda_deleter());
 
-      ARCANE_ALINA_CALL_CUDA(
+      ARCCORE_ALINA_CALL_CUDA(
       cusparseSpSV_bufferSize(handle,
                               CUSPARSE_OPERATION_NON_TRANSPOSE,
                               &alpha,
@@ -202,7 +202,7 @@ struct ilu0<backend::cuda<real>>
 
       bufL.resize(buf_size);
 
-      ARCANE_ALINA_CALL_CUDA(
+      ARCCORE_ALINA_CALL_CUDA(
       cusparseSpSV_analysis(handle,
                             CUSPARSE_OPERATION_NON_TRANSPOSE,
                             &alpha,
@@ -221,13 +221,13 @@ struct ilu0<backend::cuda<real>>
       backend::detail::cuda_matrix_description(n, n, nnz, ptr, col, val),
       backend::detail::cuda_deleter());
 
-      ARCANE_ALINA_CALL_CUDA(
+      ARCCORE_ALINA_CALL_CUDA(
       cusparseSpMatSetAttribute(descr_U.get(),
                                 CUSPARSE_SPMAT_FILL_MODE,
                                 &fill_upper,
                                 sizeof(fill_upper)));
 
-      ARCANE_ALINA_CALL_CUDA(
+      ARCCORE_ALINA_CALL_CUDA(
       cusparseSpMatSetAttribute(descr_U.get(),
                                 CUSPARSE_SPMAT_DIAG_TYPE,
                                 &diag_non_unit,
@@ -236,10 +236,10 @@ struct ilu0<backend::cuda<real>>
       size_t buf_size;
 
       cusparseSpSVDescr_t desc;
-      ARCANE_ALINA_CALL_CUDA(cusparseSpSV_createDescr(&desc));
+      ARCCORE_ALINA_CALL_CUDA(cusparseSpSV_createDescr(&desc));
       descr_SU.reset(desc, backend::detail::cuda_deleter());
 
-      ARCANE_ALINA_CALL_CUDA(
+      ARCCORE_ALINA_CALL_CUDA(
       cusparseSpSV_bufferSize(handle,
                               CUSPARSE_OPERATION_NON_TRANSPOSE,
                               &alpha,
@@ -253,7 +253,7 @@ struct ilu0<backend::cuda<real>>
 
       bufU.resize(buf_size);
 
-      ARCANE_ALINA_CALL_CUDA(
+      ARCCORE_ALINA_CALL_CUDA(
       cusparseSpSV_analysis(handle,
                             CUSPARSE_OPERATION_NON_TRANSPOSE,
                             &alpha,
@@ -269,22 +269,22 @@ struct ilu0<backend::cuda<real>>
     {
       cusparseMatDescr_t descr;
 
-      ARCANE_ALINA_CALL_CUDA(cusparseCreateMatDescr(&descr));
-      ARCANE_ALINA_CALL_CUDA(cusparseSetMatIndexBase(descr, CUSPARSE_INDEX_BASE_ZERO));
-      ARCANE_ALINA_CALL_CUDA(cusparseSetMatType(descr, CUSPARSE_MATRIX_TYPE_GENERAL));
-      ARCANE_ALINA_CALL_CUDA(cusparseSetMatFillMode(descr, CUSPARSE_FILL_MODE_LOWER));
-      ARCANE_ALINA_CALL_CUDA(cusparseSetMatDiagType(descr, CUSPARSE_DIAG_TYPE_UNIT));
+      ARCCORE_ALINA_CALL_CUDA(cusparseCreateMatDescr(&descr));
+      ARCCORE_ALINA_CALL_CUDA(cusparseSetMatIndexBase(descr, CUSPARSE_INDEX_BASE_ZERO));
+      ARCCORE_ALINA_CALL_CUDA(cusparseSetMatType(descr, CUSPARSE_MATRIX_TYPE_GENERAL));
+      ARCCORE_ALINA_CALL_CUDA(cusparseSetMatFillMode(descr, CUSPARSE_FILL_MODE_LOWER));
+      ARCCORE_ALINA_CALL_CUDA(cusparseSetMatDiagType(descr, CUSPARSE_DIAG_TYPE_UNIT));
 
       descr_L.reset(descr, backend::detail::cuda_deleter());
     }
     {
       cusparseMatDescr_t descr;
 
-      ARCANE_ALINA_CALL_CUDA(cusparseCreateMatDescr(&descr));
-      ARCANE_ALINA_CALL_CUDA(cusparseSetMatIndexBase(descr, CUSPARSE_INDEX_BASE_ZERO));
-      ARCANE_ALINA_CALL_CUDA(cusparseSetMatType(descr, CUSPARSE_MATRIX_TYPE_GENERAL));
-      ARCANE_ALINA_CALL_CUDA(cusparseSetMatFillMode(descr, CUSPARSE_FILL_MODE_UPPER));
-      ARCANE_ALINA_CALL_CUDA(cusparseSetMatDiagType(descr, CUSPARSE_DIAG_TYPE_NON_UNIT));
+      ARCCORE_ALINA_CALL_CUDA(cusparseCreateMatDescr(&descr));
+      ARCCORE_ALINA_CALL_CUDA(cusparseSetMatIndexBase(descr, CUSPARSE_INDEX_BASE_ZERO));
+      ARCCORE_ALINA_CALL_CUDA(cusparseSetMatType(descr, CUSPARSE_MATRIX_TYPE_GENERAL));
+      ARCCORE_ALINA_CALL_CUDA(cusparseSetMatFillMode(descr, CUSPARSE_FILL_MODE_UPPER));
+      ARCCORE_ALINA_CALL_CUDA(cusparseSetMatDiagType(descr, CUSPARSE_DIAG_TYPE_NON_UNIT));
 
       descr_U.reset(descr, backend::detail::cuda_deleter());
     }
@@ -292,12 +292,12 @@ struct ilu0<backend::cuda<real>>
     // Create info structures.
     {
       csrsv2Info_t info;
-      ARCANE_ALINA_CALL_CUDA(cusparseCreateCsrsv2Info(&info));
+      ARCCORE_ALINA_CALL_CUDA(cusparseCreateCsrsv2Info(&info));
       info_L.reset(info, backend::detail::cuda_deleter());
     }
     {
       csrsv2Info_t info;
-      ARCANE_ALINA_CALL_CUDA(cusparseCreateCsrsv2Info(&info));
+      ARCCORE_ALINA_CALL_CUDA(cusparseCreateCsrsv2Info(&info));
       info_U.reset(info, backend::detail::cuda_deleter());
     }
 
@@ -306,7 +306,7 @@ struct ilu0<backend::cuda<real>>
       int buf_size_L;
       int buf_size_U;
 
-      ARCANE_ALINA_CALL_CUDA(
+      ARCCORE_ALINA_CALL_CUDA(
       cusparseXcsrsv2_bufferSize(handle,
                                  CUSPARSE_OPERATION_NON_TRANSPOSE,
                                  n,
@@ -317,7 +317,7 @@ struct ilu0<backend::cuda<real>>
                                  thrust::raw_pointer_cast(&col[0]),
                                  info_L.get(), &buf_size_L));
 
-      ARCANE_ALINA_CALL_CUDA(
+      ARCCORE_ALINA_CALL_CUDA(
       cusparseXcsrsv2_bufferSize(handle,
                                  CUSPARSE_OPERATION_NON_TRANSPOSE,
                                  n,
@@ -331,7 +331,7 @@ struct ilu0<backend::cuda<real>>
       buf.resize(std::max(buf_size_L, buf_size_U));
     }
 
-    ARCANE_ALINA_CALL_CUDA(
+    ARCCORE_ALINA_CALL_CUDA(
     cusparseXcsrsv2_analysis(handle,
                              CUSPARSE_OPERATION_NON_TRANSPOSE,
                              n,
@@ -343,7 +343,7 @@ struct ilu0<backend::cuda<real>>
                              info_L.get(), CUSPARSE_SOLVE_POLICY_USE_LEVEL,
                              thrust::raw_pointer_cast(&buf[0])));
 
-    ARCANE_ALINA_CALL_CUDA(
+    ARCCORE_ALINA_CALL_CUDA(
     cusparseXcsrsv2_analysis(handle,
                              CUSPARSE_OPERATION_NON_TRANSPOSE,
                              n,
@@ -427,7 +427,7 @@ struct ilu0<backend::cuda<real>>
     backend::detail::cuda_deleter());
 
     // Solve L * y = x
-    ARCANE_ALINA_CALL_CUDA(
+    ARCCORE_ALINA_CALL_CUDA(
     cusparseSpSV_solve(handle,
                        CUSPARSE_OPERATION_NON_TRANSPOSE,
                        &alpha,
@@ -439,7 +439,7 @@ struct ilu0<backend::cuda<real>>
                        descr_SL.get()));
 
     // Solve U * x = y
-    ARCANE_ALINA_CALL_CUDA(
+    ARCCORE_ALINA_CALL_CUDA(
     cusparseSpSV_solve(handle,
                        CUSPARSE_OPERATION_NON_TRANSPOSE,
                        &alpha,
@@ -451,7 +451,7 @@ struct ilu0<backend::cuda<real>>
                        descr_SU.get()));
 #else // CUDART_VERSION >= 11000
     // Solve L * y = x
-    ARCANE_ALINA_CALL_CUDA(
+    ARCCORE_ALINA_CALL_CUDA(
     cusparseXcsrsv2_solve(handle,
                           CUSPARSE_OPERATION_NON_TRANSPOSE,
                           n,
@@ -468,7 +468,7 @@ struct ilu0<backend::cuda<real>>
                           thrust::raw_pointer_cast(&buf[0])));
 
     // Solve U * x = y
-    ARCANE_ALINA_CALL_CUDA(
+    ARCCORE_ALINA_CALL_CUDA(
     cusparseXcsrsv2_solve(handle,
                           CUSPARSE_OPERATION_NON_TRANSPOSE,
                           n,

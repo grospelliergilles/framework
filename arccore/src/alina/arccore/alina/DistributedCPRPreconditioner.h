@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Distributed CPR preconditioner.                                           */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_DISTRIBUTEDCPRPRECONDITIONER_H
-#define ARCANE_ALINA_DISTRIBUTEDCPRPRECONDITIONER_H
+#ifndef ARCCORE_ALINA_DISTRIBUTEDCPRPRECONDITIONER_H
+#define ARCCORE_ALINA_DISTRIBUTEDCPRPRECONDITIONER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -74,18 +74,18 @@ class DistributedCPRPreconditioner
     params() = default;
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, pprecond)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, sprecond)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, pprecond)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, sprecond)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
     {
       p.check_params({ "pprecond", "sprecond", "block_size", "active_rows" });
     }
 
     void get(PropertyTree& p, const std::string& path = "") const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, pprecond);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, sprecond);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, block_size);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, pprecond);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, sprecond);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, block_size);
     }
   };
 

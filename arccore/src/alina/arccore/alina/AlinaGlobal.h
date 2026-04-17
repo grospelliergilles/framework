@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Déclarations générales de la composante 'arcane_alina'.                   */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_ALINAGLOBAL_H
-#define ARCANE_ALINA_ALINAGLOBAL_H
+#ifndef ARCCORE_ALINA_ALINAGLOBAL_H
+#define ARCCORE_ALINA_ALINAGLOBAL_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -20,16 +20,16 @@
 /*---------------------------------------------------------------------------*/
 
 #ifdef ARCANE_COMPONENT_arcane_alina
-#define ARCANE_ALINA_EXPORT ARCANE_EXPORT
+#define ARCCORE_ALINA_EXPORT ARCANE_EXPORT
 #else
-#define ARCANE_ALINA_EXPORT ARCANE_IMPORT
+#define ARCCORE_ALINA_EXPORT ARCANE_IMPORT
 #endif
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
 // Always activate profiling at the moment
-#define ARCANE_ALINA_PROFILING
+#define ARCCORE_ALINA_PROFILING
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

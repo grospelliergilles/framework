@@ -1,8 +1,8 @@
 ﻿
-set(ARCANE_ALINA_BLOCK_SIZES "3;4" CACHE STRING "Block sizes for block solvers in examples")
-set(ARCANE_ALINA_BLOCK_SIZES_SEQ "")
-foreach(B ${ARCANE_ALINA_BLOCK_SIZES})
-  set(ARCANE_ALINA_BLOCK_SIZES_SEQ "${ARCANE_ALINA_BLOCK_SIZES_SEQ}(${B})")
+set(ARCCORE_ALINA_BLOCK_SIZES "3;4" CACHE STRING "Block sizes for block solvers in examples")
+set(ARCCORE_ALINA_BLOCK_SIZES_SEQ "")
+foreach(B ${ARCCORE_ALINA_BLOCK_SIZES})
+  set(ARCCORE_ALINA_BLOCK_SIZES_SEQ "${ARCCORE_ALINA_BLOCK_SIZES_SEQ}(${B})")
 endforeach()
 
 # Add a library for common samples functions and types
@@ -22,7 +22,7 @@ function(add_arcane_alina_example_no_test EXAMPLE SOURCES)
   set_target_properties(${EXAMPLE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${ALINA_SAMPLE_BUILD_DIR}")
   target_link_libraries(${EXAMPLE} PUBLIC arcane_alina_samples_lib Boost::program_options)
   target_include_directories(${EXAMPLE} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../tests")
-  target_compile_definitions(${EXAMPLE} PUBLIC "ARCANE_ALINA_BLOCK_SIZES=${ARCANE_ALINA_BLOCK_SIZES_SEQ}")
+  target_compile_definitions(${EXAMPLE} PUBLIC "ARCCORE_ALINA_BLOCK_SIZES=${ARCCORE_ALINA_BLOCK_SIZES_SEQ}")
 endfunction()
 
 # NOTE:
@@ -103,7 +103,7 @@ endif()
 add_library(arcane_alina_mpi_example INTERFACE)
 target_link_libraries(arcane_alina_mpi_example INTERFACE
   arccore_alina ${Boost_PROGRAM_OPTIONS_LIBRARY})
-target_compile_definitions(arcane_alina_mpi_example INTERFACE "ARCANE_ALINA_BLOCK_SIZES=${ARCANE_ALINA_BLOCK_SIZES_SEQ}")
+target_compile_definitions(arcane_alina_mpi_example INTERFACE "ARCCORE_ALINA_BLOCK_SIZES=${ARCCORE_ALINA_BLOCK_SIZES_SEQ}")
 
 if (TARGET eigen_target)
   target_link_libraries(arcane_alina_mpi_example INTERFACE eigen_target)
@@ -153,7 +153,7 @@ add_mpi_example_no_test(cpr_mpi cpr_mpi.cc)
 
 #if(Parmetis_FOUND)
 #  message(STATUS "Found Parmetis for Alina")
-#  target_compile_definitions(arccore_alina PUBLIC ARCANE_ALINA_HAVE_PARMETIS ARCANE_ALINA_HAVE_PARMETIS)
+#  target_compile_definitions(arccore_alina PUBLIC ARCCORE_ALINA_HAVE_PARMETIS ARCCORE_ALINA_HAVE_PARMETIS)
 #  target_link_libraries(arccore_alina PUBLIC arccon::Parmetis)
 #endif()
 

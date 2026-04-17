@@ -9,8 +9,8 @@
 /*                                                                           */
 /* CPR preconditioner with Dynamic Row Sum modification.                     */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_CPRDYNAMICROWSUMPRECONDITIONER_H
-#define ARCANE_ALINA_CPRDYNAMICROWSUMPRECONDITIONER_H
+#ifndef ARCCORE_ALINA_CPRDYNAMICROWSUMPRECONDITIONER_H
+#define ARCCORE_ALINA_CPRDYNAMICROWSUMPRECONDITIONER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -89,12 +89,12 @@ class CPRDynamicRowSumPreconditioner
     params() = default;
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, pprecond)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, sprecond)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, active_rows)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_dd)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, eps_ps)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, pprecond)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, sprecond)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, block_size)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, active_rows)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, eps_dd)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, eps_ps)
     {
       void* ptr = 0;
       size_t n = 0;
@@ -117,12 +117,12 @@ class CPRDynamicRowSumPreconditioner
 
     void get(PropertyTree& p, const std::string& path = "") const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, pprecond);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, sprecond);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, block_size);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, active_rows);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_dd);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_ps);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, pprecond);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, sprecond);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, block_size);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, active_rows);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_dd);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, eps_ps);
     }
   };
 
@@ -153,15 +153,15 @@ class CPRDynamicRowSumPreconditioner
     const auto one = math::identity<scalar_type>();
     const auto zero = math::zero<scalar_type>();
 
-    ARCANE_ALINA_TIC("sprecond");
+    ARCCORE_ALINA_TIC("sprecond");
     S->apply(rhs, x);
-    ARCANE_ALINA_TOC("sprecond");
+    ARCCORE_ALINA_TOC("sprecond");
     backend::residual(rhs, S->system_matrix(), x, *rs);
 
     backend::spmv(one, *Fpp, *rs, zero, *rp);
-    ARCANE_ALINA_TIC("pprecond");
+    ARCCORE_ALINA_TIC("pprecond");
     P->apply(*rp, *xp);
-    ARCANE_ALINA_TOC("pprecond");
+    ARCCORE_ALINA_TOC("pprecond");
 
     backend::spmv(one, *Scatter, *xp, one, x);
   }
@@ -426,12 +426,12 @@ class CPRDynamicRowSumPreconditioner
     for (size_t i = N; i < n; ++i)
       scatter->ptr[i + 1] = scatter->ptr[i];
 
-    ARCANE_ALINA_TIC("pprecond");
+    ARCCORE_ALINA_TIC("pprecond");
     P = std::make_shared<PPrecond>(App, prm.pprecond, bprm);
-    ARCANE_ALINA_TOC("pprecond");
-    ARCANE_ALINA_TIC("sprecond");
+    ARCCORE_ALINA_TOC("pprecond");
+    ARCCORE_ALINA_TIC("sprecond");
     S = std::make_shared<SPrecond>(K, prm.sprecond, bprm);
-    ARCANE_ALINA_TOC("sprecond");
+    ARCCORE_ALINA_TOC("sprecond");
 
     Fpp = backend_type_p::copy_matrix(fpp, bprm);
     Scatter = backend_type_p::copy_matrix(scatter, bprm);
@@ -533,12 +533,12 @@ class CPRDynamicRowSumPreconditioner
       }
     });
 
-    ARCANE_ALINA_TIC("pprecond");
+    ARCCORE_ALINA_TIC("pprecond");
     P = std::make_shared<PPrecond>(App, prm.pprecond, bprm);
-    ARCANE_ALINA_TOC("pprecond");
-    ARCANE_ALINA_TIC("sprecond");
+    ARCCORE_ALINA_TOC("pprecond");
+    ARCCORE_ALINA_TIC("sprecond");
     S = std::make_shared<SPrecond>(K, prm.sprecond, bprm);
-    ARCANE_ALINA_TOC("sprecond");
+    ARCCORE_ALINA_TOC("sprecond");
 
     Fpp = backend_type_p::copy_matrix(fpp, bprm);
     Scatter = backend_type_p::copy_matrix(scatter, bprm);

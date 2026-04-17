@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Enable statically sized eigen matrices as value types.                    */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_VALUETYPEEIGEN_H
-#define ARCANE_ALINA_VALUETYPEEIGEN_H
+#ifndef ARCCORE_ALINA_VALUETYPEEIGEN_H
+#define ARCCORE_ALINA_VALUETYPEEIGEN_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

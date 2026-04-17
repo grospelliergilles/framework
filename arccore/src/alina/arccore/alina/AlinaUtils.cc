@@ -226,12 +226,12 @@ check_params(const std::set<std::string>& names) const
 
   for (const auto& n : names) {
     if (!p.count(n)) {
-      ARCANE_ALINA_PARAM_MISSING(n);
+      ARCCORE_ALINA_PARAM_MISSING(n);
     }
   }
   for (const auto& v : p) {
     if (!names.count(v.first)) {
-      ARCANE_ALINA_PARAM_UNKNOWN(v.first);
+      ARCCORE_ALINA_PARAM_UNKNOWN(v.first);
     }
   }
 }
@@ -247,17 +247,17 @@ check_params(const std::set<std::string>& names,
 
   for (const auto& n : names) {
     if (!p.count(n)) {
-      ARCANE_ALINA_PARAM_MISSING(n);
+      ARCCORE_ALINA_PARAM_MISSING(n);
     }
   }
   for (const auto& n : opt_names) {
     if (!p.count(n)) {
-      ARCANE_ALINA_PARAM_MISSING(n);
+      ARCCORE_ALINA_PARAM_MISSING(n);
     }
   }
   for (const auto& v : p) {
     if (!names.count(v.first) && !opt_names.count(v.first)) {
-      ARCANE_ALINA_PARAM_UNKNOWN(v.first);
+      ARCCORE_ALINA_PARAM_UNKNOWN(v.first);
     }
   }
 }

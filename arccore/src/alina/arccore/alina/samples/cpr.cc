@@ -204,7 +204,7 @@ int main(int argc, char* argv[])
     solve_cpr(std::tie(rows, ptr, col, val), rhs, prm);
     break;
 
-    BOOST_PP_SEQ_FOR_EACH(CALL_BLOCK_SOLVER, ~, ARCANE_ALINA_BLOCK_SIZES)
+    BOOST_PP_SEQ_FOR_EACH(CALL_BLOCK_SOLVER, ~, ARCCORE_ALINA_BLOCK_SIZES)
 
   default:
     precondition(false, "Unsupported block size");

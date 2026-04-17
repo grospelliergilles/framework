@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Utility functions for solver classes.                                     */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_SOLVERUTILS_H
-#define ARCANE_ALINA_SOLVERUTILS_H
+#ifndef ARCCORE_ALINA_SOLVERUTILS_H
+#define ARCCORE_ALINA_SOLVERUTILS_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

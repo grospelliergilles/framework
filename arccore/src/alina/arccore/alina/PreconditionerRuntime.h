@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Runtime-configurable preconditioners.                                     */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_PRECONDITIONERRUNTIME_H
-#define ARCANE_ALINA_PRECONDITIONERRUNTIME_H
+#ifndef ARCCORE_ALINA_PRECONDITIONERRUNTIME_H
+#define ARCCORE_ALINA_PRECONDITIONERRUNTIME_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -114,7 +114,7 @@ class PreconditionerRuntime
   , handle(0)
   {
     if (!prm.erase("class"))
-      ARCANE_ALINA_PARAM_MISSING("class");
+      ARCCORE_ALINA_PARAM_MISSING("class");
     std::cout << "PreconditionerClass=" << _class << "\n";
     switch (_class) {
     case ePreconditionerType::amg: {

@@ -8,8 +8,8 @@
 /* CoarseningRuntime.h                                         (C) 2000-2026 */
 /*                                                                           */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_COARSENINGRUNTIME_H
-#define ARCANE_ALINA_COARSENINGRUNTIME_H
+#ifndef ARCCORE_ALINA_COARSENINGRUNTIME_H
+#define ARCCORE_ALINA_COARSENINGRUNTIME_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -105,7 +105,7 @@ struct CoarseningRuntime
   : c(prm.get("type", eCoarserningType::smoothed_aggregation))
   {
     if (!prm.erase("type"))
-      ARCANE_ALINA_PARAM_MISSING("type");
+      ARCCORE_ALINA_PARAM_MISSING("type");
 
     typedef typename backend::value_type<Backend>::type value_type;
     const bool block_value_type = math::static_rows<value_type>::value > 1;
@@ -116,7 +116,7 @@ struct CoarseningRuntime
     std::cout << "PreconditionerCoarseningType=" << c << "\n";
     switch (c) {
 
-#define ARCANE_ALINA_RUNTIME_COARSENING(t) \
+#define ARCCORE_ALINA_RUNTIME_COARSENING(t) \
   case eCoarserningType::t: \
     if (as_scalar) { \
       handle = call_constructor<AsScalarCoarsening<t>::type>(prm); \
@@ -126,12 +126,12 @@ struct CoarseningRuntime
     } \
     break
 
-      ARCANE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
-      ARCANE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);
-      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationCoarserning);
-      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationEnergyMinCoarsening);
+      ARCCORE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
+      ARCCORE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);
+      ARCCORE_ALINA_RUNTIME_COARSENING(SmoothedAggregationCoarserning);
+      ARCCORE_ALINA_RUNTIME_COARSENING(SmoothedAggregationEnergyMinCoarsening);
 
-#undef ARCANE_ALINA_RUNTIME_COARSENING
+#undef ARCCORE_ALINA_RUNTIME_COARSENING
 
     default:
       throw std::invalid_argument("Unsupported coarsening type");
@@ -142,7 +142,7 @@ struct CoarseningRuntime
   {
     switch (c) {
 
-#define ARCANE_ALINA_RUNTIME_COARSENING(t) \
+#define ARCCORE_ALINA_RUNTIME_COARSENING(t) \
   case eCoarserningType::t: \
     if (as_scalar) { \
       call_destructor<AsScalarCoarsening<t>::type>(); \
@@ -152,12 +152,12 @@ struct CoarseningRuntime
     } \
     break
 
-      ARCANE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
-      ARCANE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);
-      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationCoarserning);
-      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationEnergyMinCoarsening);
+      ARCCORE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
+      ARCCORE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);
+      ARCCORE_ALINA_RUNTIME_COARSENING(SmoothedAggregationCoarserning);
+      ARCCORE_ALINA_RUNTIME_COARSENING(SmoothedAggregationEnergyMinCoarsening);
 
-#undef ARCANE_ALINA_RUNTIME_COARSENING
+#undef ARCCORE_ALINA_RUNTIME_COARSENING
     }
   }
 
@@ -167,19 +167,19 @@ struct CoarseningRuntime
   {
     switch (c) {
 
-#define ARCANE_ALINA_RUNTIME_COARSENING(t) \
+#define ARCCORE_ALINA_RUNTIME_COARSENING(t) \
   case eCoarserningType::t: \
     if (as_scalar) { \
       return make_operators<AsScalarCoarsening<t>::type>(A); \
     } \
     return make_operators<t>(A)
 
-      ARCANE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
-      ARCANE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);
-      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationCoarserning);
-      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationEnergyMinCoarsening);
+      ARCCORE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
+      ARCCORE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);
+      ARCCORE_ALINA_RUNTIME_COARSENING(SmoothedAggregationCoarserning);
+      ARCCORE_ALINA_RUNTIME_COARSENING(SmoothedAggregationEnergyMinCoarsening);
 
-#undef ARCANE_ALINA_RUNTIME_COARSENING
+#undef ARCCORE_ALINA_RUNTIME_COARSENING
 
     default:
       throw std::invalid_argument("Unsupported coarsening type");
@@ -191,19 +191,19 @@ struct CoarseningRuntime
   {
     switch (c) {
 
-#define ARCANE_ALINA_RUNTIME_COARSENING(t) \
+#define ARCCORE_ALINA_RUNTIME_COARSENING(t) \
       case eCoarserningType::t:            \
     if (as_scalar) { \
       return make_coarse<AsScalarCoarsening<t>::type>(A, P, R); \
     } \
     return make_coarse<t>(A, P, R)
 
-      ARCANE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
-      ARCANE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);
-      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationCoarserning);
-      ARCANE_ALINA_RUNTIME_COARSENING(SmoothedAggregationEnergyMinCoarsening);
+      ARCCORE_ALINA_RUNTIME_COARSENING(RugeStubenCoarsening);
+      ARCCORE_ALINA_RUNTIME_COARSENING(AggregationCoarsening);
+      ARCCORE_ALINA_RUNTIME_COARSENING(SmoothedAggregationCoarserning);
+      ARCCORE_ALINA_RUNTIME_COARSENING(SmoothedAggregationEnergyMinCoarsening);
 
-#undef ARCANE_ALINA_RUNTIME_COARSENING
+#undef ARCCORE_ALINA_RUNTIME_COARSENING
 
     default:
       throw std::invalid_argument("Unsupported coarsening type");

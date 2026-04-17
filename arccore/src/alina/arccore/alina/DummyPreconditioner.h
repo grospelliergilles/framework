@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Dummy preconditioner using identity matrix.                               */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_DUMMYPRECONDITIONER_H
-#define ARCANE_ALINA_DUMMYPRECONDITIONER_H
+#ifndef ARCCORE_ALINA_DUMMYPRECONDITIONER_H
+#define ARCCORE_ALINA_DUMMYPRECONDITIONER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

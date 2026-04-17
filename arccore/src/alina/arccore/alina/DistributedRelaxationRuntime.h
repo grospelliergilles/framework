@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Distributed memory sparse approximate inverse relaxation scheme.          */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_DISTRIBUTEDRELAXATIONRUNTIME_H
-#define ARCANE_ALINA_MPI_DISTRIBUTEDRELAXATIONRUNTIME_H
+#ifndef ARCCORE_ALINA_MPI_DISTRIBUTEDRELAXATIONRUNTIME_H
+#define ARCCORE_ALINA_MPI_DISTRIBUTEDRELAXATIONRUNTIME_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -55,38 +55,38 @@ struct DistributedRelaxationRuntime
   : r(prm.get("type", eRelaxationType::spai0))
   {
     if (!prm.erase("type"))
-      ARCANE_ALINA_PARAM_MISSING("type");
+      ARCCORE_ALINA_PARAM_MISSING("type");
 
     switch (r) {
 
-#define ARCANE_ALINA_RELAX_DISTR(type) \
+#define ARCCORE_ALINA_RELAX_DISTR(type) \
   case eRelaxationType::type: \
     handle = static_cast<void*>(new ::Arcane::Alina::Distributed##type<Backend>(A, prm, bprm)); \
     break
 
-#define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
+#define ARCCORE_ALINA_RELAX_LOCAL_DISTR(type) \
   case eRelaxationType::type: \
     handle = call_constructor<type>(A, prm, bprm); \
     break;
 
-#define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
+#define ARCCORE_ALINA_RELAX_LOCAL_LOCAL(type) \
   case eRelaxationType::type: \
     handle = call_constructor<type>(*A.local(), prm, bprm); \
     break;
 
-      ARCANE_ALINA_RELAX_DISTR(SPAI0Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ChebyshevRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(DampedJacobiRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ILU0Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ILUKRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ILUPRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(ILUTRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(SPAI1Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(GaussSeidelRelaxation);
+      ARCCORE_ALINA_RELAX_DISTR(SPAI0Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ChebyshevRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_LOCAL(DampedJacobiRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_LOCAL(ILU0Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_LOCAL(ILUKRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_LOCAL(ILUPRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_LOCAL(ILUTRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_LOCAL(SPAI1Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_LOCAL(GaussSeidelRelaxation);
 
-#undef ARCANE_ALINA_RELAX_LOCAL_LOCAL
-#undef ARCANE_ALINA_RELAX_LOCAL_DISTR
-#undef ARCANE_ALINA_RELAX_DISTR
+#undef ARCCORE_ALINA_RELAX_LOCAL_LOCAL
+#undef ARCCORE_ALINA_RELAX_LOCAL_DISTR
+#undef ARCCORE_ALINA_RELAX_DISTR
 
     default:
       throw std::invalid_argument("Unsupported relaxation type");
@@ -96,28 +96,28 @@ struct DistributedRelaxationRuntime
   ~DistributedRelaxationRuntime()
   {
     switch (r) {
-#define ARCANE_ALINA_RELAX_DISTR(type) \
+#define ARCCORE_ALINA_RELAX_DISTR(type) \
   case eRelaxationType::type: \
     delete static_cast<Distributed##type<Backend>*>(handle); \
     break
 
-#define ARCANE_ALINA_RELAX_LOCAL(type) \
+#define ARCCORE_ALINA_RELAX_LOCAL(type) \
   case eRelaxationType::type: \
     delete static_cast<type<Backend>*>(handle); \
     break;
 
-      ARCANE_ALINA_RELAX_DISTR(SPAI0Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL(DampedJacobiRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL(ILU0Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL(ILUKRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL(ILUPRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL(ILUTRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL(SPAI1Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL(ChebyshevRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL(GaussSeidelRelaxation);
+      ARCCORE_ALINA_RELAX_DISTR(SPAI0Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL(DampedJacobiRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL(ILU0Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL(ILUKRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL(ILUPRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL(ILUTRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL(SPAI1Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL(ChebyshevRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL(GaussSeidelRelaxation);
 
-#undef ARCANE_ALINA_RELAX_LOCAL
-#undef ARCANE_ALINA_RELAX_DISTR
+#undef ARCCORE_ALINA_RELAX_LOCAL
+#undef ARCCORE_ALINA_RELAX_DISTR
 
     default:
       break;
@@ -129,34 +129,34 @@ struct DistributedRelaxationRuntime
   {
     switch (r) {
 
-#define ARCANE_ALINA_RELAX_DISTR(type) \
+#define ARCCORE_ALINA_RELAX_DISTR(type) \
   case eRelaxationType::type: \
     static_cast<const Distributed##type<Backend>*>(handle)->apply_pre(A, rhs, x, tmp); \
     break
 
-#define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
+#define ARCCORE_ALINA_RELAX_LOCAL_DISTR(type) \
   case eRelaxationType::type: \
     call_apply_pre<type>(A, rhs, x, tmp); \
     break;
 
-#define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
+#define ARCCORE_ALINA_RELAX_LOCAL_LOCAL(type) \
   case eRelaxationType::type: \
     call_apply_pre<type>(*A.local_backend(), rhs, x, tmp); \
     break;
 
-      ARCANE_ALINA_RELAX_DISTR(SPAI0Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(DampedJacobiRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILU0Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUKRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUPRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUTRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(SPAI1Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ChebyshevRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(GaussSeidelRelaxation);
+      ARCCORE_ALINA_RELAX_DISTR(SPAI0Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(DampedJacobiRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ILU0Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ILUKRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ILUPRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ILUTRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(SPAI1Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ChebyshevRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_LOCAL(GaussSeidelRelaxation);
 
-#undef ARCANE_ALINA_RELAX_LOCAL_LOCAL
-#undef ARCANE_ALINA_RELAX_LOCAL_DISTR
-#undef ARCANE_ALINA_RELAX_DISTR
+#undef ARCCORE_ALINA_RELAX_LOCAL_LOCAL
+#undef ARCCORE_ALINA_RELAX_LOCAL_DISTR
+#undef ARCCORE_ALINA_RELAX_DISTR
 
     default:
       throw std::invalid_argument("Unsupported relaxation type");
@@ -168,34 +168,34 @@ struct DistributedRelaxationRuntime
   {
     switch (r) {
 
-#define ARCANE_ALINA_RELAX_DISTR(type) \
+#define ARCCORE_ALINA_RELAX_DISTR(type) \
   case eRelaxationType::type: \
     static_cast<const ::Arcane::Alina::Distributed##type<Backend>*>(handle)->apply_post(A, rhs, x, tmp); \
     break
 
-#define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
+#define ARCCORE_ALINA_RELAX_LOCAL_DISTR(type) \
   case eRelaxationType::type: \
     call_apply_post<type>(A, rhs, x, tmp); \
     break;
 
-#define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
+#define ARCCORE_ALINA_RELAX_LOCAL_LOCAL(type) \
   case eRelaxationType::type: \
     call_apply_post<type>(*A.local_backend(), rhs, x, tmp); \
     break;
 
-      ARCANE_ALINA_RELAX_DISTR(SPAI0Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(DampedJacobiRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILU0Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUKRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUPRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUTRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(SPAI1Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ChebyshevRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(GaussSeidelRelaxation);
+      ARCCORE_ALINA_RELAX_DISTR(SPAI0Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(DampedJacobiRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ILU0Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ILUKRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ILUPRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ILUTRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(SPAI1Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ChebyshevRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_LOCAL(GaussSeidelRelaxation);
 
-#undef ARCANE_ALINA_RELAX_LOCAL_LOCAL
-#undef ARCANE_ALINA_RELAX_LOCAL_DISTR
-#undef ARCANE_ALINA_RELAX_DISTR
+#undef ARCCORE_ALINA_RELAX_LOCAL_LOCAL
+#undef ARCCORE_ALINA_RELAX_LOCAL_DISTR
+#undef ARCCORE_ALINA_RELAX_DISTR
 
     default:
       throw std::invalid_argument("Unsupported relaxation type");
@@ -207,34 +207,34 @@ struct DistributedRelaxationRuntime
   {
     switch (r) {
 
-#define ARCANE_ALINA_RELAX_DISTR(type) \
+#define ARCCORE_ALINA_RELAX_DISTR(type) \
   case eRelaxationType::type: \
     static_cast<const Distributed##type<Backend>*>(handle)->apply(A, rhs, x); \
     break
 
-#define ARCANE_ALINA_RELAX_LOCAL_DISTR(type) \
+#define ARCCORE_ALINA_RELAX_LOCAL_DISTR(type) \
   case eRelaxationType::type: \
     call_apply<type>(A, rhs, x); \
     break;
 
-#define ARCANE_ALINA_RELAX_LOCAL_LOCAL(type) \
+#define ARCCORE_ALINA_RELAX_LOCAL_LOCAL(type) \
   case eRelaxationType::type: \
     call_apply<type>(*A.local_backend(), rhs, x); \
     break;
 
-      ARCANE_ALINA_RELAX_DISTR(SPAI0Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(DampedJacobiRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_LOCAL(GaussSeidelRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILU0Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUKRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUPRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ILUTRelaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(SPAI1Relaxation);
-      ARCANE_ALINA_RELAX_LOCAL_DISTR(ChebyshevRelaxation);
+      ARCCORE_ALINA_RELAX_DISTR(SPAI0Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(DampedJacobiRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_LOCAL(GaussSeidelRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ILU0Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ILUKRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ILUPRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ILUTRelaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(SPAI1Relaxation);
+      ARCCORE_ALINA_RELAX_LOCAL_DISTR(ChebyshevRelaxation);
 
-#undef ARCANE_ALINA_RELAX_LOCAL_LOCAL
-#undef ARCANE_ALINA_RELAX_LOCAL_DISTR
-#undef ARCANE_ALINA_RELAX_DISTR
+#undef ARCCORE_ALINA_RELAX_LOCAL_LOCAL
+#undef ARCCORE_ALINA_RELAX_LOCAL_DISTR
+#undef ARCCORE_ALINA_RELAX_DISTR
 
     default:
       throw std::invalid_argument("Unsupported relaxation type");

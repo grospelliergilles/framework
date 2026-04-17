@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Richardson iteration.                                      .              */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_RICHARDSONSOLVER_H
-#define ARCANE_ALINA_RICHARDSONSOLVER_H
+#ifndef ARCCORE_ALINA_RICHARDSONSOLVER_H
+#define ARCCORE_ALINA_RICHARDSONSOLVER_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -63,24 +63,24 @@ struct RichardsonSolverParams
   RichardsonSolverParams() = default;
 
   RichardsonSolverParams(const PropertyTree& p)
-  : ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
-  , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
+  : ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, damping)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, maxiter)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, tol)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, abstol)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, ns_search)
+  , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
   {
     p.check_params({ "damping", "maxiter", "tol", "abstol", "ns_search", "verbose" });
   }
 
   void get(PropertyTree& p, const std::string& path) const
   {
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
-    ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, damping);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, maxiter);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, tol);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, abstol);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, ns_search);
+    ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
   }
 };
 

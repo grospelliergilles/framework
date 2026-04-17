@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Schur-complement pressure correction preconditioning scheme.              */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_PRECONDITIONERSCHURPRESSURECORRECTION_H
-#define ARCANE_ALINA_PRECONDITIONERSCHURPRESSURECORRECTION_H
+#ifndef ARCCORE_ALINA_PRECONDITIONERSCHURPRESSURECORRECTION_H
+#define ARCCORE_ALINA_PRECONDITIONERSCHURPRESSURECORRECTION_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
@@ -120,13 +120,13 @@ class SchurPressureCorrectionPreconditioner
     {}
 
     params(const PropertyTree& p)
-    : ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, usolver)
-    , ARCANE_ALINA_PARAMS_IMPORT_CHILD(p, psolver)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, type)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, approx_schur)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, adjust_p)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, simplec_dia)
-    , ARCANE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
+    : ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, usolver)
+    , ARCCORE_ALINA_PARAMS_IMPORT_CHILD(p, psolver)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, type)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, approx_schur)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, adjust_p)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, simplec_dia)
+    , ARCCORE_ALINA_PARAMS_IMPORT_VALUE(p, verbose)
     {
       size_t n = 0;
 
@@ -178,13 +178,13 @@ class SchurPressureCorrectionPreconditioner
 
     void get(PropertyTree& p, const std::string& path = "") const
     {
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, usolver);
-      ARCANE_ALINA_PARAMS_EXPORT_CHILD(p, path, psolver);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, type);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, approx_schur);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, adjust_p);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, simplec_dia);
-      ARCANE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, usolver);
+      ARCCORE_ALINA_PARAMS_EXPORT_CHILD(p, path, psolver);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, type);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, approx_schur);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, adjust_p);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, simplec_dia);
+      ARCCORE_ALINA_PARAMS_EXPORT_VALUE(p, path, verbose);
     }
   };
 

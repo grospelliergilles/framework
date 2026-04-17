@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Relaxation with distribution support.                                     */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_DISTRIBUTEDRELAXATION_H
-#define ARCANE_ALINA_DISTRIBUTEDRELAXATION_H
+#ifndef ARCCORE_ALINA_DISTRIBUTEDRELAXATION_H
+#define ARCCORE_ALINA_DISTRIBUTEDRELAXATION_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Base class for relaxation classes.                                        */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_RELAXATIONBASE_H
-#define ARCANE_ALINA_MPI_RELAXATIONBASE_H
+#ifndef ARCCORE_ALINA_MPI_RELAXATIONBASE_H
+#define ARCCORE_ALINA_MPI_RELAXATIONBASE_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -27,7 +27,7 @@ namespace Arcane::Alina
 /*!
  * \brief Base class for solvers.
  */
-class ARCANE_ALINA_EXPORT RelaxationBase
+class ARCCORE_ALINA_EXPORT RelaxationBase
 {
  public:
 

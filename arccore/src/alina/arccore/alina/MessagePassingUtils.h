@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Various utilities to handle message passing.                              */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MESSAGEPASSINGUTILS_H
-#define ARCANE_ALINA_MESSAGEPASSINGUTILS_H
+#ifndef ARCCORE_ALINA_MESSAGEPASSINGUTILS_H
+#define ARCCORE_ALINA_MESSAGEPASSINGUTILS_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*

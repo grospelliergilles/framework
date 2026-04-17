@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Base class for solver classes.                                            */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_MPI_SOLVERBASE_H
-#define ARCANE_ALINA_MPI_SOLVERBASE_H
+#ifndef ARCCORE_ALINA_MPI_SOLVERBASE_H
+#define ARCCORE_ALINA_MPI_SOLVERBASE_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -27,7 +27,7 @@ namespace Arcane::Alina
 /*!
  * \brief Base class for solvers.
  */
-class ARCANE_ALINA_EXPORT SolverBase
+class ARCCORE_ALINA_EXPORT SolverBase
 {
  public:
 

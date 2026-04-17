@@ -4,7 +4,7 @@ arccore_add_component_library(alina
   FILES ${SOURCES}
 )
 
-#arcane_add_library(arcane_alina
+#arcane_add_library(ARCCORE_ALINA
 #  INPUT_PATH ${Arcane_SOURCE_DIR}/src
 #  RELATIVE_PATH arcane/alina
 #  FILES ${ARCANE_SOURCES}
@@ -39,14 +39,14 @@ if (Boost_FOUND)
   )
   target_link_libraries(arccore_alina PUBLIC Boost::headers)
 else()
-  target_compile_definitions(arccore_alina INTERFACE ARCANE_ALINA_NO_BOOST)
+  target_compile_definitions(arccore_alina INTERFACE ARCCORE_ALINA_NO_BOOST)
 endif()
 
 #----------------------------------------------------------------------------
 # OpenMP
 
-set (ARCANE_ALINA_ENABLE_OMP TRUE)
-if (ARCANE_ALINA_ENABLE_OMP)
+set (ARCCORE_ALINA_ENABLE_OMP TRUE)
+if (ARCCORE_ALINA_ENABLE_OMP)
   find_package(OpenMP)
   if (OPENMP_FOUND)
     target_compile_options(arccore_alina PUBLIC ${OpenMP_CXX_FLAGS})
@@ -69,7 +69,7 @@ find_path(EIGEN_INCLUDE Eigen/SparseCore PATH_SUFFIXES eigen3)
 if (EIGEN_INCLUDE)
   add_library(eigen_target INTERFACE)
   target_include_directories(eigen_target INTERFACE ${EIGEN_INCLUDE})
-  target_compile_definitions(eigen_target INTERFACE ARCANE_ALINA_HAVE_EIGEN)
+  target_compile_definitions(eigen_target INTERFACE ARCCORE_ALINA_HAVE_EIGEN)
 endif()
 
 #----------------------------------------------------------------------------
@@ -93,19 +93,19 @@ find_package(Metis  QUIET)
 arcane_find_package(Parmetis)
 if(Parmetis_FOUND)
   message(STATUS "Found Parmetis for Alina")
-  target_compile_definitions(arccore_alina PUBLIC ARCANE_ALINA_HAVE_PARMETIS ARCANE_ALINA_HAVE_PARMETIS)
+  target_compile_definitions(arccore_alina PUBLIC ARCCORE_ALINA_HAVE_PARMETIS ARCCORE_ALINA_HAVE_PARMETIS)
   target_link_libraries(arccore_alina PUBLIC arccon::Parmetis)
 endif()
 
-option(ARCANE_ALINA_BUILD_TESTS "Build Alina tests" ON)
-option(ARCANE_ALINA_BUILD_SAMPLES "Build Alina samples" ON)
+option(ARCCORE_ALINA_BUILD_TESTS "Build Alina tests" ON)
+option(ARCCORE_ALINA_BUILD_SAMPLES "Build Alina samples" ON)
 
-if (ARCANE_ALINA_BUILD_TESTS)
+if (ARCCORE_ALINA_BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)
 endif()
 
-if (ARCANE_ALINA_BUILD_SAMPLES)
+if (ARCCORE_ALINA_BUILD_SAMPLES)
   add_subdirectory(samples)
   add_subdirectory(tutorial)
 endif()

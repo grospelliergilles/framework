@@ -9,8 +9,8 @@
 /*                                                                           */
 /* Support for various value types.                                          */
 /*---------------------------------------------------------------------------*/
-#ifndef ARCANE_ALINA_VALUETYPEINTERFACE_H
-#define ARCANE_ALINA_VALUETYPEINTERFACE_H
+#ifndef ARCCORE_ALINA_VALUETYPEINTERFACE_H
+#define ARCCORE_ALINA_VALUETYPEINTERFACE_H
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*
