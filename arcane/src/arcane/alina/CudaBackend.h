@@ -26,9 +26,9 @@
 #include <type_traits>
 #include <memory>
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/SkylineLUSolver.h>
-#include <arcane/alina/AlinaUtils.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/SkylineLUSolver.h"
+#include "arcane/alina/AlinaUtils.h"
 
 #include <thrust/device_vector.h>
 #include <thrust/fill.h>

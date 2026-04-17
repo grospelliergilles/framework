@@ -23,10 +23,10 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/BackendInterface.h>
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/Relaxation.h>
-#include <arcane/alina/DistributedMatrix.h>
+#include "arcane/alina/BackendInterface.h"
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/Relaxation.h"
+#include "arcane/alina/DistributedMatrix.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

@@ -23,11 +23,11 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/AlinaUtils.h>
-#include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/SkylineLUSolver.h>
-#include <arcane/alina/BlockCSRMatrix.h>
+#include "arcane/alina/AlinaUtils.h"
+#include "arcane/alina/ValueTypeInterface.h"
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/SkylineLUSolver.h"
+#include "arcane/alina/BlockCSRMatrix.h"
 
 #include <algorithm>
 #include <numeric>

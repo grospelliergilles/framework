@@ -1,11 +1,11 @@
 #ifndef ARCANE_ALINA_MAKE_BLOCK_SOLVER_HPP
 #define ARCANE_ALINA_MAKE_BLOCK_SOLVER_HPP
 
-#include <arcane/alina/BackendInterface.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/StaticMatrix.h>
-#include <arcane/alina/PreconditionedSolver.h>
-#include <arcane/alina/AlinaUtils.h>
+#include "arcane/alina/BackendInterface.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/StaticMatrix.h"
+#include "arcane/alina/PreconditionedSolver.h"
+#include "arcane/alina/AlinaUtils.h"
 
 namespace Arcane::Alina
 {

@@ -23,16 +23,16 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/ConjugateGradientSolver.h>
-#include <arcane/alina/BiCGStabSolver.h>
-#include <arcane/alina/BiCGStabLSolver.h>
-#include <arcane/alina/FlexibleGMRESSolver.h>
-#include <arcane/alina/GMRESSolver.h>
-#include <arcane/alina/IDRSSolver.h>
-#include <arcane/alina/LooseGMRESSolver.h>
-#include <arcane/alina/PreconditionerOnlySolver.h>
-#include <arcane/alina/RichardsonSolver.h>
-#include <arcane/alina/DistributedInnerProduct.h>
+#include "arcane/alina/ConjugateGradientSolver.h"
+#include "arcane/alina/BiCGStabSolver.h"
+#include "arcane/alina/BiCGStabLSolver.h"
+#include "arcane/alina/FlexibleGMRESSolver.h"
+#include "arcane/alina/GMRESSolver.h"
+#include "arcane/alina/IDRSSolver.h"
+#include "arcane/alina/LooseGMRESSolver.h"
+#include "arcane/alina/PreconditionerOnlySolver.h"
+#include "arcane/alina/RichardsonSolver.h"
+#include "arcane/alina/DistributedInnerProduct.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

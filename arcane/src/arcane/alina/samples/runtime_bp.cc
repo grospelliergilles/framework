@@ -8,20 +8,20 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/scope_exit.hpp>
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/PreconditionerRuntime.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/DistributedPreconditionedSolver.h>
-#include <arcane/alina/DistributedSolverRuntime.h>
-#include <arcane/alina/DistributedPreconditioner.h>
-#include <arcane/alina/Profiler.h>
-#include <arcane/alina/AlinaUtils.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/PreconditionerRuntime.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/DistributedPreconditionedSolver.h"
+#include "arcane/alina/DistributedSolverRuntime.h"
+#include "arcane/alina/DistributedPreconditioner.h"
+#include "arcane/alina/Profiler.h"
+#include "arcane/alina/AlinaUtils.h"
 
 // Pour test compilation uniquement
-#include <arcane/alina/DistributedSolver.h>
+#include "arcane/alina/DistributedSolver.h"
 
 // Pour test compilation uniquement
-#include <arcane/alina/DistributedRelaxationRuntime.h>
+#include "arcane/alina/DistributedRelaxationRuntime.h"
 
 #include "domain_partition.h"
 

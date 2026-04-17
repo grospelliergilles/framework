@@ -29,8 +29,8 @@
 
 #include <tuple>
 
-#include <arcane/alina/BackendInterface.h>
-#include <arcane/alina/DistributedMatrix.h>
+#include "arcane/alina/BackendInterface.h"
+#include "arcane/alina/DistributedMatrix.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

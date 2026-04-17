@@ -19,13 +19,13 @@
 
 #include <boost/program_options.hpp>
 
-#include <arcane/alina/AMG.h>
-#include <arcane/alina/CoarseningRuntime.h>
-#include <arcane/alina/RelaxationRuntime.h>
-#include <arcane/alina/DistributedSubDomainDeflation.h>
-#include <arcane/alina/DistributedSolverRuntime.h>
-#include <arcane/alina/DistributedDirectSolverRuntime.h>
-#include <arcane/alina/Profiler.h>
+#include "arcane/alina/AMG.h"
+#include "arcane/alina/CoarseningRuntime.h"
+#include "arcane/alina/RelaxationRuntime.h"
+#include "arcane/alina/DistributedSubDomainDeflation.h"
+#include "arcane/alina/DistributedSolverRuntime.h"
+#include "arcane/alina/DistributedDirectSolverRuntime.h"
+#include "arcane/alina/Profiler.h"
 
 using namespace Arcane;
 using namespace Arcane::Alina;

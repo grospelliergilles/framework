@@ -32,22 +32,22 @@ THE SOFTWARE.
 #include <vector>
 #include <iostream>
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/StaticMatrix.h>
-#include <arcane/alina/Adapters.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/StaticMatrix.h"
+#include "arcane/alina/Adapters.h"
 
-#include <arcane/alina/DistributedMatrix.h>
-#include <arcane/alina/DistributedPreconditionedSolver.h>
-#include <arcane/alina/DistributedAMG.h>
-#include <arcane/alina/DistributedCoarsening.h>
-#include <arcane/alina/DistributedRelaxation.h>
-#include <arcane/alina/DistributedSolver.h>
+#include "arcane/alina/DistributedMatrix.h"
+#include "arcane/alina/DistributedPreconditionedSolver.h"
+#include "arcane/alina/DistributedAMG.h"
+#include "arcane/alina/DistributedCoarsening.h"
+#include "arcane/alina/DistributedRelaxation.h"
+#include "arcane/alina/DistributedSolver.h"
 
-#include <arcane/alina/IO.h>
-#include <arcane/alina/Profiler.h>
+#include "arcane/alina/IO.h"
+#include "arcane/alina/Profiler.h"
 
 #if defined(ARCANE_ALINA_HAVE_PARMETIS)
-#include <arcane/alina/ParmetisMatrixPartitioner.h>
+#include "arcane/alina/ParmetisMatrixPartitioner.h"
 #endif
 
 // Block size

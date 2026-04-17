@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/StaticMatrix.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/StaticMatrix.h"
 
 #include "TestSolverCommon.h"
 

@@ -32,20 +32,20 @@ THE SOFTWARE.
 #include <iostream>
 #include <string>
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/StaticMatrix.h>
-#include <arcane/alina/SchurPressureCorrectionPreconditioner.h>
-#include <arcane/alina/PreconditionedSolver.h>
-#include <arcane/alina/make_block_solver.h>
-#include <arcane/alina/AMG.h>
-#include <arcane/alina/ConjugateGradientSolver.h>
-#include <arcane/alina/PreconditionerOnlySolver.h>
-#include <arcane/alina/Coarsening.h>
-#include <arcane/alina/Relaxation.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/StaticMatrix.h"
+#include "arcane/alina/SchurPressureCorrectionPreconditioner.h"
+#include "arcane/alina/PreconditionedSolver.h"
+#include "arcane/alina/make_block_solver.h"
+#include "arcane/alina/AMG.h"
+#include "arcane/alina/ConjugateGradientSolver.h"
+#include "arcane/alina/PreconditionerOnlySolver.h"
+#include "arcane/alina/Coarsening.h"
+#include "arcane/alina/Relaxation.h"
 
-#include <arcane/alina/IO.h>
-#include <arcane/alina/Profiler.h>
+#include "arcane/alina/IO.h"
+#include "arcane/alina/Profiler.h"
 
 using namespace Arcane;
 

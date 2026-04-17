@@ -66,9 +66,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <algorithm>
 
-#include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/CuthillMcKeeReorderer.h>
-#include <arcane/alina/AlinaUtils.h>
+#include "arcane/alina/ValueTypeInterface.h"
+#include "arcane/alina/CuthillMcKeeReorderer.h"
+#include "arcane/alina/AlinaUtils.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

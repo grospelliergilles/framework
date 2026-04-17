@@ -23,14 +23,14 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/AlinaUtils.h>
-#include <arcane/alina/SolverRuntime.h>
-#include <arcane/alina/CoarseningRuntime.h>
-#include <arcane/alina/RelaxationRuntime.h>
-#include <arcane/alina/Relaxation.h>
-#include <arcane/alina/DummyPreconditioner.h>
-#include <arcane/alina/PreconditionedSolver.h>
-#include <arcane/alina/AMG.h>
+#include "arcane/alina/AlinaUtils.h"
+#include "arcane/alina/SolverRuntime.h"
+#include "arcane/alina/CoarseningRuntime.h"
+#include "arcane/alina/RelaxationRuntime.h"
+#include "arcane/alina/Relaxation.h"
+#include "arcane/alina/DummyPreconditioner.h"
+#include "arcane/alina/PreconditionedSolver.h"
+#include "arcane/alina/AMG.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

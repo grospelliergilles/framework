@@ -28,11 +28,11 @@
 #include <numeric>
 #include <cassert>
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/AlinaUtils.h>
-#include <arcane/alina/Coarsening.h>
-#include <arcane/alina/MessagePassingUtils.h>
-#include <arcane/alina/DistributedMatrix.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/AlinaUtils.h"
+#include "arcane/alina/Coarsening.h"
+#include "arcane/alina/MessagePassingUtils.h"
+#include "arcane/alina/DistributedMatrix.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

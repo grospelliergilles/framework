@@ -6,19 +6,19 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/scope_exit.hpp>
 
-#include <arcane/alina/IO.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/DistributedPreconditionedSolver.h>
-#include <arcane/alina/DistributedCPRPreconditioner.h>
-#include <arcane/alina/DistributedAMG.h>
-#include <arcane/alina/DistributedCoarseningRuntime.h>
-#include <arcane/alina/DistributedRelaxationRuntime.h>
-#include <arcane/alina/DistributedSolverRuntime.h>
-#include <arcane/alina/DistributedDirectSolverRuntime.h>
-#include <arcane/alina/MatrixPartitionerRuntime.h>
-#include <arcane/alina/Profiler.h>
-#include <arcane/alina/AlinaUtils.h>
+#include "arcane/alina/IO.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/DistributedPreconditionedSolver.h"
+#include "arcane/alina/DistributedCPRPreconditioner.h"
+#include "arcane/alina/DistributedAMG.h"
+#include "arcane/alina/DistributedCoarseningRuntime.h"
+#include "arcane/alina/DistributedRelaxationRuntime.h"
+#include "arcane/alina/DistributedSolverRuntime.h"
+#include "arcane/alina/DistributedDirectSolverRuntime.h"
+#include "arcane/alina/MatrixPartitionerRuntime.h"
+#include "arcane/alina/Profiler.h"
+#include "arcane/alina/AlinaUtils.h"
 
 using namespace Arcane;
 using namespace Arcane::Alina;

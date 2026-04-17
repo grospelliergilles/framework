@@ -11,21 +11,18 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/RelaxationRuntime.h>
-#include <arcane/alina/CoarseningRuntime.h>
-#include <arcane/alina/SolverRuntime.h>
-#include <arcane/alina/PreconditionedSolver.h>
-#include <arcane/alina/DistributedSolverRuntime.h>
-#include <arcane/alina/DistributedDirectSolverRuntime.h>
-#include <arcane/alina/DistributedSubDomainDeflation.h>
-#include <arcane/alina/AMG.h>
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/Adapters.h>
+#include "arcane/alina/RelaxationRuntime.h"
+#include "arcane/alina/CoarseningRuntime.h"
+#include "arcane/alina/SolverRuntime.h"
+#include "arcane/alina/PreconditionedSolver.h"
+#include "arcane/alina/DistributedSolverRuntime.h"
+#include "arcane/alina/DistributedDirectSolverRuntime.h"
+#include "arcane/alina/DistributedSubDomainDeflation.h"
+#include "arcane/alina/AMG.h"
+#include "arcane/alina/BuiltinBackend.h"
 #include "arcane/alina/AlinaLib.h"
 
 #include <iostream>
-
-#include <type_traits>
 
 using namespace Arcane;
 

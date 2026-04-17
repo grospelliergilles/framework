@@ -45,7 +45,7 @@
 #include <omp.h>
 #endif
 
-#include <arcane/alina/BackendInterface.h>
+#include "arcane/alina/BackendInterface.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include <arcane/alina/EigenBackend.h>
+#include "arcane/alina/EigenBackend.h"
 
 #include "TestSolverCommon.h"
 

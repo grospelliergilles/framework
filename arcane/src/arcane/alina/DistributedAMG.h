@@ -28,11 +28,11 @@
 #include <list>
 #include <memory>
 
-#include <arcane/alina/BackendInterface.h>
-#include <arcane/alina/MessagePassingUtils.h>
-#include <arcane/alina/DistributedMatrix.h>
-#include <arcane/alina/DistributedSkylineLUDirectSolver.h>
-#include <arcane/alina/SimpleMatrixPartitioner.h>
+#include "arcane/alina/BackendInterface.h"
+#include "arcane/alina/MessagePassingUtils.h"
+#include "arcane/alina/DistributedMatrix.h"
+#include "arcane/alina/DistributedSkylineLUDirectSolver.h"
+#include "arcane/alina/SimpleMatrixPartitioner.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

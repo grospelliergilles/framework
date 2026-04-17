@@ -5,31 +5,31 @@
 #include <boost/preprocessor/seq/for_each.hpp>
 
 #if defined(SOLVER_BACKEND_CUDA)
-#  include <arcane/alina/CudaBackend.h>
-#  include <arcane/alina/relaxation_cusparse_ilu0.h>
+#  include "arcane/alina/CudaBackend.h"
+#  include "arcane/alina/relaxation_cusparse_ilu0.h"
    template <class T> using Backend = Arcane::Alina::backend::cuda<T>;
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
-#include <arcane/alina/BuiltinBackend.h>
+#include "arcane/alina/BuiltinBackend.h"
 template <class T> using Backend = Arcane::Alina::BuiltinBackend<T>;
 #endif
 
-#include <arcane/alina/PreconditionedSolver.h>
-#include <arcane/alina/make_block_solver.h>
-#include <arcane/alina/StaticMatrix.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/AMG.h>
-#include <arcane/alina/SolverRuntime.h>
-#include <arcane/alina/CoarseningRuntime.h>
-#include <arcane/alina/RelaxationRuntime.h>
-#include <arcane/alina/SchurPressureCorrectionPreconditioner.h>
-#include <arcane/alina/PreconditionerRuntime.h>
-#include <arcane/alina/Adapters.h>
+#include "arcane/alina/PreconditionedSolver.h"
+#include "arcane/alina/make_block_solver.h"
+#include "arcane/alina/StaticMatrix.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/AMG.h"
+#include "arcane/alina/SolverRuntime.h"
+#include "arcane/alina/CoarseningRuntime.h"
+#include "arcane/alina/RelaxationRuntime.h"
+#include "arcane/alina/SchurPressureCorrectionPreconditioner.h"
+#include "arcane/alina/PreconditionerRuntime.h"
+#include "arcane/alina/Adapters.h"
 
-#include <arcane/alina/IO.h>
-#include <arcane/alina/Profiler.h>
+#include "arcane/alina/IO.h"
+#include "arcane/alina/Profiler.h"
 
    using namespace Arcane;
 using namespace Arcane::Alina;

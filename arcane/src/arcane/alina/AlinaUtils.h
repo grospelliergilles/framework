@@ -197,7 +197,7 @@ class ARCANE_ALINA_EXPORT PropertyTree
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/ScopedStreamModifier.h>
+#include "arcane/alina/ScopedStreamModifier.h"
 
 /*!
  * \brief Performance measurement macros.
@@ -213,7 +213,7 @@ class ARCANE_ALINA_EXPORT PropertyTree
  */
 #ifdef ARCANE_ALINA_PROFILING
 #if !defined(ARCANE_ALINA_TIC) || !defined(ARCANE_ALINA_TOC)
-#include <arcane/alina/Profiler.h>
+#include "arcane/alina/Profiler.h"
 #define ARCANE_ALINA_TIC(name) ::Arcane::Alina::Profiler::globalTic(name);
 #define ARCANE_ALINA_TOC(name) ::Arcane::Alina::Profiler::globalToc(name);
 #endif

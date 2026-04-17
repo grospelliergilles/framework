@@ -11,19 +11,19 @@
 #include <boost/preprocessor/seq/for_each.hpp>
 
 #if defined(SOLVER_BACKEND_CUDA)
-#include <arcane/alina/CudaBackend.h>
-#include <arcane/alina/relaxation_cusparse_ilu0.h>
+#include "arcane/alina/CudaBackend.h"
+#include "arcane/alina/relaxation_cusparse_ilu0.h"
 typedef Arcane::Alina::backend::cuda<double> Backend;
 #elif defined(SOLVER_BACKEND_EIGEN)
-#include <arcane/alina/EigenBackend.h>
+#include "arcane/alina/EigenBackend.h"
 typedef Arcane::Alina::backend::EigenBackend<double> Backend;
 #else
 #ifndef SOLVER_BACKEND_BUILTIN
 #define SOLVER_BACKEND_BUILTIN
 #endif
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/StaticMatrix.h>
-#include <arcane/alina/Adapters.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/StaticMatrix.h"
+#include "arcane/alina/Adapters.h"
 // Use 32 bit indexing for backend.
 using Backend = Arcane::Alina::BuiltinBackend<double, Arcane::Int32>;
 //using Backend = Arcane::Alina::BuiltinBackend<double>;
@@ -33,16 +33,16 @@ using Backend = Arcane::Alina::BuiltinBackend<double, Arcane::Int32>;
 #include <arcane/utils/String.h>
 #include <arcane/utils/Convert.h>
 
-#include <arcane/alina/RelaxationRuntime.h>
-#include <arcane/alina/CoarseningRuntime.h>
-#include <arcane/alina/SolverRuntime.h>
-#include <arcane/alina/PreconditionerRuntime.h>
-#include <arcane/alina/PreconditionedSolver.h>
-#include <arcane/alina/AMG.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/IO.h>
+#include "arcane/alina/RelaxationRuntime.h"
+#include "arcane/alina/CoarseningRuntime.h"
+#include "arcane/alina/SolverRuntime.h"
+#include "arcane/alina/PreconditionerRuntime.h"
+#include "arcane/alina/PreconditionedSolver.h"
+#include "arcane/alina/AMG.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/IO.h"
 
-#include <arcane/alina/Profiler.h>
+#include "arcane/alina/Profiler.h"
 
 #include "SampleProblemCommon.h"
 

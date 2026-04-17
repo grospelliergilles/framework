@@ -9,26 +9,26 @@
 #include <boost/program_options.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/StaticMatrix.h>
-#include <arcane/alina/Adapters.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/StaticMatrix.h"
+#include "arcane/alina/Adapters.h"
 
 #if defined(SOLVER_BACKEND_CUDA)
-#  include <arcane/alina/CudaBackend.h>
-#  include <arcane/alina/relaxation_cusparse_ilu0.h>
+#  include "arcane/alina/CudaBackend.h"
+#  include "arcane/alina/relaxation_cusparse_ilu0.h"
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
 #endif
 
-#include <arcane/alina/MessagePassingUtils.h>
-#include <arcane/alina/DistributedPreconditionedSolver.h>
-#include <arcane/alina/DistributedPreconditioner.h>
-#include <arcane/alina/DistributedSolverRuntime.h>
+#include "arcane/alina/MessagePassingUtils.h"
+#include "arcane/alina/DistributedPreconditionedSolver.h"
+#include "arcane/alina/DistributedPreconditioner.h"
+#include "arcane/alina/DistributedSolverRuntime.h"
 
-#include <arcane/alina/IO.h>
-#include <arcane/alina/Profiler.h>
+#include "arcane/alina/IO.h"
+#include "arcane/alina/Profiler.h"
 
 #ifndef ARCANE_ALINA_BLOCK_SIZES
 #  define ARCANE_ALINA_BLOCK_SIZES (3)(4)

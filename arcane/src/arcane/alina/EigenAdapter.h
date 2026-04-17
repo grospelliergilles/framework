@@ -25,8 +25,8 @@
 
 #include <type_traits>
 #include <Eigen/SparseCore>
-#include <arcane/alina/AlinaUtils.h>
-#include <arcane/alina/BuiltinBackend.h>
+#include "arcane/alina/AlinaUtils.h"
+#include "arcane/alina/BuiltinBackend.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

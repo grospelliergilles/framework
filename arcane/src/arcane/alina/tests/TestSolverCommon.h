@@ -1,14 +1,14 @@
 #ifndef TESTS_TEST_SOLVER_HPP
 #define TESTS_TEST_SOLVER_HPP
 
-#include <arcane/alina/AMG.h>
-#include <arcane/alina/SolverRuntime.h>
-#include <arcane/alina/CoarseningRuntime.h>
-#include <arcane/alina/RelaxationRuntime.h>
-#include <arcane/alina/Relaxation.h>
-#include <arcane/alina/PreconditionedSolver.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/Profiler.h>
+#include "arcane/alina/AMG.h"
+#include "arcane/alina/SolverRuntime.h"
+#include "arcane/alina/CoarseningRuntime.h"
+#include "arcane/alina/RelaxationRuntime.h"
+#include "arcane/alina/Relaxation.h"
+#include "arcane/alina/PreconditionedSolver.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/Profiler.h"
 
 #include <boost/assign/std/vector.hpp>
 using namespace boost::assign;

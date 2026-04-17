@@ -23,9 +23,9 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/MessagePassingUtils.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/ValueTypeInterface.h"
+#include "arcane/alina/MessagePassingUtils.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

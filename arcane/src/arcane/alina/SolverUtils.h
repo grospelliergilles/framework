@@ -23,7 +23,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/ValueTypeInterface.h>
+#include "arcane/alina/ValueTypeInterface.h"
 
 #include <iostream>
 

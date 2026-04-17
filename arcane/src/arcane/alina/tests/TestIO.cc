@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <arcane/alina/IO.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/Profiler.h>
+#include "arcane/alina/IO.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/Profiler.h"
 #include "SampleProblemCommon.h"
 
 using namespace Arcane;

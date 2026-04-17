@@ -26,9 +26,9 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include <arcane/alina/AlinaUtils.h>
-#include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/Coarsening.h>
+#include "arcane/alina/AlinaUtils.h"
+#include "arcane/alina/ValueTypeInterface.h"
+#include "arcane/alina/Coarsening.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

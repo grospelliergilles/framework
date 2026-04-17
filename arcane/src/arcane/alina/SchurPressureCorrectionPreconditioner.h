@@ -38,9 +38,9 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/AlinaUtils.h>
-#include <arcane/alina/IO.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/AlinaUtils.h"
+#include "arcane/alina/IO.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

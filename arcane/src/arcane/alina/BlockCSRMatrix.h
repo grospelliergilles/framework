@@ -23,7 +23,7 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/AlinaUtils.h>
+#include "arcane/alina/AlinaUtils.h"
 
 #include <vector>
 #include <algorithm>

@@ -27,8 +27,8 @@
 
 #include <type_traits>
 
-#include <arcane/alina/AlinaUtils.h>
-#include <arcane/alina/Relaxation.h>
+#include "arcane/alina/AlinaUtils.h"
+#include "arcane/alina/Relaxation.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

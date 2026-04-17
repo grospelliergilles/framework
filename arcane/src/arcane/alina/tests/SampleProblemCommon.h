@@ -4,7 +4,7 @@
 #include <complex>
 #include <type_traits>
 #include <cstddef>
-#include <arcane/alina/ValueTypeInterface.h>
+#include "arcane/alina/ValueTypeInterface.h"
 
 // Generates matrix for poisson problem in a unit cube.
 template <typename ValueType, typename ColType, typename PtrType, typename RhsType>

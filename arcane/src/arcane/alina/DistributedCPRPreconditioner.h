@@ -24,10 +24,10 @@
 /*---------------------------------------------------------------------------*/
 
 #include <cassert>
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/AlinaUtils.h>
-#include <arcane/alina/DistributedInnerProduct.h>
-#include <arcane/alina/DistributedMatrix.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/AlinaUtils.h"
+#include "arcane/alina/DistributedInnerProduct.h"
+#include "arcane/alina/DistributedMatrix.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

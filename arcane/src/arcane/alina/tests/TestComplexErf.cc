@@ -2,19 +2,19 @@
 
 #include <complex>
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/AMG.h>
-#include <arcane/alina/PreconditionedSolver.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/AMG.h"
+#include "arcane/alina/PreconditionedSolver.h"
 
-#include <arcane/alina/Coarsening.h>
-#include <arcane/alina/Relaxation.h>
+#include "arcane/alina/Coarsening.h"
+#include "arcane/alina/Relaxation.h"
 
-#include <arcane/alina/ConjugateGradientSolver.h>
-#include <arcane/alina/BiCGStabSolver.h>
-#include <arcane/alina/GMRESSolver.h>
+#include "arcane/alina/ConjugateGradientSolver.h"
+#include "arcane/alina/BiCGStabSolver.h"
+#include "arcane/alina/GMRESSolver.h"
 
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/Profiler.h>
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/Profiler.h"
 
 #include "SampleProblemCommon.h"
 

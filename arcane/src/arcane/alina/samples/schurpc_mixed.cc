@@ -8,26 +8,26 @@
 #include <boost/program_options.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 
-#include <arcane/alina/PreconditionedSolver.h>
-#include <arcane/alina/make_block_solver.h>
-#include <arcane/alina/StaticMatrix.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/AMG.h>
-#include <arcane/alina/SolverRuntime.h>
-#include <arcane/alina/CoarseningRuntime.h>
-#include <arcane/alina/RelaxationRuntime.h>
-#include <arcane/alina/SchurPressureCorrectionPreconditioner.h>
-#include <arcane/alina/PreconditionerRuntime.h>
-#include <arcane/alina/Adapters.h>
+#include "arcane/alina/PreconditionedSolver.h"
+#include "arcane/alina/make_block_solver.h"
+#include "arcane/alina/StaticMatrix.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/AMG.h"
+#include "arcane/alina/SolverRuntime.h"
+#include "arcane/alina/CoarseningRuntime.h"
+#include "arcane/alina/RelaxationRuntime.h"
+#include "arcane/alina/SchurPressureCorrectionPreconditioner.h"
+#include "arcane/alina/PreconditionerRuntime.h"
+#include "arcane/alina/Adapters.h"
 
 #if defined(SOLVER_BACKEND_VEXCL)
 #else
 #  ifndef SOLVER_BACKEND_BUILTIN
 #    define SOLVER_BACKEND_BUILTIN
 #  endif
-#include <arcane/alina/BuiltinBackend.h>
+#include "arcane/alina/BuiltinBackend.h"
 #ifdef BLOCK_TYPE_EIGEN
-#include <arcane/alina/ValueTypeEigen.h>
+#include "arcane/alina/ValueTypeEigen.h"
 template <class T, int N, int M>
 using BlockMatrix = Eigen::Matrix<T, N, M>;
 #  else
@@ -37,8 +37,8 @@ using BlockMatrix = Eigen::Matrix<T, N, M>;
 template <class T> using Backend = Arcane::Alina::BuiltinBackend<T>;
 #endif
 
-#include <arcane/alina/IO.h>
-#include <arcane/alina/Profiler.h>
+#include "arcane/alina/IO.h"
+#include "arcane/alina/Profiler.h"
 
 #ifndef ARCANE_ALINA_BLOCK_SIZES
 #  define ARCANE_ALINA_BLOCK_SIZES (3)(4)

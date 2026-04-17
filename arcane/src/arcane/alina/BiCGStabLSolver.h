@@ -59,9 +59,9 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/SolverUtils.h>
-#include <arcane/alina/QRFactorizationImpl.h>
+#include "arcane/alina/ValueTypeInterface.h"
+#include "arcane/alina/SolverUtils.h"
+#include "arcane/alina/QRFactorizationImpl.h"
 #include "arcane/alina/SolverBase.h"
 
 /*---------------------------------------------------------------------------*/

@@ -25,11 +25,11 @@
 
 #include <memory>
 
-#include <arcane/alina/BackendInterface.h>
-#include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/MessagePassingUtils.h>
-#include <arcane/alina/DistributedMatrix.h>
-#include <arcane/alina/MatrixPartitionUtils.h>
+#include "arcane/alina/BackendInterface.h"
+#include "arcane/alina/ValueTypeInterface.h"
+#include "arcane/alina/MessagePassingUtils.h"
+#include "arcane/alina/DistributedMatrix.h"
+#include "arcane/alina/MatrixPartitionUtils.h"
 
 #include <parmetis.h>
 

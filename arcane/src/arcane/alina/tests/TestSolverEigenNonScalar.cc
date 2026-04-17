@@ -4,8 +4,8 @@
 
 #include <gtest/gtest.h>
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/ValueTypeEigen.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/ValueTypeEigen.h"
 
 #include "TestSolverCommon.h"
 

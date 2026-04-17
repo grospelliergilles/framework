@@ -23,10 +23,10 @@
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/SkylineLUSolver.h>
-#include <arcane/alina/DistributedDirectSolverBase.h>
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/SkylineLUSolver.h"
+#include "arcane/alina/DistributedDirectSolverBase.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

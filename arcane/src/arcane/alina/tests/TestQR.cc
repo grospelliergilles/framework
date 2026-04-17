@@ -4,10 +4,10 @@
 #include <random>
 #include <boost/multi_array.hpp>
 
-#include <arcane/alina/QRFactorizationImpl.h>
-#include <arcane/alina/ValueTypeInterface.h>
-#include <arcane/alina/ValueTypeComplex.h>
-#include <arcane/alina/StaticMatrix.h>
+#include "arcane/alina/QRFactorizationImpl.h"
+#include "arcane/alina/ValueTypeInterface.h"
+#include "arcane/alina/ValueTypeComplex.h"
+#include "arcane/alina/StaticMatrix.h"
 
 using namespace Arcane;
 

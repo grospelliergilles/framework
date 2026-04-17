@@ -5,10 +5,10 @@
 #pragma GCC diagnostic ignored "-Wint-in-bool-context"
 
 #include <Eigen/SparseLU>
-#include <arcane/alina/EigenSolver.h>
-#include <arcane/alina/BuiltinBackend.h>
-#include <arcane/alina/Adapters.h>
-#include <arcane/alina/Profiler.h>
+#include "arcane/alina/EigenSolver.h"
+#include "arcane/alina/BuiltinBackend.h"
+#include "arcane/alina/Adapters.h"
+#include "arcane/alina/Profiler.h"
 #include "SampleProblemCommon.h"
 
 namespace
